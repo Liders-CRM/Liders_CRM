@@ -6,18 +6,27 @@
 
 ---
 
-## התקנה בפרויקט חדש
+## התקנה בפרויקט חדש — פקודה אחת
 
 ```bash
-# 1. העתק תיקיית skills:
-cp -r .claude/skills/ /path/to/new-project/.claude/skills/
-cp .claude/SKILLSEXPORT.md /path/to/new-project/.claude/SKILLSEXPORT.md
+# הרץ בתיקיית הפרויקט החדש:
+curl -fsSL https://raw.githubusercontent.com/elgrablidudu-prog/-/main/install-skills.sh | bash
+```
 
-# 2. התקן סקיל Supabase מnpm:
-cd /path/to/new-project
+או אם רוצה לציין תיקייה ספציפית:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/elgrablidudu-prog/-/main/install-skills.sh) /path/to/project
+```
+
+הסקריפט מושך אוטומטית את **כל הסקילים העדכניים** מ-GitHub — תמיד הגרסה האחרונה.
+
+### לאחר ההתקנה:
+```bash
+# התקן סקיל Supabase מnpm:
 npx skills add supabase/agent-skills
 
-# 3. עדכן CLAUDE.md בפרויקט החדש
+# עדכן CLAUDE.md בפרויקט החדש
 ```
 
 ---
