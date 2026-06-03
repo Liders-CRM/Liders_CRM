@@ -1,5 +1,6 @@
 # 📦 CRM Skills Pack — ייצוא לפרויקטים חדשים
 
+> **גרסה: v2.0.0** — עודכן 2026-06-03
 > קובץ זה מסכם את כל הסקילים הזמינים. העתק את תיקיית `.claude/skills/` לכל repo חדש.
 > עדכן את CLAUDE.md בפרויקט החדש בהתאם לדומיין (נדל"ן / יופי / אחר).
 > **קובץ זה מתעדכן אוטומטית בכל הוספת סקיל חדש.**
@@ -53,6 +54,7 @@ npx skills add supabase/agent-skills
 | **Make + WhatsApp** | `/make-whatsapp` | Make.com automations: blueprints, message templates, webhook patterns, health check | 2026-06-03 |
 | **Google Calendar** | `/google-cal` | Google Calendar sync: event format, create/update/delete, conflict detection, MCP commands | 2026-06-03 |
 | **CRM Components** | `/crm-components` | Vanilla JS+CSS UI components: toast, modal, loading, confirm dialog, form validation, badges | 2026-06-03 |
+| **Security Agent** | `/security-agent` | סוכן AI אקטיבי לאבטחה: סריקת secrets, RLS audit, PII protection, brute-force, דוח ציון A-F | 2026-06-03 |
 
 ### 📦 סקילים מ-npm (`.agents/skills/`)
 
