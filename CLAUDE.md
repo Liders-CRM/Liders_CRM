@@ -71,6 +71,13 @@
 | `/security-guardian` | `security-guardian.md` | data protection, incident response |
 | `/design-system` | `design-system.md` | tokens, components, RTL specs |
 | `/crm-live-data` | `crm-live-data.md` | ⭐ שאיבת נתונים חיים מכל MCPs |
+| `/crm-status` | `crm-status.md` | ⭐ מצב פרויקט + roadmap — הפעל בתחילת שיחה |
+| `/booking-flow` | `booking-flow.md` | לוגיקת booking מלאה: slots, conflicts, validation |
+| `/make-whatsapp` | `make-whatsapp.md` | Make.com automations + WhatsApp templates |
+| `/google-cal` | `google-cal.md` | Google Calendar sync + MCP integration |
+| `/crm-components` | `crm-components.md` | UI components: toast, modal, loading, forms |
+| `/mali-marketing` | `mali-marketing.md` | שיווק דיגיטלי — אסטרטגיה, תוכן, Canva |
+| `/liders-marketing` | `liders-marketing.md` | שיווק אוניברסלי לכל עסק ב-Liders |
 
 ### מובנים ב-Claude Code (תמיד זמינים)
 

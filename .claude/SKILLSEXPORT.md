@@ -48,6 +48,11 @@ npx skills add supabase/agent-skills
 | **CRM Live Data** ⭐ | `/crm-live-data` | שאיבת נתונים חיים מכל MCPs (Supabase, Calendar, Gmail, Make, Notion, Airtable) | 2026-06-02 |
 | **Mali Marketing** | `/mali-marketing` | מנהל שיווק דיגיטלי מלא — אסטרטגיה, תוכן, קופי, עיצוב, ניתוח (Instagram, Facebook, WhatsApp) | 2026-06-03 |
 | **Liders Marketing** | `/liders-marketing` | מנהל שיווק דיגיטלי אוניברסלי לכל עסק ב-Liders CRM — אסטרטגיה, תוכן, קופי, עיצוב, ניתוח | 2026-06-03 |
+| **CRM Status** ⭐ | `/crm-status` | מצב הפרויקט: מה בנוי, מה TODO, roadmap — הפעל בתחילת כל שיחה לשחזור הקשר | 2026-06-03 |
+| **Booking Flow** | `/booking-flow` | לוגיקת booking מלאה: slot calculation, conflict detection, validation, Supabase migration | 2026-06-03 |
+| **Make + WhatsApp** | `/make-whatsapp` | Make.com automations: blueprints, message templates, webhook patterns, health check | 2026-06-03 |
+| **Google Calendar** | `/google-cal` | Google Calendar sync: event format, create/update/delete, conflict detection, MCP commands | 2026-06-03 |
+| **CRM Components** | `/crm-components` | Vanilla JS+CSS UI components: toast, modal, loading, confirm dialog, form validation, badges | 2026-06-03 |
 
 ### 📦 סקילים מ-npm (`.agents/skills/`)
 
