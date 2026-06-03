@@ -78,6 +78,7 @@
 | `/crm-components` | `crm-components.md` | UI components: toast, modal, loading, forms |
 | `/mali-marketing` | `mali-marketing.md` | שיווק דיגיטלי — אסטרטגיה, תוכן, Canva |
 | `/liders-marketing` | `liders-marketing.md` | שיווק אוניברסלי לכל עסק ב-Liders |
+| `/rtl-hebrew` | `rtl-hebrew.md` | כתיבה עברית RTL מלאה עם Unicode markers |
 
 ### מובנים ב-Claude Code (תמיד זמינים)
 
