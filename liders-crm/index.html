@@ -728,6 +728,7 @@
       to   { opacity: 1; transform: translateX(0); }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -1145,6 +1146,152 @@ function hebrewDate() {
 function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
 
 /* ═══════════════════════════════════════════
+   SUPABASE CONFIG & DATABASE LAYER
+═══════════════════════════════════════════ */
+const SUPABASE_URL = 'https://scyfywvzoogfrlalgftv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDA3MzAsImV4cCI6MjA5NjA3NjczMH0._D8ho0Yj8fEk7nd6-vmkjKkKyjfvHDmSq9Y8h5XzQCM';
+const DEMO_TENANT  = '00000000-0000-0000-0000-000000000001';
+const supabase     = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const DB = {
+  stageMap: {}, // uuid → 's1','s2',...
+  stageRev: {}, // 's1','s2',... → uuid
+  tenantId: DEMO_TENANT,
+  agentId: null,
+
+  async signIn(email, password) {
+    let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) ({ data, error } = await supabase.auth.signUp({ email, password }));
+    return { data, error };
+  },
+
+  async signOut() { await supabase.auth.signOut(); },
+
+  async ensureAgent(email, name) {
+    const { data, error } = await supabase.rpc('register_demo_agent',
+      { p_name: name || email.split('@')[0], p_email: email });
+    if (!error) this.agentId = data;
+  },
+
+  async loadAll() {
+    const [stagesR, leadsR, tasksR, propsR, actsR] = await Promise.all([
+      supabase.from('pipeline_stages').select('*').eq('tenant_id', this.tenantId).order('order_idx'),
+      supabase.from('leads').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }),
+      supabase.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
+      supabase.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
+      supabase.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
+    ]);
+    this.stageMap = {};
+    this.stageRev = {};
+    (stagesR.data || []).forEach(s => {
+      const sid = 's' + s.order_idx;
+      this.stageMap[s.id] = sid;
+      this.stageRev[sid]  = s.id;
+    });
+    return {
+      stages: (stagesR.data || []).map(s => ({
+        id: 's' + s.order_idx, name: s.name, color: s.color,
+        order: s.order_idx, is_terminal: s.is_terminal, _uuid: s.id,
+      })),
+      leads: (leadsR.data || []).map(l => ({
+        id: l.id, name: l.name, phone: l.phone, email: l.email || '',
+        stage: this.stageMap[l.pipeline_stage_id] || 's1',
+        source: l.source, budget_min: Number(l.budget_min) || 0,
+        budget_max: Number(l.budget_max) || 0,
+        desired_area: l.desired_area || '', score: l.score,
+        notes: l.notes || '', tags: l.tags || [],
+        last_contact: l.last_contact?.split('T')[0] || null,
+        next_followup: l.next_followup?.split('T')[0] || null,
+        created_at: l.created_at?.split('T')[0] || today(),
+      })),
+      tasks: (tasksR.data || []).map(t => ({
+        id: t.id, title: t.title, type: t.type, priority: t.priority,
+        due: t.due_date?.split('T')[0] || addDays(1),
+        done: t.done, lead_id: t.lead_id, notes: t.notes || '',
+      })),
+      properties: (propsR.data || []).map(p => ({
+        id: p.id, title: p.title, type: p.type, status: p.status,
+        price: Number(p.price), area: Number(p.area_sqm) || 0,
+        rooms: p.rooms, floor: p.floor, address: p.address, city: p.city,
+        neighborhood: p.neighborhood || '', description: p.description || '',
+      })),
+      activities: (actsR.data || []).map(a => ({
+        id: a.id, lead_id: a.lead_id, type: a.type,
+        content: a.content, created_at: a.created_at?.split('T')[0] || today(),
+      })),
+    };
+  },
+
+  async addLead(lead) {
+    const { data, error } = await supabase.from('leads').insert({
+      tenant_id: this.tenantId, agent_id: this.agentId,
+      name: lead.name, phone: lead.phone,
+      source: lead.source || 'other',
+      budget_max: lead.budget_max || null,
+      desired_area: lead.desired_area || null,
+      notes: lead.notes || '',
+      pipeline_stage_id: this.stageRev['s1'],
+      score: 50, next_followup: addDays(1),
+    }).select().single();
+    if (error) throw error;
+    return {
+      id: data.id, name: data.name, phone: data.phone, email: data.email || '',
+      stage: 's1', source: data.source, budget_min: 0,
+      budget_max: Number(data.budget_max) || 0,
+      desired_area: data.desired_area || '', score: 50,
+      notes: data.notes || '', tags: [],
+      last_contact: null, next_followup: addDays(1), created_at: today(),
+    };
+  },
+
+  async addTask(task) {
+    const { data, error } = await supabase.from('tasks').insert({
+      tenant_id: this.tenantId, agent_id: this.agentId,
+      lead_id: task.lead_id || null, title: task.title,
+      type: task.type || 'other', priority: task.priority || 'medium',
+      due_date: task.due || addDays(1),
+    }).select().single();
+    if (error) throw error;
+    return {
+      id: data.id, title: data.title, type: data.type, priority: data.priority,
+      due: data.due_date?.split('T')[0] || addDays(1),
+      done: false, lead_id: data.lead_id, notes: '',
+    };
+  },
+
+  async updateTask(id, updates) {
+    const patch = {};
+    if ('done' in updates) {
+      patch.done = updates.done;
+      if (updates.done) patch.done_at = new Date().toISOString();
+    }
+    const { error } = await supabase.from('tasks').update(patch).eq('id', id);
+    if (error) throw error;
+  },
+
+  async addActivity(act) {
+    const { data, error } = await supabase.from('activities').insert({
+      tenant_id: this.tenantId, agent_id: this.agentId,
+      lead_id: act.lead_id || null,
+      type: act.type || 'note', content: act.content,
+    }).select().single();
+    if (error) throw error;
+    return {
+      id: data.id, lead_id: data.lead_id, type: data.type,
+      content: data.content, created_at: today(),
+    };
+  },
+
+  async moveLead(leadId, shortStageId) {
+    const uuid = this.stageRev[shortStageId];
+    if (!uuid) return;
+    const { error } = await supabase.from('leads')
+      .update({ pipeline_stage_id: uuid }).eq('id', leadId);
+    if (error) throw error;
+  },
+};
+
+/* ═══════════════════════════════════════════
    DEMO DATA
 ═══════════════════════════════════════════ */
 const DEMO = {
@@ -1253,6 +1400,8 @@ const State = {
   tasks: [...DEMO.tasks],
   activities: [...DEMO.activities],
   stages: [...DEMO.stages],
+  agent:  { ...DEMO.agent },
+  tenant: { ...DEMO.tenant },
 };
 
 /* ═══════════════════════════════════════════
@@ -1283,23 +1432,53 @@ function toast(msg, type='') {
    APP CONTROLLER
 ═══════════════════════════════════════════ */
 const App = {
-  loginWithEmail() {
-    const email = document.getElementById('login-email').value;
-    if (!email) { toast('נא הכנס אימייל', 'error'); return; }
-    this._doLogin();
+  async loginWithEmail() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    if (!email || !password) { toast('נא הכנס אימייל וסיסמה', 'error'); return; }
+    await this._authAndEnter(email, password);
   },
-  loginDemo() { this._doLogin(); },
-  _doLogin() {
+  async loginDemo() {
+    await this._authAndEnter('demo@liders.co.il', 'demo1234');
+  },
+  async _authAndEnter(email, password) {
+    const btn = document.querySelector('#screen-login .btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = 'מתחבר...'; }
+    try {
+      const { data, error } = await DB.signIn(email, password);
+      if (error || !data?.user) {
+        toast('שגיאת התחברות: ' + (error?.message || 'נסה שנית'), 'error');
+        return;
+      }
+      const user = data.user;
+      await DB.ensureAgent(user.email, user.email.split('@')[0]);
+      const loaded = await DB.loadAll();
+      State.stages     = loaded.stages;
+      State.leads      = loaded.leads;
+      State.tasks      = loaded.tasks;
+      State.properties = loaded.properties;
+      State.activities = loaded.activities;
+      State.agent  = { name: user.email.split('@')[0], email: user.email, initials: user.email[0].toUpperCase(), role: 'סוכן' };
+      State.tenant = { name: 'לידרס נדל"ן — תל אביב' };
+      this._showApp();
+    } catch(e) {
+      toast('שגיאה: ' + e.message, 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'כניסה למערכת'; }
+    }
+  },
+  _showApp() {
     document.getElementById('screen-login').classList.add('hidden');
     document.getElementById('app-shell').classList.remove('hidden');
-    document.getElementById('sidebar-tenant-name').textContent = DEMO.tenant.name;
-    document.getElementById('sidebar-agent-name').textContent = DEMO.agent.name;
-    document.getElementById('sidebar-agent-initials').textContent = DEMO.agent.initials;
-    document.getElementById('sidebar-agent-role').textContent = DEMO.agent.role;
+    document.getElementById('sidebar-tenant-name').textContent = State.tenant.name;
+    document.getElementById('sidebar-agent-name').textContent  = State.agent.name;
+    document.getElementById('sidebar-agent-initials').textContent = State.agent.initials;
+    document.getElementById('sidebar-agent-role').textContent  = State.agent.role;
     this.go('dashboard');
     this.updateBadges();
   },
-  logout() {
+  async logout() {
+    await DB.signOut();
     document.getElementById('app-shell').classList.add('hidden');
     document.getElementById('screen-login').classList.remove('hidden');
   },
@@ -1346,7 +1525,7 @@ const App = {
 ═══════════════════════════════════════════ */
 const Dashboard = {
   render() {
-    document.getElementById('dash-agent-name').textContent = DEMO.agent.name.split(' ')[0];
+    document.getElementById('dash-agent-name').textContent = (State.agent?.name || 'ברוך הבא').split(' ')[0];
     document.getElementById('dash-date').textContent = hebrewDate();
     this.renderKPIs();
     this.renderTasks();
@@ -1712,8 +1891,8 @@ const Settings = {
         <div class="settings-row">
           <div class="settings-row-icon">👤</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">${DEMO.agent.name}</div>
-            <div class="settings-row-sub">${DEMO.agent.email}</div>
+            <div class="settings-row-label">${State.agent?.name || ''}</div>
+            <div class="settings-row-sub">${State.agent?.email || ''}</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -1730,7 +1909,7 @@ const Settings = {
         <div class="settings-row">
           <div class="settings-row-icon">🏢</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">${DEMO.tenant.name}</div>
+            <div class="settings-row-label">${State.tenant?.name || 'לידרס נדל"ן'}</div>
             <div class="settings-row-sub">תוכנית: Pro</div>
           </div>
           <div class="settings-arrow">›</div>
@@ -1795,10 +1974,18 @@ const Settings = {
 /* ═══════════════════════════════════════════
    ACTIONS
 ═══════════════════════════════════════════ */
-function toggleTask(taskId) {
+async function toggleTask(taskId) {
   const task = State.tasks.find(t => t.id === taskId);
   if (!task) return;
+  const prev = task.done;
   task.done = !task.done;
+  try {
+    await DB.updateTask(taskId, { done: task.done });
+  } catch(e) {
+    task.done = prev;
+    toast('שגיאה בשמירה', 'error');
+    return;
+  }
   toast(task.done ? '✅ משימה סומנה כבוצעה' : 'משימה נפתחה מחדש', task.done ? 'success' : '');
   App.updateBadges();
   if (State.screen === 'tasks') Tasks.render();
@@ -1806,77 +1993,94 @@ function toggleTask(taskId) {
   else if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
 }
 
-function addLead() {
+async function addLead() {
   const name = document.getElementById('new-lead-name').value.trim();
   const phone = document.getElementById('new-lead-phone').value.trim();
   if (!name || !phone) { toast('נא מלא שם וטלפון', 'error'); return; }
-  const lead = {
-    id: uid(), name, phone,
-    source: document.getElementById('new-lead-source').value,
-    budget_max: parseInt(document.getElementById('new-lead-budget').value.replace(/[,\.]/g,'')) || 0,
-    desired_area: document.getElementById('new-lead-area').value,
-    notes: document.getElementById('new-lead-notes').value,
-    stage: 's1', score: 50, created_at: today(),
-    last_contact: null, next_followup: addDays(1),
-  };
-  State.leads.unshift(lead);
-  State.activities.unshift({ id:uid(), lead_id:lead.id, type:'note', content:'ליד חדש נוצר', created_at:today() });
-  closeModal('modal-add-lead');
-  document.getElementById('new-lead-name').value = '';
-  document.getElementById('new-lead-phone').value = '';
-  document.getElementById('new-lead-area').value = '';
-  document.getElementById('new-lead-notes').value = '';
-  toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
-  App.updateBadges();
-  if (State.screen === 'pipeline') Pipeline.render();
-  else if (State.screen === 'leads') Leads.render();
-  else if (State.screen === 'dashboard') Dashboard.render();
+  try {
+    const lead = await DB.addLead({
+      name, phone,
+      source: document.getElementById('new-lead-source').value,
+      budget_max: parseInt(document.getElementById('new-lead-budget').value.replace(/[,\.]/g,'')) || 0,
+      desired_area: document.getElementById('new-lead-area').value,
+      notes: document.getElementById('new-lead-notes').value,
+    });
+    State.leads.unshift(lead);
+    await DB.addActivity({ lead_id: lead.id, type: 'lead_created', content: 'ליד חדש נוצר' });
+    State.activities.unshift({ id: uid(), lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר', created_at: today() });
+    closeModal('modal-add-lead');
+    document.getElementById('new-lead-name').value = '';
+    document.getElementById('new-lead-phone').value = '';
+    document.getElementById('new-lead-area').value = '';
+    document.getElementById('new-lead-notes').value = '';
+    toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
+    App.updateBadges();
+    if (State.screen === 'pipeline') Pipeline.render();
+    else if (State.screen === 'leads') Leads.render();
+    else if (State.screen === 'dashboard') Dashboard.render();
+  } catch(e) {
+    toast('שגיאה בשמירה: ' + e.message, 'error');
+  }
 }
 
-function addTask() {
+async function addTask() {
   const title = document.getElementById('new-task-title').value.trim();
   if (!title) { toast('נא הכנס כותרת', 'error'); return; }
-  const task = {
-    id: uid(), title, done: false,
-    type: document.getElementById('new-task-type').value,
-    priority: document.getElementById('new-task-priority').value,
-    due: document.getElementById('new-task-due').value || addDays(1),
-    lead_id: State.currentLeadId || null,
-  };
-  State.tasks.unshift(task);
-  closeModal('modal-add-task');
-  document.getElementById('new-task-title').value = '';
-  toast('✅ משימה נוספה', 'success');
-  App.updateBadges();
-  if (State.screen === 'tasks') Tasks.render();
-  else if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
-  else if (State.screen === 'dashboard') Dashboard.renderTasks();
+  try {
+    const task = await DB.addTask({
+      title,
+      type: document.getElementById('new-task-type').value,
+      priority: document.getElementById('new-task-priority').value,
+      due: document.getElementById('new-task-due').value || addDays(1),
+      lead_id: State.currentLeadId || null,
+    });
+    State.tasks.unshift(task);
+    closeModal('modal-add-task');
+    document.getElementById('new-task-title').value = '';
+    toast('✅ משימה נוספה', 'success');
+    App.updateBadges();
+    if (State.screen === 'tasks') Tasks.render();
+    else if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
+    else if (State.screen === 'dashboard') Dashboard.renderTasks();
+  } catch(e) {
+    toast('שגיאה: ' + e.message, 'error');
+  }
 }
 
-function addActivity() {
+async function addActivity() {
   const content = document.getElementById('new-activity-content').value.trim();
   if (!content) { toast('נא הכנס תיאור', 'error'); return; }
-  const act = {
-    id: uid(), content, lead_id: State.currentLeadId,
-    type: document.getElementById('new-activity-type').value,
-    created_at: today(),
-  };
-  State.activities.unshift(act);
-  // update last_contact
-  const lead = State.leads.find(l => l.id === State.currentLeadId);
-  if (lead) lead.last_contact = today();
-  closeModal('modal-add-activity');
-  document.getElementById('new-activity-content').value = '';
-  toast('📝 פעילות נרשמה', 'success');
-  if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
+  try {
+    const act = await DB.addActivity({
+      content, lead_id: State.currentLeadId,
+      type: document.getElementById('new-activity-type').value,
+    });
+    State.activities.unshift(act);
+    const lead = State.leads.find(l => l.id === State.currentLeadId);
+    if (lead) lead.last_contact = today();
+    closeModal('modal-add-activity');
+    document.getElementById('new-activity-content').value = '';
+    toast('📝 פעילות נרשמה', 'success');
+    if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
+  } catch(e) {
+    toast('שגיאה: ' + e.message, 'error');
+  }
 }
 
-function moveLead(leadId, stageId) {
+async function moveLead(leadId, stageId) {
   const lead = State.leads.find(l => l.id === leadId);
   const stage = State.stages.find(s => s.id === stageId);
   if (!lead || !stage || lead.stage === stageId) return;
   const oldStage = State.stages.find(s => s.id === lead.stage);
+  const prevStage = lead.stage;
   lead.stage = stageId;
+  try {
+    await DB.moveLead(leadId, stageId);
+  } catch(e) {
+    lead.stage = prevStage;
+    toast('שגיאה בשמירה', 'error');
+    return;
+  }
   State.activities.unshift({
     id: uid(), lead_id: leadId, type: 'stage_change',
     content: `🔄 הועבר מ-"${oldStage?.name}" ל-"${stage.name}"`,
