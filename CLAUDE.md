@@ -90,27 +90,28 @@
 - Login אמיתי עם Supabase Auth (auto-signup בכניסה ראשונה)
 - כל ה-CRUD כותב ל-Supabase + מעדכן State מקומי
 
-### 🔜 Phase 2 — Stripe Billing (הבא בתור)
+### ✅ Phase 2 — Stripe Billing (הושלם 4.6.2026)
 
-**מה לבנות:**
-1. **Stripe Product + Price** — תוכנית pro ב-₪X/חודש
-2. **Trial Period** — `trial_period_days: 30` בהרשמה חדשה
-3. **Webhook** (Make.com → Supabase) — עדכון `tenant.plan` כשמנוי פעיל/נסגר
-4. **Customer Portal** — כפתור "ניהול מנוי" בתוך ה-app → Stripe Portal
-5. **Pro-rated cancellation** — Stripe מחשב אוטומטי
-6. **Migration** — להוסיף לטבלת `tenants`:
-   - `stripe_customer_id text`
-   - `stripe_subscription_id text`
-   - `trial_ends_at timestamptz`
-   - `billing_email text`
-7. **Gate** — בדוק `tenant.plan` ו-`plan_expires_at` בכל טעינה; אם פג תוקף → מסך תשלום
+**מה נבנה:**
+- [x] Migration 011: עמודות billing בטבלת tenants (stripe_customer_id, subscription_id, trial_ends_at)
+- [x] `Billing` module: `isExpired()`, `daysLeft()`, `isPaid()`, `openCheckout()`, `openPortal()`
+- [x] Trial Banner — רצועה בראש האפליקציה עם ספירה לאחור
+- [x] Paywall Screen — מסך חסימה כשהניסיון פג, עם 2 תוכניות (Basic ₪149 / Pro ₪299)
+- [x] Billing Gate — בדיקה אוטומטית בכניסה לאפליקציה
+- [x] Settings Billing Section — מצב מנוי + כפתורי שדרוג / Customer Portal
 
-**לוגיקת ביטול יחסי (pro-rated):**
-- Stripe מחשב אוטומטי: אם שילם ₪300 לחודש והשתמש 15 יום → מקבל זיכוי ₪150
-- לא צריך לוגיקה ידנית — רק להפעיל `proration_behavior: 'create_prorations'`
+**🔧 מה נשאר להגדיר (ידנית ב-Stripe Dashboard):**
+1. צור מוצר + מחיר ב-Stripe → קבל Checkout URL
+2. עדכן `Billing.CHECKOUT_URLS` ב-index.html:
+   ```js
+   basic: 'https://buy.stripe.com/REAL_LINK_HERE',
+   pro:   'https://buy.stripe.com/REAL_LINK_HERE',
+   ```
+3. צור Customer Portal ב-Stripe → עדכן `Billing.PORTAL_URL`
+4. Make.com Webhook: `checkout.session.completed` → UPDATE tenants SET plan='pro'
 
-**כשמוכן לבנות Phase 2, כתוב:**
-> "בנה Phase 2 — Stripe billing"
+**כשמוכן לבנות Phase 3 — AI Features, כתוב:**
+> "בנה Phase 3 — AI Features"
 
 ---
 

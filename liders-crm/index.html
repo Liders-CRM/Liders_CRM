@@ -879,6 +879,65 @@
     .screen { animation: fadeIn 0.25s ease both; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
+    /* ═══════════════════════════════════════
+       TRIAL BANNER
+    ═══════════════════════════════════════ */
+    #trial-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 20px; gap: 12px; flex-shrink: 0;
+      background: linear-gradient(90deg, var(--gold-100) 0%, #fff8e7 100%);
+      border-bottom: 1px solid var(--gold-300);
+      position: sticky; top: 0; z-index: 11;
+    }
+
+    /* ═══════════════════════════════════════
+       PAYWALL SCREEN
+    ═══════════════════════════════════════ */
+    #screen-paywall {
+      position: fixed; inset: 0; z-index: 8000;
+      background: linear-gradient(145deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      overflow-y: auto;
+    }
+    #screen-paywall.hidden { display: none; }
+    .paywall-card {
+      background: var(--surface); border-radius: var(--radius-xl);
+      padding: 32px 24px; width: 100%; max-width: 480px;
+      text-align: center; box-shadow: var(--shadow-xl);
+    }
+    .paywall-logo { font-size: 28px; font-weight: 900; color: var(--navy-600); letter-spacing: -1px; margin-bottom: 16px; }
+    .paywall-logo span { color: var(--gold-500); }
+    .paywall-icon { font-size: 48px; margin-bottom: 12px; }
+    .paywall-title { font-size: 22px; font-weight: 900; color: var(--gray-900); margin-bottom: 6px; }
+    .paywall-sub { font-size: 14px; color: var(--gray-500); margin-bottom: 24px; }
+    .paywall-plans { display: flex; gap: 12px; margin-bottom: 8px; }
+    .paywall-plan {
+      flex: 1; border: 2px solid var(--border); border-radius: var(--radius-lg);
+      padding: 16px 12px; text-align: right; position: relative;
+    }
+    .paywall-plan--featured {
+      border-color: var(--navy-500);
+      background: linear-gradient(160deg, var(--navy-50) 0%, white 100%);
+    }
+    .plan-badge {
+      position: absolute; top: -10px; right: 50%; transform: translateX(50%);
+      background: var(--navy-500); color: white;
+      font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 99px;
+    }
+    .plan-name { font-size: 16px; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
+    .plan-price { font-size: 24px; font-weight: 900; color: var(--navy-600); margin-bottom: 10px; }
+    .plan-price span { font-size: 13px; font-weight: 500; color: var(--gray-500); }
+    .plan-features { font-size: 12px; color: var(--gray-600); display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; text-align: right; }
+
+    /* ═══════════════════════════════════════
+       BILLING CTA BOX (Settings)
+    ═══════════════════════════════════════ */
+    .billing-cta-box {
+      margin: 8px 0; padding: 16px; border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--navy-50) 0%, var(--gold-100) 100%);
+      border: 1px solid var(--gold-300);
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -977,6 +1036,8 @@
 
   <!-- MAIN CONTENT -->
   <main id="main-content">
+    <!-- TRIAL BANNER -->
+    <div id="trial-banner" class="hidden"></div>
 
     <!-- ── DASHBOARD ── -->
     <div id="screen-dashboard" class="screen">
@@ -1103,6 +1164,45 @@
   <!-- FAB -->
   <button class="fab" onclick="openModal('modal-add-lead')" title="הוסף ליד חדש">+</button>
 
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAYWALL SCREEN
+═══════════════════════════════════════ -->
+<div id="screen-paywall" class="hidden">
+  <div class="paywall-card">
+    <div class="paywall-logo">Liders<span>.</span></div>
+    <div class="paywall-icon">🔒</div>
+    <div class="paywall-title">תקופת הניסיון הסתיימה</div>
+    <div class="paywall-sub">בחר תוכנית כדי להמשיך לנהל את הלידים שלך</div>
+    <div class="paywall-plans">
+      <div class="paywall-plan">
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">₪149<span>/חודש</span></div>
+        <div class="plan-features">
+          <div>✓ עד 3 סוכנים</div>
+          <div>✓ לידים ללא הגבלה</div>
+          <div>✓ WhatsApp reminders</div>
+          <div>✓ Pipeline Kanban</div>
+        </div>
+        <button class="btn btn-ghost w-full" onclick="Billing.openCheckout('basic')">בחר Basic</button>
+      </div>
+      <div class="paywall-plan paywall-plan--featured">
+        <div class="plan-badge">⭐ מומלץ</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">₪299<span>/חודש</span></div>
+        <div class="plan-features">
+          <div>✓ סוכנים ללא הגבלה</div>
+          <div>✓ AI Lead Score</div>
+          <div>✓ Follow-up אוטומטי</div>
+          <div>✓ Analytics מתקדם</div>
+          <div>✓ API + Integrations</div>
+        </div>
+        <button class="btn btn-primary w-full" onclick="Billing.openCheckout('pro')">בחר Pro</button>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm mt-4" onclick="App.logout()" style="opacity:.6;">← חזור להתחברות</button>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -1347,12 +1447,13 @@ const DB = {
   },
 
   async loadAll() {
-    const [stagesR, leadsR, tasksR, propsR, actsR] = await Promise.all([
+    const [stagesR, leadsR, tasksR, propsR, actsR, tenantR] = await Promise.all([
       supabase.from('pipeline_stages').select('*').eq('tenant_id', this.tenantId).order('order_idx'),
       supabase.from('leads').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }),
       supabase.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       supabase.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       supabase.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
+      supabase.from('tenants').select('id,name,slug,plan,trial_ends_at,billing_email,stripe_customer_id,stripe_subscription_id').eq('id', this.tenantId).single(),
     ]);
     this.stageMap = {};
     this.stageRev = {};
@@ -1392,6 +1493,7 @@ const DB = {
         id: a.id, lead_id: a.lead_id, type: a.type,
         content: a.content, created_at: a.created_at?.split('T')[0] || today(),
       })),
+      tenant: tenantR.data || null,
     };
   },
 
@@ -1578,6 +1680,78 @@ const State = {
 };
 
 /* ═══════════════════════════════════════════
+   BILLING MODULE
+═══════════════════════════════════════════ */
+const Billing = {
+  // Replace with your Stripe Checkout links after creating products
+  CHECKOUT_URLS: {
+    basic: 'https://buy.stripe.com/REPLACE_WITH_BASIC_LINK',
+    pro:   'https://buy.stripe.com/REPLACE_WITH_PRO_LINK',
+  },
+  // Replace with your Stripe Customer Portal link
+  PORTAL_URL: 'https://billing.stripe.com/p/login/REPLACE_WITH_PORTAL_LINK',
+
+  daysLeft() {
+    const t = State.tenant?.trial_ends_at;
+    if (!t) return 30;
+    return Math.max(0, Math.ceil((new Date(t) - new Date()) / 864e5));
+  },
+  isPaid() {
+    return ['pro','basic'].includes(State.tenant?.plan);
+  },
+  isExpired() {
+    const plan = State.tenant?.plan;
+    if (!plan) return false;
+    if (this.isPaid()) return false;
+    if (plan === 'cancelled') return true;
+    if (plan === 'trial') return this.daysLeft() <= 0;
+    return false;
+  },
+  showPaywall() {
+    document.getElementById('app-shell').classList.add('hidden');
+    document.getElementById('screen-paywall').classList.remove('hidden');
+  },
+  renderTrialBanner() {
+    if (this.isPaid()) return;
+    const days = this.daysLeft();
+    const banner = document.getElementById('trial-banner');
+    if (!banner) return;
+    const urgency = days <= 3 ? 'var(--red-600)' : days <= 7 ? 'var(--orange-500)' : 'var(--navy-500)';
+    banner.innerHTML = `
+      <span style="font-size:13px;font-weight:700;color:${urgency}">
+        ⏳ ${days} ימים נותרו בתקופת הניסיון החינמית
+      </span>
+      <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('pro')" style="font-size:12px;padding:6px 14px;">
+        שדרג עכשיו →
+      </button>
+    `;
+    banner.classList.remove('hidden');
+  },
+  openCheckout(plan = 'pro') {
+    const url = this.CHECKOUT_URLS[plan];
+    if (url.includes('REPLACE')) {
+      toast('🔧 הגדר קישור Stripe ב-Billing.CHECKOUT_URLS', 'error');
+      return;
+    }
+    window.open(url, '_blank');
+  },
+  openPortal() {
+    if (this.PORTAL_URL.includes('REPLACE')) {
+      toast('🔧 הגדר Customer Portal URL ב-Billing.PORTAL_URL', 'error');
+      return;
+    }
+    window.open(this.PORTAL_URL, '_blank');
+  },
+  planLabel() {
+    const p = State.tenant?.plan;
+    if (p === 'pro')    return { text:'Pro ✓',   color:'var(--green-600)', bg:'var(--green-100)' };
+    if (p === 'basic')  return { text:'Basic ✓',  color:'var(--blue-500)',  bg:'var(--blue-100)' };
+    if (p === 'trial')  return { text:'ניסיון',   color:'var(--gold-600)',  bg:'var(--gold-100)' };
+    return { text:'לא פעיל', color:'var(--red-600)', bg:'var(--red-100)' };
+  },
+};
+
+/* ═══════════════════════════════════════════
    MODAL UTILS
 ═══════════════════════════════════════════ */
 function openModal(id) {
@@ -1636,7 +1810,12 @@ const App = {
       State.properties = loaded.properties;
       State.activities = loaded.activities;
       State.agent  = { name: user.email.split('@')[0], email: user.email, initials: user.email[0].toUpperCase(), role: 'סוכן' };
-      State.tenant = { name: 'לידרס נדל"ן — תל אביב' };
+      const t = loaded.tenant;
+      State.tenant = t
+        ? { name: t.name, slug: t.slug, plan: t.plan,
+            trial_ends_at: t.trial_ends_at, billing_email: t.billing_email,
+            stripe_customer_id: t.stripe_customer_id, stripe_subscription_id: t.stripe_subscription_id }
+        : { name: 'לידרס נדל"ן — תל אביב', plan: 'trial' };
       this._showApp();
       // fade out overlay
       overlay.classList.add('fade-out');
@@ -1650,11 +1829,17 @@ const App = {
   },
   _showApp() {
     document.getElementById('screen-login').classList.add('hidden');
+    // Check billing gate before showing app
+    if (Billing.isExpired()) {
+      Billing.showPaywall();
+      return;
+    }
     document.getElementById('app-shell').classList.remove('hidden');
     document.getElementById('sidebar-tenant-name').textContent = State.tenant.name;
     document.getElementById('sidebar-agent-name').textContent  = State.agent.name;
     document.getElementById('sidebar-agent-initials').textContent = State.agent.initials;
     document.getElementById('sidebar-agent-role').textContent  = State.agent.role;
+    Billing.renderTrialBanner();
     this.go('dashboard');
     this.updateBadges();
   },
@@ -2147,7 +2332,12 @@ const Settings = {
           <div class="settings-row-icon">🏢</div>
           <div class="settings-row-body">
             <div class="settings-row-label">${State.tenant?.name || 'לידרס נדל"ן'}</div>
-            <div class="settings-row-sub">תוכנית: Pro</div>
+            <div class="settings-row-sub">
+              <span style="background:${Billing.planLabel().bg};color:${Billing.planLabel().color};padding:2px 8px;border-radius:99px;font-weight:700;font-size:11px;">
+                ${Billing.planLabel().text}
+              </span>
+              ${State.tenant?.plan === 'trial' ? ` · ${Billing.daysLeft()} ימים נותרו בניסיון` : ''}
+            </div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -2191,6 +2381,35 @@ const Settings = {
           <div class="settings-row-body">
             <div class="settings-row-label">AI — Claude</div>
             <div class="settings-row-sub" style="color:var(--orange-500);">הגדר מפתח API</div>
+          </div>
+          <div class="settings-arrow">›</div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">💳 חיוב ומנוי</div>
+        ${Billing.isPaid() ? `
+        <div class="settings-row" onclick="Billing.openPortal()">
+          <div class="settings-row-icon">💳</div>
+          <div class="settings-row-body">
+            <div class="settings-row-label">ניהול מנוי</div>
+            <div class="settings-row-sub">ביטול, שינוי תוכנית, קבלות</div>
+          </div>
+          <div class="settings-arrow">›</div>
+        </div>
+        ` : `
+        <div class="billing-cta-box">
+          <div style="font-weight:800;font-size:15px;margin-bottom:4px;">⏳ ${Billing.daysLeft()} ימים נותרו בניסיון</div>
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">שדרג לתוכנית בתשלום כדי להמשיך ללא הגבלה</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('basic')" style="flex:1;">Basic ₪149/חודש</button>
+            <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('pro')" style="flex:1;">Pro ₪299/חודש ⭐</button>
+          </div>
+        </div>
+        `}
+        <div class="settings-row" style="opacity:.7;">
+          <div class="settings-row-icon">📄</div>
+          <div class="settings-row-body">
+            <div class="settings-row-label">תנאי שימוש ופרטיות</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
