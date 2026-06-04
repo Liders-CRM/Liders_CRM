@@ -963,6 +963,74 @@
       border: 1px solid var(--gold-300);
     }
 
+    /* ═══════════════════════════════════════
+       AI FEATURES — Phase 3
+    ═══════════════════════════════════════ */
+    .ai-panel { display: flex; flex-direction: column; gap: 10px; padding: 4px 0; }
+    .ai-card {
+      background: linear-gradient(135deg, var(--navy-50) 0%, var(--purple-100) 100%);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: var(--radius-md); padding: 14px;
+    }
+    .ai-card-title {
+      font-size: 12px; font-weight: 700; color: var(--purple-500);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .ai-card-body { font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+    .ai-score-row { display: flex; align-items: flex-start; gap: 12px; }
+    .ai-score-circle {
+      width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: white;
+    }
+    .ai-thinking {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--purple-500); padding: 10px 0;
+    }
+    .ai-dots span {
+      display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--purple-500); animation: ai-pulse 1.2s infinite; margin: 0 2px;
+    }
+    .ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes ai-pulse {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.1); opacity: 1; }
+    }
+    .ai-message-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px;
+      font-size: 14px; line-height: 1.7; color: var(--gray-800);
+      white-space: pre-wrap; direction: rtl; margin-top: 8px;
+    }
+    .ai-next-action {
+      margin-top: 8px; padding: 10px; background: var(--navy-50);
+      border-radius: var(--radius-sm);
+    }
+    .ai-next-action-label {
+      font-size: 11px; font-weight: 700; color: var(--navy-500); margin-bottom: 4px;
+    }
+    .ai-no-key-hint {
+      background: var(--gold-100); border: 1px solid var(--gold-300);
+      border-radius: var(--radius-md); padding: 12px;
+      font-size: 13px; color: var(--gray-700);
+    }
+    .cold-lead-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: var(--orange-100); border-radius: var(--radius-md); margin-bottom: 6px;
+      border-right: 3px solid var(--orange-500); cursor: pointer;
+    }
+    .cold-badge {
+      font-size: 10px; font-weight: 800; color: var(--orange-500);
+      background: white; padding: 2px 6px; border-radius: 99px; white-space: nowrap;
+    }
+    .api-key-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .api-key-row input {
+      flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); font-size: 12px; font-family: monospace;
+      background: var(--gray-50); direction: ltr;
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -1082,6 +1150,13 @@
       <div class="chart-card" id="dash-chart-container" style="display:none;">
         <div class="chart-card-title">📊 שווי צינור לפי שלב</div>
         <canvas id="pipeline-chart" height="140"></canvas>
+      </div>
+      <div class="dash-section" style="display:none;">
+        <div class="section-header" style="margin-top:16px;">
+          <div class="section-title">❄️ לידים קפואים — 14+ יום ללא קשר</div>
+          <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
+        </div>
+        <div id="dash-cold-leads"></div>
       </div>
       <div class="section-header mt-4">
         <div class="section-title">🕐 פעילות אחרונה</div>
@@ -1842,6 +1917,108 @@ function toast(msg, type='') {
 }
 
 /* ═══════════════════════════════════════════
+   AI MODULE — Phase 3
+═══════════════════════════════════════════ */
+const AI = {
+  MODEL: 'claude-opus-4-8',
+
+  getKey() { return localStorage.getItem('claude_api_key') || ''; },
+  setKey(k) {
+    localStorage.setItem('claude_api_key', k.trim());
+    toast('✅ מפתח API נשמר', 'success');
+    if (State.screen === 'settings') Settings.render();
+  },
+
+  async call(messages, maxTokens = 400) {
+    const key = this.getKey();
+    if (!key) { toast('🔑 הגדר Claude API Key בהגדרות', 'error'); return null; }
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({ model: this.MODEL, max_tokens: maxTokens, messages }),
+    });
+    if (!res.ok) {
+      const e = await res.json();
+      throw new Error(e.error?.message || 'שגיאת Claude API');
+    }
+    return (await res.json()).content[0].text;
+  },
+
+  async scoreLead(lead) {
+    const prompt = `אתה מומחה ניתוח לידים בנדל"ן ישראלי.
+נתח את הליד ותן ציון 0-100.
+
+שם: ${lead.name}
+תקציב: ${lead.budget_min ? formatMoney(lead.budget_min)+' – '+formatMoney(lead.budget_max) : 'לא הוגדר'}
+אזור: ${lead.desired_area || 'לא הוגדר'}
+חדרים: ${lead.rooms || 'לא הוגדר'}
+מקור: ${sourceLabel(lead.source)}
+קשר אחרון: ${lead.last_contact ? formatRelDate(lead.last_contact) : 'מעולם לא'}
+הערות: ${lead.notes || 'אין'}
+
+קריטריונים:
+- תקציב ריאלי לאזור (30 נקודות)
+- דחיפות ומחויבות (25 נקודות)
+- מגיבות ותקשורת (25 נקודות)
+- פרטים מלאים (20 נקודות)
+
+החזר JSON בלבד ללא הסברים נוספים: {"score":75,"reason":"הסבר קצר בעברית עד 2 שורות","next_action":"הצעד הבא הספציפי ביותר"}`;
+    const text = await this.call([{ role: 'user', content: prompt }], 300);
+    if (!text) return null;
+    try { return JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || text); }
+    catch { return { score: 50, reason: text.slice(0, 200), next_action: 'בדוק ידנית' }; }
+  },
+
+  async writeFollowup(lead) {
+    const stage = State.stages.find(s => s.id === lead.stage);
+    return this.call([{ role: 'user', content:
+      `כתוב הודעת WhatsApp קצרה ואנושית לליד נדל"ן.
+שם: ${lead.name} | שלב: ${stage?.name || 'ראשוני'}
+אזור: ${lead.desired_area || 'לא ידוע'} | תקציב: ${lead.budget_max ? formatMoney(lead.budget_max) : 'לא ידוע'}
+קשר אחרון: ${lead.last_contact ? formatRelDate(lead.last_contact) : 'לא היה קשר'}
+כללים: עברית פשוטה, טון חם, לא מכירתי, מקסימום 3 שורות, התחל "היי ${lead.name.split(' ')[0]}," וסיים בשאלה פתוחה.`
+    }], 200);
+  },
+
+  async writeRescue(lead) {
+    const days = lead.last_contact ? Math.abs(diffDays(lead.last_contact)) : 30;
+    return this.call([{ role: 'user', content:
+      `כתוב הודעת WhatsApp להחייאת ליד שלא פעיל ${days} ימים.
+שם: ${lead.name} | אזור: ${lead.desired_area || 'לא ידוע'} | תקציב: ${lead.budget_max ? formatMoney(lead.budget_max) : 'לא ידוע'}
+כללים: חמה ולא פולשנית, אל תאמר "לא שמעתי ממך", הצג עדכון שוק קטן כסיבה לפנות, מקסימום 3 שורות.`
+    }], 200);
+  },
+
+  async getDealAdvice(lead) {
+    const stage = State.stages.find(s => s.id === lead.stage);
+    const acts = State.activities.filter(a => a.lead_id === lead.id)
+      .sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+    return this.call([{ role: 'user', content:
+      `אתה יועץ נדל"ן עם 20 שנות ניסיון. נתח את העסקה ותמליץ על הצעד הבא.
+לקוח: ${lead.name} | שלב: ${stage?.name || 'לא ידוע'}
+תקציב: ${lead.budget_max ? formatMoney(lead.budget_max) : 'לא ידוע'} | אזור: ${lead.desired_area || 'לא ידוע'}
+קשר אחרון: ${lead.last_contact ? formatRelDate(lead.last_contact) : 'לא היה'} | follow-up: ${lead.next_followup ? formatRelDate(lead.next_followup) : 'לא מתוכנן'}
+פעילויות: ${acts.map(a => a.content).join(' | ') || 'אין'}
+ענה בעברית:
+**הצעד הבא:** [צעד ספציפי]
+**למה:** [הסבר קצר 1-2 שורות]
+**דגלים אדומים:** [אם יש, אחרת "אין"]`
+    }], 350);
+  },
+};
+
+function copyAIText(elId) {
+  const box = document.getElementById(elId)?.querySelector('.ai-message-box');
+  if (!box) return;
+  navigator.clipboard.writeText(box.textContent).then(() => toast('📋 הועתק ללוח', 'success'));
+}
+
+/* ═══════════════════════════════════════════
    APP CONTROLLER
 ═══════════════════════════════════════════ */
 const App = {
@@ -1961,6 +2138,7 @@ const Dashboard = {
     document.getElementById('dash-date').textContent = hebrewDate();
     this.renderKPIs();
     this.renderTasks();
+    this.renderColdLeads();
     this.renderActivity();
   },
   renderKPIs() {
@@ -2047,6 +2225,27 @@ const Dashboard = {
         </div>
       `;
     }).join('');
+  },
+
+  renderColdLeads() {
+    const el = document.getElementById('dash-cold-leads');
+    if (!el) return;
+    const cold = State.leads.filter(l => {
+      if (l.stage === 's5') return false;
+      if (!l.last_contact) return diffDays(l.created_at) < -14;
+      return diffDays(l.last_contact) < -14;
+    }).slice(0, 4);
+    if (!cold.length) { el.closest('.dash-section')?.classList.add('hidden'); return; }
+    el.closest('.dash-section')?.classList.remove('hidden');
+    el.innerHTML = cold.map(l => `
+      <div class="cold-lead-row" onclick="App.go('lead-detail',{currentLeadId:'${l.id}'})">
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:14px;">${l.name}</div>
+          <div style="font-size:12px;color:var(--gray-500);">${l.desired_area || '—'} · ${formatMoney(l.budget_max)}</div>
+        </div>
+        <div class="cold-badge">❄️ ${l.last_contact ? Math.abs(diffDays(l.last_contact)) : '14+'} ימים</div>
+      </div>
+    `).join('');
   }
 };
 
@@ -2186,6 +2385,7 @@ const LeadDetail = {
           <button class="tab-btn" onclick="switchTab(this,'tab-activity')">פעילות (${activities.length})</button>
           <button class="tab-btn" onclick="switchTab(this,'tab-tasks')">משימות (${tasks.filter(t=>!t.done).length})</button>
           <button class="tab-btn" onclick="switchTab(this,'tab-match')">נכסים מתאימים (${matchProps.length})</button>
+          <button class="tab-btn" onclick="switchTab(this,'tab-ai')">🤖 AI</button>
         </div>
 
         <!-- INFO TAB -->
@@ -2264,6 +2464,40 @@ const LeadDetail = {
             </div>
           ` : '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו נכסים מתאימים</div><div class="empty-sub">הוסף נכסים שיתאימו לתקציב ולאזור של הליד</div></div>'}
         </div>
+
+        <!-- AI TAB -->
+        <div class="tab-content" id="tab-ai">
+          <div class="ai-panel">
+            ${!AI.getKey() ? `
+            <div class="ai-no-key-hint">
+              ⚙️ הגדר Claude API Key ב<button onclick="App.go('settings')" style="color:var(--navy-500);font-weight:700;background:none;border:none;cursor:pointer;font-size:13px;padding:0;">הגדרות</button> כדי להפעיל AI
+            </div>
+            ` : ''}
+            <!-- Score -->
+            <button class="btn btn-primary w-full" onclick="LeadDetail.runScore()">
+              🎯 נתח ליד וקבל ציון AI
+            </button>
+            <div id="ai-score-result" class="hidden"></div>
+            <!-- Follow-up -->
+            <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runFollowup()">
+              💬 כתוב הודעת follow-up לוואטסאפ
+            </button>
+            <div id="ai-followup-result" class="hidden"></div>
+            <!-- Rescue (only if cold lead) -->
+            ${(!lead.last_contact || diffDays(lead.last_contact) < -7) ? `
+            <button class="btn btn-ghost w-full" style="border-color:var(--orange-500);color:var(--orange-500);" onclick="LeadDetail.runRescue()">
+              ❄️ הודעת החייאה — ליד לא פעיל
+            </button>
+            <div id="ai-rescue-result" class="hidden"></div>
+            ` : ''}
+            <!-- Deal Advisor -->
+            <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runAdvice()">
+              🧠 יועץ עסקה — מה הצעד הבא?
+            </button>
+            <div id="ai-advice-result" class="hidden"></div>
+          </div>
+        </div>
+
       </div>
     `;
   },
@@ -2274,7 +2508,94 @@ const LeadDetail = {
                       (!lead.budget_min || p.price >= lead.budget_min * 0.9);
       return priceOk;
     });
-  }
+  },
+
+  _thinking(elId, msg) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = `<div class="ai-thinking">${msg} <div class="ai-dots"><span></span><span></span><span></span></div></div>`;
+    el.classList.remove('hidden');
+  },
+
+  async runScore() {
+    this._thinking('ai-score-result', '🎯 מנתח ליד...');
+    try {
+      const lead = State.leads.find(l => l.id === State.currentLeadId);
+      const result = await AI.scoreLead(lead);
+      if (!result) { document.getElementById('ai-score-result').classList.add('hidden'); return; }
+      lead.score = result.score;
+      const color = result.score >= 70 ? 'var(--green-500)' : result.score >= 40 ? 'var(--gold-500)' : 'var(--red-500)';
+      document.getElementById('ai-score-result').innerHTML = `
+        <div class="ai-card">
+          <div class="ai-card-title">🎯 ניתוח AI</div>
+          <div class="ai-score-row">
+            <div class="ai-score-circle" style="background:${color}">${result.score}</div>
+            <div style="flex:1;font-size:13px;color:var(--gray-700);line-height:1.5;">${result.reason}</div>
+          </div>
+          <div class="ai-next-action">
+            <div class="ai-next-action-label">צעד מומלץ:</div>
+            <div style="font-size:13px;color:var(--gray-700);">${result.next_action}</div>
+          </div>
+        </div>`;
+      // update score badge in header
+      document.querySelectorAll('.score-badge').forEach(b => {
+        if (b.textContent == lead.score || true) b.className = 'score-badge ' + scoreClass(lead.score);
+      });
+    } catch(e) {
+      document.getElementById('ai-score-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+    }
+  },
+
+  async runFollowup() {
+    this._thinking('ai-followup-result', '✍️ כותב הודעה...');
+    try {
+      const lead = State.leads.find(l => l.id === State.currentLeadId);
+      const text = await AI.writeFollowup(lead);
+      if (!text) { document.getElementById('ai-followup-result').classList.add('hidden'); return; }
+      document.getElementById('ai-followup-result').innerHTML = `
+        <div class="ai-card">
+          <div class="ai-card-title">💬 הודעת WhatsApp</div>
+          <div class="ai-message-box">${text}</div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-followup-result')">📋 העתק</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById('ai-followup-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+    }
+  },
+
+  async runRescue() {
+    this._thinking('ai-rescue-result', '❄️ מכין הודעת החייאה...');
+    try {
+      const lead = State.leads.find(l => l.id === State.currentLeadId);
+      const text = await AI.writeRescue(lead);
+      if (!text) { document.getElementById('ai-rescue-result').classList.add('hidden'); return; }
+      document.getElementById('ai-rescue-result').innerHTML = `
+        <div class="ai-card">
+          <div class="ai-card-title">❄️ הודעת החייאה</div>
+          <div class="ai-message-box">${text}</div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-rescue-result')">📋 העתק</button>
+        </div>`;
+    } catch(e) {
+      document.getElementById('ai-rescue-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+    }
+  },
+
+  async runAdvice() {
+    this._thinking('ai-advice-result', '🧠 מנתח עסקה...');
+    try {
+      const lead = State.leads.find(l => l.id === State.currentLeadId);
+      const text = await AI.getDealAdvice(lead);
+      if (!text) { document.getElementById('ai-advice-result').classList.add('hidden'); return; }
+      const html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      document.getElementById('ai-advice-result').innerHTML = `
+        <div class="ai-card">
+          <div class="ai-card-title">🧠 המלצת יועץ</div>
+          <div class="ai-card-body">${html}</div>
+        </div>`;
+    } catch(e) {
+      document.getElementById('ai-advice-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+    }
+  },
 };
 
 function switchTab(btn, tabId) {
@@ -2442,13 +2763,26 @@ const Settings = {
           </div>
           <div class="settings-arrow">›</div>
         </div>
-        <div class="settings-row">
-          <div class="settings-row-icon">🤖</div>
-          <div class="settings-row-body">
-            <div class="settings-row-label">AI — Claude</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">הגדר מפתח API</div>
+        <div class="settings-row" style="flex-direction:column; align-items:stretch;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="settings-row-icon">🤖</div>
+            <div class="settings-row-body" style="flex:1;">
+              <div class="settings-row-label">AI — Claude</div>
+              <div class="settings-row-sub" style="color:${AI.getKey() ? 'var(--green-600)' : 'var(--orange-500)'};">
+                ${AI.getKey() ? '✅ מפתח API מוגדר' : 'הגדר מפתח API להפעלת AI'}
+              </div>
+            </div>
           </div>
-          <div class="settings-arrow">›</div>
+          <div class="api-key-row">
+            <input type="password" id="claude-api-key-input"
+                   placeholder="sk-ant-api03-..."
+                   value="${AI.getKey() ? '••••••••••••••••' : ''}" />
+            <button class="btn btn-primary btn-sm"
+                    onclick="const v=document.getElementById('claude-api-key-input').value; if(v&&!v.startsWith('•')) AI.setKey(v);">
+              שמור
+            </button>
+            ${AI.getKey() ? `<button class="btn btn-ghost btn-sm" onclick="localStorage.removeItem('claude_api_key'); toast('מפתח נמחק',''); Settings.render();">מחק</button>` : ''}
+          </div>
         </div>
       </div>
       <div class="settings-section">
@@ -2467,9 +2801,9 @@ const Settings = {
           <div style="font-weight:800;font-size:15px;margin-bottom:2px;">⏳ ${Billing.daysLeft()} ימים נותרו בניסיון Basic החינמי</div>
           <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">בחר תוכנית — ביטול בכל עת, ללא עמלות</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('starter')" style="flex:1;min-width:80px;">Starter<br><span style="font-size:10px;opacity:.7;">₪199 · 1 סוכן</span></button>
-            <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('basic')" style="flex:1;min-width:80px;">Basic<br><span style="font-size:10px;opacity:.7;">₪349 · עד 5</span></button>
-            <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('pro')" style="flex:1;min-width:80px;">Pro ⭐<br><span style="font-size:10px;opacity:.8;">₪549 · עד 10</span></button>
+            <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('basic')" style="flex:1;min-width:80px;">Basic<br><span style="font-size:10px;opacity:.7;">₪199 · 1 סוכן</span></button>
+            <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('pro')" style="flex:1;min-width:80px;">Pro<br><span style="font-size:10px;opacity:.7;">₪349 · עד 5</span></button>
+            <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('premium')" style="flex:1;min-width:80px;">Premium ⭐<br><span style="font-size:10px;opacity:.8;">₪549 · עד 10</span></button>
           </div>
         </div>
         `}
