@@ -1694,8 +1694,8 @@ const State = {
 const Billing = {
   PLANS: [
     {
-      id: 'starter',
-      name: 'Starter',
+      id: 'basic',
+      name: 'Basic',
       price: 199,
       priceLabel: '₪199',
       desc: 'לסוכן עצמאי',
@@ -1704,22 +1704,22 @@ const Billing = {
       agentLimit: '1 סוכן',
     },
     {
-      id: 'basic',
-      name: 'Basic',
+      id: 'pro',
+      name: 'Pro',
       price: 349,
       priceLabel: '₪349',
       desc: 'לצוות קטן',
-      features: ['עד 5 סוכנים', 'כל מה ב-Starter +', 'AI Lead Score', 'Analytics בסיסי', 'חיבור Google Calendar'],
+      features: ['עד 5 סוכנים', 'כל מה ב-Basic +', 'AI Lead Score', 'Analytics בסיסי', 'חיבור Google Calendar'],
       featured: false,
       agentLimit: 'עד 5 סוכנים',
     },
     {
-      id: 'pro',
-      name: 'Pro',
+      id: 'premium',
+      name: 'Premium',
       price: 549,
       priceLabel: '₪549',
       desc: 'לסוכנות',
-      features: ['עד 10 סוכנים', 'כל מה ב-Basic +', 'AI Follow-up אוטומטי', 'Analytics מתקדם', 'API + Integrations', 'תמיכה עדיפות', 'מעל 10 סוכנים — צור קשר לתמחור'],
+      features: ['עד 10 סוכנים', 'כל מה ב-Pro +', 'AI Follow-up אוטומטי', 'Analytics מתקדם', 'API + Integrations', 'תמיכה עדיפות', 'מעל 10 סוכנים — צור קשר לתמחור'],
       featured: true,
       agentLimit: 'עד 10 סוכנים',
     },
@@ -1727,10 +1727,11 @@ const Billing = {
 
   // החלף בקישורי Stripe אמיתיים אחרי יצירת המוצרים
   CHECKOUT_URLS: {
-    starter: 'https://buy.stripe.com/REPLACE_WITH_STARTER_LINK',
     basic:   'https://buy.stripe.com/REPLACE_WITH_BASIC_LINK',
     pro:     'https://buy.stripe.com/REPLACE_WITH_PRO_LINK',
+    premium: 'https://buy.stripe.com/REPLACE_WITH_PREMIUM_LINK',
   },
+
   PORTAL_URL: 'https://billing.stripe.com/p/login/REPLACE_WITH_PORTAL_LINK',
 
   daysLeft() {
@@ -1739,7 +1740,7 @@ const Billing = {
     return Math.max(0, Math.ceil((new Date(t) - new Date()) / 864e5));
   },
   isPaid() {
-    return ['starter','basic','pro'].includes(State.tenant?.plan);
+    return ['basic','pro','premium'].includes(State.tenant?.plan);
   },
   isExpired() {
     const plan = State.tenant?.plan;
@@ -1791,10 +1792,10 @@ const Billing = {
   },
   planLabel() {
     const p = State.tenant?.plan;
-    if (p === 'pro')      return { text:'Pro ✓',     color:'var(--purple-500)', bg:'var(--purple-100)' };
-    if (p === 'basic')    return { text:'Basic ✓',   color:'var(--blue-500)',   bg:'var(--blue-100)'   };
-    if (p === 'starter')  return { text:'Starter ✓', color:'var(--green-600)',  bg:'var(--green-100)'  };
-    if (p === 'trial')    return { text:'ניסיון חינם 30 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
+    if (p === 'premium') return { text:'Premium ✓', color:'var(--purple-500)', bg:'var(--purple-100)' };
+    if (p === 'pro')     return { text:'Pro ✓',     color:'var(--blue-500)',   bg:'var(--blue-100)'   };
+    if (p === 'basic')   return { text:'Basic ✓',   color:'var(--green-600)',  bg:'var(--green-100)'  };
+    if (p === 'trial')   return { text:'ניסיון חינם 30 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
     return { text:'לא פעיל', color:'var(--red-600)', bg:'var(--red-100)' };
   },
   renderPlansHTML() {
