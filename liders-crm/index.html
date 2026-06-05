@@ -2019,6 +2019,104 @@ function copyAIText(elId) {
 }
 
 /* ═══════════════════════════════════════════
+   MAKE.COM MODULE — Phase 4
+═══════════════════════════════════════════ */
+const Make = {
+  getWebhook() { return localStorage.getItem('make_webhook_url') || ''; },
+  setWebhook(url) {
+    localStorage.setItem('make_webhook_url', url.trim());
+    toast('✅ Webhook נשמר', 'success');
+    if (State.screen === 'settings') Settings.render();
+  },
+  getWhatsApp() { return localStorage.getItem('whatsapp_number') || ''; },
+  setWhatsApp(num) {
+    localStorage.setItem('whatsapp_number', num.trim());
+    toast('✅ מספר WhatsApp נשמר', 'success');
+    if (State.screen === 'settings') Settings.render();
+  },
+
+  async trigger(event, payload) {
+    const url = this.getWebhook();
+    if (!url) return;
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event,
+          ...payload,
+          agent_name: State.agent?.name || 'סוכן',
+          tenant: State.tenant?.name || 'לידרס',
+          whatsapp_from: this.getWhatsApp(),
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch {}
+  },
+
+  newLead(lead) {
+    return this.trigger('lead.created', {
+      lead_name: lead.name,
+      lead_phone: lead.phone,
+      source: sourceLabel(lead.source),
+      budget: formatMoney(lead.budget_max),
+      area: lead.desired_area || '—',
+      message: `היי ${lead.name.split(' ')[0]}, קיבלתי את פנייתך! אחזור אליך בהקדם. 🏠`,
+    });
+  },
+
+  stageChanged(lead, fromStage, toStage) {
+    const isClosed = toStage?.includes('סגירה') || toStage?.includes('נסגר');
+    return this.trigger(isClosed ? 'deal.closed' : 'lead.stage_changed', {
+      lead_name: lead.name,
+      lead_phone: lead.phone,
+      from_stage: fromStage || '—',
+      to_stage: toStage,
+      message: isClosed
+        ? `מזל טוב ${lead.name.split(' ')[0]}! נשמח לקבל המלצה ❤️`
+        : `עדכון על ${lead.name}: עבר לשלב "${toStage}"`,
+    });
+  },
+
+  taskDone(task, lead) {
+    return this.trigger('task.completed', {
+      task_title: task.title,
+      task_type: task.type,
+      lead_name: lead?.name || '—',
+      lead_phone: lead?.phone || '—',
+    });
+  },
+
+  taskDueToday(task, lead) {
+    return this.trigger('task.due_today', {
+      task_title: task.title,
+      task_type: task.type,
+      lead_name: lead?.name || '—',
+      lead_phone: lead?.phone || '—',
+      message: `תזכורת: ${task.title}${lead ? ' עבור ' + lead.name : ''}`,
+    });
+  },
+
+  coldLead(lead) {
+    const days = lead.last_contact ? Math.abs(diffDays(lead.last_contact)) : 14;
+    return this.trigger('lead.cold', {
+      lead_name: lead.name,
+      lead_phone: lead.phone,
+      days_inactive: days,
+      area: lead.desired_area || '—',
+      budget: formatMoney(lead.budget_max),
+    });
+  },
+
+  async test() {
+    const url = this.getWebhook();
+    if (!url) { toast('הוסף Webhook URL קודם', 'error'); return; }
+    await this.trigger('webhook.test', { message: '✅ בדיקת חיבור מ-Liders CRM עובד!' });
+    toast('✅ Webhook נשלח — בדוק את Make.com', 'success');
+  },
+};
+
+/* ═══════════════════════════════════════════
    APP CONTROLLER
 ═══════════════════════════════════════════ */
 const App = {
@@ -2038,7 +2136,17 @@ const App = {
     try {
       const { data, error } = await DB.signIn(email, password);
       if (error || !data?.user) {
-        toast('שגיאת התחברות: ' + (error?.message || 'נסה שנית'), 'error');
+        const msg = error?.message || '';
+        const hint = msg.includes('confirm') || msg.includes('email')
+          ? 'נא אשר את האימייל שנשלח אליך ואז נסה שוב'
+          : msg.includes('Invalid') || msg.includes('credentials')
+          ? 'סיסמה או אימייל שגויים'
+          : 'שגיאת התחברות — נסה שנית';
+        toast(hint, 'error');
+        return;
+      }
+      if (!data?.session) {
+        toast('נשלח אימייל אישור — אשר ואז התחבר שוב', 'error');
         return;
       }
       // show loading overlay while fetching data
@@ -2747,19 +2855,42 @@ const Settings = {
       </div>
       <div class="settings-section">
         <div class="settings-section-title">חיבורים</div>
-        <div class="settings-row">
-          <div class="settings-row-icon">💬</div>
-          <div class="settings-row-body">
-            <div class="settings-row-label">WhatsApp (Make.com)</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">לא מחובר</div>
+        <div class="settings-row" style="flex-direction:column; align-items:stretch;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="settings-row-icon">💬</div>
+            <div class="settings-row-body" style="flex:1;">
+              <div class="settings-row-label">מספר WhatsApp של הסוכן</div>
+              <div class="settings-row-sub" style="color:${Make.getWhatsApp() ? 'var(--green-600)' : 'var(--orange-500)'};">
+                ${Make.getWhatsApp() ? '✅ ' + Make.getWhatsApp() : 'לא הוגדר'}
+              </div>
+            </div>
           </div>
-          <div class="settings-arrow">›</div>
+          <div class="api-key-row">
+            <input type="tel" id="wa-number-input" placeholder="0501234567" value="${Make.getWhatsApp()}" style="direction:ltr;" />
+            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);">שמור</button>
+          </div>
+        </div>
+        <div class="settings-row" style="flex-direction:column; align-items:stretch;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="settings-row-icon">⚡</div>
+            <div class="settings-row-body" style="flex:1;">
+              <div class="settings-row-label">Make.com Webhook URL</div>
+              <div class="settings-row-sub" style="color:${Make.getWebhook() ? 'var(--green-600)' : 'var(--orange-500)'};">
+                ${Make.getWebhook() ? '✅ מחובר' : 'לא מחובר — הדבק URL מ-Make.com'}
+              </div>
+            </div>
+          </div>
+          <div class="api-key-row">
+            <input type="url" id="make-webhook-input" placeholder="https://hook.eu2.make.com/..." value="${Make.getWebhook()}" style="direction:ltr;" />
+            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('make-webhook-input').value; if(v) Make.setWebhook(v);">שמור</button>
+            ${Make.getWebhook() ? `<button class="btn btn-ghost btn-sm" onclick="Make.test()">בדוק</button>` : ''}
+          </div>
         </div>
         <div class="settings-row">
           <div class="settings-row-icon">📅</div>
           <div class="settings-row-body">
             <div class="settings-row-label">Google Calendar</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">לא מחובר</div>
+            <div class="settings-row-sub" style="color:var(--orange-500);">בקרוב</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -2844,6 +2975,7 @@ async function toggleTask(taskId) {
     return;
   }
   toast(task.done ? '✅ משימה סומנה כבוצעה' : 'משימה נפתחה מחדש', task.done ? 'success' : '');
+  if (task.done) { const lead = State.leads.find(l => l.id === task.lead_id); Make.taskDone(task, lead); }
   App.updateBadges();
   if (State.screen === 'tasks') Tasks.render();
   else if (State.screen === 'dashboard') Dashboard.renderTasks();
@@ -2871,6 +3003,7 @@ async function addLead() {
     document.getElementById('new-lead-area').value = '';
     document.getElementById('new-lead-notes').value = '';
     toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
+    Make.newLead(lead);
     App.updateBadges();
     if (State.screen === 'pipeline') Pipeline.render();
     else if (State.screen === 'leads') Leads.render();
@@ -2943,6 +3076,7 @@ async function moveLead(leadId, stageId) {
     content: `🔄 הועבר מ-"${oldStage?.name}" ל-"${stage.name}"`,
     created_at: today()
   });
+  Make.stageChanged(lead, oldStage?.name, stage.name);
   closeModal('modal-move-stage');
   toast(`🔄 ${lead.name} הועבר ל-${stage.name}`, 'success');
   if (State.screen === 'pipeline') Pipeline.render();
