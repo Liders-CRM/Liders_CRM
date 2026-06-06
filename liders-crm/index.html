@@ -1189,14 +1189,14 @@
         <label class="form-label">סיסמה</label>
         <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="demo1234">
       </div>
-      <button class="btn btn-primary w-full" onclick="App.loginWithEmail()" style="padding:13px; font-size:15px;">
+      <button id="btn-login-email" class="btn btn-primary w-full" onclick="App.loginWithEmail()" style="padding:13px; font-size:15px;">
         כניסה למערכת
       </button>
       <div class="login-trial-badge">
         🎁 30 יום ניסיון חינמי · כולל כל תכונות Basic · ללא כרטיס אשראי
       </div>
       <div class="login-divider">או</div>
-      <button class="btn-google" onclick="App.loginWithGoogle()">
+      <button id="btn-login-google" class="btn-google" onclick="App.loginWithGoogle()">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -1206,7 +1206,7 @@
         התחבר עם Google
       </button>
       <div class="login-divider">או</div>
-      <button class="login-demo-btn" onclick="App.loginDemo()">
+      <button id="btn-login-demo" class="login-demo-btn" onclick="App.loginDemo()">
         ⚡ כניסת דמו — ראה את המערכת מיד
       </button>
     </div>
@@ -3912,11 +3912,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Expose globals for inline onclick handlers (mobile browser compatibility)
-window.App      = App;
-window.DB       = DB;
-window.Voice    = Voice;
+window.App        = App;
+window.DB         = DB;
+window.Voice      = Voice;
 window.Onboarding = Onboarding;
 window.Analytics  = Analytics;
+
+// Attach login button listeners directly (belt-and-suspenders for mobile)
+(function bindLoginButtons() {
+  function tryBind() {
+    const btnEmail = document.getElementById('btn-login-email');
+    const btnDemo  = document.getElementById('btn-login-demo');
+    const btnGoogle= document.getElementById('btn-login-google');
+    if (btnEmail)  btnEmail.addEventListener('touchend', function(e){ e.preventDefault(); App.loginWithEmail(); });
+    if (btnDemo)   btnDemo.addEventListener('touchend',  function(e){ e.preventDefault(); App.loginDemo(); });
+    if (btnGoogle) btnGoogle.addEventListener('touchend', function(e){ e.preventDefault(); App.loginWithGoogle(); });
+    if (btnEmail)  btnEmail.addEventListener('click', function(){ App.loginWithEmail(); });
+    if (btnDemo)   btnDemo.addEventListener('click',  function(){ App.loginDemo(); });
+    if (btnGoogle) btnGoogle.addEventListener('click', function(){ App.loginWithGoogle(); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryBind);
+  else tryBind();
+})();
 </script>
 </body>
 </html>
