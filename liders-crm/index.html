@@ -1797,7 +1797,7 @@ function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
 const SUPABASE_URL = 'https://scyfywvzoogfrlalgftv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDA3MzAsImV4cCI6MjA5NjA3NjczMH0._D8ho0Yj8fEk7nd6-vmkjKkKyjfvHDmSq9Y8h5XzQCM';
 const DEMO_TENANT  = '00000000-0000-0000-0000-000000000001';
-const supabase     = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sbClient     = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const DB = {
   stageMap: {}, // uuid → 's1','s2',...
@@ -1806,27 +1806,27 @@ const DB = {
   agentId: null,
 
   async signIn(email, password) {
-    let { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) ({ data, error } = await supabase.auth.signUp({ email, password }));
+    let { data, error } = await sbClient.auth.signInWithPassword({ email, password });
+    if (error) ({ data, error } = await sbClient.auth.signUp({ email, password }));
     return { data, error };
   },
 
-  async signOut() { await supabase.auth.signOut(); },
+  async signOut() { await sbClient.auth.signOut(); },
 
   async ensureAgent(email, name) {
-    const { data, error } = await supabase.rpc('register_demo_agent',
+    const { data, error } = await sbClient.rpc('register_demo_agent',
       { p_name: name || email.split('@')[0], p_email: email });
     if (!error) this.agentId = data;
   },
 
   async loadAll() {
     const [stagesR, leadsR, tasksR, propsR, actsR, tenantR] = await Promise.all([
-      supabase.from('pipeline_stages').select('*').eq('tenant_id', this.tenantId).order('order_idx'),
-      supabase.from('leads').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }),
-      supabase.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
-      supabase.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
-      supabase.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
-      supabase.from('tenants').select('id,name,slug,plan,trial_ends_at,billing_email,stripe_customer_id,stripe_subscription_id').eq('id', this.tenantId).single(),
+      sbClient.from('pipeline_stages').select('*').eq('tenant_id', this.tenantId).order('order_idx'),
+      sbClient.from('leads').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }),
+      sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
+      sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
+      sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
+      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,billing_email,stripe_customer_id,stripe_subscription_id').eq('id', this.tenantId).single(),
     ]);
     this.stageMap = {};
     this.stageRev = {};
@@ -1871,7 +1871,7 @@ const DB = {
   },
 
   async addLead(lead) {
-    const { data, error } = await supabase.from('leads').insert({
+    const { data, error } = await sbClient.from('leads').insert({
       tenant_id: this.tenantId, agent_id: this.agentId,
       name: lead.name, phone: lead.phone,
       source: lead.source || 'other',
@@ -1893,7 +1893,7 @@ const DB = {
   },
 
   async addTask(task) {
-    const { data, error } = await supabase.from('tasks').insert({
+    const { data, error } = await sbClient.from('tasks').insert({
       tenant_id: this.tenantId, agent_id: this.agentId,
       lead_id: task.lead_id || null, title: task.title,
       type: task.type || 'other', priority: task.priority || 'medium',
@@ -1913,12 +1913,12 @@ const DB = {
       patch.done = updates.done;
       if (updates.done) patch.done_at = new Date().toISOString();
     }
-    const { error } = await supabase.from('tasks').update(patch).eq('id', id);
+    const { error } = await sbClient.from('tasks').update(patch).eq('id', id);
     if (error) throw error;
   },
 
   async addActivity(act) {
-    const { data, error } = await supabase.from('activities').insert({
+    const { data, error } = await sbClient.from('activities').insert({
       tenant_id: this.tenantId, agent_id: this.agentId,
       lead_id: act.lead_id || null,
       type: act.type || 'note', content: act.content,
@@ -1931,7 +1931,7 @@ const DB = {
   },
 
   async addProperty(prop) {
-    const { data, error } = await supabase.from('properties').insert({
+    const { data, error } = await sbClient.from('properties').insert({
       tenant_id: this.tenantId,
       title: prop.title,
       type: prop.type || 'apartment',
@@ -1957,7 +1957,7 @@ const DB = {
   async moveLead(leadId, shortStageId) {
     const uuid = this.stageRev[shortStageId];
     if (!uuid) return;
-    const { error } = await supabase.from('leads')
+    const { error } = await sbClient.from('leads')
       .update({ pipeline_stage_id: uuid }).eq('id', leadId);
     if (error) throw error;
   },
@@ -2668,7 +2668,7 @@ const App = {
   async loginWithGoogle() {
     const btn = document.querySelector('.btn-google');
     if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error } = await sbClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.href },
     });
@@ -3899,7 +3899,7 @@ document.getElementById('new-task-due').value = addDays(1);
 ═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   // Handle Google OAuth redirect — if user returns from Google login
-  supabase.auth.onAuthStateChange(async (event, session) => {
+  sbClient.auth.onAuthStateChange(async (event, session) => {
     if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
       const loginScreen = document.getElementById('screen-login');
       if (!loginScreen.classList.contains('hidden')) {
