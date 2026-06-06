@@ -1157,6 +1157,23 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script>
+    // Error catcher — runs before main script so syntax/runtime errors in main script are visible
+    window.onerror = function(msg, src, line) {
+      var el = document.getElementById('js-error-banner');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'js-error-banner';
+        el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#c00;color:#fff;padding:14px;font-size:13px;direction:ltr;word-break:break-all;';
+        (document.body || document.documentElement).appendChild(el);
+      }
+      el.textContent = 'JS ERROR line ' + line + ': ' + msg;
+      return false;
+    };
+    window.addEventListener('unhandledrejection', function(e) {
+      window.onerror('Unhandled Promise: ' + (e.reason?.message || e.reason), '', 0);
+    });
+  </script>
 </head>
 <body>
 
@@ -1183,20 +1200,22 @@
     <div class="login-form">
       <div class="form-group">
         <label class="form-label">אימייל</label>
-        <input type="email" id="login-email" class="form-input" placeholder="israel@liders.co.il" value="demo@liders.co.il">
+        <input type="email" id="login-email" class="form-input" placeholder="israel@liders.co.il"
+               autocomplete="username">
       </div>
       <div class="form-group">
         <label class="form-label">סיסמה</label>
-        <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="demo1234">
+        <input type="password" id="login-password" class="form-input" placeholder="••••••••"
+               autocomplete="current-password">
       </div>
-      <button id="btn-login-email" class="btn btn-primary w-full" onclick="App.loginWithEmail()" style="padding:13px; font-size:15px;">
+      <button id="btn-login-email" type="button" class="btn btn-primary w-full" style="padding:13px; font-size:15px; touch-action:manipulation;">
         כניסה למערכת
       </button>
       <div class="login-trial-badge">
         🎁 30 יום ניסיון חינמי · כולל כל תכונות Basic · ללא כרטיס אשראי
       </div>
       <div class="login-divider">או</div>
-      <button id="btn-login-google" class="btn-google" onclick="App.loginWithGoogle()">
+      <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation;">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -1206,7 +1225,7 @@
         התחבר עם Google
       </button>
       <div class="login-divider">או</div>
-      <button id="btn-login-demo" class="login-demo-btn" onclick="App.loginDemo()">
+      <button id="btn-login-demo" type="button" class="login-demo-btn" style="touch-action:manipulation;">
         ⚡ כניסת דמו — ראה את המערכת מיד
       </button>
     </div>
@@ -1717,19 +1736,6 @@
 
 
 <script>
-// Global error handler — shows errors visually on mobile
-window.onerror = function(msg, src, line) {
-  var el = document.getElementById('js-error-banner');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'js-error-banner';
-    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:12px;font-size:13px;direction:ltr;word-break:break-all;';
-    document.body.appendChild(el);
-  }
-  el.textContent = 'JS ERROR line ' + line + ': ' + msg;
-  return false;
-};
-
 /* ═══════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════ */
@@ -2652,8 +2658,12 @@ const App = {
     await this._authAndEnter(email, password);
   },
   async loginDemo() {
-    document.getElementById('btn-login-demo').textContent = '⏳ מתחבר...';
+    const btn = document.getElementById('btn-login-demo');
+    if (btn) { btn.textContent = '⏳ מתחבר...'; btn.disabled = true; }
+    document.getElementById('login-email').value = 'demo@liders.co.il';
+    document.getElementById('login-password').value = 'demo1234';
     await this._authAndEnter('demo@liders.co.il', 'demo1234');
+    if (btn) { btn.disabled = false; btn.textContent = '⚡ כניסת דמו — ראה את המערכת מיד'; }
   },
   async loginWithGoogle() {
     const btn = document.querySelector('.btn-google');
@@ -3932,21 +3942,20 @@ window.Voice      = Voice;
 window.Onboarding = Onboarding;
 window.Analytics  = Analytics;
 
-// Attach login button listeners directly (belt-and-suspenders for mobile)
+// Bind login buttons — uses both click and pointerdown for maximum mobile compatibility
 (function bindLoginButtons() {
-  function tryBind() {
-    const btnEmail = document.getElementById('btn-login-email');
-    const btnDemo  = document.getElementById('btn-login-demo');
-    const btnGoogle= document.getElementById('btn-login-google');
-    if (btnEmail)  btnEmail.addEventListener('touchend', function(e){ e.preventDefault(); App.loginWithEmail(); });
-    if (btnDemo)   btnDemo.addEventListener('touchend',  function(e){ e.preventDefault(); App.loginDemo(); });
-    if (btnGoogle) btnGoogle.addEventListener('touchend', function(e){ e.preventDefault(); App.loginWithGoogle(); });
-    if (btnEmail)  btnEmail.addEventListener('click', function(){ App.loginWithEmail(); });
-    if (btnDemo)   btnDemo.addEventListener('click',  function(){ App.loginDemo(); });
-    if (btnGoogle) btnGoogle.addEventListener('click', function(){ App.loginWithGoogle(); });
+  function bind(id, handler) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      handler();
+    });
+    el.addEventListener('click', handler);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryBind);
-  else tryBind();
+  bind('btn-login-email',  function(){ App.loginWithEmail(); });
+  bind('btn-login-demo',   function(){ App.loginDemo(); });
+  bind('btn-login-google', function(){ App.loginWithGoogle(); });
 })();
 </script>
 </body>
