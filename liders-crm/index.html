@@ -1717,6 +1717,19 @@
 
 
 <script>
+// Global error handler — shows errors visually on mobile
+window.onerror = function(msg, src, line) {
+  var el = document.getElementById('js-error-banner');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'js-error-banner';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:12px;font-size:13px;direction:ltr;word-break:break-all;';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'JS ERROR line ' + line + ': ' + msg;
+  return false;
+};
+
 /* ═══════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════ */
@@ -2639,6 +2652,7 @@ const App = {
     await this._authAndEnter(email, password);
   },
   async loginDemo() {
+    document.getElementById('btn-login-demo').textContent = '⏳ מתחבר...';
     await this._authAndEnter('demo@liders.co.il', 'demo1234');
   },
   async loginWithGoogle() {
