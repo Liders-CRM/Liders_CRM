@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0F2B4A">
-  <title>Liders CRM</title>
+  <title>Liders — הפלטפורמה שהופכת לידים לעסקאות</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -1219,7 +1219,7 @@
   <div class="login-card">
     <div class="login-logo">
       <div class="login-logo-text">Liders<span>.</span></div>
-      <div class="login-tagline">המכונה שמייצרת כסף 💰</div>
+      <div class="login-tagline">הפלטפורמה שהופכת לידים לעסקאות</div>
       <div class="login-sub">
         <span>✅ ניהול לידים</span>
         <span>⚡ סגירת עסקאות</span>
@@ -1812,7 +1812,7 @@
         <div id="ob-step-indicator" style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
           <!-- step dots rendered by JS -->
         </div>
-        <h2 id="ob-title" style="margin:0;font-size:1.4rem;">ברוך הבא ל-Liders CRM 🎉</h2>
+        <h2 id="ob-title" style="margin:0;font-size:1.4rem;">ברוך הבא ל-Liders 🎉</h2>
         <p id="ob-subtitle" style="color:var(--gray-500);margin-top:6px;font-size:0.9rem;"></p>
       </div>
     </div>
@@ -2562,7 +2562,7 @@ const Onboarding = {
       if (this._data.agencyPhone) localStorage.setItem('liders_agency_phone', this._data.agencyPhone);
       if (this._data.agencyCity) localStorage.setItem('liders_agency_city', this._data.agencyCity);
       document.getElementById('modal-onboarding').classList.add('hidden');
-      toast('🎉 ברוך הבא ל-Liders CRM!', 'success');
+      toast('🎉 ברוך הבא ל-Liders!', 'success');
       return;
     }
     this._step++;
@@ -2802,7 +2802,7 @@ const Make = {
   async test() {
     const url = this.getWebhook();
     if (!url) { toast('הוסף Webhook URL קודם', 'error'); return; }
-    await this.trigger('webhook.test', { message: '✅ בדיקת חיבור מ-Liders CRM עובד!' });
+    await this.trigger('webhook.test', { message: '✅ בדיקת חיבור מ-Liders עובד!' });
     toast('✅ Webhook נשלח — בדוק את Make.com', 'success');
   },
 };
@@ -3751,7 +3751,7 @@ const Analytics = {
 
   exportPDF() {
     const orig = document.title;
-    document.title = 'Liders CRM — דוח אנליטיקה ' + new Date().toLocaleDateString('he-IL');
+    document.title = 'Liders — דוח אנליטיקה ' + new Date().toLocaleDateString('he-IL');
     window.print();
     document.title = orig;
   },
