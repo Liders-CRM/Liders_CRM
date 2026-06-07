@@ -2706,6 +2706,16 @@ const Make = {
     if (State.screen === 'settings') Settings.render();
   },
 
+  EVENT_LABELS: {
+    'lead.created':       '🆕 ליד חדש',
+    'lead.stage_changed': '🔄 ליד עבר שלב',
+    'deal.closed':        '🎉 עסקה נסגרה',
+    'task.completed':     '✅ משימה הושלמה',
+    'task.due_today':     '⏰ תזכורת למשימה',
+    'lead.cold':          '⚠️ ליד התקרר',
+    'webhook.test':       '🔔 בדיקת חיבור',
+  },
+
   async trigger(event, payload) {
     const url = this.getWebhook();
     if (!url) return;
@@ -2715,6 +2725,7 @@ const Make = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           event,
+          event_label: this.EVENT_LABELS[event] || ('🔔 ' + event),
           ...payload,
           agent_name: State.agent?.name || 'סוכן',
           tenant: State.tenant?.name || 'לידרס',
@@ -2755,6 +2766,7 @@ const Make = {
       task_type: task.type,
       lead_name: lead?.name || '—',
       lead_phone: lead?.phone || '—',
+      message: `✅ משימה הושלמה: ${task.title}${lead ? ' (ליד: ' + lead.name + ')' : ''}`,
     });
   },
 
@@ -2776,6 +2788,7 @@ const Make = {
       days_inactive: days,
       area: lead.desired_area || '—',
       budget: formatMoney(lead.budget_max),
+      message: `⚠️ ליד "התקרר" — ${lead.name} ללא קשר כבר ${days} ימים. אזור: ${lead.desired_area || '—'}, תקציב: ${formatMoney(lead.budget_max)}`,
     });
   },
 
