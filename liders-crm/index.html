@@ -789,6 +789,27 @@
     .loader-text { font-size: 14px; color: var(--navy-100); font-weight: 500; letter-spacing: 0.5px; }
 
     /* ═══════════════════════════════════════
+       PRIVACY SHIELD — blurs content when the
+       window/tab loses focus (protects client
+       PII from over-the-shoulder glances)
+    ═══════════════════════════════════════ */
+    #privacy-shield {
+      position: fixed; inset: 0; z-index: 10000;
+      background: linear-gradient(145deg, rgba(6,15,28,0.96) 0%, rgba(15,36,64,0.96) 60%, rgba(28,62,107,0.94) 100%);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      text-align: center; padding: 32px;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    #privacy-shield.active { opacity: 1; visibility: visible; pointer-events: all; }
+    #privacy-shield .shield-icon { font-size: 38px; line-height: 1; }
+    #privacy-shield .shield-logo { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1.5px; line-height: 1; }
+    #privacy-shield .shield-logo span { color: var(--gold-500); }
+    #privacy-shield .shield-msg { font-size: 15px; font-weight: 700; color: #fff; max-width: 320px; line-height: 1.6; }
+    #privacy-shield .shield-sub { font-size: 13px; color: var(--navy-200); max-width: 290px; line-height: 1.6; }
+
+    /* ═══════════════════════════════════════
        LOGIN ENHANCEMENTS
     ═══════════════════════════════════════ */
     #screen-login::before {
@@ -1210,6 +1231,16 @@
     <span></span><span></span><span></span>
   </div>
   <div class="loader-text">טוען נתונים...</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PRIVACY SHIELD
+═══════════════════════════════════════ -->
+<div id="privacy-shield" dir="rtl">
+  <div class="shield-icon">🔒</div>
+  <div class="shield-logo">Liders<span>.</span></div>
+  <div class="shield-msg">התצוגה מוסתרת זמנית להגנה על פרטיות הנתונים שלך ושל הלקוחות שלך</div>
+  <div class="shield-sub">המסך יחזור להופיע ברגע שתחזרו לחלון הזה</div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -4245,6 +4276,36 @@ window.Analytics  = Analytics;
   bind('btn-login-email',  function(){ App.loginWithEmail(); });
   bind('btn-login-demo',   function(){ App.loginDemo(); });
   bind('btn-login-google', function(){ App.loginWithGoogle(); });
+})();
+
+// Privacy shield — blurs the screen when the window/tab loses focus,
+// so leads' phone numbers, budgets and addresses aren't exposed to a glance.
+// Only arms once the user is logged into the app (not on the login screen).
+(function privacyShield() {
+  const shield = document.getElementById('privacy-shield');
+  if (!shield) return;
+  let active = false;
+
+  function isInApp() {
+    const shell = document.getElementById('app-shell');
+    return !!shell && !shell.classList.contains('hidden');
+  }
+  function show() {
+    if (active || !isInApp()) return;
+    active = true;
+    shield.classList.add('active');
+  }
+  function hide() {
+    if (!active) return;
+    active = false;
+    shield.classList.remove('active');
+  }
+
+  window.addEventListener('blur', show);
+  window.addEventListener('focus', hide);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) show(); else hide();
+  });
 })();
 </script>
 </body>
