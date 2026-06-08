@@ -3189,6 +3189,22 @@ const App = {
   },
   async logout() {
     await DB.signOut();
+    // Wipe per-tenant state so a different account signing in on this same
+    // browser/device can never see (or be shown alongside) the previous
+    // tenant's leads, tasks, properties, activities, stages, agent or tenant info.
+    State.leads       = [...DEMO.leads];
+    State.properties  = [...DEMO.properties];
+    State.tasks       = [...DEMO.tasks];
+    State.activities  = [...DEMO.activities];
+    State.stages      = [...DEMO.stages];
+    State.agent       = { ...DEMO.agent };
+    State.tenant      = { ...DEMO.tenant };
+    State.isNewTenant = false;
+    State.currentLeadId = null;
+    DB.tenantId = DEMO_TENANT;
+    DB.agentId  = null;
+    DB.stageMap = {};
+    DB.stageRev = {};
     document.getElementById('app-shell').classList.add('hidden');
     document.getElementById('screen-login').classList.remove('hidden');
   },
