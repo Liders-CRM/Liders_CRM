@@ -4306,7 +4306,7 @@ document.getElementById('new-task-due').value = addDays(1);
 document.addEventListener('DOMContentLoaded', () => {
   // Handle Google OAuth redirect — if user returns from Google login
   sbClient.auth.onAuthStateChange(async (event, session) => {
-    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
+    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
       const loginScreen = document.getElementById('screen-login');
       if (!loginScreen.classList.contains('hidden')) {
         // User just signed in via OAuth redirect
