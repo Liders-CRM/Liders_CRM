@@ -2620,7 +2620,7 @@ const Onboarding = {
               ${stages.map((s, i) => `
                 <div style="display:flex;align-items:center;gap:10px;background:var(--bg-app);border-radius:8px;padding:10px 12px;">
                   <span style="background:var(--navy-500);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;">${i+1}</span>
-                  <span>${s.name}</span>
+                  <span>${escapeHtml(s.name)}</span>
                 </div>
               `).join('')}
             </div>
@@ -3345,8 +3345,8 @@ const Dashboard = {
         <div class="activity-item">
           <div class="activity-icon">${typeEmoji(a.type)}</div>
           <div>
-            <div class="activity-text">${a.content}</div>
-            <div class="activity-sub">${lead ? lead.name + ' · ' : ''}${formatRelDate(a.created_at)}</div>
+            <div class="activity-text">${escapeHtml(a.content)}</div>
+            <div class="activity-sub">${lead ? escapeHtml(lead.name) + ' · ' : ''}${formatRelDate(a.created_at)}</div>
           </div>
         </div>
       `;
@@ -3366,8 +3366,8 @@ const Dashboard = {
     el.innerHTML = cold.map(l => `
       <div class="cold-lead-row" onclick="App.go('lead-detail',{currentLeadId:'${l.id}'})">
         <div style="flex:1;">
-          <div style="font-weight:700;font-size:14px;">${l.name}</div>
-          <div style="font-size:12px;color:var(--gray-500);">${l.desired_area || '—'} · ${formatMoney(l.budget_max)}</div>
+          <div style="font-weight:700;font-size:14px;">${escapeHtml(l.name)}</div>
+          <div style="font-size:12px;color:var(--gray-500);">${escapeHtml(l.desired_area || '—')} · ${formatMoney(l.budget_max)}</div>
         </div>
         <div class="cold-badge">❄️ ${l.last_contact ? Math.abs(diffDays(l.last_contact)) : '14+'} ימים</div>
       </div>
@@ -3406,7 +3406,8 @@ const Dashboard = {
         el.innerHTML = `<div style="color:var(--gray-400);font-size:13px;padding:8px;">לא הצלחתי להכין תדרוך כרגע. נסה שוב מאוחר יותר.</div>`;
         return;
       }
-      const html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      const safe = escapeHtml(text);
+      const html = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
       this._briefingCache = { date: today(), html };
       el.innerHTML = `
         <div class="ai-card-body">${html}</div>
@@ -3434,7 +3435,7 @@ const Pipeline = {
         <div class="kanban-col" style="--col-clr:${stage.color}">
           <div class="kanban-col-header">
             <div class="kanban-stage-dot" style="background:${stage.color}"></div>
-            <div class="kanban-stage-name" style="color:${stage.color}">${stage.name}</div>
+            <div class="kanban-stage-name" style="color:${stage.color}">${escapeHtml(stage.name)}</div>
             <div class="kanban-count">${leads.length}</div>
           </div>
           ${totalVal ? `<div class="kanban-value">${formatMoney(totalVal)}</div>` : ''}
@@ -3457,14 +3458,14 @@ const Pipeline = {
         <div style="display:flex; align-items:flex-start; gap:8px;">
           <div class="lead-card-avatar">${initials}</div>
           <div style="flex:1; min-width:0;">
-            <div class="lead-card-name truncate">${lead.name}</div>
-            <div class="lead-card-meta truncate">${lead.desired_area || '—'} · ${lead.rooms || '?'} חד׳</div>
+            <div class="lead-card-name truncate">${escapeHtml(lead.name)}</div>
+            <div class="lead-card-meta truncate">${escapeHtml(lead.desired_area || '—')} · ${lead.rooms || '?'} חד׳</div>
             <div class="lead-card-meta">${formatMoney(lead.budget_min)}–${formatMoney(lead.budget_max)}</div>
           </div>
           <div class="score-badge ${scoreClass(lead.score)}">${lead.score}</div>
         </div>
         <div class="lead-card-footer" style="margin-top:8px;">
-          <span class="badge badge-${lead.source}">${sourceLabel(lead.source)}</span>
+          <span class="badge badge-${lead.source}">${escapeHtml(sourceLabel(lead.source))}</span>
           ${task ? `<span style="font-size:11px; color:${isOverdue?'var(--red-600)':isToday?'var(--orange-500)':'var(--gray-400)'}; font-weight:600;">
             ${typeEmoji(task.type)} ${formatRelDate(task.due)}
           </span>` : ''}
@@ -3517,11 +3518,11 @@ const Leads = {
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
         <div class="score-badge ${scoreClass(lead.score)}" style="width:40px;height:40px;font-size:13px;">${lead.score}</div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; font-size:15px;">${lead.name}</div>
-          <div style="font-size:12px; color:var(--gray-500);">${lead.phone} · ${lead.desired_area||'—'}</div>
+          <div style="font-weight:700; font-size:15px;">${escapeHtml(lead.name)}</div>
+          <div style="font-size:12px; color:var(--gray-500);">${escapeHtml(lead.phone)} · ${escapeHtml(lead.desired_area||'—')}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-          <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:${stage?.color+'22'};color:${stage?.color};">${stage?.name||'—'}</span>
+          <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:${stage?.color+'22'};color:${stage?.color};">${escapeHtml(stage?.name||'—')}</span>
           ${task?`<span style="font-size:11px;color:${diffDays(task.due)<0?'var(--red-600)':'var(--gray-400)'};">${typeEmoji(task.type)} ${formatRelDate(task.due)}</span>`:''}
         </div>
       </div>
@@ -3546,17 +3547,17 @@ const LeadDetail = {
       <div class="lead-detail-header">
         <button class="back-btn" onclick="history.back()">← חזרה</button>
         <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div class="lead-detail-name">${lead.name}</div>
+          <div class="lead-detail-name">${escapeHtml(lead.name)}</div>
           <div class="score-badge ${scoreClass(lead.score)}" style="width:44px;height:44px;font-size:15px;">${lead.score}</div>
         </div>
-        <div style="font-size:13px; color:var(--navy-200); margin-top:4px;">${lead.phone}${lead.email ? ' · ' + lead.email : ''}</div>
+        <div style="font-size:13px; color:var(--navy-200); margin-top:4px;">${escapeHtml(lead.phone)}${lead.email ? ' · ' + escapeHtml(lead.email) : ''}</div>
         <div style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
-          <span class="badge badge-${lead.source}">${sourceLabel(lead.source)}</span>
-          <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${stage?.color+'33'};color:white;">${stage?.name||'—'}</span>
+          <span class="badge badge-${lead.source}">${escapeHtml(sourceLabel(lead.source))}</span>
+          <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${stage?.color+'33'};color:white;">${escapeHtml(stage?.name||'—')}</span>
         </div>
         <div class="lead-detail-actions">
-          <button class="lead-action-btn" onclick="window.open('tel:${lead.phone}')">📞 שיחה</button>
-          <button class="lead-action-btn" onclick="window.open('https://wa.me/972${lead.phone.replace(/^0/,'').replace(/-/g,'')}')">💬 ווצאפ</button>
+          <button class="lead-action-btn" data-phone="${escapeHtml(lead.phone)}" onclick="window.open('tel:'+this.dataset.phone)">📞 שיחה</button>
+          <button class="lead-action-btn" data-phone="${escapeHtml(lead.phone)}" onclick="window.open('https://wa.me/972'+this.dataset.phone.replace(/^0/,'').replace(/-/g,''))">💬 ווצאפ</button>
           <button class="lead-action-btn" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
           <button class="lead-action-btn" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
           <button class="lead-action-btn" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
@@ -3576,13 +3577,13 @@ const LeadDetail = {
           <div class="info-grid">
             <div class="info-item"><div class="info-label">תקציב</div><div class="info-value">${formatMoney(lead.budget_min)} – ${formatMoney(lead.budget_max)}</div></div>
             <div class="info-item"><div class="info-label">חדרים</div><div class="info-value">${lead.rooms||'—'}</div></div>
-            <div class="info-item"><div class="info-label">אזור מבוקש</div><div class="info-value">${lead.desired_area||'—'}</div></div>
-            <div class="info-item"><div class="info-label">מקור</div><div class="info-value">${sourceLabel(lead.source)}</div></div>
+            <div class="info-item"><div class="info-label">אזור מבוקש</div><div class="info-value">${escapeHtml(lead.desired_area||'—')}</div></div>
+            <div class="info-item"><div class="info-label">מקור</div><div class="info-value">${escapeHtml(sourceLabel(lead.source))}</div></div>
             <div class="info-item"><div class="info-label">קשר אחרון</div><div class="info-value">${formatRelDate(lead.last_contact)||'—'}</div></div>
             <div class="info-item"><div class="info-label">follow-up</div><div class="info-value ${diffDays(lead.next_followup)<0?'':''}">
               ${lead.next_followup ? formatRelDate(lead.next_followup) : '—'}</div></div>
           </div>
-          ${lead.notes ? `<div style="background:var(--gray-50);border-radius:var(--radius-md);padding:12px;font-size:14px;color:var(--gray-700);">${lead.notes}</div>` : ''}
+          ${lead.notes ? `<div style="background:var(--gray-50);border-radius:var(--radius-md);padding:12px;font-size:14px;color:var(--gray-700);">${escapeHtml(lead.notes)}</div>` : ''}
           <div style="margin-top:16px;">
             <div style="font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:8px;">שנה שלב:</div>
             <div class="stage-pills">
@@ -3590,7 +3591,7 @@ const LeadDetail = {
                 <div class="stage-pill ${s.id===lead.stage?'active':''}"
                      style="${s.id===lead.stage?'background:'+s.color+';border-color:'+s.color:''}"
                      onclick="moveLead('${lead.id}','${s.id}')">
-                  ${s.name}
+                  ${escapeHtml(s.name)}
                 </div>
               `).join('')}
             </div>
@@ -3614,7 +3615,7 @@ const LeadDetail = {
               <div class="timeline-item">
                 <div class="timeline-icon">${typeEmoji(a.type)}</div>
                 <div class="timeline-body">
-                  <div class="timeline-text">${a.content}</div>
+                  <div class="timeline-text">${escapeHtml(a.content)}</div>
                   <div class="timeline-time">${formatRelDate(a.created_at)}</div>
                 </div>
               </div>
@@ -3740,7 +3741,7 @@ const LeadDetail = {
       document.getElementById('ai-followup-result').innerHTML = `
         <div class="ai-card">
           <div class="ai-card-title">💬 הודעת WhatsApp</div>
-          <div class="ai-message-box">${text}</div>
+          <div class="ai-message-box">${escapeHtml(text)}</div>
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-followup-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
@@ -3757,7 +3758,7 @@ const LeadDetail = {
       document.getElementById('ai-rescue-result').innerHTML = `
         <div class="ai-card">
           <div class="ai-card-title">❄️ הודעת החייאה</div>
-          <div class="ai-message-box">${text}</div>
+          <div class="ai-message-box">${escapeHtml(text)}</div>
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-rescue-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
@@ -3771,7 +3772,7 @@ const LeadDetail = {
       const lead = State.leads.find(l => l.id === State.currentLeadId);
       const text = await AI.getDealAdvice(lead);
       if (!text) { document.getElementById('ai-advice-result').classList.add('hidden'); return; }
-      const html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      const html = escapeHtml(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
       document.getElementById('ai-advice-result').innerHTML = `
         <div class="ai-card">
           <div class="ai-card-title">🧠 המלצת יועץ</div>
@@ -3863,11 +3864,11 @@ function renderTaskItem(task) {
         ${task.done ? '✓' : ''}
       </div>
       <div class="task-body">
-        <div class="task-title">${typeEmoji(task.type)} ${task.title}</div>
+        <div class="task-title">${typeEmoji(task.type)} ${escapeHtml(task.title)}</div>
         <div class="task-meta">
-          ${lead ? `<span onclick="App.go('lead-detail',{currentLeadId:'${lead.id}'})" style="cursor:pointer;color:var(--navy-400);">${lead.name}</span>` : ''}
+          ${lead ? `<span onclick="App.go('lead-detail',{currentLeadId:'${lead.id}'})" style="cursor:pointer;color:var(--navy-400);">${escapeHtml(lead.name)}</span>` : ''}
           <span class="${isOverdue?'task-due-overdue':isToday?'task-due-today':''}">${formatRelDate(task.due)}</span>
-          <span style="opacity:0.6">${priorityLabel(task.priority)}</span>
+          <span style="opacity:0.6">${escapeHtml(priorityLabel(task.priority))}</span>
         </div>
       </div>
     </div>
@@ -4566,7 +4567,7 @@ function openMoveStage(leadId) {
                 font-weight:600; color:${s.id===lead?.stage?s.color:'var(--gray-700)'};
                 display:flex; align-items:center; gap:8px;">
       <div style="width:10px;height:10px;border-radius:50%;background:${s.color};"></div>
-      ${s.name}
+      ${escapeHtml(s.name)}
       ${s.id===lead?.stage?' (נוכחי)':''}
     </div>
   `).join('');
