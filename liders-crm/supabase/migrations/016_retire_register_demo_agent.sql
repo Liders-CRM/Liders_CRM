@@ -1,0 +1,40 @@
+-- Liders CRM — Migration 016: Retire register_demo_agent()
+--
+-- security-adversary review of migrations 014/015 found a real, live attack
+-- surface: register_demo_agent() (migrations 010/013) is fully superseded by
+-- ensure_agent_and_tenant() (migration 014, the only function index.html
+-- calls now — verified zero references remain in the client) but was NEVER
+-- revoked from `authenticated`. Any signed-in user can still invoke it
+-- directly (browser console / raw RPC POST), and it collides badly with the
+-- new self-provisioning flow because the two functions key their idempotency
+-- differently:
+--
+--   - register_demo_agent INSERTs into agent_users keyed on
+--     (tenant_id, email) with ON CONFLICT ... DO UPDATE, always targeting
+--     the single shared DEMO_TENANT (hardcoded '00000000-...-000000000001').
+--   - ensure_agent_and_tenant (migration 014) + the new partial unique index
+--     agent_users_auth_user_id_unique (migration 015) key idempotency on
+--     auth_user_id, scoped to the caller's OWN freshly-created tenant.
+--
+-- Two concrete failure modes follow for any brand-new identity that calls
+-- register_demo_agent first (e.g. a stale cached bundle, or just typing the
+-- RPC name into devtools out of curiosity):
+--   1. They silently land in the shared DEMO_TENANT — exactly the bug
+--      migration 014 exists to eliminate (shared data, meaningless trial
+--      clock) — reintroduced through a back door ensure_agent_and_tenant's
+--      own idempotent fast path then happily honors (is_new=false, no error).
+--   2. If ensure_agent_and_tenant ran first and gave them their own tenant,
+--      register_demo_agent's INSERT then collides with
+--      agent_users_auth_user_id_unique — which it has NO exception handler
+--      for — surfacing a raw "duplicate key value violates unique
+--      constraint ..." Postgres error straight to the client.
+--
+-- Fix: revoke EXECUTE from `authenticated` (and PUBLIC/anon, which migration
+-- 013 already covered, kept here for completeness/defense-in-depth). The
+-- function is left in place — not dropped — purely as a historical/audit
+-- record of the hardening work in migrations 010/013; service_role keeps
+-- access for any future admin-side demo-seeding need.
+-- ─────────────────────────────────────────────
+REVOKE EXECUTE ON FUNCTION public.register_demo_agent(text, text) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.register_demo_agent(text, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.register_demo_agent(text, text) FROM authenticated;
