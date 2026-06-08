@@ -2057,7 +2057,7 @@ const DB = {
       sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
-      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,billing_email,stripe_customer_id,stripe_subscription_id').eq('id', this.tenantId).single(),
+      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at').eq('id', this.tenantId).single(),
     ]);
     this.stageMap = {};
     this.stageRev = {};
@@ -2589,7 +2589,7 @@ const Onboarding = {
         return `
           <div style="padding:8px 0;">
             <label class="form-label">שם העסק *</label>
-            <input class="form-input" id="ob-agency-name" placeholder='${placeholder}' value="${val}" style="font-size:1.1rem;">
+            <input class="form-input" id="ob-agency-name" placeholder='${placeholder}' value="${escapeHtml(val)}" style="font-size:1.1rem;">
             <label class="form-label" style="margin-top:16px;">טלפון ראשי (אופציונלי)</label>
             <input class="form-input" id="ob-agency-phone" placeholder="050-0000000" type="tel">
             <label class="form-label" style="margin-top:16px;">עיר / אזור עיקרי</label>
@@ -3144,9 +3144,7 @@ const App = {
       State.agent  = { name: user.email.split('@')[0], email: user.email, initials: user.email[0].toUpperCase(), role: 'סוכן' };
       const t = loaded.tenant;
       State.tenant = t
-        ? { name: t.name, slug: t.slug, plan: t.plan,
-            trial_ends_at: t.trial_ends_at, billing_email: t.billing_email,
-            stripe_customer_id: t.stripe_customer_id, stripe_subscription_id: t.stripe_subscription_id }
+        ? { name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at }
         : { name: 'לידרס נדל"ן — תל אביב', plan: 'trial' };
       State.isNewTenant = isNew;
       this._showApp();
@@ -4064,7 +4062,7 @@ const Settings = {
         <div class="settings-row">
           <div class="settings-row-icon">🏢</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">${State.tenant?.name || 'לידרס נדל"ן'}</div>
+            <div class="settings-row-label">${escapeHtml(State.tenant?.name || 'לידרס נדל"ן')}</div>
             <div class="settings-row-sub">
               <span style="background:${Billing.planLabel().bg};color:${Billing.planLabel().color};padding:2px 8px;border-radius:99px;font-weight:700;font-size:11px;">
                 ${Billing.planLabel().text}
@@ -4721,9 +4719,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
           State.agent  = { name, email: session.user.email, initials: name[0].toUpperCase(), role: 'סוכן' };
           const t = loaded.tenant;
           State.tenant = t
-            ? { name: t.name, slug: t.slug, plan: t.plan,
-                trial_ends_at: t.trial_ends_at, billing_email: t.billing_email,
-                stripe_customer_id: t.stripe_customer_id, stripe_subscription_id: t.stripe_subscription_id }
+            ? { name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at }
             : { name: 'לידרס נדל"ן', plan: 'trial' };
           State.isNewTenant = isNew;
           App._showApp();
