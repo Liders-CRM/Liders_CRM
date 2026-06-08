@@ -3201,6 +3201,7 @@ const App = {
     State.tenant      = { ...DEMO.tenant };
     State.isNewTenant = false;
     State.currentLeadId = null;
+    Dashboard._briefingCache = null;
     DB.tenantId = DEMO_TENANT;
     DB.agentId  = null;
     DB.stageMap = {};
@@ -3415,7 +3416,7 @@ const Dashboard = {
       `;
     } catch(e) {
       el.innerHTML = `
-        <div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>
+        <div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>
         <button class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="Dashboard.runAIBriefing(true)">נסה שוב</button>
       `;
     }
@@ -3728,7 +3729,7 @@ const LeadDetail = {
         b.className = 'score-badge ' + scoreClass(lead.score);
       });
     } catch(e) {
-      document.getElementById('ai-score-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+      document.getElementById('ai-score-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
     }
   },
 
@@ -3745,7 +3746,7 @@ const LeadDetail = {
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-followup-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-followup-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+      document.getElementById('ai-followup-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
     }
   },
 
@@ -3762,7 +3763,7 @@ const LeadDetail = {
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-rescue-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-rescue-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+      document.getElementById('ai-rescue-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
     }
   },
 
@@ -3779,7 +3780,7 @@ const LeadDetail = {
           <div class="ai-card-body">${html}</div>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-advice-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${e.message}</div>`;
+      document.getElementById('ai-advice-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
     }
   },
 };
@@ -3806,16 +3807,16 @@ const PropertiesScreen = {
         <div class="property-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div class="property-price">${formatMoney(p.price)}</div>
-            <span class="badge ${statusClass[p.status]||'badge-status-new'}">${statusBadge[p.status]||p.status}</span>
+            <span class="badge ${statusClass[p.status]||'badge-status-new'}">${escapeHtml(statusBadge[p.status]||p.status)}</span>
           </div>
-          <div class="property-title">${p.title}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${p.address}, ${p.city}</div>
+          <div class="property-title">${escapeHtml(p.title)}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${escapeHtml(p.address)}, ${escapeHtml(p.city)}</div>
           <div class="property-specs">
             <div class="property-spec">🛏 ${p.rooms} חד׳</div>
             <div class="property-spec">📐 ${p.area} מ"ר</div>
             ${p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
           </div>
-          ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${p.description.slice(0,80)}${p.description.length > 80 ? '...' : ''}</div>` : ''}
+          ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
         </div>
       </div>
     `).join('') || '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🏠</div><div class="empty-title">אין נכסים עדיין</div></div>';
@@ -4061,8 +4062,8 @@ const Settings = {
         <div class="settings-row">
           <div class="settings-row-icon">👤</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">${State.agent?.name || ''}</div>
-            <div class="settings-row-sub">${State.agent?.email || ''}</div>
+            <div class="settings-row-label">${escapeHtml(State.agent?.name || '')}</div>
+            <div class="settings-row-sub">${escapeHtml(State.agent?.email || '')}</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -4114,12 +4115,12 @@ const Settings = {
             <div class="settings-row-body" style="flex:1;">
               <div class="settings-row-label">מספר WhatsApp של הסוכן</div>
               <div class="settings-row-sub" style="color:${Make.getWhatsApp() ? 'var(--green-600)' : 'var(--orange-500)'};">
-                ${Make.getWhatsApp() ? '✅ ' + Make.getWhatsApp() : 'לא הוגדר'}
+                ${Make.getWhatsApp() ? '✅ ' + escapeHtml(Make.getWhatsApp()) : 'לא הוגדר'}
               </div>
             </div>
           </div>
           <div class="api-key-row">
-            <input type="tel" id="wa-number-input" placeholder="0501234567" value="${Make.getWhatsApp()}" style="direction:ltr;" />
+            <input type="tel" id="wa-number-input" placeholder="0501234567" value="${escapeHtml(Make.getWhatsApp() ?? '')}" style="direction:ltr;" />
             <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);">שמור</button>
           </div>
         </div>

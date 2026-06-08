@@ -5,18 +5,30 @@ const STRIPE_WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET') ?? '';
 const SUPABASE_URL           = Deno.env.get('SUPABASE_URL') ?? '';
 const SUPABASE_SERVICE_KEY   = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
-// Verify Stripe signature
-async function verifyStripeSignature(payload: string, sig: string, secret: string) {
+// Verify Stripe signature — constant-time comparison + replay-attack protection
+async function verifyStripeSignature(payload: string, sig: string, secret: string): Promise<boolean> {
   const parts   = sig.split(',').reduce((acc: Record<string, string>, p) => {
     const [k, v] = p.split('='); acc[k] = v; return acc;
   }, {});
-  const ts      = parts['t'];
-  const v1      = parts['v1'];
+  const ts = parts['t'];
+  const v1 = parts['v1'];
+  if (!ts || !v1) return false;
+
+  // Replay-attack protection: reject events older than 5 minutes
+  if (Math.abs(Date.now() / 1000 - parseInt(ts, 10)) > 300) return false;
+
   const signed  = `${ts}.${payload}`;
   const key     = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const sigBuf  = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signed));
   const computed = Array.from(new Uint8Array(sigBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  return computed === v1;
+
+  // Constant-time comparison — prevents timing oracle attacks
+  const a = new TextEncoder().encode(computed);
+  const b = new TextEncoder().encode(v1);
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
 }
 
 // Plan mapping from Stripe Price ID → our plan name
@@ -33,11 +45,14 @@ serve(async (req: Request) => {
   const payload = await req.text();
   const sig     = req.headers.get('stripe-signature') ?? '';
 
-  // Verify webhook authenticity
-  if (STRIPE_WEBHOOK_SECRET) {
-    const valid = await verifyStripeSignature(payload, sig, STRIPE_WEBHOOK_SECRET);
-    if (!valid) return new Response('Invalid signature', { status: 400 });
+  // Fail closed: refuse ALL requests if the webhook secret is not configured.
+  // An empty/missing secret means ANY HTTP POST can forge billing events.
+  if (!STRIPE_WEBHOOK_SECRET) {
+    console.error('stripe-webhook: STRIPE_WEBHOOK_SECRET is not set — refusing request');
+    return new Response('Webhook secret not configured', { status: 500 });
   }
+  const valid = await verifyStripeSignature(payload, sig, STRIPE_WEBHOOK_SECRET);
+  if (!valid) return new Response('Invalid signature', { status: 400 });
 
   const event = JSON.parse(payload);
   const sb    = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
@@ -106,14 +121,26 @@ serve(async (req: Request) => {
       console.warn(`stripe-webhook: session has no customer_email — proceeding without email verification for tenant ${claimedId}`);
     }
 
+    // Note: line_items are not expanded in Stripe webhook payloads by default,
+    // so session.line_items is always null here. priceId comes from
+    // session.metadata.price_id which must be set in the Payment Link metadata.
+    // If absent, plan defaults to 'basic' and a warning is logged.
+    if (!priceId) {
+      console.warn(`stripe-webhook: no price_id in session metadata for tenant ${claimedId} — defaulting to basic`);
+    }
     const plan = PRICE_TO_PLAN[priceId] ?? 'basic';
 
-    await sb.from('tenants').update({
+    const { error: updateError } = await sb.from('tenants').update({
       plan,
       stripe_customer_id:      customerId,
       stripe_subscription_id:  subId,
       trial_ends_at:           null,   // clear trial — now on paid plan
     }).eq('id', claimedId);
+
+    if (updateError) {
+      console.error(`stripe-webhook: failed to upgrade tenant ${claimedId} to ${plan}: ${updateError.message}`);
+      return new Response('DB update failed', { status: 500 });
+    }
 
     console.log(`stripe-webhook: tenant ${claimedId} upgraded to ${plan} (customer: ${customerId})`);
   }
