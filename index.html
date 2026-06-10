@@ -1376,6 +1376,13 @@
 
   <!-- MAIN CONTENT -->
   <main id="main-content">
+    <!-- DEMO BANNER -->
+    <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <span>⚡ מצב דמו — הנתונים לא נשמרים ולא מחוברים לענן</span>
+      <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:#fff;color:#d97706;border:none;border-radius:8px;padding:5px 14px;font-weight:800;font-size:12px;cursor:pointer;">
+        הרשם / התחבר →
+      </button>
+    </div>
     <!-- TRIAL BANNER -->
     <div id="trial-banner" class="hidden"></div>
 
@@ -2375,6 +2382,7 @@ const State = {
   screen: 'login',
   currentLeadId: null,
   tasksFilter: 'all',
+  isDemo: false,
   leads: [...DEMO.leads],
   properties: [...DEMO.properties],
   tasks: [...DEMO.tasks],
@@ -3145,13 +3153,17 @@ const App = {
     if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
     toast('📧 נשלח אימייל לאיפוס סיסמה — בדוק את תיבת הדואר שלך', 'success');
   },
-  async loginDemo() {
-    const btn = document.getElementById('btn-login-demo');
-    if (btn) { btn.textContent = '⏳ מתחבר...'; btn.disabled = true; }
-    document.getElementById('login-email').value = 'demo@liders.co.il';
-    document.getElementById('login-password').value = 'demo1234';
-    await this._authAndEnter('demo@liders.co.il', 'demo1234');
-    if (btn) { btn.disabled = false; btn.textContent = '⚡ כניסת דמו — ראה את המערכת מיד'; }
+  loginDemo() {
+    State.isDemo = true;
+    State.leads       = DEMO.leads.map(l => ({...l}));
+    State.properties  = DEMO.properties.map(p => ({...p}));
+    State.tasks       = DEMO.tasks.map(t => ({...t}));
+    State.activities  = DEMO.activities.map(a => ({...a}));
+    State.stages      = DEMO.stages.map(s => ({...s}));
+    State.agent       = { ...DEMO.agent };
+    State.tenant      = { ...DEMO.tenant };
+    document.getElementById('demo-banner').classList.remove('hidden');
+    this._showApp();
   },
   async loginWithGoogle() {
     const btn = document.querySelector('.btn-google');
@@ -3218,8 +3230,8 @@ const App = {
   },
   _showApp() {
     document.getElementById('screen-login').classList.add('hidden');
-    // Check billing gate before showing app
-    if (Billing.isExpired()) {
+    // Check billing gate before showing app (skip for demo)
+    if (!State.isDemo && Billing.isExpired()) {
       Billing.showPaywall();
       return;
     }
@@ -3233,10 +3245,10 @@ const App = {
     history.pushState({ screen: 'dashboard' }, '', location.pathname + '?s=dashboard');
     this.go('dashboard');
     this.updateBadges();
-    // Show onboarding wizard for new users
-    setTimeout(() => Onboarding.show(), 800);
-    // Show billing reminder for days 7-1 (once per day)
-    setTimeout(() => Billing.showDailyReminder(), 1500);
+    // Show onboarding wizard for new users (not in demo)
+    if (!State.isDemo) setTimeout(() => Onboarding.show(), 800);
+    // Show billing reminder for days 7-1 (not in demo)
+    if (!State.isDemo) setTimeout(() => Billing.showDailyReminder(), 1500);
   },
   _applyIndustryLabels() {
     const props = getLabel('properties');
@@ -4513,6 +4525,7 @@ const LeadImport = {
 };
 
 async function addLead() {
+  if (demoGuard()) return;
   const name = document.getElementById('new-lead-name').value.trim();
   const phone = document.getElementById('new-lead-phone').value.trim();
   if (!name || !phone) { toast('נא מלא שם וטלפון', 'error'); return; }
@@ -4546,6 +4559,7 @@ async function addLead() {
 }
 
 async function addTask() {
+  if (demoGuard()) return;
   const title = document.getElementById('new-task-title').value.trim();
   if (!title) { toast('נא הכנס כותרת', 'error'); return; }
   try {
@@ -4570,6 +4584,7 @@ async function addTask() {
 }
 
 async function addActivity() {
+  if (demoGuard()) return;
   const content = document.getElementById('new-activity-content').value.trim();
   if (!content) { toast('נא הכנס תיאור', 'error'); return; }
   try {
@@ -4633,6 +4648,12 @@ function openMoveStage(leadId) {
   openModal('modal-move-stage');
 }
 
+function demoGuard() {
+  if (!State.isDemo) return false;
+  toast('⚡ מצב דמו — התחבר כדי לשמור נתונים אמיתיים', 'warning');
+  return true;
+}
+
 function togglePasswordVisibility() {
   const input = document.getElementById('login-password');
   const btn   = document.getElementById('toggle-password');
@@ -4677,6 +4698,7 @@ async function uploadPropertyImage(file, propId) {
 }
 
 async function addProperty() {
+  if (demoGuard()) return;
   const title = document.getElementById('new-prop-title').value.trim();
   const price = parseFloat(document.getElementById('new-prop-price').value) || 0;
   if (!title) { toast('נא הכנס כותרת לנכס', 'error'); return; }
@@ -4738,6 +4760,7 @@ function openEditLead(leadId) {
 }
 
 async function saveEditLead() {
+  if (demoGuard()) return;
   const leadId = State.currentLeadId;
   const lead = State.leads.find(l => l.id === leadId);
   if (!lead) return;
