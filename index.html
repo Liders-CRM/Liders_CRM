@@ -196,9 +196,43 @@ select.fi{appearance:none}
 .save-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .2s}
 .save-btn:disabled{opacity:.6;cursor:not-allowed}
 .lock-link{display:block;text-align:center;margin-top:14px;background:none;border:none;color:var(--steel-lt);font-size:.78rem;cursor:pointer;font-family:var(--font)}
+
+/* ══ APP GATE ══ */
+.gate-overlay{position:fixed;inset:0;background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 60%,#0D1B35 100%);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.gate-box{width:100%;max-width:320px;text-align:center}
+.gate-logo-icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--blue),#60A5FA);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:white;margin:0 auto 12px}
+.gate-brand{font-size:1.4rem;font-weight:800;color:white;letter-spacing:.5px}
+.gate-sub{font-size:.75rem;color:var(--blue-mid);margin-bottom:36px}
+.gate-box .pin-dots{margin-bottom:28px}
+.gate-box .pin-dot{border-color:rgba(255,255,255,.3)}
+.gate-box .pin-dot.on{background:var(--blue);border-color:var(--blue)}
+.gate-box .num-key{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:white}
+.gate-box .num-key:hover{background:rgba(37,99,235,.5);border-color:var(--blue)}
+.gate-err-txt{color:#FDA4AF;font-size:.82rem;margin-top:14px;min-height:20px}
+
+/* ══ HEADER LOCK BTN ══ */
+.hdr-lock{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--r-sm);color:white;font-size:.75rem;padding:5px 10px;cursor:pointer;font-family:var(--font)}
+.hdr-lock:hover{background:rgba(255,255,255,.18)}
 </style>
 </head>
 <body>
+
+<!-- ══ APP GATE ══ -->
+<div class="gate-overlay" id="app-gate">
+  <div class="gate-box">
+    <div class="gate-logo-icon">L</div>
+    <div class="gate-brand">LIDERS CRM</div>
+    <div class="gate-sub">הפלטפורמה שהופכת לידים לעסקאות</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="gd0"></div>
+      <div class="pin-dot" id="gd1"></div>
+      <div class="pin-dot" id="gd2"></div>
+      <div class="pin-dot" id="gd3"></div>
+    </div>
+    <div class="numpad" id="gate-numpad"></div>
+    <div class="gate-err-txt" id="gate-err"></div>
+  </div>
+</div>
 
 <!-- ══ HEADER ══ -->
 <div class="header">
@@ -210,7 +244,10 @@ select.fi{appearance:none}
         <div class="logo-tag" id="h-tag">הפלטפורמה שהופכת לידים לעסקאות</div>
       </div>
     </div>
-    <div class="header-date" id="h-date"></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="header-date" id="h-date"></div>
+      <button class="hdr-lock" onclick="lockApp()" title="התנתק">🔒</button>
+    </div>
   </div>
 </div>
 
@@ -382,6 +419,7 @@ let editId   = null;
 let pinStr   = '';
 let sessPin  = '';
 let adminOn  = false;
+let gateStr  = '';
 
 /* ══════════════════
    HELPERS
@@ -424,6 +462,12 @@ function showPage(name,btn){
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
   document.getElementById('fab').style.display = (name==='leads'||name==='dash')?'flex':'none';
+  if(name==='settings' && adminOn){
+    document.getElementById('s-lock').style.display='none';
+    document.getElementById('s-panel').style.display='block';
+    document.getElementById('set-company').value = cfg.company_name||'';
+    document.getElementById('set-tag').value     = cfg.tagline||'';
+  }
 }
 
 function goToLeads(stageId){
@@ -594,6 +638,48 @@ async function saveLead(){
 }
 
 /* ══════════════════
+   APP GATE
+══════════════════ */
+function buildGateNumpad(){
+  document.getElementById('gate-numpad').innerHTML=[1,2,3,4,5,6,7,8,9,null,0,'⌫'].map(k=>{
+    if(k===null) return '<div></div>';
+    return `<button class="num-key${k==='⌫'?' del':''}" onclick="gatePin('${k}')">${k}</button>`;
+  }).join('');
+}
+
+function updGateDots(){
+  for(let i=0;i<4;i++) document.getElementById('gd'+i).classList.toggle('on',i<gateStr.length);
+}
+
+async function gatePin(v){
+  if(v==='⌫'){ gateStr=gateStr.slice(0,-1); updGateDots(); return; }
+  if(gateStr.length>=4) return;
+  gateStr+=v; updGateDots();
+  if(gateStr.length===4){
+    document.getElementById('gate-err').textContent='בודק…';
+    const {data}=await DB.rpc('verify_admin_pin',{pin_input:gateStr});
+    if(data===true){
+      sessPin=gateStr; adminOn=true;
+      document.getElementById('app-gate').style.display='none';
+      loadData();
+    } else {
+      document.getElementById('gate-err').textContent='קוד שגוי, נסה שוב';
+      gateStr='';
+      setTimeout(()=>{ document.getElementById('gate-err').textContent=''; updGateDots(); },1200);
+    }
+  }
+}
+
+function lockApp(){
+  adminOn=false; sessPin=''; gateStr=''; pinStr='';
+  document.getElementById('app-gate').style.display='flex';
+  updGateDots();
+  document.getElementById('gate-err').textContent='';
+  document.getElementById('s-lock').style.display='block';
+  document.getElementById('s-panel').style.display='none';
+}
+
+/* ══════════════════
    PIN / SETTINGS
 ══════════════════ */
 function buildNumpad(){
@@ -654,7 +740,7 @@ async function saveSettings(){
 }
 
 /* ── Init ── */
-loadData();
+buildGateNumpad();
 buildNumpad();
 </script>
 </body>
