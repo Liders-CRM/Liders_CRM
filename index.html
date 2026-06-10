@@ -988,9 +988,9 @@
     .paywall-icon { font-size: 48px; margin-bottom: 12px; }
     .paywall-title { font-size: 22px; font-weight: 900; color: var(--gray-900); margin-bottom: 6px; }
     .paywall-sub { font-size: 14px; color: var(--gray-500); margin-bottom: 24px; }
-    .paywall-plans { display: flex; gap: 12px; margin-bottom: 8px; }
+    .paywall-plans { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
     .paywall-plan {
-      flex: 1; border: 2px solid var(--border); border-radius: var(--radius-lg);
+      border: 2px solid var(--border); border-radius: var(--radius-lg);
       padding: 16px 12px; text-align: right; position: relative;
     }
     .paywall-plan--featured {
@@ -1607,7 +1607,10 @@
       ✅ הנתונים שמורים · ביטול בכל עת · ללא עמלות
     </div>
     <div class="paywall-plans" id="paywall-plans-container"></div>
-    <button class="btn btn-ghost btn-sm mt-4" onclick="App.logout()" style="opacity:.6;">← חזור להתחברות</button>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('screen-paywall').classList.add('hidden');document.getElementById('app-shell').classList.remove('hidden');App.go('dashboard');" style="flex:1;max-width:160px;">🏠 חזור לבית</button>
+      <button class="btn btn-ghost btn-sm" onclick="App.logout()" style="flex:1;max-width:160px;opacity:.6;">← יציאה</button>
+    </div>
   </div>
 </div>
 
@@ -3616,7 +3619,7 @@ const LeadDetail = {
 
     document.getElementById('lead-detail-content').innerHTML = `
       <div class="lead-detail-header">
-        <button class="back-btn" onclick="history.back()">← חזרה</button>
+        <button class="back-btn" onclick="App.go('pipeline')">← חזרה</button>
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div class="lead-detail-name">${escapeHtml(lead.name)}</div>
           <div class="score-badge ${scoreClass(lead.score)}" style="width:44px;height:44px;font-size:15px;">${lead.score}</div>
