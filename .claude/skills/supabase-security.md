@@ -1,4 +1,4 @@
-# Supabase Security — מלי יופי ועור
+# Supabase Security — Liders CRM
 
 ## פקודה: `/supabase-security`
 
@@ -69,7 +69,7 @@ const supabase = createClient(
 async function adminLogin(pin: string) {
   // hash PIN before comparing
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'admin@mali-beauty.local',
+    email: 'admin@liders.co.il',
     password: pin,
   });
   return { data, error };
@@ -82,7 +82,7 @@ async function adminLogin(pin: string) {
 // hash PIN locally before storing
 async function hashPin(pin) {
   const encoder = new TextEncoder();
-  const data = encoder.encode(pin + 'mali-salt-2025');
+  const data = encoder.encode(pin + 'liders-salt-2025');
   const hash = await crypto.subtle.digest('SHA-256', data);
   return btoa(String.fromCharCode(...new Uint8Array(hash)));
 }

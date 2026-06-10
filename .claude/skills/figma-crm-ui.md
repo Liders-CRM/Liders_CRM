@@ -1,38 +1,44 @@
-# Figma UI/UX Skill — מלי יופי ועור
+# Figma UI/UX Skill — Liders CRM
 
 ## פקודה: `/figma-crm-ui`
 
-עיצוב UI/UX עם Figma MCP + Canva MCP, RTL מלא, design tokens של הסלון.
+עיצוב UI/UX עם Figma MCP + Canva MCP, RTL מלא, design tokens של Liders CRM.
 
 ---
 
-## Design Tokens — מלי יופי ועור
+## Design Tokens — Liders CRM
 
 ```css
 /* פלטת צבעים */
---ink:         #1C1410;   /* טקסט ראשי */
---espresso:    #3A2318;   /* header, buttons */
---terracotta:  #B06A4A;   /* accent, highlights */
---sand:        #D4A882;   /* secondary text, borders */
---blush:       #EDD5BF;   /* backgrounds, cards */
---parch:       #F7EFE5;   /* page background */
---ivory:       #FDFAF6;   /* white areas */
---sage:        #7A9E7E;   /* success, available */
---sage-light:  #EBF2EC;   /* success backgrounds */
---error:       #B84C4C;   /* errors, warnings */
+--navy-900: #060F1C;
+--navy-800: #0A1A2E;
+--navy-700: #0F2440;
+--navy-600: #152F52;
+--navy-500: #1C3E6B;    /* primary brand */
+--blue-600: #2563EB;    /* accent / CTA */
+--blue-500: #3B82F6;    /* links, highlights */
+--blue-100: #DBEAFE;    /* backgrounds */
+--slate-100: #F1F5F9;   /* page background */
+--slate-50:  #F8FAFC;   /* cards */
+--white:     #FFFFFF;
+--green-500: #10B981;   /* success / won */
+--amber-500: #F59E0B;   /* warning / negotiation */
+--red-500:   #EF4444;   /* error / lost */
+--purple-500: #8B5CF6;  /* proposal */
+--gray-400:  #94A3B8;   /* new lead */
 
 /* Typography */
---font-display: 'Cormorant Garamond', Georgia, serif;
---font-body:    'Heebo', sans-serif;
+--font-main: 'Heebo', sans-serif;
 
 /* Radius */
---radius-sm: 10px;
---radius-md: 16px;
---radius-lg: 24px;
+--radius-sm: 8px;
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-xl: 20px;
 
 /* Shadows */
---shadow-soft: 0 4px 24px rgba(28,20,16,0.08);
---shadow-card: 0 2px 12px rgba(28,20,16,0.07);
+--shadow-card: 0 2px 8px rgba(15,31,61,0.08);
+--shadow-modal: 0 8px 32px rgba(15,31,61,0.16);
 ```
 
 ---
@@ -41,16 +47,16 @@
 
 ### שליפת design context
 ```
-// השתמש ב: mcp__88a7dadd__get_design_context
+// השתמש ב: mcp__Figma__get_design_context
 // לקבלת tokens, components וספריות מ-Figma
 ```
 
 ### יצירת component חדש
 ```
-1. get_libraries() — ראה אילו ספריות זמינות
-2. get_design_context(url) — שלוף tokens קיימים
-3. use_figma() — פתח עורך Figma
-4. generate_diagram() — צור ERD / flow ב-FigJam
+1. get_libraries()      — ראה ספריות זמינות
+2. get_design_context() — שלוף tokens קיימים
+3. use_figma()          — פתח עורך Figma
+4. generate_diagram()   — צור ERD / flow ב-FigJam
 ```
 
 ---
@@ -59,36 +65,31 @@
 
 ### כללים קריטיים
 ```css
-/* תמיד על html */
-html { direction: rtl; }
+html { direction: rtl; font-family: 'Heebo', sans-serif; }
 
-/* Flexbox — הפוך gap */
-.flex-row { 
-  display: flex; 
-  flex-direction: row;
-  /* בעברית: ימין לשמאל */
-}
+/* Flexbox RTL */
+.row { display: flex; flex-direction: row; }
+/* ימין = ראשוני, שמאל = סוף */
 
-/* Icons ב-RTL */
-.arrow-back::before { content: '→'; }   /* ← בלטינית */
-.arrow-forward::before { content: '←'; }
+/* טלפון תמיד LTR */
+input[type="tel"] { direction: ltr; text-align: right; }
 ```
 
 ### Component Patterns
 ```html
-<!-- כרטיס שירות — RTL -->
-<div class="service-card" dir="rtl">
-  <div class="svc-info">
-    <div class="svc-name">טיפול פנים קלאסי</div>
-    <div class="svc-sub">⏱ 60 דקות</div>
-    <span class="svc-tag">פנים</span>
+<!-- כרטיס ליד — RTL -->
+<div class="lead-card" dir="rtl">
+  <div class="lead-header">
+    <div class="lead-score">85</div>
+    <div class="lead-name">ישראל ישראלי</div>
   </div>
-  <div class="svc-price-col">
-    <div class="svc-price">₪220</div>
+  <div class="lead-meta">
+    <span class="stage-badge">ביקור נקבע</span>
+    <span class="budget">₪1.2M–₪1.8M</span>
   </div>
 </div>
 
-<!-- form field — LTR לטלפון -->
+<!-- form field — טלפון LTR -->
 <div class="form-field">
   <label>טלפון</label>
   <input type="tel" dir="ltr" placeholder="05X-XXXXXXX">
@@ -100,16 +101,15 @@ html { direction: rtl; }
 ## Canva MCP — Marketing Materials
 
 ```
-// mcp__3f33a9a8__generate_design — יצירת עיצוב שיווקי
+// mcp__Canva__generate-design
 // מתאים ל:
-- פוסטים לרשתות חברתיות (Instagram, Facebook)
-- כרטיסי ביקור דיגיטליים
+- פוסטים לרשתות חברתיות (LinkedIn, Instagram, Facebook)
 - banner לאתר
-- Stories עם מבצעים
+- מצגת למשקיעים
 
 // פרמטרים:
 {
-  brand_colors: ['#3A2318', '#B06A4A', '#D4A882'],
+  brand_colors: ['#1C3E6B', '#2563EB', '#F1F5F9'],
   font: 'Heebo',
   language: 'he',
   direction: 'rtl'
@@ -122,31 +122,35 @@ html { direction: rtl; }
 
 | מסך | תיאור | Status |
 |-----|-------|--------|
-| Booking Flow | 4 שלבים: שירות → תאריך → שעה → פרטים | ✅ |
-| Success Screen | אישור הזמנה | ✅ |
-| About Page | פרופיל מלי | ✅ |
-| Admin - Login | PIN pad | ✅ |
-| Admin - Dashboard | תורים, שירותים, שעות | ✅ |
-| Client Profile | כרטיס לקוח מפורט | ⏳ |
-| Analytics | דוחות הכנסות, ביקורים | ⏳ |
-| Notifications | WhatsApp, SMS | ⏳ |
+| Landing / Login | Google OAuth | ✅ |
+| Onboarding | שם סוכנות, תחום | ✅ |
+| Dashboard | KPIs, pipeline, tasks | ✅ |
+| Pipeline Board | Kanban לידים | ✅ |
+| Lead Detail | פרטי ליד, פעילות, משימות | ✅ |
+| Properties | ניהול נכסים | ✅ |
+| Calendar | ביקורים ו-Google Calendar | ✅ |
+| Settings | פרופיל סוכנות, pipeline | ✅ |
+| Billing | תוכניות, Stripe | ✅ |
+| Admin Panel | ניהול tenant-level | ✅ |
 
 ---
 
 ## Figma File Structure (מומלץ)
 
 ```
-📁 מלי יופי ועור - CRM
+📁 Liders CRM — Design System
   📄 Design Tokens
   📄 Components Library
-    🔲 Service Card
-    🔲 Booking Card
-    🔲 Client Card
-    🔲 Slot Button
-    🔲 Admin Block
-  📄 Screens - Mobile
-    📱 Booking Flow
-    📱 Admin Panel
-  📄 Screens - Desktop
-  📄 Marketing Assets
+    🔲 Lead Card
+    🔲 Pipeline Stage Column
+    🔲 Score Badge
+    🔲 Task Item
+    🔲 Property Card
+    🔲 Modal / Drawer
+  📄 Screens — Mobile (390px)
+    📱 Dashboard
+    📱 Pipeline
+    📱 Lead Detail
+  📄 Screens — Desktop
+  📄 Admin Panel
 ```

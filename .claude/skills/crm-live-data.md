@@ -10,11 +10,11 @@ Supabase, Google Calendar, Gmail, Make.com, Airtable, Notion.
 ## מה הסקיל הזה עושה
 
 כשמפעילים `/crm-live-data` Claude:
-1. **שולף נתונים עדכניים** מ-Supabase (תורים, לקוחות, שירותים)
-2. **מסנכרן עם Google Calendar** (בדיקת conflicts, הוספת תורים)
-3. **מושך דואר מ-Gmail** (בקשות הזמנה, ביטולים)
+1. **שולף נתונים עדכניים** מ-Supabase (לידים, נכסים, משימות, tenants)
+2. **מסנכרן עם Google Calendar** (ביקורים, conflicts)
+3. **מושך דואר מ-Gmail** (לידים נכנסים, עדכונים)
 4. **בודק Make.com** (automations שפועלות/נכשלות)
-5. **מעדכן Notion** (דשבורד, דוחות שבועיים)
+5. **מעדכן Notion** (דשבורד, דוחות)
 6. **מנתח ומסכם** את מצב המערכת
 
 ---
@@ -24,54 +24,63 @@ Supabase, Google Calendar, Gmail, Make.com, Airtable, Notion.
 ```typescript
 // פונקציות שאיבה ראשיות
 
-async function getLiveBookings(date?: string) {
-  // mcp: mcp__f474d5bb__execute_sql
-  const sql = date
-    ? `SELECT * FROM bookings WHERE date = '${date}' ORDER BY time`
-    : `SELECT * FROM bookings WHERE date >= CURRENT_DATE ORDER BY date, time LIMIT 50`;
-  return await supabase.from('bookings').select('*').gte('date', date ?? new Date().toISOString().split('T')[0]);
+async function getActiveLeads(tenantId: string) {
+  // mcp: mcp__Supabase__execute_sql
+  const sql = `
+    SELECT l.*, ps.name as stage_name, au.name as agent_name
+    FROM leads l
+    LEFT JOIN pipeline_stages ps ON ps.id = l.pipeline_stage_id
+    LEFT JOIN agent_users au ON au.id = l.agent_id
+    WHERE l.tenant_id = '${tenantId}'
+      AND l.status NOT IN ('closed_won','closed_lost','frozen')
+    ORDER BY l.score DESC, l.updated_at DESC
+    LIMIT 50
+  `;
 }
 
-async function getClientHistory(phone: string) {
-  return await supabase
-    .from('bookings')
-    .select('*')
-    .eq('phone', phone)
-    .order('date', { ascending: false });
+async function getOverdueTasks(tenantId: string) {
+  const sql = `
+    SELECT t.*, l.name as lead_name, l.phone as lead_phone
+    FROM tasks t
+    LEFT JOIN leads l ON l.id = t.lead_id
+    WHERE t.tenant_id = '${tenantId}'
+      AND t.done = false
+      AND t.due_date < now()
+    ORDER BY t.due_date ASC
+  `;
 }
 
-async function getRevenueStats(period: 'week' | 'month') {
+async function getPipelineStats(tenantId: string) {
   const sql = `
     SELECT
-      COUNT(*) as total_bookings,
-      SUM(price) as total_revenue,
-      AVG(price) as avg_price,
-      service,
-      COUNT(*) as service_count
-    FROM bookings
-    WHERE date >= CURRENT_DATE - INTERVAL '1 ${period}'
-      AND status NOT IN ('cancelled', 'no_show')
-    GROUP BY service
-    ORDER BY service_count DESC
+      ps.name as stage,
+      COUNT(l.id) as lead_count,
+      COALESCE(SUM(l.budget_max), 0) as total_value,
+      AVG(l.score)::numeric(5,1) as avg_score
+    FROM pipeline_stages ps
+    LEFT JOIN leads l ON l.pipeline_stage_id = ps.id
+      AND l.status NOT IN ('closed_won','closed_lost')
+    WHERE ps.tenant_id = '${tenantId}'
+    GROUP BY ps.id, ps.name, ps.order_idx
+    ORDER BY ps.order_idx
   `;
-  // mcp: execute_sql(sql)
 }
 ```
 
 ---
 
-## Google Calendar — סנכרון תורים
+## Google Calendar — סנכרון ביקורים
 
 ```typescript
-// mcp: mcp__6368118b__list_events
+// mcp: mcp__Google_Calendar__list_events
 
-async function syncCalendarWithBookings() {
-  // 1. שלוף תורים מ-Supabase
-  const bookings = await getLiveBookings();
+async function syncShowingsWithCalendar() {
+  // 1. שלוף ביקורים מ-Supabase
+  const showings = await getUpcomingShowings();
 
   // 2. שלוף events מ-Google Calendar
-  // mcp__6368118b__list_events({
-  //   calendarId: 'mali-beauty@gmail.com',
+  // mcp__Google_Calendar__list_events({
+  //   calendarId: 'primary',
   //   timeMin: new Date().toISOString(),
   //   maxResults: 50
   // })
@@ -79,34 +88,33 @@ async function syncCalendarWithBookings() {
   // 3. מצא conflicts ודיווח
 }
 
-async function addBookingToCalendar(booking: Booking) {
-  // mcp__6368118b__create_event({
-  //   summary: `${booking.service} — ${booking.client_name}`,
-  //   description: `טלפון: ${booking.phone}\nהערות: ${booking.notes}`,
-  //   start: { dateTime: `${booking.date}T${booking.time}:00`, timeZone: 'Asia/Jerusalem' },
-  //   end: { dateTime: calculateEnd(booking), timeZone: 'Asia/Jerusalem' },
-  //   colorId: '3'  // sage green
+async function addShowingToCalendar(showing: Showing) {
+  // mcp__Google_Calendar__create_event({
+  //   summary: `ביקור — ${lead.name} | ${property.address}`,
+  //   description: `ליד: ${lead.phone}\nנכס: ${property.title}`,
+  //   start: { dateTime: showing.scheduled_at, timeZone: 'Asia/Jerusalem' },
+  //   end: { dateTime: addMinutes(showing.scheduled_at, showing.duration_min), timeZone: 'Asia/Jerusalem' }
   // })
 }
 ```
 
 ---
 
-## Gmail — בקשות ובקרה
+## Gmail — לידים ועדכונים
 
 ```typescript
-// mcp: mcp__4e93495e__search_threads
+// mcp: mcp__Gmail__search_threads
 
-async function checkBookingRequests() {
-  // חפש הזמנות שהגיעו דרך אימייל
-  // mcp__4e93495e__search_threads({
-  //   query: 'subject:(תור OR הזמנה OR booking) is:unread'
+async function checkIncomingLeads() {
+  // חפש לידים שהגיעו דרך אימייל
+  // mcp__Gmail__search_threads({
+  //   query: 'subject:(ליד OR lead OR inquiry) is:unread'
   // })
 }
 
-async function checkCancellations() {
-  // mcp__4e93495e__search_threads({
-  //   query: 'subject:(ביטול OR cancel) newer_than:1d'
+async function checkBillingEmails() {
+  // mcp__Gmail__search_threads({
+  //   query: 'subject:(stripe OR billing OR payment) newer_than:1d'
   // })
 }
 ```
@@ -116,14 +124,14 @@ async function checkCancellations() {
 ## Make.com — בדיקת Automations
 
 ```typescript
-// mcp: mcp__194941ca__scenarios_list + executions_list
+// mcp: mcp__Make__scenarios_list + mcp__Make__executions_list
 
 async function checkAutomationHealth() {
   // 1. רשימת כל הסצנריות
-  // mcp__194941ca__scenarios_list()
+  // mcp__Make__scenarios_list()
 
   // 2. בדוק executions אחרונות
-  // mcp__194941ca__executions_list({ limit: 20 })
+  // mcp__Make__executions_list({ limit: 20 })
 
   // 3. דווח על כשלים
   const failedExecutions = executions.filter(e => e.status === 'error');
@@ -136,16 +144,16 @@ async function checkAutomationHealth() {
 ## Notion — עדכון Dashboard
 
 ```typescript
-// mcp: mcp__97537a26__notion-update-page
+// mcp: mcp__Notion__notion-update-page
 
-async function updateNotionDashboard(stats: RevenueStats) {
-  // mcp__97537a26__notion-search({ query: 'CRM Dashboard מלי' })
+async function updateNotionDashboard(stats: PipelineStats) {
+  // mcp__Notion__notion-search({ query: 'Liders CRM Dashboard' })
   // מצא pageId
-  // mcp__97537a26__notion-update-page({
+  // mcp__Notion__notion-update-page({
   //   pageId,
   //   properties: {
-  //     'הכנסות השבוע': { number: stats.weekly_revenue },
-  //     'תורים השבוע': { number: stats.weekly_bookings },
+  //     'לידים פעילים': { number: stats.active_leads },
+  //     'ערך פייפליין': { number: stats.pipeline_value },
   //     'עדכון אחרון': { date: new Date().toISOString() }
   //   }
   // })
@@ -154,18 +162,18 @@ async function updateNotionDashboard(stats: RevenueStats) {
 
 ---
 
-## Airtable — סנכרון לקוחות
+## Airtable — דיווח ואנליטיקס
 
 ```typescript
-// mcp: mcp__273af94e__list_records_for_table
+// mcp: mcp__Airtable__list_records_for_table
 
-async function syncClientsToAirtable() {
-  // 1. שלוף לקוחות מ-Supabase
-  const clients = await supabase.from('clients').select('*');
+async function syncLeadsToAirtable() {
+  // 1. שלוף לידים מ-Supabase
+  const leads = await getActiveLeads(tenantId);
 
   // 2. עדכן/צור ב-Airtable
-  // mcp__273af94e__search_bases({ query: 'מלי CRM' })
-  // mcp__273af94e__update_records_for_table(...)
+  // mcp__Airtable__search_bases({ query: 'Liders CRM' })
+  // mcp__Airtable__update_records_for_table(...)
 }
 ```
 
@@ -173,20 +181,20 @@ async function syncClientsToAirtable() {
 
 ## Live Status Report — `/crm-live-data status`
 
-כשמריצים עם פרמטר `status`, Claude יפיק דוח כזה:
-
 ```
-📊 דוח מערכת — מלי יופי ועור
+📊 דוח מערכת — Liders CRM
 ═══════════════════════════════
 📅 תאריך: [היום]
 
-🗓️  תורים היום: X תורים
-   הבא: [שם] — [שעה] — [שירות]
+👥 לידים פעילים: X
+   🔥 חם (score ≥80): X
+   🌤 פושר (60–79): X
+   🧊 קר (<40): X
 
-📆 תורים השבוע: X | הכנסה צפויה: ₪X
+📋 משימות באיחור: X
+   הבאה: [כותרת] — [ליד]
 
-👥 לקוחות חדשות החודש: X
-   לקוחות לא פעילות (>60 יום): X
+🏠 נכסים זמינים: X
 
 ⚙️  Make.com: X automations פעילות | X כשלים
 📧  Gmail: X הודעות לא נקראו
@@ -200,12 +208,11 @@ async function syncClientsToAirtable() {
 ## הוראות הפעלה
 
 ```bash
-# בשיחה עם Claude:
-/crm-live-data              # שאיבה כללית
-/crm-live-data status       # דוח מלא
-/crm-live-data today        # תורים היום בלבד
-/crm-live-data week         # סיכום שבועי
-/crm-live-data client [phone]  # היסטוריית לקוח ספציפי
-/crm-live-data sync-calendar   # סנכרון עם Google Calendar
+/crm-live-data                   # שאיבה כללית
+/crm-live-data status            # דוח מלא
+/crm-live-data leads             # לידים פעילים בלבד
+/crm-live-data tasks             # משימות באיחור
+/crm-live-data sync-calendar     # סנכרון עם Google Calendar
 /crm-live-data check-automations # בדיקת Make.com
+/crm-live-data lead [phone]      # היסטוריית ליד ספציפי
 ```

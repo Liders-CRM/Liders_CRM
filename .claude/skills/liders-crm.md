@@ -1,68 +1,95 @@
-# CRM Workflow Skill — מלי יופי ועור
+# Liders CRM — SaaS Architecture Skill
 
 ## פקודה: `/liders-crm`
 
-סקיל זה מספק ארכיטקטורה, entities ו-workflow לבניית features במערכת ה-CRM של **מלי • יופי ועור**.
+סקיל זה מספק ארכיטקטורה, entities ו-workflow לבניית features במערכת **Liders CRM** — פלטפורמת SaaS מולטי-טנאנט לניהול לידים ומכירות נדל"ן.
 
 ---
 
 ## Entities ראשיים
 
 ```typescript
-interface Service {
-  id: number;
-  name: string;          // שם הטיפול
-  price: number;         // מחיר בשקלים
-  duration: number;      // דקות
-  tag: 'פנים' | 'פרמיום' | 'רפואי' | 'רגליים' | 'הסרה';
-  active: boolean;
+interface Tenant {
+  id: uuid;
+  name: string;           // שם הסוכנות
+  slug: string;           // מזהה ייחודי
+  plan: 'trial' | 'basic' | 'pro' | 'premium' | 'cancelled';
+  trial_ends_at: timestamptz;
+  industry: 'real_estate' | 'sales' | 'marketing' | 'other';
+  city: string;
+  is_active: boolean;
 }
 
-interface Booking {
-  id: number;
-  client_name: string;
-  phone: string;
-  service: string;       // שם הטיפול
-  service_id?: number;
-  price: number;
-  date: string;          // YYYY-MM-DD
-  time: string;          // HH:mm
-  notes: string;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
-  created_at: string;
+interface AgentUser {
+  id: uuid;
+  tenant_id: uuid;
+  auth_user_id: uuid;     // Google OAuth UID
+  name: string;
+  email: string;
+  role: 'owner' | 'admin' | 'agent' | 'viewer';
+  is_active: boolean;
 }
 
-interface Client {
-  id: number;
+interface Lead {
+  id: uuid;
+  tenant_id: uuid;
+  agent_id: uuid;
+  pipeline_stage_id: uuid;
   name: string;
   phone: string;
   email?: string;
-  notes?: string;
-  skin_type?: string;     // סוג עור
-  allergies?: string;
-  last_visit?: string;
-  total_visits: number;
-  total_spent: number;
-  tags: string[];         // VIP, חדשה, רגישת עור, etc.
+  source: 'yad2' | 'madlan' | 'facebook' | 'instagram' | 'referral' |
+          'website' | 'call' | 'whatsapp' | 'email' | 'ad' | 'other';
+  status: 'new' | 'contacted' | 'qualified' | 'showing' |
+          'offer' | 'closed_won' | 'closed_lost' | 'frozen';
+  budget_min?: number;
+  budget_max?: number;
+  desired_area?: string;
+  rooms_min?: number;
+  rooms_max?: number;
+  urgency: 'low' | 'medium' | 'high' | 'immediate';
+  score: number;          // 0–100, AI scoring
+  score_reason?: string;
+  next_followup?: timestamptz;
+  notes: string;
+  tags: string[];
 }
 
-interface Schedule {
-  day: 0 | 1 | 2 | 3 | 4 | 5 | 6;  // 0=ראשון
-  open: boolean;
-  from: string;   // HH:mm
-  to: string;     // HH:mm
-  break_from?: string;
-  break_to?: string;
+interface PipelineStage {
+  id: uuid;
+  tenant_id: uuid;
+  name: string;
+  color: string;
+  order_idx: number;
+  is_terminal: boolean;
+  is_won: boolean;
 }
 
-interface SalonSettings {
-  salon_name: string;
-  tagline: string;
-  pin: string;
-  slot_min: number;      // ברירת מחדל גודל slot בדקות
-  phone?: string;
-  address?: string;
-  whatsapp_number?: string;
+interface Property {
+  id: uuid;
+  tenant_id: uuid;
+  agent_id: uuid;
+  title: string;
+  type: 'apartment' | 'house' | 'penthouse' | 'villa' | 'commercial' | 'office' | 'land' | 'other';
+  status: 'available' | 'under_offer' | 'sold' | 'rented' | 'off_market' | 'coming_soon';
+  price: number;
+  area_sqm?: number;
+  rooms?: number;
+  address: string;
+  city: string;
+}
+
+interface Task {
+  id: uuid;
+  tenant_id: uuid;
+  agent_id: uuid;
+  lead_id?: uuid;
+  property_id?: uuid;
+  title: string;
+  type: 'call' | 'whatsapp' | 'email' | 'showing' | 'offer' | 'meeting' | 'document' | 'other';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  due_date?: timestamptz;
+  done: boolean;
 }
 ```
 
@@ -72,46 +99,57 @@ interface SalonSettings {
 
 ### 1. ניתוח הדרישה
 ```
-- מה הentity המרכזי?
+- מה ה-entity המרכזי?
 - האם נדרשת DB migration?
-- האם יש RLS policies?
+- האם יש RLS policies עם tenant isolation?
 - האם יש automation (Make.com / WhatsApp)?
+- האם feature חוצה tenants? (אסור!)
 ```
 
 ### 2. Schema Supabase
 ```sql
--- דוגמה: הוספת טבלת לקוחות
-CREATE TABLE clients (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL,
-  phone text UNIQUE NOT NULL,
-  email text,
-  notes text DEFAULT '',
-  skin_type text,
-  allergies text,
-  last_visit date,
-  total_visits integer DEFAULT 0,
-  total_spent numeric(10,2) DEFAULT 0,
-  tags text[] DEFAULT '{}',
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now()
+-- כל טבלה חייבת tenant_id + RLS
+CREATE TABLE new_feature (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id   uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  agent_id    uuid REFERENCES agent_users(id) ON DELETE SET NULL,
+  -- ... שאר הקולומנות
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  updated_at  timestamptz NOT NULL DEFAULT now()
 );
-
-ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE new_feature ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "tenant isolation" ON new_feature
+  FOR ALL
+  USING (tenant_id = get_my_tenant_id() AND tenant_access_active())
+  WITH CHECK (tenant_id = get_my_tenant_id() AND tenant_access_active());
 ```
 
-### 3. צינור נתונים
+### 3. Auth Flow
 ```
-[לקוח בדפדפן] → [index.html JS] → [Supabase REST/RLS] → [PostgreSQL]
-                                  ↓
-                           [Make.com Webhook] → [WhatsApp / Gmail]
+[Google OAuth] → [Supabase Auth] → [ensure_agent_and_tenant()]
+                                    ↓
+                            {agent_id, tenant_id, is_new}
+                                    ↓
+                         [אם is_new → Onboarding wizard]
+                         [אם !is_new → Dashboard]
 ```
 
-### 4. Component HTML Pattern
+### 4. צינור נתונים
+```
+[דפדפן] → [Supabase JS client + JWT] → [RLS: get_my_tenant_id()]
+                                         → [PostgreSQL — רק נתוני הטנאנט]
+                 ↓
+          [Make.com Webhook] → [WhatsApp / Gmail automations]
+```
+
+### 5. Component HTML Pattern
 ```html
-<!-- כל component חדש — RTL, עברית, design tokens -->
-<div class="admin-block">
-  <div class="sec-head"><h2>כותרת</h2><div class="sec-line"></div></div>
+<!-- כל component — RTL, עברית, design tokens -->
+<div class="section-block">
+  <div class="section-header">
+    <h2>כותרת</h2>
+    <button class="btn-primary">פעולה</button>
+  </div>
   <!-- תוכן -->
 </div>
 ```
@@ -120,25 +158,34 @@ ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
 
 ## Checklist לפני Push
 
-- [ ] TypeScript types מוגדרים
-- [ ] RLS policies פועלות
+- [ ] tenant_id על כל INSERT
+- [ ] RLS policy עם `get_my_tenant_id() AND tenant_access_active()`
 - [ ] RTL/עברית תקין
-- [ ] Mobile responsive
+- [ ] Mobile responsive (390px)
 - [ ] Supabase migration נכתבה
 - [ ] Make.com automation מוגדרת (אם נדרש)
-- [ ] PIN admin מוגן
+- [ ] Google Auth מוגן (לא PIN)
 
 ---
 
-## שירותים קיימים (ייחוס מהיר)
+## RPCs ראשיים
 
-| # | שם | מחיר | זמן | קטגוריה |
-|---|----|------|-----|---------|
-| 1 | טיפול פנים קלאסי | ₪220 | 60 דק' | פנים |
-| 2 | טיפול פנים עמוק (KB Pure) | ₪320 | 75 דק' | פרמיום |
-| 3 | טיפול אנטי-אייג'ינג | ₪380 | 75 דק' | רפואי |
-| 4 | טיפול אקנה ובעיות עור | ₪280 | 60 דק' | רפואי |
-| 5 | פדיקור רפואי | ₪200 | 60 דק' | רגליים |
-| 6 | פדיקור + לק | ₪240 | 70 דק' | רגליים |
-| 7 | הסרת שיער בשעווה (פנים) | ₪80 | 25 דק' | הסרה |
-| 8 | עיצוב גבות | ₪70 | 20 דק' | פנים |
+| פונקציה | תיאור |
+|---------|-------|
+| `ensure_agent_and_tenant()` | bootstrap בהתחברות — יוצר tenant חדש אם לא קיים |
+| `update_tenant_profile(name, phone, city)` | עדכון פרופיל סוכנות (owner/admin בלבד) |
+| `get_my_tenant_id()` | מחזיר tenant_id של המשתמש המחובר |
+| `get_my_agent_id()` | מחזיר agent_id של המשתמש המחובר |
+| `tenant_access_active()` | בודק האם הטנאנט פעיל (trial/billing) |
+
+---
+
+## Pipeline ברירת מחדל (per new tenant)
+
+| # | שם | צבע |
+|---|----|-----|
+| 1 | ליד חדש | #94A3B8 אפור |
+| 2 | בקשר | #3B82F6 כחול |
+| 3 | ביקור נקבע | #8B5CF6 סגול |
+| 4 | הצעה הוגשה | #F59E0B כתום |
+| 5 | סגירה ✓ | #10B981 ירוק |
