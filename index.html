@@ -3,890 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מלי • יופי ועור | הזמנת תור</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Liders CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --ink:     #1C1410;
-  --espresso:#3A2318;
-  --terracotta:#B06A4A;
-  --sand:    #D4A882;
-  --blush:   #EDD5BF;
-  --parch:   #F7EFE5;
-  --ivory:   #FDFAF6;
-  --sage:    #7A9E7E;
-  --sage-light:#EBF2EC;
-  --error:   #B84C4C;
-  --white:   #FFFFFF;
-
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body:    'Heebo', sans-serif;
-
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --shadow-soft: 0 4px 24px rgba(28,20,16,0.08);
-  --shadow-card: 0 2px 12px rgba(28,20,16,0.07);
+:root{
+  --navy:#0F1F3D;
+  --navy2:#162B52;
+  --blue:#2563EB;
+  --blue-dk:#1D4ED8;
+  --blue-lt:#EFF6FF;
+  --blue-mid:#BFDBFE;
+  --steel:#64748B;
+  --steel-lt:#94A3B8;
+  --bg:#F1F5F9;
+  --white:#FFFFFF;
+  --border:#E2E8F0;
+  --ink:#0F172A;
+  --success:#10B981;
+  --success-bg:#ECFDF5;
+  --warn:#F59E0B;
+  --warn-bg:#FFFBEB;
+  --err:#EF4444;
+  --err-bg:#FEF2F2;
+  --purple:#8B5CF6;
+  --purple-bg:#F5F3FF;
+  --font:'Heebo',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;
+  --sh:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --sh-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;direction:rtl;padding-bottom:72px}
 
-body{
-  font-family:var(--font-body);
-  background:var(--parch);
-  color:var(--ink);
-  min-height:100vh;
-  direction:rtl;
+/* ══ HEADER ══ */
+.header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  color:white;padding:18px 20px 14px;
+  position:sticky;top:0;z-index:50;
 }
+.header-top{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:38px;height:38px;border-radius:var(--r-sm);
+  background:linear-gradient(135deg,var(--blue),#60A5FA);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:800;color:white;
+}
+.logo-name{font-size:1.1rem;font-weight:700;letter-spacing:.3px}
+.logo-tag{font-size:.65rem;color:var(--blue-mid);margin-top:1px}
+.header-date{font-size:.72rem;color:var(--steel-lt)}
 
-/* ── GRAIN OVERLAY ── */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:9999;
-  opacity:.4;
-}
-
-/* ══════════════════════════════
-   HERO HEADER
-══════════════════════════════ */
-.hero{
-  background:var(--espresso);
-  color:var(--ivory);
-  padding:36px 20px 28px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:'';
-  position:absolute;
-  width:340px;height:340px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(176,106,74,0.35) 0%,transparent 70%);
-  top:-80px;left:-60px;
-}
-.hero::after{
-  content:'';
-  position:absolute;
-  width:240px;height:240px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(212,168,130,0.2) 0%,transparent 70%);
-  bottom:-60px;right:-20px;
-}
-.hero-inner{position:relative;z-index:1}
-
-.logo-mark{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:52px;height:52px;
-  border:1.5px solid rgba(212,168,130,0.5);
-  border-radius:50%;
-  margin-bottom:12px;
-  font-size:1.4rem;
-}
-.hero h1{
-  font-family:var(--font-display);
-  font-size:2.2rem;
-  font-weight:300;
-  letter-spacing:0.04em;
-  line-height:1.1;
-}
-.hero h1 strong{
-  font-weight:600;
-  font-style:italic;
-  color:var(--sand);
-}
-.hero-tagline{
-  font-size:0.78rem;
-  color:rgba(253,250,246,0.55);
-  margin-top:8px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  font-weight:300;
-}
-.hero-badges{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-.badge-pill{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(212,168,130,0.3);
-  border-radius:20px;
-  padding:4px 12px;
-  font-size:0.72rem;
-  color:var(--blush);
-  letter-spacing:0.05em;
-}
-
-/* ══════════════════════════════
-   TABS
-══════════════════════════════ */
+/* ══ TAB BAR ══ */
 .tab-bar{
-  display:flex;
-  background:var(--espresso);
-  border-top:1px solid rgba(255,255,255,0.06);
-  position:sticky;
-  top:0;
-  z-index:100;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);border-top:1px solid var(--border);
+  display:flex;z-index:100;
+  box-shadow:0 -2px 8px rgba(0,0,0,.07);
 }
 .tab-btn{
-  flex:1;
-  padding:13px 8px;
-  text-align:center;
-  font-size:0.78rem;
-  font-weight:500;
-  color:rgba(253,250,246,0.4);
-  cursor:pointer;
-  border-bottom:2px solid transparent;
-  transition:all 0.22s;
-  letter-spacing:0.03em;
-  font-family:var(--font-body);
+  flex:1;padding:10px 4px 12px;background:none;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:var(--font);color:var(--steel-lt);font-size:.68rem;font-weight:500;
+  transition:color .15s;
 }
-.tab-btn.active{
-  color:var(--sand);
-  border-bottom-color:var(--sand);
-}
+.tab-btn.active{color:var(--blue)}
+.tab-icon{font-size:1.2rem}
 
-/* ══════════════════════════════
-   PAGES
-══════════════════════════════ */
-.page{display:none;padding:24px 16px 60px;max-width:540px;margin:0 auto}
-.page.active{display:block;animation:fadeUp .3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ══ PAGES ══ */
+.page{display:none;padding:16px}
+.page.active{display:block}
 
-/* ── Section heading ── */
-.sec-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:18px;
-}
-.sec-head h2{
-  font-family:var(--font-display);
-  font-size:1.35rem;
-  font-weight:400;
-  font-style:italic;
-  color:var(--espresso);
-}
-.sec-line{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--blush))}
+/* ══ SECTION TITLE ══ */
+.sec-title{font-size:.72rem;font-weight:600;color:var(--steel);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
 
-/* ── Step dots ── */
-.step-dots{
-  display:flex;
-  gap:6px;
-  margin-bottom:22px;
-}
-.step-dot{
-  height:3px;border-radius:2px;
-  flex:1;
-  background:var(--blush);
-  transition:background .35s;
-}
-.step-dot.active{background:var(--terracotta)}
+/* ══ KPI GRID ══ */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.kpi-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh)}
+.kpi-label{font-size:.7rem;color:var(--steel);margin-bottom:4px}
+.kpi-val{font-size:1.65rem;font-weight:700;color:var(--ink);line-height:1}
+.kpi-sub{font-size:.65rem;color:var(--steel-lt);margin-top:3px}
+.kpi-card.blue{background:var(--blue)}
+.kpi-card.blue .kpi-label,.kpi-card.blue .kpi-sub{color:var(--blue-mid)}
+.kpi-card.blue .kpi-val{color:white}
+.kpi-card.green .kpi-val{color:var(--success)}
+.kpi-card.green{background:var(--success-bg)}
 
-/* ══════════════════════════════
-   SERVICE CARDS
-══════════════════════════════ */
-.service-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.service-card{
-  background:var(--white);
-  border:1.5px solid transparent;
-  border-radius:var(--radius-md);
-  padding:16px;
-  cursor:pointer;
-  display:grid;
-  grid-template-columns:1fr auto;
-  align-items:center;
-  gap:12px;
-  box-shadow:var(--shadow-card);
-  transition:all .2s;
-  position:relative;
-  overflow:hidden;
-}
-.service-card::before{
-  content:'';
-  position:absolute;
-  right:0;top:0;bottom:0;
-  width:3px;
-  background:var(--terracotta);
-  opacity:0;
-  transition:opacity .2s;
-}
-.service-card:hover{border-color:var(--blush);transform:translateY(-1px);box-shadow:var(--shadow-soft)}
-.service-card.selected{border-color:var(--terracotta);background:#FDF6F1}
-.service-card.selected::before{opacity:1}
-.svc-name{font-weight:600;font-size:0.95rem;color:var(--ink)}
-.svc-sub{font-size:0.76rem;color:#9A7E6F;margin-top:3px}
-.svc-tag{
-  display:inline-block;
-  background:var(--sage-light);
-  color:var(--sage);
-  font-size:0.68rem;
-  font-weight:600;
-  padding:2px 7px;
-  border-radius:10px;
-  margin-top:6px;
-}
-.svc-price-col{text-align:left}
-.svc-price{font-weight:700;font-size:1.05rem;color:var(--terracotta)}
-.svc-dur{font-size:0.72rem;color:#9A7E6F;margin-top:2px;text-align:left}
+/* ══ PIPELINE BARS ══ */
+.pipe-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh);margin-bottom:18px}
+.pipe-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pipe-row:last-child{margin-bottom:0}
+.pipe-lbl{font-size:.72rem;color:var(--ink);width:100px;text-align:right;flex-shrink:0}
+.pipe-bar-bg{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.pipe-bar{height:100%;border-radius:4px;transition:width .5s ease}
+.pipe-cnt{font-size:.7rem;font-weight:600;color:var(--steel);width:18px;text-align:left;flex-shrink:0}
 
-/* ══════════════════════════════
-   CALENDAR
-══════════════════════════════ */
-.cal-nav{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:16px;
-}
-.cal-nav h3{
-  font-family:var(--font-display);
-  font-size:1.1rem;
-  font-style:italic;
-  font-weight:400;
-}
-.cal-arrow{
-  width:36px;height:36px;
-  border:1.5px solid var(--blush);
-  border-radius:var(--radius-sm);
-  background:transparent;
-  cursor:pointer;
-  font-size:1rem;
-  color:var(--espresso);
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
-}
-.cal-arrow:hover{background:var(--blush)}
-.cal-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:4px;
-  margin-bottom:24px;
-}
-.cal-lbl{text-align:center;font-size:0.68rem;color:#9A7E6F;font-weight:600;padding:3px 0 8px}
-.cal-day{
-  aspect-ratio:1;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:var(--radius-sm);
-  font-size:0.83rem;font-weight:500;
-  cursor:pointer;
-  border:1.5px solid transparent;
-  transition:all .15s;
-  position:relative;
-}
-.cal-day.open:hover{border-color:var(--blush);background:var(--ivory)}
-.cal-day.selected{background:var(--terracotta);color:white;border-color:var(--terracotta)}
-.cal-day.today{color:var(--terracotta);font-weight:700}
-.cal-day.today.selected{color:white}
-.cal-day.past,.cal-day.closed{color:#CCC;cursor:default}
-.cal-day.empty{cursor:default}
-.cal-day.open::after{
-  content:'';
-  width:4px;height:4px;
-  border-radius:50%;
-  background:var(--sage);
-  position:absolute;bottom:3px;
-}
-.cal-day.selected::after{background:rgba(255,255,255,0.6)}
+/* ══ RECENT LIST ══ */
+.recent-card{background:var(--white);border-radius:var(--r-md);padding:4px 14px;box-shadow:var(--sh);margin-bottom:18px}
+.recent-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.recent-row:last-child{border-bottom:none}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#60A5FA);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:white;flex-shrink:0}
+.av.sm{width:40px;height:40px;font-size:.9rem}
+.rr-info{flex:1;min-width:0}
+.rr-name{font-size:.82rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rr-co{font-size:.7rem;color:var(--steel)}
+.rr-right{text-align:left}
+.rr-val{font-size:.78rem;font-weight:700;color:var(--blue)}
+.stage-pill{font-size:.63rem;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap}
 
-/* ══════════════════════════════
-   TIME SLOTS
-══════════════════════════════ */
-.slots-wrap{margin-bottom:24px}
-.slots-date-label{
-  font-size:0.82rem;
-  color:var(--espresso);
-  font-weight:600;
-  margin-bottom:12px;
-  padding:8px 12px;
-  background:var(--blush);
-  border-radius:var(--radius-sm);
-  display:inline-block;
-}
-.slots-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-.slot{
-  padding:10px 4px;
-  text-align:center;
-  border-radius:var(--radius-sm);
-  border:1.5px solid var(--blush);
-  font-size:0.82rem;font-weight:600;
-  cursor:pointer;
-  background:white;
-  color:var(--espresso);
-  transition:all .15s;
-}
-.slot:hover{background:var(--blush)}
-.slot.selected{background:var(--terracotta);color:white;border-color:var(--terracotta)}
-.slot.booked{background:#F5F5F3;color:#C5BAB3;border-color:#EBEBEB;cursor:not-allowed;font-size:0.7rem;font-weight:400}
+/* ══ FILTER CHIPS ══ */
+.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:5px 13px;border-radius:20px;background:var(--white);border:1.5px solid var(--border);font-family:var(--font);font-size:.72rem;font-weight:500;color:var(--steel);white-space:nowrap;cursor:pointer;transition:all .15s;box-shadow:var(--sh)}
+.chip.active{background:var(--blue);border-color:var(--blue);color:white}
 
-/* ══════════════════════════════
-   FORM
-══════════════════════════════ */
-.form-field{margin-bottom:16px}
-.form-field label{
-  display:block;
-  font-size:0.78rem;
-  font-weight:600;
-  color:#7A6355;
-  margin-bottom:6px;
-  letter-spacing:0.04em;
-}
-.form-field input,.form-field textarea{
-  width:100%;
-  padding:13px 14px;
-  border:1.5px solid #E6DBD2;
-  border-radius:var(--radius-sm);
-  font-family:var(--font-body);
-  font-size:0.92rem;
-  background:white;
-  color:var(--ink);
-  transition:border-color .15s;
-  direction:rtl;
-}
-.form-field input:focus,.form-field textarea:focus{
-  outline:none;
-  border-color:var(--terracotta);
-}
+/* ══ SEARCH ══ */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-inp{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--white);font-family:var(--font);font-size:.85rem;color:var(--ink);outline:none;box-shadow:var(--sh)}
+.search-inp:focus{border-color:var(--blue)}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--steel-lt);font-size:.9rem;pointer-events:none}
 
-/* ── Summary card ── */
-.summary-card{
-  background:var(--espresso);
-  color:var(--ivory);
-  border-radius:var(--radius-md);
-  padding:20px;
-  margin-bottom:20px;
-  position:relative;
-  overflow:hidden;
-}
-.summary-card::before{
-  content:'';
-  position:absolute;
-  width:160px;height:160px;
-  border-radius:50%;
-  background:rgba(176,106,74,0.2);
-  top:-40px;left:-40px;
-}
-.summary-card-title{
-  font-family:var(--font-display);
-  font-size:1rem;
-  font-style:italic;
-  font-weight:300;
-  color:var(--sand);
-  margin-bottom:14px;
-  position:relative;
-}
-.sum-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:7px 0;
-  border-bottom:1px solid rgba(255,255,255,0.07);
-  font-size:0.87rem;
-  position:relative;
-}
-.sum-row:last-child{border-bottom:none}
-.sum-row .lbl{color:rgba(253,250,246,0.5);font-size:0.8rem}
-.sum-row .val{font-weight:600;font-size:0.9rem}
-.sum-row.price-row .val{color:var(--sand);font-size:1.05rem}
+/* ══ LEAD CARD ══ */
+.lead-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh);margin-bottom:10px}
+.lc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.lc-info{flex:1;min-width:0}
+.lc-name{font-size:.9rem;font-weight:600;color:var(--ink)}
+.lc-co{font-size:.73rem;color:var(--steel);margin-top:1px}
+.lc-val{font-size:.78rem;font-weight:700;color:var(--blue);background:var(--blue-lt);border-radius:6px;padding:3px 9px;white-space:nowrap;flex-shrink:0}
+.lc-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.lc-phone{font-size:.7rem;color:var(--steel)}
+.lc-date{font-size:.68rem;color:var(--steel-lt)}
+.lc-notes{font-size:.73rem;color:var(--steel);background:var(--bg);border-radius:6px;padding:6px 10px;margin-bottom:8px}
+.lc-actions{display:flex;gap:6px;border-top:1px solid var(--border);padding-top:9px}
+.btn-sm{flex:1;padding:7px 4px;border-radius:var(--r-sm);font-family:var(--font);font-size:.72rem;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.btn-edit{background:var(--blue-lt);color:var(--blue)}
+.btn-del{background:var(--err-bg);color:var(--err)}
+.stage-sel{flex:2;padding:7px 4px;border-radius:var(--r-sm);font-family:var(--font);font-size:.72rem;background:var(--bg);color:var(--steel);border:1px solid var(--border);cursor:pointer;text-align:center}
 
-/* ══════════════════════════════
-   BUTTONS
-══════════════════════════════ */
-.btn-main{
-  width:100%;
-  padding:15px;
-  background:var(--terracotta);
-  color:white;
-  border:none;
-  border-radius:var(--radius-md);
-  font-family:var(--font-body);
-  font-size:0.96rem;
-  font-weight:700;
-  cursor:pointer;
-  letter-spacing:0.03em;
-  transition:all .2s;
-  box-shadow:0 4px 18px rgba(176,106,74,0.3);
-}
-.btn-main:hover{background:#9A5C3D;transform:translateY(-1px)}
-.btn-main:disabled{background:#C8B5A8;box-shadow:none;cursor:not-allowed;transform:none}
-.btn-ghost{
-  width:100%;
-  padding:12px;
-  background:transparent;
-  color:var(--terracotta);
-  border:1.5px solid var(--terracotta);
-  border-radius:var(--radius-md);
-  font-family:var(--font-body);
-  font-size:0.88rem;
-  font-weight:600;
-  cursor:pointer;
-  margin-top:10px;
-  transition:all .15s;
-}
-.btn-ghost:hover{background:#FDF0E8}
+/* ══ FAB ══ */
+.fab{position:fixed;bottom:82px;left:20px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:white;border:none;font-size:1.6rem;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,.4);display:none;align-items:center;justify-content:center;z-index:99;transition:transform .15s}
+.fab:hover{transform:scale(1.05)}
 
-/* ══════════════════════════════
-   SUCCESS
-══════════════════════════════ */
-.success-wrap{text-align:center;padding:40px 16px}
-.success-ring{
-  width:88px;height:88px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--sage),#5C8A62);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.4rem;
-  margin:0 auto 22px;
-  box-shadow:0 10px 30px rgba(122,158,126,0.35);
-  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes popIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
-.success-wrap h2{
-  font-family:var(--font-display);
-  font-size:1.7rem;
-  font-style:italic;
-  font-weight:400;
-  margin-bottom:8px;
-  color:var(--espresso);
-}
-.success-wrap p{color:#9A7E6F;font-size:0.88rem;margin-bottom:24px}
+/* ══ MODAL ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:20px;width:100%;max-height:88vh;overflow-y:auto;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:1rem;font-weight:700;color:var(--ink)}
+.modal-x{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--steel);line-height:1}
+.fg{margin-bottom:13px}
+.fl{font-size:.73rem;font-weight:600;color:var(--steel);display:block;margin-bottom:5px}
+.fi{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:.85rem;color:var(--ink);background:white;outline:none}
+.fi:focus{border-color:var(--blue)}
+select.fi{appearance:none}
+.modal-foot{display:flex;gap:10px;margin-top:18px}
+.btn-primary{flex:1;padding:12px;background:var(--blue);color:white;border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer}
+.btn-cancel{padding:12px 18px;background:var(--bg);color:var(--steel);border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.88rem;cursor:pointer}
 
-/* ══════════════════════════════
-   ADMIN LOCK
-══════════════════════════════ */
-.lock-wrap{text-align:center;padding:50px 20px}
-.lock-icon-wrap{
-  width:68px;height:68px;
-  border-radius:50%;
-  background:var(--blush);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.8rem;
-  margin:0 auto 18px;
-}
-.lock-wrap h2{
-  font-family:var(--font-display);
-  font-size:1.5rem;font-style:italic;font-weight:400;
-  margin-bottom:6px;color:var(--espresso);
-}
-.lock-wrap p{font-size:0.82rem;color:#9A7E6F;margin-bottom:28px}
-.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:28px}
-.pin-dot{
-  width:13px;height:13px;
-  border-radius:50%;
-  border:2px solid var(--blush);
-  background:transparent;
-  transition:all .2s;
-}
-.pin-dot.on{background:var(--terracotta);border-color:var(--terracotta)}
-.numpad{
-  display:grid;
-  grid-template-columns:repeat(3,68px);
-  gap:10px;
-  justify-content:center;
-}
-.num-key{
-  padding:14px 0;
-  background:white;
-  border:1.5px solid #E6DBD2;
-  border-radius:var(--radius-sm);
-  font-size:1.1rem;
-  font-weight:700;
-  font-family:var(--font-body);
-  color:var(--ink);
-  cursor:pointer;
-  transition:all .15s;
-}
-.num-key:hover{border-color:var(--terracotta);background:#FDF0E8}
-.num-key.del{font-size:0.9rem;color:#9A7E6F}
-.pin-err{color:var(--error);font-size:0.82rem;margin-top:14px;min-height:20px}
+/* ══ EMPTY STATE ══ */
+.empty{text-align:center;padding:44px 20px;color:var(--steel-lt)}
+.empty-ico{font-size:2.5rem;margin-bottom:10px}
+.empty-msg{font-size:.85rem}
 
-/* ══════════════════════════════
-   ADMIN PANEL
-══════════════════════════════ */
-.admin-block{margin-bottom:32px}
+/* ══ PIN / SETTINGS ══ */
+.lock-wrap{max-width:300px;margin:32px auto 0;text-align:center;background:var(--white);border-radius:var(--r-lg);padding:28px 18px;box-shadow:var(--sh-md)}
+.lock-ico{font-size:2rem;margin-bottom:10px}
+.lock-wrap h2{font-size:1rem;font-weight:700;margin-bottom:6px}
+.lock-wrap p{font-size:.8rem;color:var(--steel);margin-bottom:22px}
+.pin-dots{display:flex;justify-content:center;gap:11px;margin-bottom:22px}
+.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all .2s}
+.pin-dot.on{background:var(--blue);border-color:var(--blue)}
+.numpad{display:grid;grid-template-columns:repeat(3,62px);gap:8px;justify-content:center}
+.num-key{width:62px;height:50px;border-radius:var(--r-md);background:var(--bg);border:1.5px solid var(--border);font-family:var(--font);font-size:1.1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:all .15s}
+.num-key:hover{background:var(--blue-lt);border-color:var(--blue)}
+.num-key.del{font-size:.9rem;color:var(--steel)}
+.pin-err{color:var(--err);font-size:.8rem;margin-top:10px;min-height:18px}
 
-/* Bookings */
-.booking-card{
-  background:white;
-  border-radius:var(--radius-md);
-  padding:14px 16px;
-  margin-bottom:10px;
-  box-shadow:var(--shadow-card);
-  display:flex;
-  gap:14px;
-  align-items:flex-start;
-  border-right:4px solid var(--terracotta);
-}
-.booking-card.today-card{border-right-color:var(--sage)}
-.bk-time-col{
-  min-width:44px;
-  text-align:center;
-}
-.bk-time{font-weight:700;font-size:1rem;color:var(--terracotta)}
-.bk-date-sm{font-size:0.68rem;color:#9A7E6F}
-.bk-info{flex:1}
-.bk-name{font-weight:700;font-size:0.93rem}
-.bk-detail{font-size:0.76rem;color:#9A7E6F;margin-top:3px}
-.bk-price{font-weight:700;color:var(--terracotta);font-size:0.9rem;white-space:nowrap}
-.today-tag{
-  display:inline-block;
-  background:var(--sage-light);
-  color:var(--sage);
-  font-size:0.68rem;
-  font-weight:700;
-  padding:2px 7px;
-  border-radius:10px;
-  margin-bottom:5px;
-}
-
-/* Services admin */
-.svc-edit-card{
-  background:white;
-  border-radius:var(--radius-sm);
-  padding:14px 16px;
-  margin-bottom:8px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  box-shadow:var(--shadow-card);
-}
-.svc-edit-main{flex:1}
-.svc-edit-name{
-  width:100%;
-  border:none;
-  font-family:var(--font-body);
-  font-size:0.92rem;
-  font-weight:600;
-  color:var(--ink);
-  background:transparent;
-  padding:0;
-  border-bottom:1px solid transparent;
-  transition:border-color .15s;
-}
-.svc-edit-name:focus{outline:none;border-bottom-color:var(--blush)}
-.svc-edit-meta{display:flex;align-items:center;gap:6px;margin-top:6px}
-.mini-input{
-  padding:4px 8px;
-  border:1.5px solid #E6DBD2;
-  border-radius:6px;
-  font-family:var(--font-body);
-  font-size:0.78rem;
-  width:60px;text-align:center;
-  background:white;
-}
-.price-edit{
-  padding:6px 10px;
-  border:1.5px solid var(--blush);
-  border-radius:var(--radius-sm);
-  font-family:var(--font-body);
-  font-weight:700;
-  color:var(--terracotta);
-  font-size:0.92rem;
-  width:75px;text-align:center;
-  background:white;
-}
-.del-btn{
-  background:none;border:none;cursor:pointer;
-  color:#D0C4BB;font-size:1.1rem;
-  padding:4px;transition:color .15s;
-}
-.del-btn:hover{color:var(--error)}
-.add-svc-btn{
-  width:100%;
-  padding:12px;
-  background:transparent;
-  border:2px dashed var(--blush);
-  border-radius:var(--radius-md);
-  font-family:var(--font-body);
-  font-size:0.85rem;
-  color:#9A7E6F;
-  cursor:pointer;
-  transition:all .15s;
-}
-.add-svc-btn:hover{border-color:var(--terracotta);color:var(--terracotta);background:#FDF0E8}
-
-/* Schedule */
-.sched-grid{
-  background:white;
-  border-radius:var(--radius-md);
-  overflow:hidden;
-  box-shadow:var(--shadow-card);
-  margin-bottom:12px;
-}
-.sched-row{
-  display:flex;
-  align-items:center;
-  padding:12px 16px;
-  border-bottom:1px solid #F5EDE5;
-  gap:12px;
-}
-.sched-row:last-child{border-bottom:none}
-.day-nm{font-weight:600;font-size:0.87rem;min-width:56px}
-.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
-.toggle input{opacity:0;width:0;height:0}
-.tog-sl{
-  position:absolute;inset:0;
-  background:#DDD;border-radius:22px;cursor:pointer;transition:.2s;
-}
-.tog-sl::before{
-  content:'';position:absolute;
-  width:16px;height:16px;
-  right:3px;top:3px;
-  background:white;border-radius:50%;transition:.2s;
-}
-.toggle input:checked+.tog-sl{background:var(--terracotta)}
-.toggle input:checked+.tog-sl::before{transform:translateX(-18px)}
-.time-row{display:flex;gap:6px;align-items:center;flex:1;font-size:0.75rem;color:#9A7E6F}
-.time-row input[type=time]{
-  padding:5px 7px;
-  border:1.5px solid #E6DBD2;
-  border-radius:6px;
-  font-size:0.78rem;width:72px;
-  font-family:var(--font-body);
-  text-align:center;
-}
-
-/* Settings */
-.setting-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:white;
-  border-radius:var(--radius-sm);
-  padding:14px 16px;
-  margin-bottom:8px;
-  box-shadow:var(--shadow-card);
-}
-.setting-row .lbl{font-weight:600;font-size:0.87rem}
-.setting-row .sub{font-size:0.72rem;color:#9A7E6F;margin-top:2px}
-.setting-input{
-  padding:7px 10px;
-  border:1.5px solid #E6DBD2;
-  border-radius:var(--radius-sm);
-  font-family:var(--font-body);
-  font-size:0.84rem;
-  width:140px;
-  text-align:right;
-}
-
-/* Save bar */
-.save-bar{
-  position:sticky;bottom:0;
-  background:linear-gradient(to top,var(--parch) 80%,transparent);
-  padding:20px 0 0;margin-top:12px;
-}
-
-/* Empty state */
-.empty-msg{
-  text-align:center;
-  color:#B0A099;font-size:0.85rem;
-  padding:28px 20px;
-  background:white;
-  border-radius:var(--radius-md);
-  border:1.5px dashed var(--blush);
-}
-
-/* About strip */
-.about-strip{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:24px;
-}
-.about-chip{
-  background:white;
-  border:1px solid var(--blush);
-  border-radius:20px;
-  padding:6px 14px;
-  font-size:0.76rem;
-  color:var(--espresso);
-  display:flex;align-items:center;gap:5px;
-}
-
-/* Divider */
-.divider{
-  height:1px;
-  background:linear-gradient(to left,transparent,var(--blush),transparent);
-  margin:24px 0;
-}
+.scard{background:var(--white);border-radius:var(--r-md);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.scard-title{font-size:.7rem;font-weight:600;color:var(--steel);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.srow:last-child{margin-bottom:0}
+.slbl .t{font-size:.83rem;font-weight:500;color:var(--ink)}
+.slbl .s{font-size:.7rem;color:var(--steel-lt);margin-top:1px}
+.sinp{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:.82rem;color:var(--ink);width:155px;outline:none}
+.sinp:focus{border-color:var(--blue)}
+.save-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .2s}
+.save-btn:disabled{opacity:.6;cursor:not-allowed}
+.lock-link{display:block;text-align:center;margin-top:14px;background:none;border:none;color:var(--steel-lt);font-size:.78rem;cursor:pointer;font-family:var(--font)}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ═══ HERO ═══ -->
-<header class="hero">
-  <div class="hero-inner">
-    <div class="logo-mark">🌿</div>
-    <h1><strong>מלי</strong> • יופי ועור</h1>
-    <p class="hero-tagline">טיפולי עור מתקדמים • טבריה</p>
-    <div class="hero-badges">
-      <span class="badge-pill">✦ KB Pure מורשית</span>
-      <span class="badge-pill">✦ טיפולים רפואיים</span>
-      <span class="badge-pill">✦ שנים של ניסיון</span>
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">L</div>
+      <div>
+        <div class="logo-name">LIDERS CRM</div>
+        <div class="logo-tag" id="h-tag">הפלטפורמה שהופכת לידים לעסקאות</div>
+      </div>
     </div>
+    <div class="header-date" id="h-date"></div>
   </div>
-</header>
+</div>
 
-<!-- ═══ TAB BAR ═══ -->
+<!-- ══ TAB BAR ══ -->
 <nav class="tab-bar">
-  <button class="tab-btn active" onclick="showPage('booking',this)">📅 הזמנת תור</button>
-  <button class="tab-btn" onclick="showPage('about',this)">✨ אודות</button>
-  <button class="tab-btn" onclick="showPage('admin',this)">⚙️ ניהול</button>
+  <button class="tab-btn active" onclick="showPage('dash',this)">
+    <span class="tab-icon">📊</span>דשבורד
+  </button>
+  <button class="tab-btn" onclick="showPage('leads',this)">
+    <span class="tab-icon">🎯</span>לידים
+  </button>
+  <button class="tab-btn" onclick="showPage('settings',this)">
+    <span class="tab-icon">⚙️</span>הגדרות
+  </button>
 </nav>
 
-<!-- ════════════════════════════════════
-     BOOKING PAGE
-════════════════════════════════════ -->
-<div class="page active" id="page-booking">
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div class="page active" id="page-dash">
 
-  <div id="booking-flow">
-    <!-- Step dots -->
-    <div class="step-dots">
-      <div class="step-dot active" id="sd1"></div>
-      <div class="step-dot" id="sd2"></div>
-      <div class="step-dot" id="sd3"></div>
-      <div class="step-dot" id="sd4"></div>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-label">סה"כ לידים</div>
+      <div class="kpi-val" id="kpi-total">—</div>
+      <div class="kpi-sub">בפייפליין</div>
     </div>
-
-    <!-- STEP 1 – Service -->
-    <div id="step1">
-      <div class="sec-head"><h2>בחרי טיפול</h2><div class="sec-line"></div></div>
-      <div class="service-list" id="svc-list"></div>
+    <div class="kpi-card">
+      <div class="kpi-label">פעילים</div>
+      <div class="kpi-val" id="kpi-active">—</div>
+      <div class="kpi-sub">לידים פתוחים</div>
     </div>
-
-    <!-- STEP 2 – Date -->
-    <div id="step2" style="display:none">
-      <div class="sec-head"><h2>בחרי תאריך</h2><div class="sec-line"></div></div>
-      <div class="cal-nav">
-        <button class="cal-arrow" onclick="changeMonth(-1)">›</button>
-        <h3 id="month-label"></h3>
-        <button class="cal-arrow" onclick="changeMonth(1)">‹</button>
-      </div>
-      <div class="cal-grid" id="cal-grid"></div>
+    <div class="kpi-card green">
+      <div class="kpi-label">עסקאות סגורות</div>
+      <div class="kpi-val" id="kpi-closed">—</div>
+      <div class="kpi-sub">סה"כ</div>
     </div>
-
-    <!-- STEP 3 – Time -->
-    <div id="step3" style="display:none">
-      <div class="sec-head"><h2>בחרי שעה</h2><div class="sec-line"></div></div>
-      <div class="slots-wrap">
-        <div class="slots-date-label" id="slots-date-label"></div>
-        <div class="slots-grid" id="slots-grid"></div>
-      </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ערך פייפליין</div>
+      <div class="kpi-val" id="kpi-pipe">—</div>
+      <div class="kpi-sub">₪ לידים פעילים</div>
     </div>
-
-    <!-- STEP 4 – Details -->
-    <div id="step4" style="display:none">
-      <div class="sec-head"><h2>פרטים אישיים</h2><div class="sec-line"></div></div>
-      <div class="summary-card" id="booking-summary"></div>
-      <div class="form-field">
-        <label>שם מלא</label>
-        <input type="text" id="f-name" placeholder="שם ושם משפחה">
-      </div>
-      <div class="form-field">
-        <label>טלפון</label>
-        <input type="tel" id="f-phone" placeholder="05X-XXXXXXX" dir="ltr">
-      </div>
-      <div class="form-field">
-        <label>הערות (אופציונלי)</label>
-        <textarea id="f-notes" rows="2" placeholder="מידע רלוונטי על העור / בקשות מיוחדות..."></textarea>
-      </div>
-    </div>
-
-    <!-- Nav buttons -->
-    <button class="btn-main" id="next-btn" onclick="nextStep()" disabled>המשך</button>
-    <button class="btn-ghost" id="back-btn" onclick="prevStep()" style="display:none">← חזרה</button>
   </div>
 
-  <!-- SUCCESS -->
-  <div id="success-screen" class="success-wrap" style="display:none">
-    <div class="success-ring">✓</div>
-    <h2>התור נקבע!</h2>
-    <p>מלי תשמח לראות אותך 🌿<br>פרטי התור שמורים למטה</p>
-    <div class="summary-card" id="success-summary"></div>
-    <button class="btn-ghost" onclick="resetBooking()">הזמנה נוספת</button>
+  <div class="pipe-card">
+    <div class="sec-title">פייפליין</div>
+    <div id="pipe-bars"></div>
   </div>
+
+  <div class="sec-title">לידים אחרונים</div>
+  <div class="recent-card" id="recent-list"></div>
 
 </div>
 
-<!-- ════════════════════════════════════
-     ABOUT PAGE
-════════════════════════════════════ -->
-<div class="page" id="page-about">
-  <div class="sec-head"><h2>על מלי אלגרבלי</h2><div class="sec-line"></div></div>
-
-  <div class="about-strip">
-    <div class="about-chip">📍 טבריה</div>
-    <div class="about-chip">🎓 תעודות מוסמכות</div>
-    <div class="about-chip">🌿 KB Pure מורשית</div>
-    <div class="about-chip">💆 טיפול אישי</div>
+<!-- ══════════════════════ LEADS ══════════════════════ -->
+<div class="page" id="page-leads">
+  <div class="chips" id="chips"></div>
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input class="search-inp" id="search" placeholder="חפש לפי שם, חברה, טלפון..." oninput="renderLeads()">
   </div>
-
-  <p style="font-size:0.9rem;line-height:1.75;color:#5A3E30;margin-bottom:20px">
-    מלי אלגרבלי היא קוסמטיקאית מוסמכת ומנוסה עם שנים של ניסיון בתחום טיפולי העור והיופי.
-    היא מתמחה בטיפולי פנים מתקדמים, פדיקור רפואי ובעיות עור מורכבות — ועובדת אך ורק עם
-    מוצרי <strong>KB Pure</strong>, הידועים כמהפכניים בעולם הקוסמטיקה הרפואית.
-  </p>
-
-  <div class="divider"></div>
-  <div class="sec-head" style="margin-bottom:14px"><h2>מה מייחד אותה</h2><div class="sec-line"></div></div>
-
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
-    <div style="background:white;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow-card);display:flex;gap:12px;align-items:flex-start">
-      <span style="font-size:1.3rem">🧬</span>
-      <div>
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:3px">גישה רפואית לקוסמטיקה</div>
-        <div style="font-size:0.78rem;color:#9A7E6F">טיפול בשורש הבעיה ולא רק בסימפטומים — אקנה, פיגמנטציה, עור רגיש ועוד</div>
-      </div>
-    </div>
-    <div style="background:white;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow-card);display:flex;gap:12px;align-items:flex-start">
-      <span style="font-size:1.3rem">🌿</span>
-      <div>
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:3px">מוצרים מתקדמים בלבד</div>
-        <div style="font-size:0.78rem;color:#9A7E6F">שיתוף פעולה עם KB Pure — סדרת הטיפוח הרפואית המובילה בישראל</div>
-      </div>
-    </div>
-    <div style="background:white;border-radius:var(--radius-sm);padding:14px 16px;box-shadow:var(--shadow-card);display:flex;gap:12px;align-items:flex-start">
-      <span style="font-size:1.3rem">🏠</span>
-      <div>
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:3px">קליניקה ביתית אינטימית</div>
-        <div style="font-size:0.78rem;color:#9A7E6F">טיפול אישי ואוירה חמה — ללא המולה של מכון גדול</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <div class="sec-head" style="margin-bottom:14px"><h2>צרי קשר</h2><div class="sec-line"></div></div>
-  <div style="background:var(--espresso);color:var(--ivory);border-radius:var(--radius-md);padding:20px;text-align:center">
-    <div style="font-size:0.8rem;color:var(--sand);margin-bottom:8px;letter-spacing:0.08em">טבריה והסביבה</div>
-    <div style="font-family:var(--font-display);font-size:1.3rem;font-style:italic;margin-bottom:14px">מלי אלגרבלי</div>
-    <button onclick="showPage('booking',document.querySelector('.tab-btn'))" class="btn-main" style="margin:0">לקביעת תור ←</button>
-  </div>
+  <div id="leads-list"></div>
 </div>
 
-<!-- ════════════════════════════════════
-     ADMIN PAGE
-════════════════════════════════════ -->
-<div class="page" id="page-admin">
+<!-- ══════════════════════ SETTINGS ══════════════════════ -->
+<div class="page" id="page-settings">
 
-  <!-- Lock -->
-  <div id="admin-lock" class="lock-wrap">
-    <div class="lock-icon-wrap">🔒</div>
+  <div id="s-lock" class="lock-wrap">
+    <div class="lock-ico">🔐</div>
     <h2>כניסה לניהול</h2>
-    <p>הכנסי קוד PIN כדי להיכנס</p>
+    <p>הכנס קוד PIN כדי להיכנס</p>
     <div class="pin-dots">
       <div class="pin-dot" id="pd0"></div>
       <div class="pin-dot" id="pd1"></div>
@@ -897,494 +287,352 @@ body::before{
     <div class="pin-err" id="pin-err"></div>
   </div>
 
-  <!-- Panel -->
-  <div id="admin-panel" style="display:none">
-
-    <!-- Upcoming bookings -->
-    <div class="admin-block">
-      <div class="sec-head"><h2>תורים קרובים</h2><div class="sec-line"></div></div>
-      <div id="bk-list"></div>
-    </div>
-
-    <!-- Services -->
-    <div class="admin-block">
-      <div class="sec-head"><h2>שירותים ומחירים</h2><div class="sec-line"></div></div>
-      <div id="svc-admin"></div>
-      <button class="add-svc-btn" onclick="addService()">+ הוסיפי שירות</button>
-    </div>
-
-    <!-- Schedule -->
-    <div class="admin-block">
-      <div class="sec-head"><h2>שעות עבודה</h2><div class="sec-line"></div></div>
-      <div class="sched-grid" id="sched-grid"></div>
-    </div>
-
-    <!-- Settings -->
-    <div class="admin-block">
-      <div class="sec-head"><h2>הגדרות כלליות</h2><div class="sec-line"></div></div>
-      <div class="setting-row">
-        <div><div class="lbl">שם הסלון</div><div class="sub">כותרת ראשית</div></div>
-        <input class="setting-input" id="set-name" value="מלי • יופי ועור">
+  <div id="s-panel" style="display:none">
+    <div class="scard">
+      <div class="scard-title">מיתוג</div>
+      <div class="srow">
+        <div class="slbl"><div class="t">שם החברה</div><div class="s">מופיע בכותרת</div></div>
+        <input class="sinp" id="set-company">
       </div>
-      <div class="setting-row">
-        <div><div class="lbl">כיתוב תחתי</div><div class="sub">תגית קטנה</div></div>
-        <input class="setting-input" id="set-tagline" value="טיפולי עור מתקדמים • טבריה">
-      </div>
-      <div class="setting-row">
-        <div><div class="lbl">PIN כניסה</div><div class="sub">4 ספרות</div></div>
-        <input class="setting-input" id="set-pin" placeholder="PIN חדש (4 ספרות)" maxlength="4" type="password" autocomplete="new-password">
+      <div class="srow">
+        <div class="slbl"><div class="t">תגית</div><div class="s">כיתוב משנה</div></div>
+        <input class="sinp" id="set-tag">
       </div>
     </div>
 
-    <div class="save-bar">
-      <button class="btn-main" onclick="saveSettings()">💾 שמור שינויים</button>
+    <div class="scard">
+      <div class="scard-title">אבטחה</div>
+      <div class="srow">
+        <div class="slbl"><div class="t">PIN חדש</div><div class="s">4 ספרות</div></div>
+        <input class="sinp" id="set-pin" placeholder="••••" maxlength="4" type="password" autocomplete="new-password">
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn" onclick="saveSettings()">💾 שמור שינויים</button>
+    <button class="lock-link" onclick="lockSettings()">🔒 נעל פאנל</button>
+  </div>
+
+</div>
+
+<!-- ══ FAB ══ -->
+<button class="fab" id="fab" onclick="openModal()">+</button>
+
+<!-- ══ LEAD MODAL ══ -->
+<div class="overlay" id="modal" onclick="outsideClose(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-ttl">ליד חדש</span>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="fg"><label class="fl">שם *</label><input class="fi" id="f-name" placeholder="שם מלא"></div>
+    <div class="fg"><label class="fl">חברה</label><input class="fi" id="f-co" placeholder="שם החברה"></div>
+    <div class="fg"><label class="fl">טלפון</label><input class="fi" id="f-phone" placeholder="05X-XXXXXXX" type="tel"></div>
+    <div class="fg"><label class="fl">אימייל</label><input class="fi" id="f-email" type="email" placeholder="email@example.com"></div>
+    <div class="fg"><label class="fl">ערך עסקה ₪</label><input class="fi" id="f-val" type="number" min="0" placeholder="0"></div>
+    <div class="fg">
+      <label class="fl">שלב בפייפליין</label>
+      <select class="fi" id="f-stage">
+        <option value="1">ליד חדש</option>
+        <option value="2">יצרנו קשר</option>
+        <option value="3">הצעה נשלחה</option>
+        <option value="4">במשא ומתן</option>
+        <option value="5">עסקה סגורה ✓</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">הערות</label><input class="fi" id="f-notes" placeholder="הערות נוספות..."></div>
+
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+      <button class="btn-primary" onclick="saveLead()">שמור ליד</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════
-   SUPABASE CLIENT
-═══════════════════════════ */
+/* ══════════════════
+   SUPABASE
+══════════════════ */
 const DB = supabase.createClient(
   'https://scyfywvzoogfrlalgftv.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDA3MzAsImV4cCI6MjA5NjA3NjczMH0._D8ho0Yj8fEk7nd6-vmkjKkKyjfvHDmSq9Y8h5XzQCM'
 );
 
-/* ═══════════════════════════
-   STATE
-═══════════════════════════ */
-const S = {
-  salonName: 'מלי • יופי ועור',
-  tagline: 'טיפולי עור מתקדמים • טבריה',
-  slotMin: 30,
-  services: [],
-  schedule: {
-    0:{open:false,from:'09:00',to:'17:00'},
-    1:{open:true, from:'09:00',to:'17:00'},
-    2:{open:true, from:'09:00',to:'17:00'},
-    3:{open:true, from:'09:00',to:'17:00'},
-    4:{open:true, from:'09:00',to:'17:00'},
-    5:{open:true, from:'09:00',to:'13:30'},
-    6:{open:false,from:'09:00',to:'17:00'},
-  },
-  bookings: []
+/* ══════════════════
+   PIPELINE CONFIG
+══════════════════ */
+const ST = {
+  1:{n:'ליד חדש',     c:'#64748B',bg:'#F8FAFC'},
+  2:{n:'יצרנו קשר',   c:'#2563EB',bg:'#EFF6FF'},
+  3:{n:'הצעה נשלחה',  c:'#8B5CF6',bg:'#F5F3FF'},
+  4:{n:'במשא ומתן',   c:'#F59E0B',bg:'#FFFBEB'},
+  5:{n:'עסקה סגורה ✓',c:'#10B981',bg:'#ECFDF5'},
 };
 
-const MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-const DAYS_S = ['א','ב','ג','ד','ה','ו','ש'];
-const DAY_NM = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+/* ══════════════════
+   STATE
+══════════════════ */
+let leads    = [];
+let cfg      = {company_name:'Liders CRM',tagline:'הפלטפורמה שהופכת לידים לעסקאות'};
+let stageF   = 0;
+let editId   = null;
+let pinStr   = '';
+let sessPin  = '';
+let adminOn  = false;
 
-let bk = { service:null, date:null, time:null };
-let step = 1;
-let calMonth = new Date(); calMonth.setDate(1);
-let pinStr = '';
-let sessionPin = '';
-let adminOpen = false;
-
-/* ═══════════════════════════
+/* ══════════════════
    HELPERS
-═══════════════════════════ */
-function todayStr(){
-  const d=new Date();
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
-}
-function dateStr(off=0){
-  const d=new Date(); d.setDate(d.getDate()+off);
-  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
-}
-function p(n){return String(n).padStart(2,'0')}
-function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`}
-function fmtDay(s){
-  if(!s)return'';
-  const d=new Date(s+'T00:00:00');
-  return DAY_NM[d.getDay()]+', '+fmtDate(s);
-}
-function slots(from,to,dur){
-  const r=[];let[fh,fm]=from.split(':').map(Number);
-  let[th,tm]=to.split(':').map(Number);
-  let c=fh*60+fm,e=th*60+tm;
-  while(c+dur<=e){r.push(`${p(Math.floor(c/60))}:${p(c%60)}`);c+=dur;}
-  return r;
-}
-function isBooked(date,time){return S.bookings.some(b=>b.date===date&&b.time===time)}
-
-function updateHeroText(){
-  const parts=S.salonName.split('•');
-  document.querySelector('.hero h1').innerHTML=`<strong>${parts[0].trim()}</strong>${parts[1]?' • '+parts[1].trim():''}`;
-  document.querySelector('.hero-tagline').textContent=S.tagline;
+══════════════════ */
+function ini(n){ return n.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function fmtV(v){ if(!v) return '—'; return v>=1000?'₪'+(v/1000).toFixed(v%1000?1:0)+'K':'₪'+v; }
+function fmtD(s){ const d=new Date(s); return `${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(2)}`; }
+function todayHe(){
+  const M=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const d=new Date(); return `${d.getDate()} ${M[d.getMonth()]}`;
 }
 
-/* ═══════════════════════════
-   DATA LOADING
-═══════════════════════════ */
+/* ══════════════════
+   DATA
+══════════════════ */
 async function loadData(){
-  const [svcRes,schedRes,setRes] = await Promise.all([
-    DB.from('services').select('*').order('display_order'),
-    DB.from('schedule').select('*').order('day'),
-    DB.from('salon_settings').select('salon_name,tagline').eq('id',1).single()
+  const [lr,cr] = await Promise.all([
+    DB.from('leads').select('*').order('created_at',{ascending:false}),
+    DB.from('crm_settings').select('*').eq('id',1).single()
   ]);
-
-  if(svcRes.data?.length){
-    S.services = svcRes.data.map(s=>({
-      id:s.id, name:s.name, price:s.price,
-      duration:s.duration, tag:s.tag, display_order:s.display_order
-    }));
-  }
-  if(schedRes.data?.length){
-    schedRes.data.forEach(r=>{ S.schedule[r.day]={open:r.is_open,from:r.from_time,to:r.to_time}; });
-  }
-  if(setRes.data){
-    S.salonName=setRes.data.salon_name;
-    S.tagline  =setRes.data.tagline;
-  }
-
-  renderServices();
-  updateHeroText();
-  checkNext();
+  if(lr.data)  leads = lr.data;
+  if(cr.data)  cfg   = cr.data;
+  updateBrand();
+  renderDash();
+  renderLeads();
+  buildChips();
 }
 
-async function loadBookings(){
-  const { data } = await DB.from('bookings')
-    .select('*').gte('date',todayStr()).order('date').order('time');
-  if(data){
-    S.bookings = data.map(b=>({
-      id:b.id, name:b.client_name, phone:b.phone,
-      service:b.service, price:b.price,
-      date:b.date, time:b.time, notes:b.notes
-    }));
-  }
+function updateBrand(){
+  document.getElementById('h-tag').textContent  = cfg.tagline||'';
+  document.getElementById('h-date').textContent = todayHe();
 }
 
-/* ── Pages ── */
+/* ══════════════════
+   PAGES
+══════════════════ */
 function showPage(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='admin') renderAdmin();
+  document.getElementById('fab').style.display = name==='leads'?'flex':'none';
 }
 
-/* ══════════════════════════
-   BOOKING FLOW
-══════════════════════════ */
-function renderServices(){
-  document.getElementById('svc-list').innerHTML = S.services.map(s=>`
-    <div class="service-card ${bk.service?.id===s.id?'selected':''}" onclick="selectSvc(${s.id})">
-      <div>
-        <div class="svc-name">${s.name}</div>
-        <div class="svc-sub">⏱ ${s.duration} דקות</div>
-        <span class="svc-tag">${s.tag}</span>
-      </div>
-      <div class="svc-price-col">
-        <div class="svc-price">₪${s.price}</div>
-        <div class="svc-dur">לטיפול</div>
-      </div>
-    </div>`).join('');
-}
+/* ══════════════════
+   DASHBOARD
+══════════════════ */
+function renderDash(){
+  const tot    = leads.length;
+  const active = leads.filter(l=>l.stage_id<5).length;
+  const closed = leads.filter(l=>l.stage_id===5).length;
+  const pipe   = leads.filter(l=>l.stage_id<5).reduce((s,l)=>s+(l.deal_value||0),0);
 
-function selectSvc(id){
-  bk.service=S.services.find(s=>s.id===id);
-  bk.date=null;bk.time=null;
-  renderServices();checkNext();
-}
+  document.getElementById('kpi-total').textContent  = tot;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-closed').textContent = closed;
+  document.getElementById('kpi-pipe').textContent   = fmtV(pipe).replace('₪','');
 
-function renderCal(){
-  const y=calMonth.getFullYear(),m=calMonth.getMonth();
-  document.getElementById('month-label').textContent=`${MONTHS[m]} ${y}`;
-  const first=new Date(y,m,1).getDay();
-  const days=new Date(y,m+1,0).getDate();
-  const today=new Date();today.setHours(0,0,0,0);
-  let html=DAYS_S.map(d=>`<div class="cal-lbl">${d}</div>`).join('');
-  for(let i=0;i<first;i++) html+=`<div class="cal-day empty"></div>`;
-  for(let d=1;d<=days;d++){
-    const dt=new Date(y,m,d);
-    const dow=dt.getDay();
-    const ds=`${y}-${p(m+1)}-${p(d)}`;
-    const past=dt<today;
-    const closed=!S.schedule[dow]?.open;
-    const isTod=dt.toDateString()===today.toDateString();
-    const sel=bk.date===ds;
-    let cls='cal-day';
-    if(past)cls+=' past';
-    else if(closed)cls+=' closed';
-    else cls+=' open';
-    if(isTod)cls+=' today';
-    if(sel)cls+=' selected';
-    const click=(!past&&!closed)?`onclick="selectDate('${ds}')"`: '';
-    html+=`<div class="${cls}" ${click}>${d}</div>`;
-  }
-  document.getElementById('cal-grid').innerHTML=html;
-}
-
-function selectDate(ds){
-  bk.date=ds;bk.time=null;
-  renderCal();renderSlots();checkNext();
-}
-
-function changeMonth(dir){
-  calMonth.setMonth(calMonth.getMonth()+dir);renderCal();
-}
-
-function renderSlots(){
-  if(!bk.date)return;
-  document.getElementById('slots-date-label').textContent='📅 '+fmtDay(bk.date);
-  const dow=new Date(bk.date+'T00:00:00').getDay();
-  const sc=S.schedule[dow];
-  const dur=bk.service?.duration||S.slotMin;
-  const sl=slots(sc.from,sc.to,dur);
-  if(!sl.length){document.getElementById('slots-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#9A7E6F;font-size:0.85rem;padding:12px">אין שעות פנויות</div>';return;}
-  document.getElementById('slots-grid').innerHTML=sl.map(t=>{
-    const bked=isBooked(bk.date,t);
-    return`<div class="slot ${bked?'booked':''} ${bk.time===t?'selected':''}" ${bked?'':` onclick="selectTime('${t}')"`}>${bked?'תפוס':t}</div>`;
+  const mx = Math.max(...Object.keys(ST).map(id=>leads.filter(l=>l.stage_id===+id).length),1);
+  document.getElementById('pipe-bars').innerHTML = Object.entries(ST).map(([id,s])=>{
+    const cnt=leads.filter(l=>l.stage_id===+id).length;
+    const pct=Math.round(cnt/mx*100);
+    return `<div class="pipe-row">
+      <span class="pipe-lbl">${s.n}</span>
+      <div class="pipe-bar-bg"><div class="pipe-bar" style="width:${pct}%;background:${s.c}"></div></div>
+      <span class="pipe-cnt">${cnt}</span>
+    </div>`;
   }).join('');
+
+  const recent=leads.slice(0,5);
+  document.getElementById('recent-list').innerHTML = recent.length
+    ? recent.map(l=>`
+      <div class="recent-row">
+        <div class="av">${ini(l.name)}</div>
+        <div class="rr-info">
+          <div class="rr-name">${l.name}</div>
+          <div class="rr-co">${l.company||'ללא חברה'}</div>
+        </div>
+        <div class="rr-right">
+          <div class="rr-val">${fmtV(l.deal_value)}</div>
+          <span class="stage-pill" style="background:${ST[l.stage_id]?.bg};color:${ST[l.stage_id]?.c}">${ST[l.stage_id]?.n}</span>
+        </div>
+      </div>`).join('')
+    : '<div style="text-align:center;padding:24px;color:var(--steel-lt);font-size:.82rem">אין לידים עדיין</div>';
 }
 
-function selectTime(t){bk.time=t;renderSlots();checkNext();}
-
-function buildSummary(elId){
-  document.getElementById(elId).innerHTML=`
-    <div class="summary-card-title">סיכום הזמנה</div>
-    <div class="sum-row"><span class="lbl">טיפול</span><span class="val">${bk.service.name}</span></div>
-    <div class="sum-row"><span class="lbl">תאריך</span><span class="val">${fmtDay(bk.date)}</span></div>
-    <div class="sum-row"><span class="lbl">שעה</span><span class="val">${bk.time}</span></div>
-    <div class="sum-row"><span class="lbl">משך</span><span class="val">${bk.service.duration} דקות</span></div>
-    <div class="sum-row price-row"><span class="lbl">לתשלום</span><span class="val">₪${bk.service.price}</span></div>`;
+/* ══════════════════
+   LEADS PAGE
+══════════════════ */
+function buildChips(){
+  document.getElementById('chips').innerHTML =
+    `<button class="chip ${!stageF?'active':''}" onclick="setFilter(0)">הכל (${leads.length})</button>`+
+    Object.entries(ST).map(([id,s])=>{
+      const cnt=leads.filter(l=>l.stage_id===+id).length;
+      return `<button class="chip ${stageF===+id?'active':''}" onclick="setFilter(${id})">${s.n} (${cnt})</button>`;
+    }).join('');
 }
 
-function checkNext(){
-  const btn=document.getElementById('next-btn');
-  if(step===1) btn.disabled=!bk.service;
-  else if(step===2) btn.disabled=!bk.date;
-  else if(step===3) btn.disabled=!bk.time;
-  else btn.disabled=false;
-  for(let i=1;i<=4;i++) document.getElementById('sd'+i).classList.toggle('active',i<=step);
+function setFilter(s){ stageF=s; buildChips(); renderLeads(); }
+
+function renderLeads(){
+  const q=(document.getElementById('search')?.value||'').toLowerCase();
+  let list=leads;
+  if(stageF) list=list.filter(l=>l.stage_id===stageF);
+  if(q)      list=list.filter(l=>(l.name+' '+(l.company||'')+' '+(l.phone||'')).toLowerCase().includes(q));
+
+  document.getElementById('leads-list').innerHTML = list.length
+    ? list.map(l=>`
+      <div class="lead-card">
+        <div class="lc-top">
+          <div class="av sm">${ini(l.name)}</div>
+          <div class="lc-info">
+            <div class="lc-name">${l.name}</div>
+            <div class="lc-co">${l.company||'ללא חברה'}</div>
+          </div>
+          ${l.deal_value?`<div class="lc-val">${fmtV(l.deal_value)}</div>`:''}
+        </div>
+        <div class="lc-meta">
+          <span class="stage-pill" style="background:${ST[l.stage_id]?.bg};color:${ST[l.stage_id]?.c}">${ST[l.stage_id]?.n}</span>
+          ${l.phone?`<span class="lc-phone">📱 ${l.phone}</span>`:''}
+          <span class="lc-date">${fmtD(l.created_at)}</span>
+        </div>
+        ${l.notes?`<div class="lc-notes">💬 ${l.notes}</div>`:''}
+        <div class="lc-actions">
+          <button class="btn-sm btn-edit" onclick="openModal(${l.id})">✏️ ערוך</button>
+          <select class="stage-sel" onchange="updateStage(${l.id},+this.value)">
+            ${Object.entries(ST).map(([id,s])=>`<option value="${id}" ${l.stage_id===+id?'selected':''}>${s.n}</option>`).join('')}
+          </select>
+          <button class="btn-sm btn-del" onclick="delLead(${l.id})">🗑</button>
+        </div>
+      </div>`).join('')
+    : `<div class="empty"><div class="empty-ico">🎯</div><div class="empty-msg">אין לידים${stageF?' בשלב זה':''}<br>לחץ + להוספה</div></div>`;
 }
 
-function nextStep(){
-  if(step===4){submitBooking();return;}
-  step++;
-  showStep(step);
-  if(step===2) renderCal();
-  if(step===3) renderSlots();
-  if(step===4){buildSummary('booking-summary');document.getElementById('next-btn').textContent='✓ אשרי הזמנה';}
-  document.getElementById('back-btn').style.display=step>1?'block':'none';
-  checkNext();
+async function updateStage(id,stage_id){
+  await DB.from('leads').update({stage_id,updated_at:new Date().toISOString()}).eq('id',id);
+  const l=leads.find(x=>x.id===id); if(l) l.stage_id=stage_id;
+  renderDash(); renderLeads(); buildChips();
 }
 
-function prevStep(){
-  step--;
-  showStep(step);
-  document.getElementById('next-btn').textContent='המשך';
-  document.getElementById('back-btn').style.display=step>1?'block':'none';
-  checkNext();
+async function delLead(id){
+  if(!confirm('למחוק ליד זה?')) return;
+  await DB.from('leads').delete().eq('id',id);
+  leads=leads.filter(l=>l.id!==id);
+  renderDash(); renderLeads(); buildChips();
 }
 
-function showStep(n){
-  for(let i=1;i<=4;i++) document.getElementById('step'+i).style.display=i===n?'block':'none';
-}
-
-async function submitBooking(){
-  const name=document.getElementById('f-name').value.trim();
-  const phone=document.getElementById('f-phone').value.trim();
-  if(!name||!phone){alert('נא למלא שם וטלפון');return;}
-
-  const { data, error } = await DB.from('bookings').insert({
-    client_name:name, phone,
-    service:bk.service.name, price:bk.service.price,
-    date:bk.date, time:bk.time,
-    notes:document.getElementById('f-notes').value.trim()
-  }).select().single();
-
-  if(!error && data){
-    S.bookings.push({
-      id:data.id, name, phone,
-      service:bk.service.name, price:bk.service.price,
-      date:bk.date, time:bk.time, notes:data.notes
-    });
+/* ══════════════════
+   MODAL
+══════════════════ */
+function openModal(id=null){
+  editId=id;
+  document.getElementById('modal-ttl').textContent = id?'עריכת ליד':'ליד חדש';
+  if(id){
+    const l=leads.find(x=>x.id===id)||{};
+    document.getElementById('f-name').value  = l.name||'';
+    document.getElementById('f-co').value    = l.company||'';
+    document.getElementById('f-phone').value = l.phone||'';
+    document.getElementById('f-email').value = l.email||'';
+    document.getElementById('f-val').value   = l.deal_value||'';
+    document.getElementById('f-stage').value = l.stage_id||1;
+    document.getElementById('f-notes').value = l.notes||'';
+  } else {
+    ['f-name','f-co','f-phone','f-email','f-val','f-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('f-stage').value=1;
   }
-
-  document.getElementById('booking-flow').style.display='none';
-  buildSummary('success-summary');
-  document.getElementById('success-screen').style.display='block';
+  document.getElementById('modal').classList.add('open');
 }
 
-function resetBooking(){
-  bk={service:null,date:null,time:null};step=1;
-  ['f-name','f-phone','f-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('next-btn').textContent='המשך';
-  document.getElementById('booking-flow').style.display='block';
-  document.getElementById('success-screen').style.display='none';
-  showStep(1);renderServices();checkNext();
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function outsideClose(e){ if(e.target===document.getElementById('modal')) closeModal(); }
+
+async function saveLead(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ alert('שם הוא שדה חובה'); return; }
+  const payload={
+    name,
+    company:document.getElementById('f-co').value.trim()||null,
+    phone:document.getElementById('f-phone').value.trim()||null,
+    email:document.getElementById('f-email').value.trim()||null,
+    deal_value:+document.getElementById('f-val').value||0,
+    stage_id:+document.getElementById('f-stage').value||1,
+    notes:document.getElementById('f-notes').value.trim()||'',
+    updated_at:new Date().toISOString()
+  };
+  if(editId){
+    await DB.from('leads').update(payload).eq('id',editId);
+    const i=leads.findIndex(l=>l.id===editId);
+    if(i>=0) leads[i]={...leads[i],...payload};
+  } else {
+    const {data:nl}=await DB.from('leads').insert(payload).select().single();
+    if(nl) leads.unshift(nl);
+  }
+  closeModal(); renderDash(); renderLeads(); buildChips();
 }
 
-/* ══════════════════════════
-   ADMIN
-══════════════════════════ */
+/* ══════════════════
+   PIN / SETTINGS
+══════════════════ */
 function buildNumpad(){
-  const keys=[1,2,3,4,5,6,7,8,9,null,0,'⌫'];
-  document.getElementById('numpad').innerHTML=keys.map(k=>{
-    if(k===null) return'<div></div>';
-    return`<button class="num-key ${k==='⌫'?'del':''}" onclick="pinPress('${k}')">${k}</button>`;
+  document.getElementById('numpad').innerHTML=[1,2,3,4,5,6,7,8,9,null,0,'⌫'].map(k=>{
+    if(k===null) return '<div></div>';
+    return `<button class="num-key${k==='⌫'?' del':''}" onclick="pinPress('${k}')">${k}</button>`;
   }).join('');
 }
 
 async function pinPress(v){
-  if(v==='⌫'){ pinStr=pinStr.slice(0,-1); updatePinDots(); return; }
+  if(v==='⌫'){ pinStr=pinStr.slice(0,-1); updDots(); return; }
   if(pinStr.length>=4) return;
-  pinStr+=v;
-  updatePinDots();
+  pinStr+=v; updDots();
   if(pinStr.length===4){
     document.getElementById('pin-err').textContent='בודק…';
-    const { data } = await DB.rpc('verify_admin_pin',{ pin_input:pinStr });
+    const {data}=await DB.rpc('verify_admin_pin',{pin_input:pinStr});
     if(data===true){
-      sessionPin=pinStr;
-      adminOpen=true;
-      document.getElementById('admin-lock').style.display='none';
-      document.getElementById('admin-panel').style.display='block';
-      loadBookings().then(()=>renderAdmin());
+      sessPin=pinStr; adminOn=true;
+      document.getElementById('s-lock').style.display='none';
+      document.getElementById('s-panel').style.display='block';
+      document.getElementById('set-company').value = cfg.company_name||'';
+      document.getElementById('set-tag').value     = cfg.tagline||'';
+      document.getElementById('set-pin').value     = '';
     } else {
-      document.getElementById('pin-err').textContent='קוד שגוי, נסי שוב';
+      document.getElementById('pin-err').textContent='קוד שגוי, נסה שוב';
       pinStr='';
-      setTimeout(()=>{ document.getElementById('pin-err').textContent=''; updatePinDots(); },1000);
+      setTimeout(()=>{ document.getElementById('pin-err').textContent=''; updDots(); },1000);
     }
   }
 }
 
-function updatePinDots(){
-  for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('on',i<pinStr.length);
-}
+function updDots(){ for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('on',i<pinStr.length); }
 
-function renderAdmin(){
-  if(!adminOpen) return;
-  renderBookingList();
-  renderSvcAdmin();
-  renderSchedAdmin();
-  document.getElementById('set-name').value=S.salonName;
-  document.getElementById('set-tagline').value=S.tagline;
-  document.getElementById('set-pin').value='';
-}
-
-function renderBookingList(){
-  const today=todayStr();
-  const list=S.bookings.filter(b=>b.date>=today).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
-  document.getElementById('bk-list').innerHTML = list.length ? list.map(b=>`
-    <div class="booking-card ${b.date===today?'today-card':''}">
-      <div class="bk-time-col">
-        <div class="bk-time">${b.time}</div>
-        <div class="bk-date-sm">${fmtDate(b.date)}</div>
-      </div>
-      <div class="bk-info">
-        ${b.date===today?'<div class="today-tag">היום</div>':''}
-        <div class="bk-name">${b.name}</div>
-        <div class="bk-detail">${b.service}</div>
-        ${b.notes?`<div class="bk-detail">💬 ${b.notes}</div>`:''}
-        <div class="bk-detail">📱 ${b.phone}</div>
-      </div>
-      <div class="bk-price">₪${b.price}</div>
-    </div>`).join('')
-    : '<div class="empty-msg">אין תורים קרובים</div>';
-}
-
-function renderSvcAdmin(){
-  document.getElementById('svc-admin').innerHTML=S.services.map((s,i)=>`
-    <div class="svc-edit-card">
-      <div class="svc-edit-main">
-        <input class="svc-edit-name" value="${s.name}" onchange="S.services[${i}].name=this.value">
-        <div class="svc-edit-meta">
-          <span style="font-size:0.72rem;color:#9A7E6F">⏱</span>
-          <input class="mini-input" type="number" value="${s.duration}" onchange="S.services[${i}].duration=+this.value" min="5"> דק'
-          <span style="font-size:0.72rem;color:#9A7E6F;margin-right:4px">תג:</span>
-          <input class="mini-input" style="width:72px" value="${s.tag}" onchange="S.services[${i}].tag=this.value">
-        </div>
-      </div>
-      <input class="price-edit" type="number" value="${s.price}" onchange="S.services[${i}].price=+this.value" min="0">
-      <span style="font-size:0.8rem;color:#9A7E6F">₪</span>
-      <button class="del-btn" onclick="delSvc(${i})">🗑</button>
-    </div>`).join('');
-}
-
-async function addService(){
-  const { data, error } = await DB.from('services').insert({
-    name:'שירות חדש', price:0, duration:30, tag:'כללי',
-    display_order: S.services.length+1
-  }).select().single();
-  if(!error && data){
-    S.services.push({id:data.id,name:data.name,price:data.price,duration:data.duration,tag:data.tag,display_order:data.display_order});
-    renderSvcAdmin(); renderServices();
-  }
-}
-
-async function delSvc(i){
-  if(!confirm('למחוק שירות זה?')) return;
-  const { error } = await DB.from('services').delete().eq('id',S.services[i].id);
-  if(!error){ S.services.splice(i,1); renderSvcAdmin(); renderServices(); }
-}
-
-function renderSchedAdmin(){
-  document.getElementById('sched-grid').innerHTML=Object.entries(S.schedule).map(([d,v])=>`
-    <div class="sched-row">
-      <span class="day-nm">${DAY_NM[d]}</span>
-      <label class="toggle">
-        <input type="checkbox" ${v.open?'checked':''} onchange="S.schedule[${d}].open=this.checked;toggleTimes(${d},this.checked)">
-        <span class="tog-sl"></span>
-      </label>
-      <div class="time-row" id="tr-${d}" style="opacity:${v.open?1:0.3}">
-        <span>מ-</span>
-        <input type="time" value="${v.from}" onchange="S.schedule[${d}].from=this.value" ${!v.open?'disabled':''}>
-        <span>עד</span>
-        <input type="time" value="${v.to}" onchange="S.schedule[${d}].to=this.value" ${!v.open?'disabled':''}>
-      </div>
-    </div>`).join('');
-}
-
-function toggleTimes(d,open){
-  const row=document.getElementById('tr-'+d);
-  row.style.opacity=open?'1':'0.3';
-  row.querySelectorAll('input').forEach(i=>i.disabled=!open);
+function lockSettings(){
+  adminOn=false; pinStr=''; sessPin='';
+  document.getElementById('s-lock').style.display='block';
+  document.getElementById('s-panel').style.display='none';
+  updDots();
 }
 
 async function saveSettings(){
-  const salonName=document.getElementById('set-name').value;
-  const tagline  =document.getElementById('set-tagline').value;
-  const newPin   =document.getElementById('set-pin').value;
-
-  const btn=document.querySelector('.save-bar .btn-main');
+  const company = document.getElementById('set-company').value.trim();
+  const tagline = document.getElementById('set-tag').value.trim();
+  const newPin  = document.getElementById('set-pin').value;
+  const btn=document.getElementById('save-btn');
   btn.textContent='שומר…'; btn.disabled=true;
 
   const pinToSet=(newPin&&/^\d{4}$/.test(newPin))?newPin:null;
+  await DB.rpc('save_crm_settings',{
+    pin_input:sessPin, p_company_name:company, p_tagline:tagline, p_new_pin:pinToSet
+  });
+  if(pinToSet){ sessPin=pinToSet; document.getElementById('set-pin').value=''; }
+  cfg.company_name=company; cfg.tagline=tagline;
+  updateBrand();
 
-  const [settingsRes, svcRes, schedRes] = await Promise.all([
-    DB.rpc('save_settings',{
-      pin_input:sessionPin,
-      p_salon_name:salonName,
-      p_tagline:tagline,
-      p_new_pin:pinToSet
-    }),
-    DB.from('services').upsert(
-      S.services.map((s,i)=>({
-        id:s.id, name:s.name, price:s.price,
-        duration:s.duration, tag:s.tag, display_order:i+1
-      }))
-    ),
-    DB.from('schedule').upsert(
-      Object.entries(S.schedule).map(([day,v])=>({
-        day:+day, is_open:v.open, from_time:v.from, to_time:v.to
-      }))
-    )
-  ]);
-
-  if(settingsRes.data===true && pinToSet){
-    sessionPin=pinToSet;
-    document.getElementById('set-pin').value='';
-  }
-
-  S.salonName=salonName; S.tagline=tagline;
-  updateHeroText();
-
-  btn.disabled=false;
-  btn.textContent='✓ נשמר בהצלחה!'; btn.style.background='var(--sage)';
-  setTimeout(()=>{ btn.textContent='💾 שמור שינויים'; btn.style.background=''; },2200);
+  btn.disabled=false; btn.textContent='✓ נשמר!';
+  setTimeout(()=>{ btn.textContent='💾 שמור שינויים'; },2000);
 }
 
 /* ── Init ── */
