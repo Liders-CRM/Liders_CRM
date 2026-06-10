@@ -1440,6 +1440,11 @@
         </div>
         <div id="dash-cold-leads"></div>
       </div>
+      <div class="section-header" style="margin-top:16px;">
+        <div class="section-title">🔥 לידים חמים</div>
+        <div class="section-link" onclick="App.go('pipeline')">כל הפייפליין</div>
+      </div>
+      <div id="dash-hot-leads" style="padding:0 20px 4px;display:flex;flex-direction:column;gap:8px;"></div>
       <div class="section-header mt-4">
         <div class="section-title">🕐 פעילות אחרונה</div>
       </div>
@@ -3337,9 +3342,32 @@ const Dashboard = {
     if (gs) gs.style.display = State.leads.length === 0 ? '' : 'none';
     this.renderKPIs();
     this.renderTasks();
+    this.renderHotLeads();
     this.renderColdLeads();
     this.renderActivity();
     this.renderAIBriefing();
+  },
+  renderHotLeads() {
+    const el = document.getElementById('dash-hot-leads');
+    if (!el) return;
+    const hot = State.leads
+      .filter(l => l.stage !== 's5')
+      .sort((a,b) => (b.score||0) - (a.score||0))
+      .slice(0, 4);
+    if (!hot.length) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.innerHTML = hot.map(l => `
+      <div onclick="App.go('lead-detail',{currentLeadId:'${l.id}'})"
+           style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+                  padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;">
+        <div class="score-badge ${scoreClass(l.score)}" style="min-width:36px;height:36px;font-size:13px;">${l.score||'—'}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:14px;">${escapeHtml(l.name)}</div>
+          <div style="font-size:12px;color:var(--gray-500);">${escapeHtml(l.desired_area||'—')} · ${formatMoney(l.budget_max)}</div>
+        </div>
+        <div style="font-size:18px;color:var(--gray-300);">›</div>
+      </div>
+    `).join('');
   },
   renderKPIs() {
     const newToday   = State.leads.filter(l => l.created_at === today()).length;
@@ -3471,6 +3499,16 @@ const Dashboard = {
   async runAIBriefing(force) {
     const el = document.getElementById('dash-ai-briefing-body');
     if (!el) return;
+    if (State.isDemo) {
+      el.innerHTML = `<div class="ai-card-body">
+        🎯 <strong>ספיר אלגרבלי</strong> — ציון 85, תקציב 1.8M, ממתין לחזרה.<br>
+        📞 <strong>אמיר כהן</strong> — מחכה לאישור בנק, צור קשר היום.<br>
+        ❄️ <strong>2 לידים קפואים</strong> — ללא קשר מעל 14 יום.<br>
+        💡 <strong>המלצה:</strong> התחל עם ספיר — הסיכוי לסגירה הכי גבוה.
+      </div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">⚡ תצוגת דמו — התחבר לקבל תדרוך אמיתי על הלידים שלך</div>`;
+      return;
+    }
     if (!force && this._briefingCache?.date === today()) { this.renderAIBriefing(); return; }
     el.innerHTML = `<div class="ai-thinking">✨ סורק לידים, משימות ופעילות ובונה תדרוך אישי... <div class="ai-dots"><span></span><span></span><span></span></div></div>`;
     try {
