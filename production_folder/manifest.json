@@ -1,0 +1,15 @@
+{
+  "name": "Liders CRM",
+  "short_name": "Liders",
+  "description": "ניהול לידים ופייפליין מכירות",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F1F3D",
+  "theme_color": "#2563EB",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

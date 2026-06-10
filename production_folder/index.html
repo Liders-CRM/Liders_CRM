@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liders CRM</title>
+<meta name="description" content="Liders CRM — מערכת ניהול לידים ופייפליין מכירות">
+<meta name="theme-color" content="#0F1F3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Liders CRM">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --navy:#0F1F3D;
+  --navy2:#162B52;
+  --blue:#2563EB;
+  --blue-dk:#1D4ED8;
+  --blue-lt:#EFF6FF;
+  --blue-mid:#BFDBFE;
+  --steel:#64748B;
+  --steel-lt:#94A3B8;
+  --bg:#F1F5F9;
+  --white:#FFFFFF;
+  --border:#E2E8F0;
+  --ink:#0F172A;
+  --success:#10B981;
+  --success-bg:#ECFDF5;
+  --warn:#F59E0B;
+  --warn-bg:#FFFBEB;
+  --err:#EF4444;
+  --err-bg:#FEF2F2;
+  --purple:#8B5CF6;
+  --purple-bg:#F5F3FF;
+  --font:'Heebo',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;
+  --sh:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --sh-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;direction:rtl;padding-bottom:72px}
+
+/* ══ HEADER ══ */
+.header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  color:white;padding:18px 20px 14px;
+  position:sticky;top:0;z-index:50;
+}
+.header-top{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:38px;height:38px;border-radius:var(--r-sm);
+  background:linear-gradient(135deg,var(--blue),#60A5FA);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:800;color:white;
+}
+.logo-name{font-size:1.1rem;font-weight:700;letter-spacing:.3px}
+.logo-tag{font-size:.65rem;color:var(--blue-mid);margin-top:1px}
+.header-date{font-size:.72rem;color:var(--steel-lt)}
+
+/* ══ TAB BAR ══ */
+.tab-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);border-top:1px solid var(--border);
+  display:flex;z-index:100;
+  box-shadow:0 -2px 8px rgba(0,0,0,.07);
+}
+.tab-btn{
+  flex:1;padding:10px 4px 12px;background:none;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:var(--font);color:var(--steel-lt);font-size:.68rem;font-weight:500;
+  transition:color .15s;
+}
+.tab-btn.active{color:var(--blue)}
+.tab-icon{font-size:1.2rem}
+
+/* ══ PAGES ══ */
+.page{display:none;padding:16px}
+.page.active{display:block}
+
+/* ══ SECTION TITLE ══ */
+.sec-title{font-size:.72rem;font-weight:600;color:var(--steel);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+
+/* ══ KPI GRID ══ */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.kpi-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.kpi-label{font-size:.7rem;color:var(--steel);margin-bottom:4px}
+.kpi-val{font-size:1.65rem;font-weight:700;color:var(--ink);line-height:1}
+.kpi-sub{font-size:.65rem;color:var(--steel-lt);margin-top:3px}
+.kpi-card.blue{background:var(--blue)}
+.kpi-card.blue .kpi-label,.kpi-card.blue .kpi-sub{color:var(--blue-mid)}
+.kpi-card.blue .kpi-val{color:white}
+.kpi-card.green .kpi-val{color:var(--success)}
+.kpi-card.green{background:var(--success-bg)}
+
+/* ══ PIPELINE BARS ══ */
+.pipe-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh);margin-bottom:18px}
+.pipe-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;cursor:pointer;border-radius:6px;padding:2px 4px;transition:background .12s}
+.pipe-row:hover{background:var(--blue-lt)}
+.pipe-row:last-child{margin-bottom:0}
+.pipe-lbl{font-size:.72rem;color:var(--ink);width:100px;text-align:right;flex-shrink:0}
+.pipe-bar-bg{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.pipe-bar{height:100%;border-radius:4px;transition:width .5s ease}
+.pipe-cnt{font-size:.7rem;font-weight:600;color:var(--steel);width:18px;text-align:left;flex-shrink:0}
+
+/* ══ RECENT LIST ══ */
+.recent-card{background:var(--white);border-radius:var(--r-md);padding:4px 14px;box-shadow:var(--sh);margin-bottom:18px}
+.recent-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;border-radius:6px;padding-inline:6px}
+.recent-row:hover{background:var(--blue-lt)}
+.recent-row:last-child{border-bottom:none}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#60A5FA);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:white;flex-shrink:0}
+.av.sm{width:40px;height:40px;font-size:.9rem}
+.rr-info{flex:1;min-width:0}
+.rr-name{font-size:.82rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rr-co{font-size:.7rem;color:var(--steel)}
+.rr-right{text-align:left}
+.rr-val{font-size:.78rem;font-weight:700;color:var(--blue)}
+.stage-pill{font-size:.63rem;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap}
+
+/* ══ FILTER CHIPS ══ */
+.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:5px 13px;border-radius:20px;background:var(--white);border:1.5px solid var(--border);font-family:var(--font);font-size:.72rem;font-weight:500;color:var(--steel);white-space:nowrap;cursor:pointer;transition:all .15s;box-shadow:var(--sh)}
+.chip.active{background:var(--blue);border-color:var(--blue);color:white}
+
+/* ══ SEARCH ══ */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-inp{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--white);font-family:var(--font);font-size:.85rem;color:var(--ink);outline:none;box-shadow:var(--sh)}
+.search-inp:focus{border-color:var(--blue)}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--steel-lt);font-size:.9rem;pointer-events:none}
+
+/* ══ LEAD CARD ══ */
+.lead-card{background:var(--white);border-radius:var(--r-md);padding:14px;box-shadow:var(--sh);margin-bottom:10px}
+.lc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.lc-info{flex:1;min-width:0}
+.lc-name{font-size:.9rem;font-weight:600;color:var(--ink)}
+.lc-co{font-size:.73rem;color:var(--steel);margin-top:1px}
+.lc-val{font-size:.78rem;font-weight:700;color:var(--blue);background:var(--blue-lt);border-radius:6px;padding:3px 9px;white-space:nowrap;flex-shrink:0}
+.lc-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.lc-phone{font-size:.7rem;color:var(--steel)}
+.lc-date{font-size:.68rem;color:var(--steel-lt)}
+.lc-notes{font-size:.73rem;color:var(--steel);background:var(--bg);border-radius:6px;padding:6px 10px;margin-bottom:8px}
+.lc-actions{display:flex;gap:6px;border-top:1px solid var(--border);padding-top:9px}
+.btn-sm{flex:1;padding:7px 4px;border-radius:var(--r-sm);font-family:var(--font);font-size:.72rem;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.btn-edit{background:var(--blue-lt);color:var(--blue)}
+.btn-del{background:var(--err-bg);color:var(--err)}
+.stage-sel{flex:2;padding:7px 4px;border-radius:var(--r-sm);font-family:var(--font);font-size:.72rem;background:var(--bg);color:var(--steel);border:1px solid var(--border);cursor:pointer;text-align:center}
+
+/* ══ FAB ══ */
+.fab{position:fixed;bottom:82px;left:20px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:white;border:none;font-size:1.6rem;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,.4);display:none;align-items:center;justify-content:center;z-index:99;transition:transform .15s}
+.fab:hover{transform:scale(1.05)}
+
+/* ══ MODAL ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:20px;width:100%;max-height:88vh;overflow-y:auto;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:1rem;font-weight:700;color:var(--ink)}
+.modal-x{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--steel);line-height:1}
+.fg{margin-bottom:13px}
+.fl{font-size:.73rem;font-weight:600;color:var(--steel);display:block;margin-bottom:5px}
+.fi{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:.85rem;color:var(--ink);background:white;outline:none}
+.fi:focus{border-color:var(--blue)}
+select.fi{appearance:none}
+.modal-foot{display:flex;gap:10px;margin-top:18px}
+.btn-primary{flex:1;padding:12px;background:var(--blue);color:white;border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer}
+.btn-cancel{padding:12px 18px;background:var(--bg);color:var(--steel);border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.88rem;cursor:pointer}
+
+/* ══ EMPTY STATE ══ */
+.empty{text-align:center;padding:44px 20px;color:var(--steel-lt)}
+.empty-ico{font-size:2.5rem;margin-bottom:10px}
+.empty-msg{font-size:.85rem}
+
+/* ══ PIN / SETTINGS ══ */
+.lock-wrap{max-width:300px;margin:32px auto 0;text-align:center;background:var(--white);border-radius:var(--r-lg);padding:28px 18px;box-shadow:var(--sh-md)}
+.lock-ico{font-size:2rem;margin-bottom:10px}
+.lock-wrap h2{font-size:1rem;font-weight:700;margin-bottom:6px}
+.lock-wrap p{font-size:.8rem;color:var(--steel);margin-bottom:22px}
+.pin-dots{display:flex;justify-content:center;gap:11px;margin-bottom:22px}
+.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all .2s}
+.pin-dot.on{background:var(--blue);border-color:var(--blue)}
+.numpad{display:grid;grid-template-columns:repeat(3,62px);gap:8px;justify-content:center}
+.num-key{width:62px;height:50px;border-radius:var(--r-md);background:var(--bg);border:1.5px solid var(--border);font-family:var(--font);font-size:1.1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:all .15s}
+.num-key:hover{background:var(--blue-lt);border-color:var(--blue)}
+.num-key.del{font-size:.9rem;color:var(--steel)}
+.pin-err{color:var(--err);font-size:.8rem;margin-top:10px;min-height:18px}
+
+.scard{background:var(--white);border-radius:var(--r-md);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.scard-title{font-size:.7rem;font-weight:600;color:var(--steel);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.srow:last-child{margin-bottom:0}
+.slbl .t{font-size:.83rem;font-weight:500;color:var(--ink)}
+.slbl .s{font-size:.7rem;color:var(--steel-lt);margin-top:1px}
+.sinp{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:.82rem;color:var(--ink);width:155px;outline:none}
+.sinp:focus{border-color:var(--blue)}
+.save-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--r-md);font-family:var(--font);font-size:.9rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .2s}
+.save-btn:disabled{opacity:.6;cursor:not-allowed}
+.lock-link{display:block;text-align:center;margin-top:14px;background:none;border:none;color:var(--steel-lt);font-size:.78rem;cursor:pointer;font-family:var(--font)}
+
+/* ══ APP GATE ══ */
+.gate-overlay{position:fixed;inset:0;background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 60%,#0D1B35 100%);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.gate-box{width:100%;max-width:320px;text-align:center}
+.gate-logo-icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--blue),#60A5FA);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:white;margin:0 auto 12px}
+.gate-brand{font-size:1.4rem;font-weight:800;color:white;letter-spacing:.5px}
+.gate-sub{font-size:.75rem;color:var(--blue-mid);margin-bottom:36px}
+.gate-box .pin-dots{margin-bottom:28px}
+.gate-box .pin-dot{border-color:rgba(255,255,255,.3)}
+.gate-box .pin-dot.on{background:var(--blue);border-color:var(--blue)}
+.gate-box .num-key{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:white}
+.gate-box .num-key:hover{background:rgba(37,99,235,.5);border-color:var(--blue)}
+.gate-err-txt{color:#FDA4AF;font-size:.82rem;margin-top:14px;min-height:20px}
+
+/* ══ HEADER LOCK BTN ══ */
+.hdr-lock{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--r-sm);color:white;font-size:.75rem;padding:5px 10px;cursor:pointer;font-family:var(--font)}
+.hdr-lock:hover{background:rgba(255,255,255,.18)}
+</style>
+</head>
+<body>
+
+<!-- ══ APP GATE ══ -->
+<div class="gate-overlay" id="app-gate">
+  <div class="gate-box">
+    <div class="gate-logo-icon">L</div>
+    <div class="gate-brand">LIDERS CRM</div>
+    <div class="gate-sub">הפלטפורמה שהופכת לידים לעסקאות</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="gd0"></div>
+      <div class="pin-dot" id="gd1"></div>
+      <div class="pin-dot" id="gd2"></div>
+      <div class="pin-dot" id="gd3"></div>
+    </div>
+    <div class="numpad" id="gate-numpad"></div>
+    <div class="gate-err-txt" id="gate-err"></div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">L</div>
+      <div>
+        <div class="logo-name">LIDERS CRM</div>
+        <div class="logo-tag" id="h-tag">הפלטפורמה שהופכת לידים לעסקאות</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="header-date" id="h-date"></div>
+      <button class="hdr-lock" onclick="lockApp()" title="התנתק">🔒</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB BAR ══ -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('dash',this)">
+    <span class="tab-icon">📊</span>דשבורד
+  </button>
+  <button class="tab-btn" onclick="showPage('leads',this)">
+    <span class="tab-icon">🎯</span>לידים
+  </button>
+  <button class="tab-btn" onclick="showPage('settings',this)">
+    <span class="tab-icon">⚙️</span>הגדרות
+  </button>
+</nav>
+
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div class="page active" id="page-dash">
+
+  <div class="kpi-grid">
+    <div class="kpi-card blue" onclick="goToLeads(0)">
+      <div class="kpi-label">סה"כ לידים</div>
+      <div class="kpi-val" id="kpi-total">—</div>
+      <div class="kpi-sub">בפייפליין ←</div>
+    </div>
+    <div class="kpi-card" onclick="goToLeads(-1)">
+      <div class="kpi-label">פעילים</div>
+      <div class="kpi-val" id="kpi-active">—</div>
+      <div class="kpi-sub">לידים פתוחים ←</div>
+    </div>
+    <div class="kpi-card green" onclick="goToLeads(5)">
+      <div class="kpi-label">עסקאות סגורות</div>
+      <div class="kpi-val" id="kpi-closed">—</div>
+      <div class="kpi-sub">סה"כ ←</div>
+    </div>
+    <div class="kpi-card" onclick="goToLeads(-1)">
+      <div class="kpi-label">ערך פייפליין</div>
+      <div class="kpi-val" id="kpi-pipe">—</div>
+      <div class="kpi-sub">₪ לידים פעילים ←</div>
+    </div>
+  </div>
+
+  <div class="pipe-card">
+    <div class="sec-title">פייפליין</div>
+    <div id="pipe-bars"></div>
+  </div>
+
+  <div class="sec-title">לידים אחרונים</div>
+  <div class="recent-card" id="recent-list"></div>
+
+</div>
+
+<!-- ══════════════════════ LEADS ══════════════════════ -->
+<div class="page" id="page-leads">
+  <div class="chips" id="chips"></div>
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input class="search-inp" id="search" placeholder="חפש לפי שם, חברה, טלפון..." oninput="renderLeads()">
+  </div>
+  <div id="leads-list"></div>
+</div>
+
+<!-- ══════════════════════ SETTINGS ══════════════════════ -->
+<div class="page" id="page-settings">
+
+  <div id="s-lock" class="lock-wrap">
+    <div class="lock-ico">🔐</div>
+    <h2>כניסה לניהול</h2>
+    <p>הכנס קוד PIN כדי להיכנס</p>
+    <div class="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="numpad" id="numpad"></div>
+    <div class="pin-err" id="pin-err"></div>
+  </div>
+
+  <div id="s-panel" style="display:none">
+    <div class="scard">
+      <div class="scard-title">מיתוג</div>
+      <div class="srow">
+        <div class="slbl"><div class="t">שם החברה</div><div class="s">מופיע בכותרת</div></div>
+        <input class="sinp" id="set-company">
+      </div>
+      <div class="srow">
+        <div class="slbl"><div class="t">תגית</div><div class="s">כיתוב משנה</div></div>
+        <input class="sinp" id="set-tag">
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">אבטחה</div>
+      <div class="srow">
+        <div class="slbl"><div class="t">PIN חדש</div><div class="s">4 ספרות</div></div>
+        <input class="sinp" id="set-pin" placeholder="••••" maxlength="4" type="password" autocomplete="new-password">
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn" onclick="saveSettings()">💾 שמור שינויים</button>
+    <button class="lock-link" onclick="lockSettings()">🔒 נעל פאנל</button>
+  </div>
+
+</div>
+
+<!-- ══ FAB ══ -->
+<button class="fab" id="fab" onclick="openModal()">+</button>
+
+<!-- ══ LEAD MODAL ══ -->
+<div class="overlay" id="modal" onclick="outsideClose(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-ttl">ליד חדש</span>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="fg"><label class="fl">שם *</label><input class="fi" id="f-name" placeholder="שם מלא"></div>
+    <div class="fg"><label class="fl">חברה</label><input class="fi" id="f-co" placeholder="שם החברה"></div>
+    <div class="fg"><label class="fl">טלפון</label><input class="fi" id="f-phone" placeholder="05X-XXXXXXX" type="tel"></div>
+    <div class="fg"><label class="fl">אימייל</label><input class="fi" id="f-email" type="email" placeholder="email@example.com"></div>
+    <div class="fg"><label class="fl">ערך עסקה ₪</label><input class="fi" id="f-val" type="number" min="0" placeholder="0"></div>
+    <div class="fg">
+      <label class="fl">שלב בפייפליין</label>
+      <select class="fi" id="f-stage">
+        <option value="1">ליד חדש</option>
+        <option value="2">יצרנו קשר</option>
+        <option value="3">הצעה נשלחה</option>
+        <option value="4">במשא ומתן</option>
+        <option value="5">עסקה סגורה ✓</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">הערות</label><input class="fi" id="f-notes" placeholder="הערות נוספות..."></div>
+
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+      <button class="btn-primary" onclick="saveLead()">שמור ליד</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════
+   SUPABASE
+══════════════════ */
+const DB = supabase.createClient(
+  'https://scyfywvzoogfrlalgftv.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDA3MzAsImV4cCI6MjA5NjA3NjczMH0._D8ho0Yj8fEk7nd6-vmkjKkKyjfvHDmSq9Y8h5XzQCM'
+);
+
+/* ══════════════════
+   PIPELINE CONFIG
+══════════════════ */
+const ST = {
+  1:{n:'ליד חדש',     c:'#64748B',bg:'#F8FAFC'},
+  2:{n:'יצרנו קשר',   c:'#2563EB',bg:'#EFF6FF'},
+  3:{n:'הצעה נשלחה',  c:'#8B5CF6',bg:'#F5F3FF'},
+  4:{n:'במשא ומתן',   c:'#F59E0B',bg:'#FFFBEB'},
+  5:{n:'עסקה סגורה ✓',c:'#10B981',bg:'#ECFDF5'},
+};
+
+/* ══════════════════
+   STATE
+══════════════════ */
+let leads    = [];
+let cfg      = {company_name:'Liders CRM',tagline:'הפלטפורמה שהופכת לידים לעסקאות'};
+let stageF   = 0;
+let editId   = null;
+let pinStr   = '';
+let sessPin  = '';
+let adminOn  = false;
+let gateStr  = '';
+
+/* ══════════════════
+   HELPERS
+══════════════════ */
+function ini(n){ return n.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function fmtV(v){ if(!v) return '—'; return v>=1000?'₪'+(v/1000).toFixed(v%1000?1:0)+'K':'₪'+v; }
+function fmtD(s){ const d=new Date(s); return `${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(2)}`; }
+function todayHe(){
+  const M=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const d=new Date(); return `${d.getDate()} ${M[d.getMonth()]}`;
+}
+
+/* ══════════════════
+   DATA
+══════════════════ */
+async function loadData(){
+  const [lr,cr] = await Promise.all([
+    DB.from('leads').select('*').order('created_at',{ascending:false}),
+    DB.from('crm_settings').select('*').eq('id',1).single()
+  ]);
+  if(lr.data)  leads = lr.data;
+  if(cr.data)  cfg   = cr.data;
+  updateBrand();
+  renderDash();
+  renderLeads();
+  buildChips();
+}
+
+function updateBrand(){
+  document.getElementById('h-tag').textContent  = cfg.tagline||'';
+  document.getElementById('h-date').textContent = todayHe();
+}
+
+/* ══════════════════
+   PAGES
+══════════════════ */
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  document.getElementById('fab').style.display = (name==='leads'||name==='dash')?'flex':'none';
+  if(name==='settings' && adminOn){
+    document.getElementById('s-lock').style.display='none';
+    document.getElementById('s-panel').style.display='block';
+    document.getElementById('set-company').value = cfg.company_name||'';
+    document.getElementById('set-tag').value     = cfg.tagline||'';
+  }
+}
+
+function goToLeads(stageId){
+  // stageId: 0=all, -1=active only (stages 1-4), 1-5=specific stage
+  if(stageId===-1){
+    stageF=0; // will filter active in renderLeads
+    window._activeOnly=true;
+  } else {
+    stageF=stageId;
+    window._activeOnly=false;
+  }
+  const btn=document.querySelectorAll('.tab-btn')[1];
+  showPage('leads',btn);
+  buildChips(); renderLeads();
+}
+
+/* ══════════════════
+   DASHBOARD
+══════════════════ */
+function renderDash(){
+  const tot    = leads.length;
+  const active = leads.filter(l=>l.stage_id<5).length;
+  const closed = leads.filter(l=>l.stage_id===5).length;
+  const pipe   = leads.filter(l=>l.stage_id<5).reduce((s,l)=>s+(l.deal_value||0),0);
+
+  document.getElementById('kpi-total').textContent  = tot;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-closed').textContent = closed;
+  document.getElementById('kpi-pipe').textContent   = fmtV(pipe).replace('₪','');
+
+  const mx = Math.max(...Object.keys(ST).map(id=>leads.filter(l=>l.stage_id===+id).length),1);
+  document.getElementById('pipe-bars').innerHTML = Object.entries(ST).map(([id,s])=>{
+    const cnt=leads.filter(l=>l.stage_id===+id).length;
+    const pct=Math.round(cnt/mx*100);
+    return `<div class="pipe-row" onclick="goToLeads(${id})">
+      <span class="pipe-lbl">${s.n}</span>
+      <div class="pipe-bar-bg"><div class="pipe-bar" style="width:${pct}%;background:${s.c}"></div></div>
+      <span class="pipe-cnt">${cnt}</span>
+    </div>`;
+  }).join('');
+
+  const recent=leads.slice(0,5);
+  document.getElementById('recent-list').innerHTML = recent.length
+    ? recent.map(l=>`
+      <div class="recent-row" onclick="openModal(${l.id})">
+        <div class="av">${ini(l.name)}</div>
+        <div class="rr-info">
+          <div class="rr-name">${l.name}</div>
+          <div class="rr-co">${l.company||'ללא חברה'}</div>
+        </div>
+        <div class="rr-right">
+          <div class="rr-val">${fmtV(l.deal_value)}</div>
+          <span class="stage-pill" style="background:${ST[l.stage_id]?.bg};color:${ST[l.stage_id]?.c}">${ST[l.stage_id]?.n}</span>
+        </div>
+      </div>`).join('')
+    : '<div style="text-align:center;padding:24px;color:var(--steel-lt);font-size:.82rem">אין לידים עדיין</div>';
+}
+
+/* ══════════════════
+   LEADS PAGE
+══════════════════ */
+function buildChips(){
+  document.getElementById('chips').innerHTML =
+    `<button class="chip ${!stageF?'active':''}" onclick="setFilter(0)">הכל (${leads.length})</button>`+
+    Object.entries(ST).map(([id,s])=>{
+      const cnt=leads.filter(l=>l.stage_id===+id).length;
+      return `<button class="chip ${stageF===+id?'active':''}" onclick="setFilter(${id})">${s.n} (${cnt})</button>`;
+    }).join('');
+}
+
+function setFilter(s){ stageF=s; window._activeOnly=false; buildChips(); renderLeads(); }
+
+function renderLeads(){
+  const q=(document.getElementById('search')?.value||'').toLowerCase();
+  let list=leads;
+  if(stageF) list=list.filter(l=>l.stage_id===stageF);
+  else if(window._activeOnly) list=list.filter(l=>l.stage_id<5);
+  if(q)      list=list.filter(l=>(l.name+' '+(l.company||'')+' '+(l.phone||'')).toLowerCase().includes(q));
+
+  document.getElementById('leads-list').innerHTML = list.length
+    ? list.map(l=>`
+      <div class="lead-card">
+        <div class="lc-top">
+          <div class="av sm">${ini(l.name)}</div>
+          <div class="lc-info">
+            <div class="lc-name">${l.name}</div>
+            <div class="lc-co">${l.company||'ללא חברה'}</div>
+          </div>
+          ${l.deal_value?`<div class="lc-val">${fmtV(l.deal_value)}</div>`:''}
+        </div>
+        <div class="lc-meta">
+          <span class="stage-pill" style="background:${ST[l.stage_id]?.bg};color:${ST[l.stage_id]?.c}">${ST[l.stage_id]?.n}</span>
+          ${l.phone?`<span class="lc-phone">📱 ${l.phone}</span>`:''}
+          <span class="lc-date">${fmtD(l.created_at)}</span>
+        </div>
+        ${l.notes?`<div class="lc-notes">💬 ${l.notes}</div>`:''}
+        <div class="lc-actions">
+          <button class="btn-sm btn-edit" onclick="openModal(${l.id})">✏️ ערוך</button>
+          <select class="stage-sel" onchange="updateStage(${l.id},+this.value)">
+            ${Object.entries(ST).map(([id,s])=>`<option value="${id}" ${l.stage_id===+id?'selected':''}>${s.n}</option>`).join('')}
+          </select>
+          <button class="btn-sm btn-del" onclick="delLead(${l.id})">🗑</button>
+        </div>
+      </div>`).join('')
+    : `<div class="empty"><div class="empty-ico">🎯</div><div class="empty-msg">אין לידים${stageF?' בשלב זה':''}<br>לחץ + להוספה</div></div>`;
+}
+
+async function updateStage(id,stage_id){
+  await DB.from('leads').update({stage_id,updated_at:new Date().toISOString()}).eq('id',id);
+  const l=leads.find(x=>x.id===id); if(l) l.stage_id=stage_id;
+  renderDash(); renderLeads(); buildChips();
+}
+
+async function delLead(id){
+  if(!confirm('למחוק ליד זה?')) return;
+  await DB.from('leads').delete().eq('id',id);
+  leads=leads.filter(l=>l.id!==id);
+  renderDash(); renderLeads(); buildChips();
+}
+
+/* ══════════════════
+   MODAL
+══════════════════ */
+function openModal(id=null){
+  editId=id;
+  document.getElementById('modal-ttl').textContent = id?'עריכת ליד':'ליד חדש';
+  if(id){
+    const l=leads.find(x=>x.id===id)||{};
+    document.getElementById('f-name').value  = l.name||'';
+    document.getElementById('f-co').value    = l.company||'';
+    document.getElementById('f-phone').value = l.phone||'';
+    document.getElementById('f-email').value = l.email||'';
+    document.getElementById('f-val').value   = l.deal_value||'';
+    document.getElementById('f-stage').value = l.stage_id||1;
+    document.getElementById('f-notes').value = l.notes||'';
+  } else {
+    ['f-name','f-co','f-phone','f-email','f-val','f-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('f-stage').value=1;
+  }
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function outsideClose(e){ if(e.target===document.getElementById('modal')) closeModal(); }
+
+async function saveLead(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ alert('שם הוא שדה חובה'); return; }
+  const payload={
+    name,
+    company:document.getElementById('f-co').value.trim()||null,
+    phone:document.getElementById('f-phone').value.trim()||null,
+    email:document.getElementById('f-email').value.trim()||null,
+    deal_value:+document.getElementById('f-val').value||0,
+    stage_id:+document.getElementById('f-stage').value||1,
+    notes:document.getElementById('f-notes').value.trim()||'',
+    updated_at:new Date().toISOString()
+  };
+  if(editId){
+    await DB.from('leads').update(payload).eq('id',editId);
+    const i=leads.findIndex(l=>l.id===editId);
+    if(i>=0) leads[i]={...leads[i],...payload};
+  } else {
+    const {data:nl}=await DB.from('leads').insert(payload).select().single();
+    if(nl) leads.unshift(nl);
+  }
+  closeModal(); renderDash(); renderLeads(); buildChips();
+}
+
+/* ══════════════════
+   APP GATE
+══════════════════ */
+function buildGateNumpad(){
+  document.getElementById('gate-numpad').innerHTML=[1,2,3,4,5,6,7,8,9,null,0,'⌫'].map(k=>{
+    if(k===null) return '<div></div>';
+    return `<button class="num-key${k==='⌫'?' del':''}" onclick="gatePin('${k}')">${k}</button>`;
+  }).join('');
+}
+
+function updGateDots(){
+  for(let i=0;i<4;i++) document.getElementById('gd'+i).classList.toggle('on',i<gateStr.length);
+}
+
+async function gatePin(v){
+  if(v==='⌫'){ gateStr=gateStr.slice(0,-1); updGateDots(); return; }
+  if(gateStr.length>=4) return;
+  gateStr+=v; updGateDots();
+  if(gateStr.length===4){
+    document.getElementById('gate-err').textContent='בודק…';
+    const {data}=await DB.rpc('verify_admin_pin',{pin_input:gateStr});
+    if(data===true){
+      sessPin=gateStr; adminOn=true;
+      document.getElementById('app-gate').style.display='none';
+      loadData();
+    } else {
+      document.getElementById('gate-err').textContent='קוד שגוי, נסה שוב';
+      gateStr='';
+      setTimeout(()=>{ document.getElementById('gate-err').textContent=''; updGateDots(); },1200);
+    }
+  }
+}
+
+function lockApp(){
+  adminOn=false; sessPin=''; gateStr=''; pinStr='';
+  document.getElementById('app-gate').style.display='flex';
+  updGateDots();
+  document.getElementById('gate-err').textContent='';
+  document.getElementById('s-lock').style.display='block';
+  document.getElementById('s-panel').style.display='none';
+}
+
+/* ══════════════════
+   PIN / SETTINGS
+══════════════════ */
+function buildNumpad(){
+  document.getElementById('numpad').innerHTML=[1,2,3,4,5,6,7,8,9,null,0,'⌫'].map(k=>{
+    if(k===null) return '<div></div>';
+    return `<button class="num-key${k==='⌫'?' del':''}" onclick="pinPress('${k}')">${k}</button>`;
+  }).join('');
+}
+
+async function pinPress(v){
+  if(v==='⌫'){ pinStr=pinStr.slice(0,-1); updDots(); return; }
+  if(pinStr.length>=4) return;
+  pinStr+=v; updDots();
+  if(pinStr.length===4){
+    document.getElementById('pin-err').textContent='בודק…';
+    const {data}=await DB.rpc('verify_admin_pin',{pin_input:pinStr});
+    if(data===true){
+      sessPin=pinStr; adminOn=true;
+      document.getElementById('s-lock').style.display='none';
+      document.getElementById('s-panel').style.display='block';
+      document.getElementById('set-company').value = cfg.company_name||'';
+      document.getElementById('set-tag').value     = cfg.tagline||'';
+      document.getElementById('set-pin').value     = '';
+    } else {
+      document.getElementById('pin-err').textContent='קוד שגוי, נסה שוב';
+      pinStr='';
+      setTimeout(()=>{ document.getElementById('pin-err').textContent=''; updDots(); },1000);
+    }
+  }
+}
+
+function updDots(){ for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('on',i<pinStr.length); }
+
+function lockSettings(){
+  adminOn=false; pinStr=''; sessPin='';
+  document.getElementById('s-lock').style.display='block';
+  document.getElementById('s-panel').style.display='none';
+  updDots();
+}
+
+async function saveSettings(){
+  const company = document.getElementById('set-company').value.trim();
+  const tagline = document.getElementById('set-tag').value.trim();
+  const newPin  = document.getElementById('set-pin').value;
+  const btn=document.getElementById('save-btn');
+  btn.textContent='שומר…'; btn.disabled=true;
+
+  const pinToSet=(newPin&&/^\d{4}$/.test(newPin))?newPin:null;
+  await DB.rpc('save_crm_settings',{
+    pin_input:sessPin, p_company_name:company, p_tagline:tagline, p_new_pin:pinToSet
+  });
+  if(pinToSet){ sessPin=pinToSet; document.getElementById('set-pin').value=''; }
+  cfg.company_name=company; cfg.tagline=tagline;
+  updateBrand();
+
+  btn.disabled=false; btn.textContent='✓ נשמר!';
+  setTimeout(()=>{ btn.textContent='💾 שמור שינויים'; },2000);
+}
+
+/* ── Init ── */
+buildGateNumpad();
+buildNumpad();
+</script>
+</body>
+</html>
