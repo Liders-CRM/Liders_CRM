@@ -3614,12 +3614,12 @@ const Dashboard = {
     }
     if (State.isDemo) {
       el.innerHTML = `<div class="ai-card-body">
-        **🎯 המוקד של היום:** סגור את עסקת אמיר בן-דוד — הוא מחכה לאישור בנק ומוכן לחתום תוך חודשיים.<br><br>
-        **👥 לטפל בדחיפות:**<br>
+        <strong>🎯 המוקד של היום:</strong> סגור את עסקת אמיר בן-דוד — הוא מחכה לאישור בנק ומוכן לחתום תוך חודשיים.<br><br>
+        <strong>👥 לטפל בדחיפות:</strong><br>
         🔴 <strong>אמיר בן-דוד</strong> (ציון 95) — הצעה ב-4.2M שלוחה, אישור בנק ממשמש ובא. צור קשר היום.<br>
         🟠 <strong>שרה אברהם</strong> (ציון 91) — ביקור בנכס ברמת השרון מחר. שלח אישור וכתובת.<br>
         🟡 <strong>מיכל רוזן</strong> (ציון 45) — לא ענתה לשיחה האחרונה, ניסיון חוזר באיחור של יומיים.<br><br>
-        **💡 תובנה לשיפור:** 3 לידים ללא כתובת מייל — שלח WhatsApp עם בקשה להשלמת פרטים לפני הביקור.
+        <strong>💡 תובנה לשיפור:</strong> 3 לידים ללא כתובת מייל — שלח WhatsApp עם בקשה להשלמת פרטים לפני הביקור.
       </div>
       <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">⚡ תצוגת דמו — התחבר לקבל תדרוך אמיתי על הלידים שלך</div>
       <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;opacity:.6;" disabled>🔄 רענן תדרוך</button>`;
@@ -3643,7 +3643,7 @@ const Dashboard = {
       `;
     } catch(e) {
       el.innerHTML = `
-        <div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>
+        <div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e?.message || 'שגיאה לא ידועה')}</div>
         <button class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="Dashboard.runAIBriefing(true)">נסה שוב</button>
       `;
     }
@@ -3956,7 +3956,7 @@ const LeadDetail = {
         b.className = 'score-badge ' + scoreClass(lead.score);
       });
     } catch(e) {
-      document.getElementById('ai-score-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
+      document.getElementById('ai-score-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e?.message || 'שגיאה לא ידועה')}</div>`;
     }
   },
 
@@ -3973,7 +3973,7 @@ const LeadDetail = {
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-followup-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-followup-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
+      document.getElementById('ai-followup-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e?.message || 'שגיאה לא ידועה')}</div>`;
     }
   },
 
@@ -3990,7 +3990,7 @@ const LeadDetail = {
           <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="copyAIText('ai-rescue-result')">📋 העתק</button>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-rescue-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
+      document.getElementById('ai-rescue-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e?.message || 'שגיאה לא ידועה')}</div>`;
     }
   },
 
@@ -4007,7 +4007,7 @@ const LeadDetail = {
           <div class="ai-card-body">${html}</div>
         </div>`;
     } catch(e) {
-      document.getElementById('ai-advice-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e.message)}</div>`;
+      document.getElementById('ai-advice-result').innerHTML = `<div style="color:var(--red-600);font-size:13px;padding:8px;">שגיאה: ${escapeHtml(e?.message || 'שגיאה לא ידועה')}</div>`;
     }
   },
 };
@@ -4401,7 +4401,7 @@ const Settings = {
         </div>
         ` : `
         <div class="billing-cta-box">
-          <div style="font-weight:800;font-size:15px;margin-bottom:2px;">⏳ ${Billing.daysLeft()} ימים נותרו בניסיון Basic החינמי</div>
+          <div style="font-weight:800;font-size:15px;margin-bottom:2px;">⏳ ${Billing.daysLeft()} ימים נותרו בניסיון החינמי</div>
           <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">בחר תוכנית — ביטול בכל עת, ללא עמלות</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('basic')" style="flex:1;min-width:80px;">Basic<br><span style="font-size:10px;opacity:.7;">₪199 · 1 סוכן</span></button>
