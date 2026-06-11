@@ -2463,7 +2463,7 @@ const Billing = {
 
   daysLeft() {
     const t = State.tenant?.trial_ends_at;
-    if (!t) return 30;
+    if (!t) return 21;
     return Math.max(0, Math.ceil((new Date(t) - new Date()) / 864e5));
   },
   // תקופת שימור נתונים — 30 יום נוספים בחינם אחרי תום הניסיון, בלי גישה לשימוש במערכת
