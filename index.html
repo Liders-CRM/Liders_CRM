@@ -1642,7 +1642,7 @@
     </div>
     <div class="paywall-plans" id="paywall-plans-container"></div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('screen-paywall').classList.add('hidden');document.getElementById('app-shell').classList.remove('hidden');App.go('dashboard');" style="flex:1;max-width:160px;">🏠 חזור לבית</button>
+      <button class="btn btn-ghost btn-sm" onclick="if(Billing.isExpired()||Billing.retentionEndsAt()&&new Date()>Billing.retentionEndsAt()){App.logout();}else{document.getElementById('screen-paywall').classList.add('hidden');document.getElementById('app-shell').classList.remove('hidden');App.go('dashboard');}" style="flex:1;max-width:160px;">🏠 חזור לבית</button>
       <button class="btn btn-ghost btn-sm" onclick="App.logout()" style="flex:1;max-width:160px;opacity:.6;">← יציאה</button>
     </div>
   </div>
@@ -2479,7 +2479,7 @@ const Billing = {
 
   daysLeft() {
     const t = State.tenant?.trial_ends_at;
-    if (!t) return 21;
+    if (!t) return 0;
     return Math.max(0, Math.ceil((new Date(t) - new Date()) / 864e5));
   },
   // תקופת שימור נתונים — 30 יום נוספים בחינם אחרי תום הניסיון, בלי גישה לשימוש במערכת
@@ -2535,6 +2535,7 @@ const Billing = {
   },
   renderTrialBanner() {
     if (this.isPaid()) return;
+    if (this.isExpired()) return;
     const days = this.daysLeft();
     const banner = document.getElementById('trial-banner');
     if (!banner) return;
@@ -2588,7 +2589,6 @@ const Billing = {
     if (days > 7 || days <= 0 || this.isPaid()) return;
     const key = 'billing_reminder_' + new Date().toISOString().split('T')[0];
     if (localStorage.getItem(key)) return;
-    localStorage.setItem(key, '1');
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
     modal.id = 'modal-billing-reminder';
@@ -2612,6 +2612,7 @@ const Billing = {
       </div>
     `;
     document.body.appendChild(modal);
+    localStorage.setItem(key, '1');
   },
   openCheckout(planId = 'pro') {
     const url = this.CHECKOUT_URLS[planId];
@@ -3085,11 +3086,10 @@ const Make = {
   async trigger(event, payload) {
     const url = this.getWebhook();
     if (!url) return;
+    const _ctrl = new AbortController();
+    const _timer = setTimeout(() => _ctrl.abort(), 8000);
     try {
-      await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
           event,
           event_label: this.EVENT_LABELS[event] || ('🔔 ' + event),
           ...payload,
@@ -3097,9 +3097,8 @@ const Make = {
           tenant: State.tenant?.name || 'לידרס',
           whatsapp_from: this.getWhatsApp(),
           timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch {}
+        }), signal: _ctrl.signal });
+    } catch(_e) { /* timeout or network — silent */ } finally { clearTimeout(_timer); }
   },
 
   newLead(lead) {
@@ -3354,6 +3353,10 @@ const App = {
     // Wipe per-tenant state so a different account signing in on this same
     // browser/device can never see (or be shown alongside) the previous
     // tenant's leads, tasks, properties, activities, stages, agent or tenant info.
+    State.isDemo = false;
+    document.getElementById('demo-banner')?.classList.add('hidden');
+    ['make_webhook_url','whatsapp_number','onboarding_done','liders_industry',
+     'liders_agency_name','liders_agency_phone','liders_agency_city'].forEach(k => localStorage.removeItem(k));
     State.leads       = [...DEMO.leads];
     State.properties  = [...DEMO.properties];
     State.tasks       = [...DEMO.tasks];
@@ -3709,7 +3712,7 @@ const Leads = {
     const q = this._query.toLowerCase();
     const list = q
       ? State.leads.filter(l =>
-          l.name.toLowerCase().includes(q) ||
+          (l.name||'').toLowerCase().includes(q) ||
           (l.phone||'').includes(q) ||
           (l.desired_area||'').toLowerCase().includes(q)
         )
@@ -3940,11 +3943,11 @@ const LeadDetail = {
           <div class="ai-card-title">🎯 ניתוח AI</div>
           <div class="ai-score-row">
             <div class="ai-score-circle" style="background:${color}">${result.score}</div>
-            <div style="flex:1;font-size:13px;color:var(--gray-700);line-height:1.5;">${result.reason}</div>
+            <div style="flex:1;font-size:13px;color:var(--gray-700);line-height:1.5;">${escapeHtml(result.reason||'')}</div>
           </div>
           <div class="ai-next-action">
             <div class="ai-next-action-label">צעד מומלץ:</div>
-            <div style="font-size:13px;color:var(--gray-700);">${result.next_action}</div>
+            <div style="font-size:13px;color:var(--gray-700);">${escapeHtml(result.next_action||'')}</div>
           </div>
         </div>`;
       // update score badge in header
@@ -4449,6 +4452,7 @@ const Settings = {
    ACTIONS
 ═══════════════════════════════════════════ */
 async function toggleTask(taskId) {
+  if (demoGuard()) return;
   const task = State.tasks.find(t => t.id === taskId);
   if (!task) return;
   const prev = task.done;
@@ -4604,6 +4608,7 @@ const LeadImport = {
 
   async confirm() {
     if (!this._leads.length) return;
+    if (demoGuard()) return;
     const btn = document.getElementById('import-confirm-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'מייבא…'; }
     try {
@@ -4749,6 +4754,12 @@ async function addTask() {
     State.tasks.unshift(task);
     closeModal('modal-add-task');
     document.getElementById('new-task-title').value = '';
+    const tsel = document.getElementById('new-task-type');
+    const tpri = document.getElementById('new-task-priority');
+    const tdue = document.getElementById('new-task-due');
+    if (tsel) tsel.value = 'call';
+    if (tpri) tpri.value = 'medium';
+    if (tdue) tdue.value = '';
     toast('✅ משימה נוספה', 'success');
     App.updateBadges();
     if (State.screen === 'tasks') Tasks.render();
@@ -4773,6 +4784,8 @@ async function addActivity() {
     if (lead) lead.last_contact = today();
     closeModal('modal-add-activity');
     document.getElementById('new-activity-content').value = '';
+    const asel = document.getElementById('new-activity-type');
+    if (asel) asel.value = 'call';
     toast('📝 פעילות נרשמה', 'success');
     if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
   } catch(e) {
