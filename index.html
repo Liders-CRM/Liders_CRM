@@ -2119,7 +2119,7 @@ const DB = {
       sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
-      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at').eq('id', this.tenantId).single(),
+      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number').eq('id', this.tenantId).single(),
     ]);
     this.stageMap = {};
     this.stageRev = {};
@@ -2295,7 +2295,7 @@ const DB = {
    DEMO DATA
 ═══════════════════════════════════════════ */
 const DEMO = {
-  tenant: { id:'t1', name:'לידרס נדל"ן — תל אביב', slug:'liders-tlv', plan:'pro' },
+  tenant: { id:'t1', name:'לידרס נדל"ן — תל אביב', slug:'liders-tlv', plan:'pro', make_webhook_url:null, whatsapp_number:null },
   agent:  { id:'a1', name:'ישראל כהן', initials:'יכ', email:'israel@liders.co.il', role:'מנהל' },
 
   stages: [
@@ -2984,15 +2984,33 @@ function copyAIText(elId) {
    MAKE.COM MODULE — Phase 4
 ═══════════════════════════════════════════ */
 const Make = {
-  getWebhook() { return localStorage.getItem('make_webhook_url') || ''; },
-  setWebhook(url) {
-    localStorage.setItem('make_webhook_url', url.trim());
+  getWebhook() {
+    return State.tenant?.make_webhook_url || localStorage.getItem('make_webhook_url') || '';
+  },
+  async setWebhook(url) {
+    url = url.trim();
+    localStorage.setItem('make_webhook_url', url);
+    if (!State.isDemo && DB.tenantId) {
+      try {
+        await sbClient.rpc('update_tenant_integrations', { p_make_webhook_url: url });
+        if (State.tenant) State.tenant.make_webhook_url = url;
+      } catch(e) { console.warn('setWebhook DB:', e); }
+    }
     toast('✅ Webhook נשמר', 'success');
     if (State.screen === 'settings') Settings.render();
   },
-  getWhatsApp() { return localStorage.getItem('whatsapp_number') || ''; },
-  setWhatsApp(num) {
-    localStorage.setItem('whatsapp_number', num.trim());
+  getWhatsApp() {
+    return State.tenant?.whatsapp_number || localStorage.getItem('whatsapp_number') || '';
+  },
+  async setWhatsApp(num) {
+    num = num.trim();
+    localStorage.setItem('whatsapp_number', num);
+    if (!State.isDemo && DB.tenantId) {
+      try {
+        await sbClient.rpc('update_tenant_integrations', { p_whatsapp_number: num });
+        if (State.tenant) State.tenant.whatsapp_number = num;
+      } catch(e) { console.warn('setWhatsApp DB:', e); }
+    }
     toast('✅ מספר WhatsApp נשמר', 'success');
     if (State.screen === 'settings') Settings.render();
   },
@@ -3227,8 +3245,12 @@ const App = {
       State.agent  = { name: user.email.split('@')[0], email: user.email, initials: user.email[0].toUpperCase(), role: 'סוכן' };
       const t = loaded.tenant;
       State.tenant = t
-        ? { name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at }
+        ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
+            make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null }
         : { name: 'לידרס נדל"ן — תל אביב', plan: 'trial' };
+      // Seed localStorage from DB so Make.getWebhook() works offline too
+      if (t?.make_webhook_url) localStorage.setItem('make_webhook_url', t.make_webhook_url);
+      if (t?.whatsapp_number)  localStorage.setItem('whatsapp_number',  t.whatsapp_number);
       State.isNewTenant = isNew;
       this._showApp();
       // fade out overlay
@@ -4237,7 +4259,7 @@ const Settings = {
           </div>
           <div class="api-key-row">
             <input type="tel" id="wa-number-input" placeholder="0501234567" value="${escapeHtml(Make.getWhatsApp() ?? '')}" style="direction:ltr;" />
-            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);">שמור</button>
+            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);" >שמור</button>
           </div>
         </div>
         <div class="settings-row" style="flex-direction:column; align-items:stretch;">
@@ -4252,8 +4274,13 @@ const Settings = {
           </div>
           <div class="api-key-row">
             <input type="url" id="make-webhook-input" placeholder="https://hook.eu2.make.com/..." value="${escapeHtml(Make.getWebhook())}" style="direction:ltr;" />
-            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('make-webhook-input').value; if(v) Make.setWebhook(v);">שמור</button>
-            ${Make.getWebhook() ? `<button class="btn btn-ghost btn-sm" onclick="Make.test()">בדוק</button>` : ''}
+            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('make-webhook-input').value; if(v) Make.setWebhook(v);" >שמור</button>
+            ${Make.getWebhook() ? `<button class="btn btn-ghost btn-sm" onclick="Make.test()">בדוק חיבור</button>` : ''}
+            <div style="font-size:11px;color:var(--gray-500);margin-top:6px;line-height:1.5;">
+              💡 <strong>איך מגדירים?</strong><br>
+              make.com → Scenarios → Create → Custom webhook → העתק את ה-URL לכאן<br>
+              אחרי שמירה — לחץ "בדוק חיבור" לאימות
+            </div>
           </div>
         </div>
         <div class="settings-row">
@@ -4294,6 +4321,23 @@ const Settings = {
           </div>
         </div>
         `}
+        <div class="settings-row" style="flex-direction:column; align-items:stretch; cursor:default;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="settings-row-icon">🔗</div>
+            <div class="settings-row-body" style="flex:1;">
+              <div class="settings-row-label">Stripe Webhook URL</div>
+              <div class="settings-row-sub" style="color:var(--gray-500);">הדבק ב-Stripe → Developers → Webhooks</div>
+            </div>
+          </div>
+          <div class="api-key-row" style="margin-top:6px;">
+            <input class="form-input" style="font-size:11px;direction:ltr;" readonly
+              value="https://scyfywvzoogfrlalgftv.supabase.co/functions/v1/stripe-webhook"
+              onclick="this.select();navigator.clipboard?.writeText(this.value);toast('✅ URL הועתק','success');" />
+          </div>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:4px;line-height:1.5;">
+            Events to listen: <code>checkout.session.completed</code> · <code>invoice.paid</code> · <code>customer.subscription.deleted</code>
+          </div>
+        </div>
         <div class="settings-row" style="opacity:.7;">
           <div class="settings-row-icon">📄</div>
           <div class="settings-row-body">
@@ -4922,8 +4966,11 @@ sbClient.auth.onAuthStateChange((event, session) => {
           State.agent  = { name, email: session.user.email, initials: name[0].toUpperCase(), role: 'סוכן' };
           const t = loaded.tenant;
           State.tenant = t
-            ? { name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at }
+            ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
+                make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null }
             : { name: 'לידרס נדל"ן', plan: 'trial' };
+          if (t?.make_webhook_url) localStorage.setItem('make_webhook_url', t.make_webhook_url);
+          if (t?.whatsapp_number)  localStorage.setItem('whatsapp_number',  t.whatsapp_number);
           State.isNewTenant = isNew;
           App._showApp();
           overlay.classList.add('fade-out');

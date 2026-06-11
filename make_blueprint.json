@@ -1,0 +1,135 @@
+{
+  "name": "Liders CRM — Lead Notifications",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": 1,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": -400, "y": 0 },
+        "restore": {
+          "parameters": {
+            "hook": { "label": "Liders CRM Webhook" }
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": -100, "y": 0 }
+      },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 3,
+              "module": "gmail:ActionSendEmail",
+              "version": 1,
+              "parameters": {
+                "account": "YOUR_GMAIL_CONNECTION_ID"
+              },
+              "filter": {
+                "name": "ליד חדש",
+                "conditions": [
+                  [{ "a": "{{1.event}}", "b": "lead.created", "o": "text:equal" }]
+                ]
+              },
+              "mapper": {
+                "to": "elgrablidudu@gmail.com",
+                "subject": "🆕 ליד חדש: {{1.lead_name}}",
+                "content": "<div dir='rtl' style='font-family:sans-serif;'><h2>ליד חדש נכנס!</h2><table><tr><td><b>שם:</b></td><td>{{1.lead_name}}</td></tr><tr><td><b>טלפון:</b></td><td>{{1.lead_phone}}</td></tr><tr><td><b>מקור:</b></td><td>{{1.source}}</td></tr><tr><td><b>תקציב:</b></td><td>{{1.budget}}</td></tr><tr><td><b>אזור:</b></td><td>{{1.area}}</td></tr></table><p>{{1.message}}</p></div>",
+                "type": "html"
+              },
+              "metadata": {
+                "designer": { "x": 200, "y": -150 }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 4,
+              "module": "gmail:ActionSendEmail",
+              "version": 1,
+              "parameters": {
+                "account": "YOUR_GMAIL_CONNECTION_ID"
+              },
+              "filter": {
+                "name": "עסקה נסגרה",
+                "conditions": [
+                  [{ "a": "{{1.event}}", "b": "deal.closed", "o": "text:equal" }]
+                ]
+              },
+              "mapper": {
+                "to": "elgrablidudu@gmail.com",
+                "subject": "🎉 עסקה נסגרה: {{1.lead_name}}",
+                "content": "<div dir='rtl' style='font-family:sans-serif;'><h2>🎉 עסקה נסגרה!</h2><p><b>{{1.lead_name}}</b> עבר לשלב סגירה.</p><p>{{1.message}}</p></div>",
+                "type": "html"
+              },
+              "metadata": {
+                "designer": { "x": 200, "y": 0 }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 5,
+              "module": "gmail:ActionSendEmail",
+              "version": 1,
+              "parameters": {
+                "account": "YOUR_GMAIL_CONNECTION_ID"
+              },
+              "filter": {
+                "name": "שינוי שלב",
+                "conditions": [
+                  [{ "a": "{{1.event}}", "b": "lead.stage_changed", "o": "text:equal" }]
+                ]
+              },
+              "mapper": {
+                "to": "elgrablidudu@gmail.com",
+                "subject": "🔄 עדכון ליד: {{1.lead_name}}",
+                "content": "<div dir='rtl' style='font-family:sans-serif;'><h2>שינוי שלב</h2><p><b>{{1.lead_name}}</b> עבר מ-<b>{{1.from_stage}}</b> ל-<b>{{1.to_stage}}</b></p></div>",
+                "type": "html"
+              },
+              "metadata": {
+                "designer": { "x": 200, "y": 150 }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "eu2.make.com"
+  }
+}
