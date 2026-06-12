@@ -4435,6 +4435,18 @@ const Settings = {
           <div class="settings-arrow">›</div>
         </div>
       </div>
+      ${['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes((State.agent?.email||'').toLowerCase()) ? `
+      <div class="settings-section">
+        <div class="settings-section-title">ניהול פלטפורמה</div>
+        <div class="settings-row" onclick="window.open('./admin.html','_blank')" style="cursor:pointer;">
+          <div class="settings-row-icon">🛡️</div>
+          <div class="settings-row-body">
+            <div class="settings-row-label">פאנל אדמין Liders</div>
+            <div class="settings-row-sub">ניהול לקוחות, חשבוניות ו-SaaS</div>
+          </div>
+          <div class="settings-arrow">↗</div>
+        </div>
+      </div>` : ''}
       <div class="settings-section">
         <div class="settings-section-title">אחר</div>
         <div class="settings-row" onclick="App.logout()">
