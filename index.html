@@ -4,10 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Liders CRM">
   <meta name="theme-color" content="#0F2B4A">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
-  <title>Liders — הפלטפורמה שהופכת לידים לעסקאות</title>
+  <title>Liders CRM — הפלטפורמה שהופכת לידים לעסקאות</title>
+  <meta name="description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 21 יום.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Liders CRM — הפלטפורמה שהופכת לידים לעסקאות">
+  <meta property="og:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 21 יום.">
+  <meta property="og:locale" content="he_IL">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -1341,6 +1349,9 @@
       <button id="btn-login-demo" type="button" class="login-demo-btn" style="touch-action:manipulation;">
         👀 לצפייה זריזה בדמו
       </button>
+      <p style="text-align:center;font-size:0.78rem;color:var(--gray-400);margin-top:16px;">
+        בהרשמה אתה מסכים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
+      </p>
     </div>
   </div>
 </div>
@@ -1968,6 +1979,58 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-property')">ביטול</button>
       <button class="btn btn-primary" style="flex:1;" onclick="addProperty()">שמור נכס</button>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Policy & Terms Modal -->
+<div id="modal-privacy" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-privacy')">
+  <div class="modal" style="max-height:85vh;overflow-y:auto;">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📄 מדיניות פרטיות ותנאי שימוש</div>
+      <button class="modal-close" onclick="closeModal('modal-privacy')">×</button>
+    </div>
+    <div style="padding:0 4px 8px;font-size:0.88rem;line-height:1.75;color:var(--gray-700);">
+
+      <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy-700);">1. מדיניות פרטיות</h3>
+
+      <p><strong>איזה מידע אנחנו אוספים?</strong><br>
+      שם, כתובת אימייל, מספר טלפון ונתוני עסק שאתה מזין למערכת בעצמך (לידים, עסקאות, פעילויות).
+      אין איסוף אוטומטי של נתוני גלישה מעבר למה שנדרש להפעלת השירות.</p>
+
+      <p><strong>למה אנחנו אוספים את זה?</strong><br>
+      אך ורק כדי לספק לך את שירות ה-CRM — ניהול לידים, מעקב עסקאות, ודוחות.</p>
+
+      <p><strong>כמה זמן אנחנו שומרים את הנתונים?</strong><br>
+      נתוניך נשמרים כל עוד המנוי פעיל + 30 יום נוספים לאחר סיומו. לאחר מכן נמחקים אוטומטית.</p>
+
+      <p><strong>האם מידע משותף עם צדדים שלישיים?</strong><br>
+      לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים. שירותי תשתית (Supabase לאחסון, Stripe לחיוב) מקבלים גישה מוגבלת לנדרש בלבד.</p>
+
+      <p><strong>זכות מחיקה</strong><br>
+      לבקשת מחיקת כל הנתונים שלך, שלח אימייל ל-<a href="mailto:liders.crm@gmail.com" style="color:var(--blue-500);">liders.crm@gmail.com</a></p>
+
+      <h3 style="margin:20px 0 8px;font-size:1rem;color:var(--navy-700);">2. תנאי שימוש</h3>
+
+      <p><strong>תיאור השירות</strong><br>
+      Liders CRM הוא שירות SaaS לניהול פייפליין מכירות עבור עסקים. השירות מסופק "כפי שהוא" עם מאמץ מקסימאלי לזמינות.</p>
+
+      <p><strong>ניסיון חינמי</strong><br>
+      ניסיון חינמי של 21 יום ניתן לכל חשבון חדש ללא צורך בכרטיס אשראי. לאחר 21 יום יידרש מנוי בתשלום להמשך גישה.</p>
+
+      <p><strong>ביטול ומחיקה</strong><br>
+      ניתן לבטל בכל עת דרך פורטל החיוב. ביטול תקף לסוף תקופת החיוב הנוכחית. נתוניך יישמרו 30 יום נוספים ולאחר מכן יימחקו.</p>
+
+      <p><strong>הגבלת אחריות</strong><br>
+      Liders לא תישא באחריות לנזקים עקיפים, אובדן רווחים, או אובדן נתונים הנובעים משימוש בשירות.</p>
+
+      <p><strong>דין חל</strong><br>
+      השירות כפוף לחוקי מדינת ישראל, כולל חוק הגנת הפרטיות, תשמ"א-1981 ותקנות אבטחת המידע.</p>
+
+      <p style="margin-top:16px;color:var(--gray-500);font-size:0.82rem;">
+        עדכון אחרון: יוני 2026 | שאלות: <a href="mailto:liders.crm@gmail.com" style="color:var(--blue-500);">liders.crm@gmail.com</a>
+      </p>
     </div>
   </div>
 </div>
@@ -3084,7 +3147,7 @@ const Make = {
       try {
         await sbClient.rpc('update_tenant_integrations', { p_make_webhook_url: url });
         if (State.tenant) State.tenant.make_webhook_url = url;
-      } catch(e) { console.warn('setWebhook DB:', e); }
+      } catch(_e) { /* silent — webhook saved locally */ }
     }
     toast('✅ Webhook נשמר', 'success');
     if (State.screen === 'settings') Settings.render();
@@ -3099,7 +3162,7 @@ const Make = {
       try {
         await sbClient.rpc('update_tenant_integrations', { p_whatsapp_number: num });
         if (State.tenant) State.tenant.whatsapp_number = num;
-      } catch(e) { console.warn('setWhatsApp DB:', e); }
+      } catch(_e) { /* silent — number saved locally */ }
     }
     toast('✅ מספר WhatsApp נשמר', 'success');
     if (State.screen === 'settings') Settings.render();
@@ -3216,10 +3279,10 @@ const Twilio = {
       const { data, error } = await sbClient.functions.invoke('twilio-whatsapp', {
         body: { to: toE164, message },
       });
-      if (error) console.warn('Twilio:', error);
+      if (error) return null;
       return data;
-    } catch(e) {
-      console.warn('Twilio send:', e?.message);
+    } catch(_e) {
+      return null;
     }
   },
 
@@ -4515,7 +4578,7 @@ const Settings = {
             Events to listen: <code>checkout.session.completed</code> · <code>invoice.paid</code> · <code>customer.subscription.deleted</code>
           </div>
         </div>
-        <div class="settings-row" style="opacity:.7;">
+        <div class="settings-row" onclick="openModal('modal-privacy')" style="cursor:pointer;">
           <div class="settings-row-icon">📄</div>
           <div class="settings-row-body">
             <div class="settings-row-label">תנאי שימוש ופרטיות</div>

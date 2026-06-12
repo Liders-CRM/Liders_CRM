@@ -1,0 +1,16 @@
+-- Migration 026: Stripe Webhook Edge Function deployment note
+-- Edge Function `stripe-webhook` must be deployed via Supabase Dashboard or MCP.
+-- Source: supabase/functions/stripe-webhook/index.ts
+--
+-- Required secrets (Supabase Dashboard → Edge Functions → stripe-webhook → Configuration):
+--   STRIPE_WEBHOOK_SECRET = whsec_xxxxxxxxxxxxxxxxxxxxxxxxxxxx  (from Stripe Dashboard → Webhooks)
+--
+-- Stripe Dashboard setup:
+--   1. Go to Stripe Dashboard → Developers → Webhooks → Add endpoint
+--   2. Endpoint URL: https://scyfywvzoogfrlalgftv.supabase.co/functions/v1/stripe-webhook
+--   3. Events: checkout.session.completed, customer.subscription.deleted
+--   4. Copy "Signing secret" → paste as STRIPE_WEBHOOK_SECRET above
+--
+-- Payment Links setup (per plan):
+--   Each Payment Link must have metadata: plan = basic | pro | premium
+--   Stripe Dashboard → Payment Links → Edit → Metadata → Add: plan = basic
