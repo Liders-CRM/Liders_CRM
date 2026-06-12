@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0F2B4A">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
   <title>Liders — הפלטפורמה שהופכת לידים לעסקאות</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -3069,6 +3071,14 @@ const Make = {
   },
   async setWebhook(url) {
     url = url.trim();
+    if (url && !/^https:\/\//i.test(url)) {
+      toast('Webhook URL חייב להתחיל ב-https://', 'error');
+      return;
+    }
+    if (url && /localhost|127\.0\.0\.1|0\.0\.0\.0/i.test(url)) {
+      toast('Webhook URL לא תקין', 'error');
+      return;
+    }
     localStorage.setItem('make_webhook_url', url);
     if (!State.isDemo && DB.tenantId) {
       try {
@@ -3203,16 +3213,10 @@ const Twilio = {
     const toE164 = this._toE164(to);
     if (!toE164) return;
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/twilio-whatsapp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-        },
-        body: JSON.stringify({ to: toE164, message }),
+      const { data, error } = await sbClient.functions.invoke('twilio-whatsapp', {
+        body: { to: toE164, message },
       });
-      const data = await res.json();
-      if (!res.ok) console.warn('Twilio:', data.error || data);
+      if (error) console.warn('Twilio:', error);
       return data;
     } catch(e) {
       console.warn('Twilio send:', e?.message);
@@ -4806,11 +4810,13 @@ async function addLead() {
   const name = document.getElementById('new-lead-name').value.trim();
   const phone = document.getElementById('new-lead-phone').value.trim();
   if (!name || !phone) { toast('נא מלא שם וטלפון', 'error'); return; }
+  const rawBudget = parseInt(document.getElementById('new-lead-budget').value.replace(/[,\.]/g,'')) || 0;
+  if (rawBudget < 0 || rawBudget > 1e9) { toast('תקציב לא תקין', 'error'); return; }
   try {
     const lead = await DB.addLead({
       name, phone,
       source: document.getElementById('new-lead-source').value,
-      budget_max: parseInt(document.getElementById('new-lead-budget').value.replace(/[,\.]/g,'')) || 0,
+      budget_max: rawBudget,
       desired_area: document.getElementById('new-lead-area').value,
       notes: document.getElementById('new-lead-notes').value,
     });
@@ -5054,12 +5060,16 @@ async function saveEditLead() {
   const name = document.getElementById('edit-lead-name').value.trim();
   const phone = document.getElementById('edit-lead-phone').value.trim();
   if (!name || !phone) { toast('נא מלא שם וטלפון', 'error'); return; }
+  const rawBudgetMin = parseInt(document.getElementById('edit-lead-budget-min').value) || null;
+  const rawBudgetMax = parseInt(document.getElementById('edit-lead-budget-max').value) || null;
+  if (rawBudgetMin !== null && (rawBudgetMin < 0 || rawBudgetMin > 1e9)) { toast('תקציב מינימום לא תקין', 'error'); return; }
+  if (rawBudgetMax !== null && (rawBudgetMax < 0 || rawBudgetMax > 1e9)) { toast('תקציב מקסימום לא תקין', 'error'); return; }
   const patch = {
     name,
     phone,
     email: document.getElementById('edit-lead-email').value.trim() || null,
-    budget_min: parseInt(document.getElementById('edit-lead-budget-min').value) || null,
-    budget_max: parseInt(document.getElementById('edit-lead-budget-max').value) || null,
+    budget_min: rawBudgetMin,
+    budget_max: rawBudgetMax,
     desired_area: document.getElementById('edit-lead-area').value.trim() || null,
     source: document.getElementById('edit-lead-source').value,
     notes: document.getElementById('edit-lead-notes').value.trim(),
