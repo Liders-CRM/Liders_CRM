@@ -1,0 +1,13 @@
+-- Migration 023: Twilio WhatsApp Edge Function deployment note
+-- Edge Function `twilio-whatsapp` was deployed via Supabase MCP.
+--
+-- Required secrets (set in Supabase Dashboard → Edge Functions → twilio-whatsapp → Configuration):
+--   TWILIO_ACCOUNT_SID  = ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+--   TWILIO_AUTH_TOKEN   = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+--   TWILIO_WHATSAPP_FROM = +14155238886   (Sandbox) / your approved number (production)
+--
+-- The function accepts POST { to: "+972XXXXXXXXX", message: "..." }
+-- Authorization: Bearer <supabase_anon_key>  (JWT required)
+--
+-- Sandbox note: receiving numbers must first send "join turn-layers" to +1 415 523 8886
+-- For production: upgrade Twilio account + register WhatsApp Business number

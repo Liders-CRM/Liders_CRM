@@ -3166,6 +3166,66 @@ const Make = {
 };
 
 /* ═══════════════════════════════════════════
+   TWILIO WHATSAPP MODULE
+═══════════════════════════════════════════ */
+const Twilio = {
+  _toE164(num) {
+    let n = (num || '').replace(/\D/g, '');
+    if (!n) return null;
+    if (n.startsWith('0')) n = '972' + n.slice(1);
+    return '+' + n;
+  },
+
+  async send(to, message) {
+    if (State.isDemo) return;
+    const toE164 = this._toE164(to);
+    if (!toE164) return;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/twilio-whatsapp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+        },
+        body: JSON.stringify({ to: toE164, message }),
+      });
+      const data = await res.json();
+      if (!res.ok) console.warn('Twilio:', data.error || data);
+      return data;
+    } catch(e) {
+      console.warn('Twilio send:', e?.message);
+    }
+  },
+
+  notifyNewLead(lead) {
+    const to = Make.getWhatsApp();
+    if (!to) return;
+    return this.send(to,
+      `🆕 *ליד חדש הגיע!*\n👤 ${lead.name}\n📞 ${lead.phone || '—'}\n💰 ${lead.budget_max ? '₪' + Number(lead.budget_max).toLocaleString('he') : '—'}\n📍 ${lead.desired_area || '—'}`
+    );
+  },
+
+  notifyStageChanged(lead, toStage) {
+    const to = Make.getWhatsApp();
+    if (!to) return;
+    const isClosed = toStage?.includes('סגירה') || toStage?.includes('נסגר');
+    if (isClosed) {
+      return this.send(to, `🎉 *עסקה נסגרה!*\n👤 ${lead.name}\n💰 ${lead.budget_max ? '₪' + Number(lead.budget_max).toLocaleString('he') : '—'}`);
+    }
+    return this.send(to, `🔄 *${lead.name}* עבר לשלב: *${toStage}*`);
+  },
+
+  async test() {
+    const to = Make.getWhatsApp();
+    if (!to) { toast('הגדר מספר WhatsApp בהגדרות קודם', 'error'); return; }
+    toast('שולח הודעת בדיקה...', '');
+    const data = await this.send(to, '✅ בדיקת חיבור מ-Liders CRM — Twilio WhatsApp עובד! 🎉');
+    if (data?.success) toast('✅ הודעת בדיקה נשלחה ל-WhatsApp שלך!', 'success');
+    else toast('שגיאה בשליחה — בדוק שהמספר הצטרף ל-Sandbox', 'error');
+  },
+};
+
+/* ═══════════════════════════════════════════
    VOICE-TO-CRM MODULE — Phase 5
 ═══════════════════════════════════════════ */
 const Voice = {
@@ -4348,8 +4408,10 @@ const Settings = {
           </div>
           <div class="api-key-row">
             <input type="tel" id="wa-number-input" placeholder="0501234567" value="${escapeHtml(Make.getWhatsApp() ?? '')}" style="direction:ltr;" />
-            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);" >שמור</button>
+            <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);">שמור</button>
+            ${Make.getWhatsApp() ? `<button class="btn btn-ghost btn-sm" onclick="Twilio.test()">🔔 בדוק Twilio</button>` : ''}
           </div>
+          ${Make.getWhatsApp() ? `<div style="font-size:11px;color:var(--gray-500);margin-top:6px;line-height:1.5;">💡 <strong>Sandbox:</strong> שלח <code>join turn-layers</code> ל-<strong>+1 415 523 8886</strong> מה-WhatsApp שלך לפני הבדיקה</div>` : ''}
         </div>
         <div class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -4742,6 +4804,7 @@ async function addLead() {
     document.getElementById('new-lead-source').value = 'other';
     toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
     Make.newLead(lead);
+    Twilio.notifyNewLead(lead);
     App.updateBadges();
     if (State.screen === 'pipeline') Pipeline.render();
     else if (State.screen === 'leads') Leads.render();
@@ -4825,6 +4888,7 @@ async function moveLead(leadId, stageId) {
     created_at: today()
   });
   Make.stageChanged(lead, oldStage?.name, stage.name);
+  Twilio.notifyStageChanged(lead, stage.name);
   closeModal('modal-move-stage');
   toast(`🔄 ${lead.name} הועבר ל-${stage.name}`, 'success');
   if (State.screen === 'pipeline') Pipeline.render();
