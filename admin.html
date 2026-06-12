@@ -1234,10 +1234,29 @@ function renderSaasTable(tenants) {
         <td>
           <div class="action-btns">
             <button class="btn-icon" title="פתח CRM" onclick="window.open('https://liders-crm.github.io/Liders_CRM/','_blank')" style="font-size:.75rem;">↗</button>
+            ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענק גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
+            ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזר לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">↩</button>` : ''}
           </div>
         </td>
       </tr>`;
   }).join('');
+}
+
+async function grantFreePlan(tenantId) {
+  if (!confirm('להעניק גישה חינמית לצמיתות לטנאנט זה?')) return;
+  const { error } = await sb.from('tenants').update({ plan: 'premium', trial_ends_at: null }).eq('id', tenantId);
+  if (error) { alert('שגיאה: ' + error.message); return; }
+  toast('⭐ גישה חינמית לצמיתות הוענקה!', 'success');
+  loadSaasTenants();
+}
+
+async function resetToTrial(tenantId) {
+  if (!confirm('להחזיר טנאנט זה לניסיון של 21 יום?')) return;
+  const trialEnd = new Date(Date.now() + 21 * 864e5).toISOString();
+  const { error } = await sb.from('tenants').update({ plan: 'trial', trial_ends_at: trialEnd }).eq('id', tenantId);
+  if (error) { alert('שגיאה: ' + error.message); return; }
+  toast('↩ הוחזר לניסיון', '');
+  loadSaasTenants();
 }
 
 function filterSaas() {
