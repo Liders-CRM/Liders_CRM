@@ -1,12 +1,12 @@
 {
-  "_note": "ייבא כ-scenario חדש ב-Make.com → Create scenario → Import blueprint. חיבור Gmail: 8042119 (liders.crm@gmail.com). הוסף את ה-webhook URL שמופיע בתחילת הסנריו לקוד האפליקציה (LIFECYCLE_WEBHOOK_URL).",
-  "name": "Liders CRM — Lead Notifications (v2 with Lifecycle)",
+  "_note": "עדכון ל-scenario 6083347 (Lead Notifications). פתח אותו ב-Make.com → שלוש נקודות → Import Blueprint → בחר קובץ זה. חיבור Gmail: 8042119 (liders.crm@gmail.com). Webhook: 3187919.",
+  "name": "Liders CRM — Lead Notifications",
   "flow": [
     {
       "id": 1,
       "module": "gateway:CustomWebHook",
       "version": 1,
-      "parameters": { "hook": "YOUR_HOOK_ID", "maxResults": 1 },
+      "parameters": { "hook": 3187919, "maxResults": 1 },
       "mapper": {},
       "metadata": { "designer": { "x": -400, "y": 0 } }
     },
