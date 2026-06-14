@@ -16,6 +16,9 @@
   <meta property="og:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 21 יום.">
   <meta property="og:locale" content="he_IL">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -2111,6 +2114,12 @@ function hebrewDate() {
   return `יום ${days[d.getDay()]}, ${d.getDate()} ב${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
+function calcInitials(name) {
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return parts[0][0] + parts[parts.length - 1][0];
+}
 
 // Escapes HTML-significant characters before interpolating untrusted text
 // (e.g. raw cell values from an uploaded CSV) into innerHTML templates.
@@ -2201,14 +2210,20 @@ const DB = {
     if (error) throw error;
   },
 
+  async updateAgentName(name) {
+    const { error } = await sbClient.from('agent_users').update({ name }).eq('id', this.agentId);
+    if (error) throw error;
+  },
+
   async loadAll() {
-    const [stagesR, leadsR, tasksR, propsR, actsR, tenantR] = await Promise.all([
+    const [stagesR, leadsR, tasksR, propsR, actsR, tenantR, agentR] = await Promise.all([
       sbClient.from('pipeline_stages').select('*').eq('tenant_id', this.tenantId).order('order_idx'),
       sbClient.from('leads').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }),
       sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
       sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number').eq('id', this.tenantId).single(),
+      this.agentId ? sbClient.from('agent_users').select('id,name,email,role').eq('id', this.agentId).maybeSingle() : Promise.resolve({ data: null }),
     ]);
     this.stageMap = {};
     this.stageRev = {};
@@ -2250,6 +2265,7 @@ const DB = {
         content: a.content, created_at: a.created_at?.split('T')[0] || today(),
       })),
       tenant: tenantR.data || null,
+      agent: agentR.data || null,
     };
   },
 
@@ -3447,7 +3463,10 @@ const App = {
       State.tasks      = loaded.tasks;
       State.properties = loaded.properties;
       State.activities = loaded.activities;
-      State.agent  = { name: user.email.split('@')[0], email: user.email, initials: user.email[0].toUpperCase(), role: 'סוכן' };
+      const agentRow = loaded.agent;
+      const displayName = agentRow?.name || user.email.split('@')[0];
+      const roleMap = { owner: 'מנהל', agent: 'סוכן', admin: 'אדמין' };
+      State.agent = { name: displayName, email: user.email, initials: calcInitials(displayName), role: roleMap[agentRow?.role] || 'סוכן' };
       const t = loaded.tenant;
       State.tenant = t
         ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
@@ -4435,7 +4454,7 @@ const Settings = {
     document.getElementById('settings-body').innerHTML = `
       <div class="settings-section">
         <div class="settings-section-title">הפרופיל שלי</div>
-        <div class="settings-row">
+        <div class="settings-row" onclick="Settings.editName()" style="cursor:pointer;">
           <div class="settings-row-icon">👤</div>
           <div class="settings-row-body">
             <div class="settings-row-label">${escapeHtml(State.agent?.name || '')}</div>
@@ -4443,10 +4462,11 @@ const Settings = {
           </div>
           <div class="settings-arrow">›</div>
         </div>
-        <div class="settings-row">
+        <div class="settings-row" onclick="Settings.changePassword()" style="cursor:pointer;">
           <div class="settings-row-icon">🔑</div>
           <div class="settings-row-body">
             <div class="settings-row-label">שינוי סיסמה</div>
+            <div class="settings-row-sub">שלח אימייל לאיפוס סיסמה</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -4608,7 +4628,33 @@ const Settings = {
         </div>
       </div>
     `;
-  }
+  },
+  editName() {
+    if (demoGuard()) return;
+    const current = State.agent?.name || '';
+    const name = prompt('שם מלא:', current);
+    if (!name || name.trim() === current.trim()) return;
+    const trimmed = name.trim();
+    DB.updateAgentName(trimmed).then(() => {
+      State.agent.name = trimmed;
+      State.agent.initials = calcInitials(trimmed);
+      document.getElementById('sidebar-agent-name').textContent = trimmed;
+      document.getElementById('sidebar-agent-initials').textContent = calcInitials(trimmed);
+      Settings.render();
+      toast('✅ שם עודכן', 'success');
+    }).catch(e => toast('שגיאה: ' + e.message, 'error'));
+  },
+  changePassword() {
+    if (demoGuard()) return;
+    const email = State.agent?.email;
+    if (!email) { toast('לא נמצא אימייל — התחבר מחדש', 'error'); return; }
+    sbClient.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://liders-crm.github.io/Liders_CRM/',
+    }).then(({ error }) => {
+      if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+      toast('📧 נשלח אימייל לאיפוס סיסמה — בדוק את תיבת הדואר', 'success');
+    });
+  },
 };
 
 /* ═══════════════════════════════════════════
