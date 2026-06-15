@@ -93,6 +93,32 @@
 
 ---
 
+## קישורים חיים
+
+| | URL |
+|-|-----|
+| CRM (לקוחות) | https://liders-crm.github.io/liders_crm/ |
+| פאנל אדמין | https://liders-crm.github.io/liders_crm/admin.html |
+
+> האדמין מחובר לאותה Supabase. כניסה: אימייל + סיסמה. קישור אליו גם מתוך הגדרות ה-CRM.
+
+---
+
+## Make.com
+
+- **Team ID**: `1851801`
+- **Zone**: `eu1.make.com`
+- **Webhook URL**: `https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i`
+
+### סצנריות פעילות
+
+| סצנריו | ID | קישור | טריגר |
+|--------|-----|-------|-------|
+| Lead Notifications | 6083347 | https://eu1.make.com/1851801/scenarios/6083347/edit | Webhook |
+| Trial Expiry Notifications | 6185659 | https://eu1.make.com/1851801/scenarios/6185659/edit | Scheduled (24h) |
+
+---
+
 ## MCP Servers
 
 | שרת | UUID prefix | שימוש |
