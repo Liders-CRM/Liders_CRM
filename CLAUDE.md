@@ -1,15 +1,12 @@
 # CLAUDE.md — Liders CRM
 
-## 📋 סיכום סשן אחרון — 15 יוני 2026
+## 📋 סיכום סשן אחרון — 15 יוני 2026 (ערב)
 
 ### מה בוצע
-- **Make.com** — בדיקת סטטוס מלאה:
-  - Team ID: `1851801` (zone: eu1)
-  - 2 סצנריות פעילות ועובדות
-  - Webhook URL מוגדר בשני הטנאנטים ב-Supabase
-- **תיקון Trial Expiry** — רץ כל 24 דקות במקום פעם ביום. תוקן ל-86,400 שניות (24 שעות)
-- **עדכון CLAUDE.md** — נוספו קישורים חיים, Team ID, Webhook URL, קישורים לסצנריות
-- Branch `claude/make-setup-instructions-3xuf7o` — **טרם מוזג ל-main**
+- **מיזוג** `claude/make-setup-instructions-3xuf7o` ← מוזג ל-main (PR #13) ✅
+- **תיקון URL** ב-CLAUDE.md — `liders_crm` → `Liders_CRM` (אות גדולה) ✅
+- **קובץ כפול ב-Drive** — נמחק, נשאר הגרסה החדשה ✅
+- **אישור קישורים חיים** — CRM ואדמין עובדים ✅
 
 ### מצב נוכחי
 | רכיב | סטטוס |
@@ -21,14 +18,16 @@
 | Supabase | ✅ פעיל — 2 טנאנטים: ארביטראז + Liders |
 | Stripe | ❌ Test mode — ממתין למס עוסק (~19-20 יוני 2026) |
 
-### משימות פתוחות
-1. **Stripe Live Mode** (כשיהיה מס עוסק):
+### משימות פתוחות לסשן הבא
+1. **דומיין חדש דרך Starlink** (מנוי חינמי) — **עדיפות ראשונה**:
+   - לרשום דומיין עסקי
+   - לחבר ל-GitHub Pages (DNS records)
+   - לעדכן ב: GitHub Pages settings, Supabase CORS, Make.com webhooks, `index.html`
+2. **Stripe Live Mode** (כשיהיה מס עוסק):
    - להשלים אימות ב-Stripe
    - ליצור Payment Links חדשים (Live)
    - ליצור Webhook חדש (Live) ← לעדכן `STRIPE_WEBHOOK_SECRET` ב-Supabase
    - לשלוח 4 URLs לקלוד ← יעדכן `index.html`
-2. **למזג ל-main** את branch `claude/make-setup-instructions-3xuf7o`
-3. **לבדוק ולסגור** את הקובץ הכפול ב-Drive
 
 ---
 
