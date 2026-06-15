@@ -4690,6 +4690,10 @@ const LeadImport = {
   _rows: [],
   _mapping: {},   // colIndex -> field key
   _leads: [],
+  _detectedFormat: '',   // 'hubspot' | 'pipedrive' | 'xlsx' | 'csv'
+  _firstNameIdx: -1,     // HubSpot split-name support
+  _lastNameIdx: -1,
+
   FIELDS: [
     { key: 'name',         label: 'שם מלא',     required: true },
     { key: 'phone',        label: 'טלפון',       required: true },
@@ -4699,18 +4703,40 @@ const LeadImport = {
     { key: 'desired_area', label: 'אזור מבוקש' },
     { key: 'notes',        label: 'הערות' },
   ],
+
   GUESSES: {
-    name:         ['שם', 'שם מלא', 'שם הליד', 'name', 'full name', 'fullname'],
-    phone:        ['טלפון', 'נייד', 'פלאפון', 'מספר טלפון', 'phone', 'mobile', 'tel'],
-    email:        ['מייל', 'אימייל', 'דוא"ל', 'email', 'mail'],
-    source:       ['מקור', 'מאיפה הגיע', 'source'],
-    budget_max:   ['תקציב', 'מחיר', 'budget', 'price'],
-    desired_area: ['אזור', 'אזור מבוקש', 'עיר', 'area', 'city', 'location'],
-    notes:        ['הערות', 'הערה', 'notes', 'note', 'comment', 'comments'],
+    name:         ['שם', 'שם מלא', 'שם הליד', 'name', 'full name', 'fullname', 'contact name', 'person name', 'customer name', 'client name', 'contact'],
+    phone:        ['טלפון', 'נייד', 'פלאפון', 'מספר טלפון', 'phone', 'mobile', 'tel', 'phone number', 'mobile phone', 'phone - mobile', 'phone - work', 'telephone', 'cell phone', 'cell'],
+    email:        ['מייל', 'אימייל', 'דוא"ל', 'email', 'mail', 'email address', 'e-mail'],
+    source:       ['מקור', 'מאיפה הגיע', 'source', 'lead source', 'traffic source', 'channel'],
+    budget_max:   ['תקציב', 'מחיר', 'budget', 'price', 'value', 'deal amount', 'amount', 'deal value', 'close value', 'revenue'],
+    desired_area: ['אזור', 'אזור מבוקש', 'עיר', 'area', 'city', 'location', 'state', 'region', 'zip', 'postal'],
+    notes:        ['הערות', 'הערה', 'notes', 'note', 'comment', 'comments', 'description', 'memo'],
   },
 
+  // Normalize competitor source values → our enum
+  SOURCE_MAP: {
+    'organic search': 'website', 'organic': 'website', 'website': 'website',
+    'social media': 'facebook', 'facebook': 'facebook', 'instagram': 'facebook',
+    'social': 'facebook', 'paid social': 'facebook',
+    'email marketing': 'other', 'newsletter': 'other',
+    'referrals': 'referral', 'referral': 'referral', 'word of mouth': 'referral', 'recommendation': 'referral',
+    'direct traffic': 'website', 'direct': 'website', 'paid search': 'website', 'google': 'website',
+    'inbound call': 'call', 'call': 'call', 'phone': 'call', 'cold call': 'call',
+    'yad2': 'yad2', 'מדלן': 'madlan', 'madlan': 'madlan', 'מד"לן': 'madlan',
+  },
+
+  // HubSpot / Pipedrive first/last name split columns
+  FIRST_NAME_COLS: ['first name', 'firstname', 'שם פרטי', 'given name'],
+  LAST_NAME_COLS:  ['last name', 'lastname', 'surname', 'שם משפחה', 'family name'],
+
+  // HubSpot / Pipedrive signature columns for auto-detection
+  HUBSPOT_COLS:  ['first name', 'last name', 'email', 'phone number', 'lead status', 'hubspot owner', 'hs_lead_status'],
+  PIPEDRIVE_COLS: ['person name', 'organization name', 'pipeline', 'stage', 'owner name', 'pipedrive'],
+
   open() {
-    this._step = 1; this._headers = []; this._rows = []; this._mapping = {}; this._leads = [];
+    this._step = 1; this._headers = []; this._rows = []; this._mapping = {};
+    this._leads = []; this._detectedFormat = ''; this._firstNameIdx = -1; this._lastNameIdx = -1;
     const fileInput = document.getElementById('import-file-input');
     if (fileInput) fileInput.value = '';
     this._render();
@@ -4718,39 +4744,107 @@ const LeadImport = {
   },
   close() { closeModal('modal-import-leads'); },
 
-  handleFile(input) {
+  async _loadXLSX() {
+    if (window.XLSX) return;
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  },
+
+  async handleFile(input) {
     const file = input.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const { headers, rows } = parseCSV(String(e.target.result || ''));
+    const isXLSX = /\.(xlsx|xls)$/i.test(file.name);
+
+    const process = (headers, rows, baseFormat) => {
       if (!headers.length || !rows.length) {
-        toast('לא הצלחנו לקרוא נתונים מהקובץ — ודאו שזהו קובץ CSV תקין', 'error');
+        toast('לא הצלחנו לקרוא נתונים מהקובץ', 'error');
         return;
       }
       this._headers = headers;
       this._rows = rows;
-      this._autoMap();
+      this._autoMap(baseFormat);
       this._step = 2;
       this._render();
     };
-    reader.onerror = () => toast('שגיאה בקריאת הקובץ', 'error');
-    reader.readAsText(file, 'UTF-8');
+
+    if (isXLSX) {
+      try {
+        await this._loadXLSX();
+      } catch {
+        toast('לא הצלחנו לטעון תמיכה ב-Excel — נסה לייצא כ-CSV', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+          const headers = (data[0] || []).map(String);
+          const rows = data.slice(1).map(r => headers.map((_, i) => String(r[i] ?? '')));
+          process(headers, rows, 'xlsx');
+        } catch {
+          toast('שגיאה בקריאת קובץ Excel', 'error');
+        }
+      };
+      reader.onerror = () => toast('שגיאה בקריאת הקובץ', 'error');
+      reader.readAsArrayBuffer(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const { headers, rows } = parseCSV(String(e.target.result || ''));
+        process(headers, rows, 'csv');
+      };
+      reader.onerror = () => toast('שגיאה בקריאת הקובץ', 'error');
+      reader.readAsText(file, 'UTF-8');
+    }
   },
 
-  _autoMap() {
+  _autoMap(baseFormat) {
     this._mapping = {};
-    this._headers.forEach((h, i) => {
-      const norm = (h || '').trim().toLowerCase();
-      if (!norm) return;
+    this._firstNameIdx = -1;
+    this._lastNameIdx = -1;
+
+    const norm = s => (s || '').trim().toLowerCase();
+    const lowerHeaders = this._headers.map(norm);
+
+    // Detect CRM format
+    const hubspotScore  = this.HUBSPOT_COLS.filter(c  => lowerHeaders.some(h => h === c || h.includes(c))).length;
+    const pipedriveScore = this.PIPEDRIVE_COLS.filter(c => lowerHeaders.some(h => h === c || h.includes(c))).length;
+
+    if (baseFormat === 'xlsx') this._detectedFormat = 'xlsx';
+    else if (hubspotScore >= 2)  this._detectedFormat = 'hubspot';
+    else if (pipedriveScore >= 2) this._detectedFormat = 'pipedrive';
+    else this._detectedFormat = 'csv';
+
+    // Detect split first/last name (HubSpot style)
+    lowerHeaders.forEach((h, i) => {
+      if (this.FIRST_NAME_COLS.some(c => h === c)) this._firstNameIdx = i;
+      if (this.LAST_NAME_COLS.some(c => h === c))  this._lastNameIdx = i;
+    });
+
+    // Auto-map standard fields
+    lowerHeaders.forEach((h, i) => {
+      if (!h) return;
+      // Skip first/last name cols — handled specially
+      if (i === this._firstNameIdx || i === this._lastNameIdx) return;
       for (const [field, names] of Object.entries(this.GUESSES)) {
         if (Object.values(this._mapping).includes(field)) continue;
-        if (names.some(n => norm === n.toLowerCase() || norm.includes(n.toLowerCase()))) {
+        if (names.some(n => h === n.toLowerCase() || h.includes(n.toLowerCase()))) {
           this._mapping[i] = field;
           break;
         }
       }
     });
+
+    // If we found split name cols but no full-name col, synthesize: mark firstNameIdx as "name"
+    if (this._firstNameIdx >= 0 && this._lastNameIdx >= 0 && !Object.values(this._mapping).includes('name')) {
+      this._mapping[this._firstNameIdx] = 'name';  // will be merged in _buildLeads
+    }
   },
 
   setMapping(colIndex, field) {
@@ -4797,11 +4891,23 @@ const LeadImport = {
 
     const out = [];
     for (const row of this._rows) {
-      const name = (row[nameCol] || '').trim();
+      // Merge HubSpot-style first + last name
+      let name;
+      if (nameCol === this._firstNameIdx && this._lastNameIdx >= 0) {
+        const first = (row[this._firstNameIdx] || '').trim();
+        const last  = (row[this._lastNameIdx]  || '').trim();
+        name = [first, last].filter(Boolean).join(' ');
+      } else {
+        name = (row[nameCol] || '').trim();
+      }
+
       const phone = (row[phoneCol] || '').trim();
       if (!name || !phone) continue;
-      let source = (row[sourceCol] || '').trim().toLowerCase();
-      if (!VALID_SOURCES.includes(source)) source = 'other';
+
+      // Normalize source value via SOURCE_MAP, then fall back to 'other'
+      const rawSource = (row[sourceCol] || '').trim().toLowerCase();
+      let source = this.SOURCE_MAP[rawSource] || (VALID_SOURCES.includes(rawSource) ? rawSource : 'other');
+
       const budgetDigits = (row[budgetCol] || '').replace(/[^\d]/g, '');
       out.push({
         name, phone,
@@ -4850,11 +4956,11 @@ const LeadImport = {
             נעזור לך לשייך כל עמודה לשדה הנכון במערכת.
           </div>
           <label class="btn btn-primary" style="cursor:pointer;display:inline-block;">
-            📁 בחירת קובץ CSV
-            <input type="file" id="import-file-input" accept=".csv,.txt,text/csv" style="display:none;" onchange="LeadImport.handleFile(this)">
+            📁 בחירת קובץ
+            <input type="file" id="import-file-input" accept=".csv,.xlsx,.xls,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none;" onchange="LeadImport.handleFile(this)">
           </label>
           <div style="color:var(--gray-400);font-size:0.78rem;margin-top:12px;">
-            תומך בקבצי CSV (מיוצא מ-Excel, Google Sheets, יד2 ועוד)
+            תומך ב-Excel (.xlsx), CSV, Google Sheets, HubSpot, Pipedrive ועוד
           </div>
         </div>`;
       footer.innerHTML = `<button class="btn btn-ghost" style="flex:1;" onclick="LeadImport.close()">ביטול</button>`;
@@ -4862,10 +4968,25 @@ const LeadImport = {
     }
 
     if (this._step === 2) {
+      const fmtBadge = {
+        hubspot:  { icon: '🟠', label: 'HubSpot', color: '#ff7a59', bg: '#fff4f0' },
+        pipedrive: { icon: '🟢', label: 'Pipedrive', color: '#00be5a', bg: '#f0fff7' },
+        xlsx:      { icon: '📊', label: 'Excel', color: '#1d6f42', bg: '#f0fff4' },
+        csv:       { icon: '📄', label: 'CSV', color: '#6b7280', bg: '#f9fafb' },
+      }[this._detectedFormat] || { icon: '📄', label: 'CSV', color: '#6b7280', bg: '#f9fafb' };
+      const splitNameNote = (this._firstNameIdx >= 0 && this._lastNameIdx >= 0)
+        ? `<div style="margin-bottom:10px;padding:8px 12px;background:#eff6ff;border-radius:8px;font-size:0.8rem;color:#1d4ed8;">✂️ זיהינו שם פרטי ושם משפחה בנפרד — הם יאוחדו אוטומטית לשדה "שם מלא"</div>`
+        : '';
       body.innerHTML = `
-        <div style="margin-bottom:12px;color:var(--gray-500);font-size:0.85rem;line-height:1.6;">
-          מצאנו ${this._rows.length} שורות בקובץ. שייכו כל עמודה לשדה המתאים במערכת
-          (שם מלא וטלפון הם שדות חובה):
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;color:${fmtBadge.color};background:${fmtBadge.bg};border:1px solid ${fmtBadge.color}33;">
+            ${fmtBadge.icon} זוהה: ${fmtBadge.label}
+          </span>
+          <span style="color:var(--gray-400);font-size:0.8rem;">${this._rows.length} שורות</span>
+        </div>
+        ${splitNameNote}
+        <div style="margin-bottom:10px;color:var(--gray-500);font-size:0.85rem;line-height:1.6;">
+          שייכו כל עמודה לשדה המתאים במערכת (שם מלא וטלפון הם שדות חובה):
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;max-height:48vh;overflow:auto;">
           ${this._headers.map((h, i) => `
