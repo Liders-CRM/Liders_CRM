@@ -4120,6 +4120,7 @@ const Dashboard = {
       return;
     }
     if (!force && this._briefingCache?.date === today()) { this.renderAIBriefing(); return; }
+    if (force && State.tenant?.plan === 'trial') { toast('רענון תדרוך זמין בתוכנית בסיסית ומעלה', 'error'); return; }
     el.innerHTML = `<div class="ai-thinking">✨ סורק לידים, משימות ופעילות ובונה תדרוך אישי... <div class="ai-dots"><span></span><span></span><span></span></div></div>`;
     try {
       const text = await AI.getDailyBriefing();
@@ -4133,7 +4134,7 @@ const Dashboard = {
       this._briefingCache = { date: today(), html };
       el.innerHTML = `
         <div class="ai-card-body">${html}</div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>
+        ${State.tenant?.plan !== 'trial' ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>` : `<div style="font-size:11px;color:var(--gray-400);margin-top:8px;">💡 תדרוך אחד ביום — שדרג לקבל רענון בכל עת</div>`}
       `;
     } catch(e) {
       el.innerHTML = `
