@@ -2625,7 +2625,7 @@ const Billing = {
     return Math.max(0, Math.ceil((end - new Date()) / 864e5));
   },
   isPaid() {
-    return ['basic','pro','premium'].includes(State.tenant?.plan);
+    return ['basic','pro','premium','lifetime'].includes(State.tenant?.plan);
   },
   isExpired() {
     const plan = State.tenant?.plan;
@@ -2777,7 +2777,8 @@ const Billing = {
     if (p === 'premium') return { text:'Premium ✓', color:'var(--purple-500)', bg:'var(--purple-100)' };
     if (p === 'pro')     return { text:'Pro ✓',     color:'var(--blue-500)',   bg:'var(--blue-100)'   };
     if (p === 'basic')   return { text:'Basic ✓',   color:'var(--green-600)',  bg:'var(--green-100)'  };
-    if (p === 'trial')   return { text:'ניסיון חינם 21 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
+    if (p === 'trial')    return { text:'ניסיון חינם 21 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
+    if (p === 'lifetime') return { text:'Lifetime ♾️', color:'var(--blue-500)', bg:'var(--blue-100)' };
     return { text:'לא פעיל', color:'var(--red-600)', bg:'var(--red-100)' };
   },
   renderPlansHTML() {
