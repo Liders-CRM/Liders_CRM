@@ -3949,13 +3949,13 @@ const Dashboard = {
     const closedTotal= State.leads.filter(l => l.stage === 's5').length;
     const pipelineVal= State.leads.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0);
     const kpis = [
-      { label:'לידים חדשים היום', value: newToday,               sub:'לידים חדשים', accent:'#2563EB', icon:'🆕' },
-      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור',      accent:'#7C3AED', icon:'📋' },
-      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'סה"כ',        accent:'#16A34A', icon:'🎉' },
-      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'פוטנציאל',    accent:'#C49A2A', icon:'💰' },
+      { label:'לידים חדשים היום', value: newToday,               sub:'לידים חדשים', accent:'#2563EB', icon:'🆕', nav:'leads' },
+      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור',      accent:'#7C3AED', icon:'📋', nav:'pipeline' },
+      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'סה"כ',        accent:'#16A34A', icon:'🎉', nav:'pipeline' },
+      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'פוטנציאל',    accent:'#C49A2A', icon:'💰', nav:'pipeline' },
     ];
     document.getElementById('kpi-row').innerHTML = kpis.map(k => `
-      <div class="kpi-card" style="--kpi-accent:${k.accent}">
+      <div class="kpi-card" style="--kpi-accent:${k.accent};cursor:pointer;" onclick="App.go('${k.nav}')">
         <div class="kpi-icon">${k.icon}</div>
         <div class="kpi-label">${k.label}</div>
         <div class="kpi-value">${k.value}</div>
