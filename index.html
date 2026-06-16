@@ -1500,6 +1500,7 @@
       <div class="screen-header">
         <div class="screen-title" id="screen-pipeline-title">📋 פייפליין לידים</div>
         <div class="flex gap-2">
+          <button class="btn btn-ghost btn-sm" onclick="Settings.openPipelineStages()" title="ערוך שמות שלבים">✏️ שלבים</button>
           <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 ייבוא</button>
           <button class="btn btn-ghost btn-sm" onclick="openModal('modal-add-lead')">+ ליד</button>
         </div>
@@ -1738,6 +1739,32 @@
     </div>
     <div id="import-modal-body"></div>
     <div class="modal-footer" id="import-modal-footer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: EDIT PIPELINE STAGES
+═══════════════════════════════════════ -->
+<div id="modal-edit-stages" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-edit-stages')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">✏️ עריכת שלבי הפייפליין</div>
+      <button class="modal-close" onclick="closeModal('modal-edit-stages')">×</button>
+    </div>
+    <div class="modal-body" style="padding:20px 20px 8px;">
+      <p style="font-size:13px;color:var(--gray-500);margin:0 0 16px;line-height:1.6;">
+        כאן אתה מגדיר את <strong>מסע הליד</strong> — מהרגע שנכנס ועד לרגע שנסגרת העסקה.<br>
+        כל שלב הוא תחנה בדרך. שמות ברורים = צוות שיודע בדיוק מה לעשות. 🎯
+      </p>
+      <div id="pipeline-stages-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;border:1.5px dashed var(--gray-300);color:var(--gray-500);"
+              onclick="Settings.addPipelineStage()">+ הוסף שלב</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit-stages')">ביטול</button>
+      <button class="btn btn-primary" onclick="Settings.savePipelineStages()">💾 שמור שלבים</button>
+    </div>
   </div>
 </div>
 
@@ -5086,6 +5113,46 @@ const Settings = {
     try {
       await DB.updateStageNames(names);
       Settings.render();
+      toast('✅ שלבי הפייפליין עודכנו', 'success');
+    } catch(e) {
+      toast('שגיאה: ' + e.message, 'error');
+    }
+  },
+  openPipelineStages() {
+    const list = document.getElementById('pipeline-stages-list');
+    if (!list) return;
+    list.innerHTML = '';
+    (State.stages || []).forEach((stage, i) => {
+      const row = document.createElement('div');
+      row.className = 'ob-stage-row';
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;';
+      row.innerHTML = `<span style="background:var(--navy-400);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</span>
+        <input class="form-input pipeline-stage-input" value="${escapeHtml(stage.name)}" style="flex:1;padding:7px 10px;font-size:13px;">`;
+      list.appendChild(row);
+    });
+    openModal('modal-edit-stages');
+  },
+  addPipelineStage() {
+    const list = document.getElementById('pipeline-stages-list');
+    if (!list) return;
+    const count = list.querySelectorAll('.ob-stage-row').length;
+    if (count >= 8) { toast('מקסימום 8 שלבים', 'error'); return; }
+    const row = document.createElement('div');
+    row.className = 'ob-stage-row';
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;';
+    row.innerHTML = `<span style="background:var(--navy-400);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${count+1}</span>
+      <input class="form-input pipeline-stage-input" placeholder="שם השלב החדש" style="flex:1;padding:7px 10px;font-size:13px;">`;
+    list.appendChild(row);
+    row.querySelector('input').focus();
+  },
+  async savePipelineStages() {
+    if (demoGuard()) return;
+    const inputs = document.querySelectorAll('#pipeline-stages-list .pipeline-stage-input');
+    const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
+    if (names.length < 2) { toast('נדרשים לפחות 2 שלבים', 'error'); return; }
+    try {
+      await DB.updateStageNames(names);
+      closeModal('modal-edit-stages');
       toast('✅ שלבי הפייפליין עודכנו', 'success');
     } catch(e) {
       toast('שגיאה: ' + e.message, 'error');
