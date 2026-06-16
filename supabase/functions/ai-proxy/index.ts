@@ -37,3 +37,4 @@ serve(async (req) => {
     return Response.json({ error: { message: e.message } }, { status: 500, headers: CORS });
   }
 });
+
