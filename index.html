@@ -2223,6 +2223,15 @@ const DB = {
     } catch(_e) { /* non-fatal — localStorage is source of truth */ }
   },
 
+  updateCustomLabels(labels) {
+    State.customLabels = labels;
+    if (Object.keys(labels).length) {
+      localStorage.setItem('liders_custom_labels', JSON.stringify(labels));
+    } else {
+      localStorage.removeItem('liders_custom_labels');
+    }
+  },
+
   async updateStageNames(names) {
     if (State.isDemo || !this.tenantId) return;
     const existing = [...State.stages].sort((a,b) => (a.order_idx||0) - (b.order_idx||0));
@@ -2545,6 +2554,7 @@ const State = {
   stages: [...DEMO.stages],
   agent:  { ...DEMO.agent },
   tenant: { ...DEMO.tenant },
+  customLabels: {},
 };
 
 /* ═══════════════════════════════════════════
@@ -3091,6 +3101,8 @@ const INDUSTRY_LABELS = {
   },
 };
 function getLabel(key) {
+  const custom = State.customLabels || {};
+  if (custom[key]) return custom[key];
   const ind = localStorage.getItem('liders_industry') || 'other';
   return (INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other)[key] || key;
 }
@@ -3740,13 +3752,17 @@ const App = {
     document.getElementById('sidebar-agent-initials').textContent = State.agent.initials;
     document.getElementById('sidebar-agent-role').textContent  = State.agent.role;
     Billing.renderTrialBanner();
-    // Restore industry from Supabase so it survives logout — if tenant.industry
-    // matches one of our known IDs, apply it and mark onboarding as done
+    // Restore industry from Supabase so it survives logout
     const savedInd = State.tenant?.industry;
     if (savedInd && INDUSTRY_LABELS[savedInd]) {
       localStorage.setItem('liders_industry', savedInd);
       localStorage.setItem('onboarding_done', '1');
     }
+    // Restore custom label overrides from localStorage
+    try {
+      const raw = localStorage.getItem('liders_custom_labels');
+      State.customLabels = raw ? JSON.parse(raw) : {};
+    } catch(_e) { State.customLabels = {}; }
     this._applyIndustryLabels();
     history.pushState({ screen: 'dashboard' }, '', location.pathname + '?s=dashboard');
     this.go('dashboard');
@@ -4814,6 +4830,39 @@ const Settings = {
         })()}
       </div>
       <div class="settings-section">
+        <div class="settings-section-title">✏️ התאמת שפה</div>
+        ${(() => {
+          const ind = localStorage.getItem('liders_industry') || 'other';
+          const indLabels = INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other;
+          const custom = State.customLabels || {};
+          const fields = [
+            {key:'lead',    label:'שם רשומה (יחיד)', hint:'למשל: ג\'וב, קונה, ליד'},
+            {key:'leads',   label:'שם רשומה (רבים)',  hint:'למשל: ג\'ובים, קונים, לידים'},
+            {key:'client',  label:'שם הלקוח',          hint:'למשל: הומאונר, לקוח, קליינט'},
+            {key:'meeting', label:'סוג הפגישה',         hint:'למשל: וואלקת\'רו, ביקור נכס, תור'},
+            {key:'addLead', label:'כפתור הוספה',        hint:'למשל: ג\'וב חדש, קונה חדש'},
+          ];
+          const rows = fields.map(f => `
+            <div style="margin-bottom:12px;">
+              <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:3px;">${f.label}</div>
+              <input class="form-input" id="custom-label-${f.key}"
+                     placeholder="${escapeHtml(indLabels[f.key] || f.hint)}"
+                     value="${escapeHtml(custom[f.key] || '')}"
+                     style="font-size:13px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">ברירת מחדל: ${escapeHtml(indLabels[f.key] || '')} — ${f.hint}</div>
+            </div>`).join('');
+          const hasCustom = Object.keys(custom).length > 0;
+          return `<div style="padding:12px 16px;">
+            ${hasCustom ? `<div style="font-size:11px;color:var(--blue-600);background:var(--blue-50);border-radius:6px;padding:6px 10px;margin-bottom:12px;">✨ שפה מותאמת אישית פעילה</div>` : ''}
+            ${rows}
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              ${hasCustom ? `<button class="btn btn-ghost btn-sm" onclick="Settings.resetCustomLabels()">↺ ברירת מחדל</button>` : ''}
+              <button class="btn btn-primary btn-sm" style="flex:1;" onclick="Settings.saveCustomLabels()">שמור שפה</button>
+            </div>
+          </div>`;
+        })()}
+      </div>
+      <div class="settings-section">
         <div class="settings-section-title">חיבורים</div>
         <div class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -4943,9 +4992,33 @@ const Settings = {
     if (!INDUSTRY_LABELS[ind]) return;
     localStorage.setItem('liders_industry', ind);
     await DB.updateIndustry(ind);
+    // Switching industry resets custom labels so defaults feel fresh
+    DB.updateCustomLabels({});
     App._applyIndustryLabels();
     Settings.render();
     toast('✅ תחום עודכן ל-' + (getLabel('pipeline') || ind), 'success');
+  },
+
+  saveCustomLabels() {
+    if (demoGuard()) return;
+    const fields = ['lead','leads','client','meeting','addLead'];
+    const labels = {};
+    fields.forEach(f => {
+      const v = document.getElementById('custom-label-' + f)?.value.trim();
+      if (v) labels[f] = v;
+    });
+    DB.updateCustomLabels(labels);
+    App._applyIndustryLabels();
+    Settings.render();
+    toast('✅ שפת המערכת עודכנה', 'success');
+  },
+
+  resetCustomLabels() {
+    if (demoGuard()) return;
+    DB.updateCustomLabels({});
+    App._applyIndustryLabels();
+    Settings.render();
+    toast('↺ שפה אופסה לברירת מחדל', 'success');
   },
   addStage() {
     const list = document.getElementById('settings-stages-list');
