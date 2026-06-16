@@ -2763,12 +2763,13 @@ const Onboarding = {
       subtitle: 'נגדיר את המערכת בדיוק עבורך — תוך 2 דקות',
       render() {
         const INDUSTRIES = [
-          { id: 'realestate', icon: '🏠', label: 'נדל"ן' },
-          { id: 'sales',      icon: '💼', label: 'מכירות B2B' },
-          { id: 'ecommerce',  icon: '🛒', label: 'חנות אונליין' },
-          { id: 'beauty',     icon: '💅', label: 'יופי ובריאות' },
-          { id: 'services',   icon: '⚙️', label: 'שירות ותמיכה' },
-          { id: 'other',      icon: '🎯', label: 'אחר' },
+          { id: 'realestate',   icon: '🏠', label: 'נדל"ן' },
+          { id: 'construction', icon: '🏗️', label: 'קונסטרקשן' },
+          { id: 'sales',        icon: '💼', label: 'מכירות B2B' },
+          { id: 'ecommerce',    icon: '🛒', label: 'חנות אונליין' },
+          { id: 'beauty',       icon: '💅', label: 'יופי ובריאות' },
+          { id: 'services',     icon: '⚙️', label: 'שירות ותמיכה' },
+          { id: 'other',        icon: '🎯', label: 'אחר' },
         ];
         const current = localStorage.getItem('liders_industry') || '';
         return `
@@ -2967,6 +2968,13 @@ const Onboarding = {
    INDUSTRY LABELS — adapts app language per industry
 ═══════════════════════════════════════════ */
 const INDUSTRY_LABELS = {
+  construction: {
+    lead:'ג\'וב', leads:'ג\'ובים', property:'פרויקט', properties:'פרויקטים', deal:'חוזה', client:'קליינט', meeting:'וואלקת\'רו', agent:'קבלן',
+    addLead:'ג\'וב חדש', allLeads:'כל הג\'ובים', pipeline:'פייפליין עבודות', propertiesIcon:'🏗️',
+    matchTab:'פרויקטים פעילים', docLabel:'מסמכים',
+    stages:['ג\'וב נכנס','וואלקת\'רו נקבע','אסטימייט נשלח','חוזה נחתם','פרויקט הושלם ✓'],
+    notesPlaceholder:'הערות — סוג עבודה (שיפוץ/תוספת/בנייה), כתובת האתר, גודל הפרויקט, תקציב קליינט, מצב פרמיט...',
+  },
   realestate: {
     lead:'קונה', leads:'קונים', property:'נכס', properties:'נכסים', deal:'עסקה', client:'לקוח', meeting:'ביקור נכס', agent:'מתווך',
     addLead:'קונה חדש', allLeads:'כל הקונים', pipeline:'פייפליין עסקאות', propertiesIcon:'🏠',
@@ -3055,13 +3063,15 @@ const AI = {
   _industryRole() {
     const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const map = {
-      realestate: 'מומחה נדל"ן ומתווך',
-      sales:      'מומחה מכירות B2B',
-      ecommerce:  'מומחה מסחר אלקטרוני',
-      beauty:     'מומחה תחום היופי והאסתטיקה',
-      finance:    'מומחה פיננסי ויועץ השקעות',
-      health:     'מומחה שירותי בריאות',
-      education:  'מומחה חינוך והדרכה',
+      realestate:   'מומחה נדל"ן ומתווך',
+      construction: 'קבלן בנייה ישראלי בפלורידה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
+      sales:        'מומחה מכירות B2B',
+      ecommerce:    'מומחה מסחר אלקטרוני',
+      beauty:       'מומחה תחום היופי והאסתטיקה',
+      services:     'מומחה שירות ותמיכה',
+      finance:      'מומחה פיננסי ויועץ השקעות',
+      health:       'מומחה שירותי בריאות',
+      education:    'מומחה חינוך והדרכה',
     };
     return map[ind] || 'מומחה מכירות ופיתוח עסקי';
   },
