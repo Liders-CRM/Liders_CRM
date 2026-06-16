@@ -2272,7 +2272,7 @@ const DB = {
       sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
-      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number,industry').eq('id', this.tenantId).single(),
+      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number,industry,created_at').eq('id', this.tenantId).single(),
       this.agentId ? sbClient.from('agent_users').select('id,name,email,role').eq('id', this.agentId).maybeSingle() : Promise.resolve({ data: null }),
     ]);
     this.stageMap = {};
@@ -3768,6 +3768,11 @@ const App = {
     const savedInd = State.tenant?.industry;
     if (savedInd && INDUSTRY_LABELS[savedInd]) {
       localStorage.setItem('liders_industry', savedInd);
+    }
+    // Skip onboarding for existing tenants (created > 30 min ago).
+    // New users will see it because their tenant was just created this session.
+    const tenantAge = Date.now() - new Date(State.tenant?.created_at || 0).getTime();
+    if (savedInd || tenantAge > 30 * 60 * 1000) {
       localStorage.setItem('onboarding_done', '1');
     }
     // Restore custom label overrides from localStorage
