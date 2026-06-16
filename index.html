@@ -4107,16 +4107,22 @@ const Dashboard = {
       return;
     }
     if (State.isDemo) {
-      el.innerHTML = `<div class="ai-card-body">
-        <strong>🎯 המוקד של היום:</strong> סגור את עסקת אמיר בן-דוד — הוא מחכה לאישור בנק ומוכן לחתום תוך חודשיים.<br><br>
-        <strong>👥 לטפל בדחיפות:</strong><br>
-        🔴 <strong>אמיר בן-דוד</strong> (ציון 95) — הצעה ב-4.2M שלוחה, אישור בנק ממשמש ובא. צור קשר היום.<br>
-        🟠 <strong>שרה אברהם</strong> (ציון 91) — ביקור בנכס ברמת השרון מחר. שלח אישור וכתובת.<br>
-        🟡 <strong>מיכל רוזן</strong> (ציון 45) — לא ענתה לשיחה האחרונה, ניסיון חוזר באיחור של יומיים.<br><br>
-        <strong>💡 תובנה לשיפור:</strong> 3 לידים ללא כתובת מייל — שלח WhatsApp עם בקשה להשלמת פרטים לפני הביקור.
-      </div>
-      <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">⚡ תצוגת דמו — התחבר לקבל תדרוך אמיתי על הלידים שלך</div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;opacity:.6;" disabled>🔄 רענן תדרוך</button>`;
+      el.innerHTML = `
+        <div style="filter:blur(3px);pointer-events:none;user-select:none;font-size:13px;line-height:1.7;color:var(--gray-600);margin-bottom:12px;">
+          🎯 <strong>המוקד של היום:</strong> סגור את עסקת אמיר בן-דוד...<br>
+          🔴 <strong>אמיר בן-דוד</strong> (ציון 95) — הצעה ב-4.2M שלוחה...<br>
+          🟠 <strong>שרה אברהם</strong> (ציון 91) — ביקור בנכס ברמת השרון...<br>
+          💡 <strong>תובנה:</strong> 3 לידים ללא כתובת מייל — שלח WhatsApp...
+        </div>
+        <div style="background:linear-gradient(135deg,#0F1F3D,#2563EB);border-radius:12px;padding:16px;text-align:center;color:white;">
+          <div style="font-size:18px;margin-bottom:6px;">✨</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">רוצה לראות את התדרוך האמיתי שלך?</div>
+          <div style="font-size:12px;opacity:.85;margin-bottom:12px;">פתח חשבון חינמי ב-30 שניות — קבל AI שמנתח את הלידים שלך בכל בוקר</div>
+          <button class="btn" style="background:white;color:#1D4ED8;font-weight:800;font-size:13px;padding:10px 24px;border-radius:8px;width:100%;"
+            onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
+            🚀 פתח חשבון חינמי עכשיו
+          </button>
+        </div>`;
       return;
     }
     if (!force && this._briefingCache?.date === today()) { this.renderAIBriefing(); return; }
