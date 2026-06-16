@@ -1500,6 +1500,7 @@
       <div class="screen-header">
         <div class="screen-title" id="screen-pipeline-title">📋 פייפליין לידים</div>
         <div class="flex gap-2">
+          <button class="btn btn-ghost btn-sm" onclick="Settings.openPipelineStages()" title="ערוך שמות שלבים">✏️ שלבים</button>
           <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 ייבוא</button>
           <button class="btn btn-ghost btn-sm" onclick="openModal('modal-add-lead')">+ ליד</button>
         </div>
@@ -1692,6 +1693,10 @@
         <label class="form-label">טלפון *</label>
         <input type="tel" id="new-lead-phone" class="form-input" placeholder="050-0000000" style="direction:ltr;">
       </div>
+      <div class="form-group">
+        <label class="form-label">טלפון נוסף <span style="color:var(--gray-400);font-weight:400;">(אופציונלי)</span></label>
+        <input type="tel" id="new-lead-phone2" class="form-input" placeholder="050-0000000" style="direction:ltr;">
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">מקור</label>
@@ -1738,6 +1743,32 @@
     </div>
     <div id="import-modal-body"></div>
     <div class="modal-footer" id="import-modal-footer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: EDIT PIPELINE STAGES
+═══════════════════════════════════════ -->
+<div id="modal-edit-stages" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-edit-stages')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">✏️ עריכת שלבי הפייפליין</div>
+      <button class="modal-close" onclick="closeModal('modal-edit-stages')">×</button>
+    </div>
+    <div class="modal-body" style="padding:20px 20px 8px;">
+      <p style="font-size:13px;color:var(--gray-500);margin:0 0 16px;line-height:1.6;">
+        כאן אתה מגדיר את <strong>מסע הליד</strong> — מהרגע שנכנס ועד לרגע שנסגרת העסקה.<br>
+        כל שלב הוא תחנה בדרך. שמות ברורים = צוות שיודע בדיוק מה לעשות. 🎯
+      </p>
+      <div id="pipeline-stages-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;border:1.5px dashed var(--gray-300);color:var(--gray-500);"
+              onclick="Settings.addPipelineStage()">+ הוסף שלב</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit-stages')">ביטול</button>
+      <button class="btn btn-primary" onclick="Settings.savePipelineStages()">💾 שמור שלבים</button>
+    </div>
   </div>
 </div>
 
@@ -1858,6 +1889,10 @@
       <div class="form-group">
         <label class="form-label">טלפון *</label>
         <input type="tel" id="edit-lead-phone" class="form-input" placeholder="050-0000000" style="direction:ltr;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">טלפון נוסף <span style="color:var(--gray-400);font-weight:400;">(אופציונלי)</span></label>
+        <input type="tel" id="edit-lead-phone2" class="form-input" placeholder="050-0000000" style="direction:ltr;">
       </div>
       <div class="form-group">
         <label class="form-label">אימייל</label>
@@ -2288,7 +2323,7 @@ const DB = {
         order: s.order_idx, is_terminal: s.is_terminal, _uuid: s.id,
       })),
       leads: (leadsR.data || []).map(l => ({
-        id: l.id, name: l.name, phone: l.phone, email: l.email || '',
+        id: l.id, name: l.name, phone: l.phone, phone2: l.phone2 || '', email: l.email || '',
         stage: this.stageMap[l.pipeline_stage_id] || 's1',
         source: l.source, budget_min: Number(l.budget_min) || 0,
         budget_max: Number(l.budget_max) || 0,
@@ -2323,7 +2358,7 @@ const DB = {
     const firstStageId = this.stageRev['s1'] || Object.values(this.stageRev)[0] || null;
     const { data, error } = await sbClient.from('leads').insert({
       tenant_id: this.tenantId, agent_id: this.agentId,
-      name: lead.name, phone: lead.phone,
+      name: lead.name, phone: lead.phone, phone2: lead.phone2 || null,
       source: lead.source || 'other',
       budget_max: lead.budget_max || null,
       desired_area: lead.desired_area || null,
@@ -2333,7 +2368,7 @@ const DB = {
     }).select().single();
     if (error) throw error;
     return {
-      id: data.id, name: data.name, phone: data.phone, email: data.email || '',
+      id: data.id, name: data.name, phone: data.phone, phone2: data.phone2 || '', email: data.email || '',
       stage: 's1', source: data.source, budget_min: 0,
       budget_max: Number(data.budget_max) || 0,
       desired_area: data.desired_area || '', score: 50,
@@ -3922,13 +3957,13 @@ const Dashboard = {
     const closedTotal= State.leads.filter(l => l.stage === 's5').length;
     const pipelineVal= State.leads.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0);
     const kpis = [
-      { label:'לידים חדשים היום', value: newToday,               sub:'לידים חדשים', accent:'#2563EB', icon:'🆕' },
-      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור',      accent:'#7C3AED', icon:'📋' },
-      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'סה"כ',        accent:'#16A34A', icon:'🎉' },
-      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'פוטנציאל',    accent:'#C49A2A', icon:'💰' },
+      { label:'לידים חדשים היום', value: newToday,               sub:'לידים חדשים', accent:'#2563EB', icon:'🆕', nav:'leads' },
+      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור',      accent:'#7C3AED', icon:'📋', nav:'pipeline' },
+      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'סה"כ',        accent:'#16A34A', icon:'🎉', nav:'pipeline' },
+      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'פוטנציאל',    accent:'#C49A2A', icon:'💰', nav:'pipeline' },
     ];
     document.getElementById('kpi-row').innerHTML = kpis.map(k => `
-      <div class="kpi-card" style="--kpi-accent:${k.accent}">
+      <div class="kpi-card" style="--kpi-accent:${k.accent};cursor:pointer;" onclick="App.go('${k.nav}')">
         <div class="kpi-icon">${k.icon}</div>
         <div class="kpi-label">${k.label}</div>
         <div class="kpi-value">${k.value}</div>
@@ -4050,9 +4085,15 @@ const Dashboard = {
 
     const cache = this._briefingCache;
     if (cache && cache.date === today() && cache.html) {
+      const plan = State.tenant?.plan || 'trial';
+      const dailyLimit = { trial:2, basic:2, pro:3, premium:5, lifetime:5 }[plan] ?? 2;
+      const remaining = dailyLimit - (cache.count || 0);
       el.innerHTML = `
         <div class="ai-card-body">${cache.html}</div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>
+        ${remaining > 0
+          ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 תדרוך נוסף (${remaining} נותר היום)</button>`
+          : `<div style="font-size:11px;color:var(--gray-400);margin-top:8px;">✅ השתמשת ב-${dailyLimit} תדרוכים להיום — נתחדש מחר</div>`
+        }
       `;
       return;
     }
@@ -4072,19 +4113,42 @@ const Dashboard = {
       return;
     }
     if (State.isDemo) {
-      el.innerHTML = `<div class="ai-card-body">
-        <strong>🎯 המוקד של היום:</strong> סגור את עסקת אמיר בן-דוד — הוא מחכה לאישור בנק ומוכן לחתום תוך חודשיים.<br><br>
-        <strong>👥 לטפל בדחיפות:</strong><br>
-        🔴 <strong>אמיר בן-דוד</strong> (ציון 95) — הצעה ב-4.2M שלוחה, אישור בנק ממשמש ובא. צור קשר היום.<br>
-        🟠 <strong>שרה אברהם</strong> (ציון 91) — ביקור בנכס ברמת השרון מחר. שלח אישור וכתובת.<br>
-        🟡 <strong>מיכל רוזן</strong> (ציון 45) — לא ענתה לשיחה האחרונה, ניסיון חוזר באיחור של יומיים.<br><br>
-        <strong>💡 תובנה לשיפור:</strong> 3 לידים ללא כתובת מייל — שלח WhatsApp עם בקשה להשלמת פרטים לפני הביקור.
-      </div>
-      <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">⚡ תצוגת דמו — התחבר לקבל תדרוך אמיתי על הלידים שלך</div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;opacity:.6;" disabled>🔄 רענן תדרוך</button>`;
+      el.innerHTML = `
+        <div style="background:linear-gradient(135deg,#0F1F3D,#2563EB);border-radius:12px;padding:20px;text-align:center;color:white;">
+          <div style="font-size:22px;margin-bottom:8px;">🤖</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">תדרוך AI מקצועי על המערכת שלך</div>
+          <div style="font-size:12px;opacity:.85;margin-bottom:6px;line-height:1.6;">
+            הצטרף למנוי חינמי, הוסף לידים או העלה רשימה —<br>
+            וקבל תדרוך יומי שמנתח <strong>את הלידים שלך</strong> בדיוק.
+          </div>
+          <div style="font-size:11px;opacity:.7;margin-bottom:14px;">📅 פתיחת יום + סגירת יום — 2 תדרוכים חינם בכל יום</div>
+          <button class="btn" style="background:white;color:#1D4ED8;font-weight:800;font-size:13px;padding:10px 24px;border-radius:8px;width:100%;"
+            onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
+            🚀 פתח חשבון חינמי עכשיו
+          </button>
+        </div>`;
       return;
     }
     if (!force && this._briefingCache?.date === today()) { this.renderAIBriefing(); return; }
+    const plan = State.tenant?.plan || 'trial';
+    const dailyLimit = { trial:2, basic:2, pro:3, premium:5, lifetime:5 }[plan] ?? 2;
+    const usedToday = this._briefingCache?.date === today() ? (this._briefingCache.count||0) : 0;
+    if (usedToday >= dailyLimit) {
+      toast(`הגעת למגבלת ${dailyLimit} תדרוכים ביום — נסה מחר 😊`, 'error'); return;
+    }
+    if (State.leads.length < 5) {
+      el.innerHTML = `
+        <div style="text-align:center;padding:12px 8px;color:var(--gray-500);">
+          <div style="font-size:24px;margin-bottom:8px;">📋</div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:6px;">צריך לפחות 5 לידים כדי להפעיל את הסוכן</div>
+          <div style="font-size:12px;line-height:1.6;margin-bottom:12px;">הוסף לידים ידנית או העלה רשימה — והסוכן יתחיל לעבוד בשבילך.</div>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 העלה רשימה</button>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')">➕ הוסף ליד</button>
+          </div>
+        </div>`;
+      return;
+    }
     el.innerHTML = `<div class="ai-thinking">✨ סורק לידים, משימות ופעילות ובונה תדרוך אישי... <div class="ai-dots"><span></span><span></span><span></span></div></div>`;
     try {
       const text = await AI.getDailyBriefing();
@@ -4095,10 +4159,14 @@ const Dashboard = {
       }
       const safe = escapeHtml(text);
       const html = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-      this._briefingCache = { date: today(), html };
+      this._briefingCache = { date: today(), html, count: (this._briefingCache?.date === today() ? (this._briefingCache.count||0) : 0) + 1 };
+      const remaining = dailyLimit - this._briefingCache.count;
       el.innerHTML = `
         <div class="ai-card-body">${html}</div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>
+        ${remaining > 0
+          ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 תדרוך נוסף (${remaining} נותר היום)</button>`
+          : `<div style="font-size:11px;color:var(--gray-400);margin-top:8px;">✅ השתמשת ב-${dailyLimit} תדרוכים להיום — נתחדש מחר</div>`
+        }
       `;
     } catch(e) {
       el.innerHTML = `
@@ -4237,13 +4305,14 @@ const LeadDetail = {
           <div class="lead-detail-name">${escapeHtml(lead.name)}</div>
           <div class="score-badge ${scoreClass(lead.score)}" style="width:44px;height:44px;font-size:15px;">${lead.score}</div>
         </div>
-        <div style="font-size:13px; color:var(--navy-200); margin-top:4px;">${escapeHtml(lead.phone)}${lead.email ? ' · ' + escapeHtml(lead.email) : ''}</div>
+        <div style="font-size:13px; color:var(--navy-200); margin-top:4px;">${escapeHtml(lead.phone)}${lead.phone2 ? ' · ' + escapeHtml(lead.phone2) : ''}${lead.email ? ' · ' + escapeHtml(lead.email) : ''}</div>
         <div style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
           <span class="badge badge-${lead.source}">${escapeHtml(sourceLabel(lead.source))}</span>
           <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${stage?.color+'33'};color:white;">${escapeHtml(stage?.name||'—')}</span>
         </div>
         <div class="lead-detail-actions">
           <button class="lead-action-btn" data-phone="${escapeHtml(lead.phone)}" onclick="window.open('tel:'+this.dataset.phone)">📞 שיחה</button>
+          ${lead.phone2 ? `<button class="lead-action-btn" data-phone="${escapeHtml(lead.phone2)}" onclick="window.open('tel:'+this.dataset.phone)">📞 טלפון 2</button>` : ''}
           <button class="lead-action-btn" data-phone="${escapeHtml(lead.phone)}" onclick="window.open('https://wa.me/972'+this.dataset.phone.replace(/^0/,'').replace(/-/g,''))">💬 WhatsApp</button>
           <button class="lead-action-btn" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
           <button class="lead-action-btn" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
@@ -5091,6 +5160,46 @@ const Settings = {
       toast('שגיאה: ' + e.message, 'error');
     }
   },
+  openPipelineStages() {
+    const list = document.getElementById('pipeline-stages-list');
+    if (!list) return;
+    list.innerHTML = '';
+    (State.stages || []).forEach((stage, i) => {
+      const row = document.createElement('div');
+      row.className = 'ob-stage-row';
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;';
+      row.innerHTML = `<span style="background:var(--navy-400);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</span>
+        <input class="form-input pipeline-stage-input" value="${escapeHtml(stage.name)}" style="flex:1;padding:7px 10px;font-size:13px;">`;
+      list.appendChild(row);
+    });
+    openModal('modal-edit-stages');
+  },
+  addPipelineStage() {
+    const list = document.getElementById('pipeline-stages-list');
+    if (!list) return;
+    const count = list.querySelectorAll('.ob-stage-row').length;
+    if (count >= 8) { toast('מקסימום 8 שלבים', 'error'); return; }
+    const row = document.createElement('div');
+    row.className = 'ob-stage-row';
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;';
+    row.innerHTML = `<span style="background:var(--navy-400);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${count+1}</span>
+      <input class="form-input pipeline-stage-input" placeholder="שם השלב החדש" style="flex:1;padding:7px 10px;font-size:13px;">`;
+    list.appendChild(row);
+    row.querySelector('input').focus();
+  },
+  async savePipelineStages() {
+    if (demoGuard()) return;
+    const inputs = document.querySelectorAll('#pipeline-stages-list .pipeline-stage-input');
+    const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
+    if (names.length < 2) { toast('נדרשים לפחות 2 שלבים', 'error'); return; }
+    try {
+      await DB.updateStageNames(names);
+      closeModal('modal-edit-stages');
+      toast('✅ שלבי הפייפליין עודכנו', 'success');
+    } catch(e) {
+      toast('שגיאה: ' + e.message, 'error');
+    }
+  },
   editName() {
     if (demoGuard()) return;
     const current = State.agent?.name || '';
@@ -5386,6 +5495,7 @@ async function addLead() {
   try {
     const lead = await DB.addLead({
       name, phone,
+      phone2: document.getElementById('new-lead-phone2').value.trim() || null,
       source: document.getElementById('new-lead-source').value,
       budget_max: rawBudget,
       desired_area: document.getElementById('new-lead-area').value,
@@ -5397,6 +5507,7 @@ async function addLead() {
     closeModal('modal-add-lead');
     document.getElementById('new-lead-name').value = '';
     document.getElementById('new-lead-phone').value = '';
+    document.getElementById('new-lead-phone2').value = '';
     document.getElementById('new-lead-area').value = '';
     document.getElementById('new-lead-notes').value = '';
     document.getElementById('new-lead-budget').value = '';
@@ -5613,6 +5724,7 @@ function openEditLead(leadId) {
   if (!lead) return;
   document.getElementById('edit-lead-name').value = lead.name || '';
   document.getElementById('edit-lead-phone').value = lead.phone || '';
+  document.getElementById('edit-lead-phone2').value = lead.phone2 || '';
   document.getElementById('edit-lead-email').value = lead.email || '';
   document.getElementById('edit-lead-budget-min').value = lead.budget_min || '';
   document.getElementById('edit-lead-budget-max').value = lead.budget_max || '';
@@ -5638,6 +5750,7 @@ async function saveEditLead() {
   const patch = {
     name,
     phone,
+    phone2: document.getElementById('edit-lead-phone2').value.trim() || null,
     email: document.getElementById('edit-lead-email').value.trim() || null,
     budget_min: rawBudgetMin,
     budget_max: rawBudgetMax,
@@ -5650,6 +5763,7 @@ async function saveEditLead() {
     Object.assign(lead, {
       name: patch.name,
       phone: patch.phone,
+      phone2: patch.phone2 || '',
       email: patch.email || '',
       budget_min: patch.budget_min || 0,
       budget_max: patch.budget_max || 0,
