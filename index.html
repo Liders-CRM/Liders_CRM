@@ -4120,7 +4120,10 @@ const Dashboard = {
       return;
     }
     if (!force && this._briefingCache?.date === today()) { this.renderAIBriefing(); return; }
-    if (force && State.tenant?.plan === 'trial') { toast('רענון תדרוך זמין בתוכנית בסיסית ומעלה', 'error'); return; }
+    const isTrial = State.tenant?.plan === 'trial';
+    if (isTrial && this._briefingCache?.date === today() && (this._briefingCache?.count || 0) >= 2) {
+      toast('הגעת למגבלת 2 תדרוכים ביום — נסה מחר 😊', 'error'); return;
+    }
     el.innerHTML = `<div class="ai-thinking">✨ סורק לידים, משימות ופעילות ובונה תדרוך אישי... <div class="ai-dots"><span></span><span></span><span></span></div></div>`;
     try {
       const text = await AI.getDailyBriefing();
@@ -4131,10 +4134,15 @@ const Dashboard = {
       }
       const safe = escapeHtml(text);
       const html = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-      this._briefingCache = { date: today(), html };
+      this._briefingCache = { date: today(), html, count: (this._briefingCache?.date === today() ? (this._briefingCache.count||0) : 0) + 1 };
       el.innerHTML = `
         <div class="ai-card-body">${html}</div>
-        ${State.tenant?.plan !== 'trial' ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>` : `<div style="font-size:11px;color:var(--gray-400);margin-top:8px;">💡 תדרוך אחד ביום — שדרג לקבל רענון בכל עת</div>`}
+        ${State.tenant?.plan !== 'trial'
+          ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 רענן תדרוך</button>`
+          : (this._briefingCache?.count || 0) < 2
+            ? `<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="Dashboard.runAIBriefing(true)">🔄 תדרוך נוסף (${2-(this._briefingCache?.count||0)} נותר היום)</button>`
+            : `<div style="font-size:11px;color:var(--gray-400);margin-top:8px;">✅ השתמשת ב-2 תדרוכים להיום — נתחדש מחר</div>`
+        }
       `;
     } catch(e) {
       el.innerHTML = `
