@@ -949,6 +949,36 @@
     @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
     /* ═══════════════════════════════════════
+       PWA INSTALL BANNER
+    ═══════════════════════════════════════ */
+    #pwa-install-banner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #0F1F3D, #1E3A5F);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky; top: 0; z-index: 12;
+      color: #fff;
+      font-size: 13px;
+    }
+    #pwa-install-banner.hidden { display: none; }
+    #pwa-install-banner .pwa-icon { font-size: 22px; flex-shrink: 0; }
+    #pwa-install-banner .pwa-text { flex: 1; line-height: 1.4; }
+    #pwa-install-banner .pwa-text strong { font-size: 13px; font-weight: 800; }
+    #pwa-install-banner .pwa-text span { font-size: 12px; color: rgba(255,255,255,0.7); }
+    #pwa-install-banner .pwa-btn {
+      background: #2563EB; color: #fff; border: none;
+      border-radius: 8px; padding: 7px 14px;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+      font-family: 'Heebo', sans-serif;
+    }
+    #pwa-install-banner .pwa-close {
+      background: none; border: none; color: rgba(255,255,255,0.5);
+      font-size: 18px; cursor: pointer; padding: 0 0 0 4px;
+      line-height: 1; flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════
        TRIAL BANNER
     ═══════════════════════════════════════ */
     #trial-banner {
@@ -1460,6 +1490,16 @@
       <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:#fff;color:#d97706;border:none;border-radius:8px;padding:5px 14px;font-weight:800;font-size:12px;cursor:pointer;">
         הרשם / התחבר →
       </button>
+    </div>
+    <!-- PWA INSTALL BANNER -->
+    <div id="pwa-install-banner" class="hidden">
+      <div class="pwa-icon">📲</div>
+      <div class="pwa-text">
+        <strong>הוסף לבית</strong><br>
+        <span id="pwa-install-msg">התקן כאפליקציה לגישה מהירה</span>
+      </div>
+      <button class="pwa-btn" id="pwa-install-btn">התקן</button>
+      <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
     </div>
     <!-- TRIAL BANNER -->
     <div id="trial-banner" class="hidden"></div>
@@ -6238,6 +6278,71 @@ window.LeadDocs   = LeadDocs;
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) show(); else hide();
   });
+})();
+
+// ═══════════════════════════════════════
+// PWA INSTALL BANNER
+// ═══════════════════════════════════════
+(function pwaInstall() {
+  const banner  = document.getElementById('pwa-install-banner');
+  const btn     = document.getElementById('pwa-install-btn');
+  const closeBtn= document.getElementById('pwa-install-close');
+  const msg     = document.getElementById('pwa-install-msg');
+  if (!banner) return;
+
+  // Already installed as standalone — never show
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
+
+  // Dismissed before — don't nag
+  if (localStorage.getItem('pwa_banner_dismissed') === '1') return;
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (!isIOS && !isAndroid) return; // desktop — skip
+
+  let deferredPrompt = null;
+
+  if (isAndroid) {
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      showBanner();
+    });
+  } else if (isIOS) {
+    // iOS has no install event — show manual instructions
+    msg.innerHTML = 'לחץ <strong>שתף ↑</strong> ואחר כך <strong>"הוסף למסך הבית"</strong>';
+    btn.textContent = 'הבנתי';
+    btn.onclick = dismiss;
+    // Show after a short delay so login loads first
+    setTimeout(showBanner, 3000);
+  }
+
+  function showBanner() {
+    // Only show once user is inside the app (not on login)
+    const shell = document.getElementById('app-shell');
+    if (shell && shell.classList.contains('hidden')) {
+      setTimeout(showBanner, 2000);
+      return;
+    }
+    banner.classList.remove('hidden');
+  }
+
+  if (isAndroid) {
+    btn.addEventListener('click', async function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') dismiss();
+      deferredPrompt = null;
+    });
+  }
+
+  closeBtn.addEventListener('click', dismiss);
+
+  function dismiss() {
+    banner.classList.add('hidden');
+    localStorage.setItem('pwa_banner_dismissed', '1');
+  }
 })();
 </script>
 </body>
