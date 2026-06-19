@@ -10,7 +10,7 @@ Liders CRM
 ניהול לידים חכם לסוכני נדל"ן 🏢
 פייפליין מכירות • מובייל-ראשון • עברית מלאה
 👇 נסה בחינם
-liders-crm.github.io/liders_crm
+liders-crm.com
 ```
 
 ---
@@ -162,7 +162,7 @@ Liders CRM
 נחזור אליך בתחילת יום העסקים הבא.
 
 בינתיים, תוכל לנסות את המערכת בחינם:
-liders-crm.github.io/liders_crm
+liders-crm.com
 ```
 
 ---
@@ -282,7 +282,7 @@ liders-crm.github.io/liders_crm
 יש לנו תקופת ניסיון בחינם.
 שווה 5 דקות מהזמן שלך?
 
-liders-crm.github.io/liders_crm
+liders-crm.com
 ```
 
 ### גרסה ב' — עם שאלה
