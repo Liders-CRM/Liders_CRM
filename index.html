@@ -3816,7 +3816,7 @@ const App = {
     const email = document.getElementById('login-email').value.trim();
     if (!email) { toast('הכנס קודם את האימייל שלך בשדה למעלה', 'error'); return; }
     const { error } = await sbClient.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://liders-crm.github.io/Liders_CRM/',
+      redirectTo: 'https://liders-crm.com/',
     });
     if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
     toast('📧 נשלח אימייל לאיפוס סיסמה — בדוק את תיבת הדואר שלך', 'success');
@@ -3838,7 +3838,7 @@ const App = {
     if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
     const REDIRECT = window.location.origin.includes('localhost')
       ? window.location.href
-      : 'https://liders-crm.github.io/Liders_CRM/';
+      : 'https://liders-crm.com/';
     const { error } = await sbClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: REDIRECT },
@@ -5536,7 +5536,7 @@ const Settings = {
     const email = State.agent?.email;
     if (!email) { toast('לא נמצא אימייל — התחבר מחדש', 'error'); return; }
     sbClient.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://liders-crm.github.io/Liders_CRM/',
+      redirectTo: 'https://liders-crm.com/',
     }).then(({ error }) => {
       if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
       toast('📧 נשלח אימייל לאיפוס סיסמה — בדוק את תיבת הדואר', 'success');

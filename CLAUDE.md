@@ -97,8 +97,8 @@
 
 | | URL |
 |-|-----|
-| CRM (לקוחות) | https://liders-crm.github.io/liders_crm/ |
-| פאנל אדמין | https://liders-crm.github.io/liders_crm/admin.html |
+| CRM (לקוחות) | https://liders-crm.com/ |
+| פאנל אדמין | https://liders-crm.com/admin.html |
 
 > האדמין מחובר לאותה Supabase. כניסה: אימייל + סיסמה. קישור אליו גם מתוך הגדרות ה-CRM.
 

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://liders-crm.github.io/Liders_CRM/sitemap.xml
+Sitemap: https://liders-crm.com/sitemap.xml
