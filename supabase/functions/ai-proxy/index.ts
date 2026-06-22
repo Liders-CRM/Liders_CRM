@@ -8,6 +8,14 @@ const CORS = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
 
+  // Defense-in-depth: verify a Bearer JWT is present even though Supabase
+  // gateway already validates it. Rejects anonymous / keyless calls explicitly
+  // rather than relying solely on the gateway configuration.
+  const authHeader = req.headers.get('Authorization') ?? '';
+  if (!authHeader.startsWith('Bearer ')) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS });
+  }
+
   try {
     const apiKey = Deno.env.get('ANTHROPIC_API_KEY');
     if (!apiKey) return Response.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500, headers: CORS });
