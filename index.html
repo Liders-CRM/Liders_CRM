@@ -3018,13 +3018,15 @@ const Onboarding = {
       subtitle: 'נגדיר את המערכת בדיוק עבורך — תוך 2 דקות',
       render() {
         const INDUSTRIES = [
-          { id: 'realestate',   icon: '🏠', label: 'נדל"ן' },
-          { id: 'construction', icon: '🏗️', label: 'קונסטרקשן' },
-          { id: 'sales',        icon: '💼', label: 'מכירות B2B' },
-          { id: 'ecommerce',    icon: '🛒', label: 'חנות אונליין' },
-          { id: 'beauty',       icon: '💅', label: 'יופי ובריאות' },
-          { id: 'services',     icon: '⚙️', label: 'שירות ותמיכה' },
-          { id: 'other',        icon: '🎯', label: 'אחר' },
+          { id: 'realestate',        icon: '🏠', label: 'נדל"ן' },
+          { id: 'construction',      icon: '🏗️', label: 'קונסטרקשן' },
+          { id: 'interior_design',   icon: '🎨', label: 'עיצוב פנים' },
+          { id: 'realestate_law',    icon: '⚖️', label: 'עורך דין נדל"ן' },
+          { id: 'mortgages',         icon: '💰', label: 'משכנתאות' },
+          { id: 'property_insurance',icon: '🛡️', label: 'ביטוח נכסים' },
+          { id: 'staging_photo',     icon: '📸', label: 'Staging וצילום' },
+          { id: 'realestate_tax',    icon: '🧾', label: 'יועץ מס נדל"ן' },
+          { id: 'other',             icon: '🎯', label: 'אחר' },
         ];
         const current = localStorage.getItem('liders_industry') || '';
         return `
@@ -3052,8 +3054,13 @@ const Onboarding = {
         const val = State.tenant?.name || '';
         const industry = localStorage.getItem('liders_industry') || 'other';
         const placeholder = industry === 'realestate' ? 'לידרס נדל"ן — תל אביב'
-          : industry === 'sales' ? 'לידרס מכירות — תל אביב'
-          : industry === 'beauty' ? 'לידרס ביוטי — רמת גן'
+          : industry === 'construction' ? 'לידרס קונסטרקשן — תל אביב'
+          : industry === 'interior_design' ? 'סטודיו עיצוב לידרס — תל אביב'
+          : industry === 'realestate_law' ? 'משרד עו"ד לידרס — תל אביב'
+          : industry === 'mortgages' ? 'לידרס משכנתאות — תל אביב'
+          : industry === 'property_insurance' ? 'לידרס ביטוח נכסים — תל אביב'
+          : industry === 'staging_photo' ? 'לידרס צילום נכסים — תל אביב'
+          : industry === 'realestate_tax' ? 'לידרס ייעוץ מס — תל אביב'
           : 'שם העסק שלי';
         return `
           <div style="padding:8px 0;">
@@ -3272,33 +3279,47 @@ const INDUSTRY_LABELS = {
     stages:['פנייה נכנסה','יצרנו קשר','ביקור נקבע','הצעת מחיר הוגשה','חוזה נחתם ✓'],
     notesPlaceholder:'הערות על הקונה — תקציב, דרישות, אזור מועדף, מועד מבוקש...',
   },
-  sales: {
-    lead:'ליד', leads:'לידים', property:'מוצר', properties:'מוצרים', deal:'עסקה', client:'לקוח', meeting:'פגישה עסקית', agent:'מנהל מכירות',
-    addLead:'ליד חדש', allLeads:'כל הלידים', pipeline:'פייפליין מכירות', propertiesIcon:'📁',
-    matchTab:'מוצרים מתאימים', docLabel:'מסמכים',
-    stages:['ליד נכנס','שיחת גילוי','הצעה נשלחה','משא ומתן','עסקה נסגרה ✓'],
-    notesPlaceholder:'הערות — צרכי הלקוח, כאב, תקציב, מסגרת זמן, מקבלי החלטה...',
+  interior_design: {
+    lead:'פרויקט', leads:'פרויקטים', property:'עיצוב', properties:'עיצובים', deal:'פרויקט', client:'לקוח', meeting:'סיור בנכס', agent:'מעצבת פנים',
+    addLead:'פרויקט חדש', allLeads:'כל הפרויקטים', pipeline:'פייפליין עיצוב', propertiesIcon:'🎨',
+    matchTab:'עיצובים פעילים', docLabel:'קבצי עיצוב',
+    stages:['פנייה נכנסה','שיחת היכרות','סיור בנכס','הצעת עיצוב הוגשה','פרויקט הושלם ✓'],
+    notesPlaceholder:'הערות — גודל הדירה (מ"ר), תקציב, סגנון מבוקש (מודרני/כפרי/מינימליסטי), שיפוץ מלא או חלקי, לוח זמנים, מצב הנכס הנוכחי...',
   },
-  ecommerce: {
-    lead:'קונה', leads:'קונים', property:'פריט', properties:'מלאי', deal:'הזמנה', client:'קונה', meeting:'שיחה', agent:'נציג',
-    addLead:'קונה חדש', allLeads:'כל הקונים', pipeline:'פייפליין הזמנות', propertiesIcon:'🛒',
-    matchTab:'מוצרים מתאימים', docLabel:'מסמכים',
-    stages:['עגלה פתוחה','יצרנו קשר','הצעה נשלחה','ממתין לתשלום','הזמנה בוצעה ✓'],
-    notesPlaceholder:'הערות על הקונה — מוצרים שמעניינים, תקציב, כמות...',
+  realestate_law: {
+    lead:'תיק', leads:'תיקים', property:'נכס', properties:'נכסים', deal:'עסקה', client:'לקוח', meeting:'ייעוץ משפטי', agent:'עורך דין',
+    addLead:'תיק חדש', allLeads:'כל התיקים', pipeline:'פייפליין תיקים', propertiesIcon:'⚖️',
+    matchTab:'נכסים בטיפול', docLabel:'מסמכים משפטיים',
+    stages:['פנייה נכנסה','ייעוץ ראשוני','הסכם שכ"ט נחתם','בדיקות ורישום','עסקה נסגרה ✓'],
+    notesPlaceholder:'הערות — סוג עסקה (קנייה/מכירה/שכירות), שווי הנכס, צד מיוצג (קונה/מוכר), מצב טאבו, הערות משפטיות, מועדי הגשה...',
   },
-  beauty: {
-    lead:'לקוחה', leads:'לקוחות', property:'שירות', properties:'שירותים', deal:'תור', client:'לקוחה', meeting:'טיפול', agent:'מטפלת',
-    addLead:'לקוחה חדשה', allLeads:'כל הלקוחות', pipeline:'פייפליין לקוחות', propertiesIcon:'💅',
-    matchTab:'שירותים מתאימים', docLabel:'מסמכים',
-    stages:['פנייה נכנסה','יצרנו קשר','תור נקבע','טיפול בוצע','לקוחה קבועה ✓'],
-    notesPlaceholder:'הערות — סוג טיפול, העדפות, אלרגיות, תדירות ביקורים...',
+  mortgages: {
+    lead:'לווה', leads:'לווים', property:'תיק מימון', properties:'תיקי מימון', deal:'משכנתא', client:'לווה', meeting:'פגישת אפיון', agent:'יועץ משכנתא',
+    addLead:'לווה חדש', allLeads:'כל הלווים', pipeline:'פייפליין משכנתאות', propertiesIcon:'💰',
+    matchTab:'תיקי מימון פעילים', docLabel:'מסמכים פיננסיים',
+    stages:['פנייה נכנסה','אפיון פיננסי','הוגש לבנק','אישור עקרוני','משכנתא נסגרה ✓'],
+    notesPlaceholder:'הערות — הכנסה חודשית, הון עצמי, שווי הנכס, אחוז מימון, בנקים שהוגש, ריבית מוצעת, מועד סגירת העסקה...',
   },
-  services: {
-    lead:'לקוח', leads:'לקוחות', property:'שירות', properties:'שירותים', deal:'פרויקט', client:'לקוח', meeting:'פגישה', agent:'נציג',
-    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין פרויקטים', propertiesIcon:'⚙️',
-    matchTab:'שירותים מתאימים', docLabel:'מסמכים',
-    stages:['פנייה נכנסה','בירור צרכים','הצעת מחיר','בביצוע','פרויקט הושלם ✓'],
-    notesPlaceholder:'הערות — סוג שירות, לוח זמנים, תקציב, דרישות טכניות...',
+  property_insurance: {
+    lead:'מבוטח', leads:'מבוטחים', property:'פוליסה', properties:'פוליסות', deal:'פוליסה', client:'מבוטח', meeting:'סקר נכס', agent:'סוכן ביטוח',
+    addLead:'מבוטח חדש', allLeads:'כל המבוטחים', pipeline:'פייפליין ביטוח', propertiesIcon:'🛡️',
+    matchTab:'פוליסות פעילות', docLabel:'מסמכי ביטוח',
+    stages:['פנייה נכנסה','סקר נכס','הצעת פוליסה','תנאים מאושרים','פוליסה חתומה ✓'],
+    notesPlaceholder:'הערות — סוג נכס (דירה/בית/מסחרי), גיל הנכס, כתובת, ביטוח קיים, חברת ביטוח, גובל ביטוח מבוקש, תאריך חידוש...',
+  },
+  staging_photo: {
+    lead:'נכס', leads:'נכסים', property:'פרויקט', properties:'פרויקטים', deal:'ביצוע', client:'סוכן/בעלים', meeting:'סיור ראשוני', agent:'צלם/מעצב',
+    addLead:'נכס חדש', allLeads:'כל הנכסים', pipeline:'פייפליין פרויקטים', propertiesIcon:'📸',
+    matchTab:'נכסים בביצוע', docLabel:'קבצי מדיה',
+    stages:['פנייה נכנסה','סיור ראשוני','הצעת מחיר','תאריך נקבע','מסירה ✓'],
+    notesPlaceholder:'הערות — כתובת הנכס, גודל (חדרים/מ"ר), שירותים מבוקשים (צילום/וידאו/staging/וירטואלי), תאריך מועדף, מדיה קיימת...',
+  },
+  realestate_tax: {
+    lead:'לקוח', leads:'לקוחות', property:'עסקה', properties:'עסקאות', deal:'תיק מס', client:'לקוח', meeting:'ייעוץ מס', agent:'יועץ מס',
+    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין תיקי מס', propertiesIcon:'🧾',
+    matchTab:'עסקאות פעילות', docLabel:'מסמכי מס',
+    stages:['פנייה נכנסה','אפיון העסקה','מסמכים התקבלו','תכנון מס','הגשה ✓'],
+    notesPlaceholder:'הערות — סוג עסקה (קנייה/מכירה/ירושה), שווי נכס, תאריך רכישה מקורית, מס שבח משוער, זכאות לפטור, דד-ליין הגשה (60 יום), היטל השבחה...',
   },
   other: {
     lead:'ליד', leads:'לידים', property:'מוצר', properties:'מוצרים', deal:'עסקה', client:'לקוח', meeting:'פגישה', agent:'נציג',
@@ -3361,15 +3382,14 @@ const AI = {
   _industryRole() {
     const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const map = {
-      realestate:   'מומחה נדל"ן ומתווך',
-      construction: 'קבלן בנייה ישראלי בפלורידה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
-      sales:        'מומחה מכירות B2B',
-      ecommerce:    'מומחה מסחר אלקטרוני',
-      beauty:       'מומחה תחום היופי והאסתטיקה',
-      services:     'מומחה שירות ותמיכה',
-      finance:      'מומחה פיננסי ויועץ השקעות',
-      health:       'מומחה שירותי בריאות',
-      education:    'מומחה חינוך והדרכה',
+      realestate:        'מתווך נדל"ן ישראלי מנוסה עם ניסיון בעסקאות קנייה, מכירה והשכרה',
+      construction:      'קבלן בנייה ישראלי בפלורידה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
+      interior_design:   'מעצבת פנים ישראלית מנוסה המתמחה בעיצוב דירות ונכסי יוקרה',
+      realestate_law:    'עורך דין נדל"ן ישראלי מנוסה המתמחה בעסקאות מקרקעין, חוזים ורישום',
+      mortgages:         'יועץ משכנתאות ישראלי מנוסה עם ניסיון רב בבנקים ובתכנון פיננסי',
+      property_insurance:'סוכן ביטוח נכסים ישראלי מנוסה המתמחה בביטוח דירות ונכסים מסחריים',
+      staging_photo:     'מצלם נכסים ומעצב staging ישראלי מנוסה המכיר את צרכי השוק המקומי',
+      realestate_tax:    'יועץ מס ורואה חשבון ישראלי המתמחה בנדל"ן, מס שבח, מס רכישה והיטל השבחה',
     };
     return map[ind] || 'מומחה מכירות ופיתוח עסקי';
   },
@@ -5258,13 +5278,15 @@ const Settings = {
         <div class="settings-section-title">תחום העסק</div>
         ${(() => {
           const IND_META = {
-            construction:{ icon:'🏗️', label:'קונסטרקשן' },
-            realestate:  { icon:'🏠', label:'נדל"ן' },
-            sales:       { icon:'💼', label:'מכירות B2B' },
-            ecommerce:   { icon:'🛒', label:'חנות אונליין' },
-            beauty:      { icon:'💅', label:'יופי ובריאות' },
-            services:    { icon:'⚙️', label:'שירות ותמיכה' },
-            other:       { icon:'🎯', label:'אחר' },
+            realestate:        { icon:'🏠', label:'נדל"ן' },
+            construction:      { icon:'🏗️', label:'קונסטרקשן' },
+            interior_design:   { icon:'🎨', label:'עיצוב פנים' },
+            realestate_law:    { icon:'⚖️', label:'עו"ד נדל"ן' },
+            mortgages:         { icon:'💰', label:'משכנתאות' },
+            property_insurance:{ icon:'🛡️', label:'ביטוח נכסים' },
+            staging_photo:     { icon:'📸', label:'Staging וצילום' },
+            realestate_tax:    { icon:'🧾', label:'יועץ מס' },
+            other:             { icon:'🎯', label:'אחר' },
           };
           const cur = localStorage.getItem('liders_industry') || 'other';
           const curMeta = IND_META[cur] || IND_META.other;
@@ -5280,7 +5302,7 @@ const Settings = {
               <div style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">
                 תחום נוכחי: <strong>${curMeta.icon} ${curMeta.label}</strong>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">${grid}</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">${grid}</div>
               <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
                 <div>
                   <div style="font-size:13px;font-weight:600;color:var(--gray-700);">📧 שפת מיילים ללקוחות</div>
