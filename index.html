@@ -1225,6 +1225,128 @@
     .wa-template-preview.visible { display: block; }
 
     /* ═══════════════════════════════════════
+       GAMIFICATION SYSTEM
+    ═══════════════════════════════════════ */
+    /* Sidebar level badge */
+    .level-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 10px; padding: 8px 12px; margin-top: 10px;
+    }
+    .level-icon { font-size: 1.3rem; }
+    .level-info { flex: 1; min-width: 0; }
+    .level-name { font-size: 11px; font-weight: 800; color: var(--gold-400); }
+    .level-xp { font-size: 10px; color: rgba(255,255,255,.45); margin-top: 1px; }
+    .xp-bar { height: 4px; background: rgba(255,255,255,.12); border-radius: 4px; margin-top: 5px; overflow: hidden; }
+    .xp-fill { height: 100%; background: linear-gradient(90deg, var(--gold-500), var(--gold-300)); border-radius: 4px; transition: width .6s ease; }
+
+    /* Dashboard gamification widget */
+    .gamify-widget {
+      margin: 0 20px 14px;
+      background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-500) 100%);
+      border-radius: 16px; padding: 18px 20px; color: white;
+      position: relative; overflow: hidden;
+    }
+    .gamify-widget::before {
+      content: ''; position: absolute; top: -30px; left: -20px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(201,168,76,.08); pointer-events: none;
+    }
+    .gamify-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .gamify-avatar {
+      width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold-500), var(--gold-300));
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+    .gamify-level-name { font-size: 15px; font-weight: 900; }
+    .gamify-streak { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .gamify-xp-area { margin-bottom: 14px; }
+    .gamify-xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.55); margin-bottom: 5px; }
+    .gamify-bar { height: 8px; background: rgba(255,255,255,.12); border-radius: 8px; overflow: hidden; }
+    .gamify-fill { height: 100%; background: linear-gradient(90deg, var(--gold-500), var(--gold-300)); border-radius: 8px; transition: width .8s ease; }
+    .gamify-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .gamify-stat {
+      background: rgba(255,255,255,.06); border-radius: 10px;
+      padding: 8px 6px; text-align: center;
+    }
+    .gamify-stat-val { font-size: 1.3rem; font-weight: 900; color: var(--gold-300); }
+    .gamify-stat-label { font-size: 10px; color: rgba(255,255,255,.45); margin-top: 2px; }
+    .gamify-achievements { display: flex; gap: 6px; flex-wrap: wrap; }
+    .gamify-badge {
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px; padding: 5px 9px; font-size: 11px; display: flex; align-items: center; gap: 5px;
+      color: rgba(255,255,255,.8); cursor: pointer; transition: all .2s;
+    }
+    .gamify-badge.unlocked { background: rgba(201,168,76,.2); border-color: rgba(201,168,76,.4); color: var(--gold-300); }
+    .gamify-badge.locked { opacity: .4; filter: grayscale(.8); }
+    .gamify-daily-challenge {
+      margin-top: 12px; background: rgba(255,255,255,.06);
+      border-radius: 10px; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .gamify-daily-icon { font-size: 1.3rem; }
+    .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.75); flex: 1; line-height: 1.4; }
+    .gamify-daily-done { font-size: 1rem; color: var(--gold-300); }
+
+    /* Achievement toast */
+    .achievement-toast {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, #1a2744, #2a4080);
+      border: 2px solid var(--gold-500); border-radius: 16px;
+      padding: 14px 20px; z-index: 9999; min-width: 280px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+      color: white;
+    }
+    .achievement-toast.show { transform: translateX(-50%) translateY(0); }
+    .achievement-toast-icon { font-size: 2rem; }
+    .achievement-toast-title { font-size: 11px; color: var(--gold-400); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .achievement-toast-name { font-size: 16px; font-weight: 900; }
+    .achievement-toast-xp { font-size: 12px; color: var(--gold-300); margin-top: 2px; }
+
+    /* Level up overlay */
+    .levelup-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9998; opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .levelup-overlay.show { opacity: 1; pointer-events: all; }
+    .levelup-card {
+      background: linear-gradient(135deg, #0f2040, #1e3d80);
+      border: 2px solid var(--gold-500); border-radius: 24px;
+      padding: 40px 32px; text-align: center; color: white;
+      max-width: 320px; width: 90%;
+      transform: scale(.8); transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    .levelup-overlay.show .levelup-card { transform: scale(1); }
+    .levelup-icon { font-size: 4rem; margin-bottom: 12px; }
+    .levelup-label { font-size: 12px; color: var(--gold-400); letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+    .levelup-name { font-size: 2rem; font-weight: 900; color: var(--gold-300); margin-bottom: 8px; }
+    .levelup-sub { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 24px; }
+    .levelup-btn {
+      background: var(--gold-500); color: var(--navy-800); border: none;
+      padding: 12px 32px; border-radius: 12px; font-family: inherit;
+      font-weight: 800; font-size: 1rem; cursor: pointer;
+    }
+
+    /* Confetti */
+    #confetti-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9997; overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute; top: -10px;
+      width: 10px; height: 14px; border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ═══════════════════════════════════════
        CALENDAR SCREEN
     ═══════════════════════════════════════ */
     .cal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; }
@@ -1553,6 +1675,14 @@
           <div class="agent-role" id="sidebar-agent-role">מנהל</div>
         </div>
       </div>
+      <div class="level-badge" id="sidebar-level-badge">
+        <div class="level-icon" id="sidebar-level-icon">🌱</div>
+        <div class="level-info">
+          <div class="level-name" id="sidebar-level-name">מתחיל</div>
+          <div class="level-xp" id="sidebar-level-xp">0 XP</div>
+          <div class="xp-bar"><div class="xp-fill" id="sidebar-xp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
       <a class="nav-item mt-2" data-screen="settings" onclick="App.go('settings')">
         <span class="nav-icon">⚙️</span> הגדרות
       </a>
@@ -1618,6 +1748,44 @@
       </div>
 
       <div id="dash-trial-card"></div>
+
+      <!-- GAMIFICATION WIDGET -->
+      <div class="gamify-widget" id="gamify-widget">
+        <div class="gamify-top">
+          <div class="gamify-avatar" id="gamify-avatar">🌱</div>
+          <div>
+            <div class="gamify-level-name" id="gamify-level-name">מתחיל</div>
+            <div class="gamify-streak" id="gamify-streak">🔥 0 ימים רצופים</div>
+          </div>
+        </div>
+        <div class="gamify-xp-area">
+          <div class="gamify-xp-label">
+            <span id="gamify-xp-cur">0 XP</span>
+            <span id="gamify-xp-next">לרמה הבאה: 200 XP</span>
+          </div>
+          <div class="gamify-bar"><div class="gamify-fill" id="gamify-xp-fill" style="width:0%"></div></div>
+        </div>
+        <div class="gamify-stats">
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-leads-count">0</div>
+            <div class="gamify-stat-label">לידים</div>
+          </div>
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-closed-count">0</div>
+            <div class="gamify-stat-label">עסקאות שנסגרו</div>
+          </div>
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-tasks-count">0</div>
+            <div class="gamify-stat-label">משימות שבוצעו</div>
+          </div>
+        </div>
+        <div class="gamify-achievements" id="gamify-badges-row"></div>
+        <div class="gamify-daily-challenge" id="gamify-daily">
+          <div class="gamify-daily-icon">⚡</div>
+          <div class="gamify-daily-text" id="gamify-daily-text">טוען אתגר יומי...</div>
+          <div class="gamify-daily-done" id="gamify-daily-check"></div>
+        </div>
+      </div>
 
       <div class="ai-card" id="dash-ai-briefing" style="margin: 0 20px 14px;">
         <div class="ai-card-title">✨ עוזר AI אישי — תדרוך יומי על המערכת</div>
@@ -2034,6 +2202,30 @@
      TOAST CONTAINER
 ═══════════════════════════════════════ -->
 <div id="toast-container"></div>
+
+<!-- CONFETTI -->
+<div id="confetti-container"></div>
+
+<!-- ACHIEVEMENT TOAST -->
+<div class="achievement-toast" id="achievement-toast">
+  <div class="achievement-toast-icon" id="ach-toast-icon">🏆</div>
+  <div>
+    <div class="achievement-toast-title">הישג חדש!</div>
+    <div class="achievement-toast-name" id="ach-toast-name"></div>
+    <div class="achievement-toast-xp" id="ach-toast-xp"></div>
+  </div>
+</div>
+
+<!-- LEVEL UP OVERLAY -->
+<div class="levelup-overlay" id="levelup-overlay" onclick="Gamify.closeLevelUp()">
+  <div class="levelup-card" onclick="event.stopPropagation()">
+    <div class="levelup-icon" id="levelup-icon">⭐</div>
+    <div class="levelup-label">עלית רמה!</div>
+    <div class="levelup-name" id="levelup-name">מקצוען</div>
+    <div class="levelup-sub" id="levelup-sub">כל הכבוד — אתה הולך וגדל!</div>
+    <button class="levelup-btn" onclick="Gamify.closeLevelUp()">🚀 המשך</button>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════
      MODAL: ADD LEAD
@@ -3642,6 +3834,7 @@ const AI = {
     });
     if (error) throw new Error(error.message || 'שגיאת שירות AI');
     if (data?.error) throw new Error(data.error?.message || data.error || 'שגיאת Claude API');
+    Gamify.event('use_ai');
     return data?.content?.[0]?.text || null;
   },
 
@@ -3970,6 +4163,258 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
     if (!el) return;
     navigator.clipboard.writeText(el.textContent)
       .then(() => toast('📋 הועתק ללוח', 'success'));
+  },
+};
+
+/* ═══════════════════════════════════════════
+   GAMIFICATION MODULE
+═══════════════════════════════════════════ */
+const Gamify = {
+  LEVELS: [
+    { min:    0, name: 'מתחיל',    icon: '🌱', next: 200  },
+    { min:  200, name: 'סוכן',     icon: '📋', next: 600  },
+    { min:  600, name: 'מקצוען',   icon: '⭐', next: 1200 },
+    { min: 1200, name: 'מומחה',    icon: '🏆', next: 2500 },
+    { min: 2500, name: 'אגדה',     icon: '👑', next: 99999 },
+  ],
+  XP: {
+    add_lead:      50,
+    advance_stage: 40,
+    close_deal:    250,
+    complete_task: 35,
+    use_ai:        20,
+    log_activity:  25,
+    daily_login:   30,
+    rescue_cold:   60,
+  },
+  ACHIEVEMENTS: [
+    { id:'first_lead',   icon:'🎯', name:'ליד ראשון',        desc:'הוסף את הליד הראשון',          xp:50,  check: d => d.leadsAdded >= 1   },
+    { id:'leads_5',      icon:'📊', name:'5 לידים',           desc:'5 לידים במערכת',               xp:75,  check: d => d.leadsAdded >= 5   },
+    { id:'leads_20',     icon:'🚀', name:'20 לידים',          desc:'20 לידים במערכת',              xp:150, check: d => d.leadsAdded >= 20  },
+    { id:'first_deal',   icon:'🤝', name:'עסקה ראשונה',       desc:'סגור עסקה ראשונה',             xp:200, check: d => d.dealsClosed >= 1  },
+    { id:'deals_5',      icon:'💰', name:'5 עסקאות',          desc:'5 עסקאות שנסגרו',             xp:300, check: d => d.dealsClosed >= 5  },
+    { id:'tasks_10',     icon:'✅', name:'מסיים משימות',      desc:'10 משימות הושלמו',            xp:100, check: d => d.tasksCompleted >= 10 },
+    { id:'streak_3',     icon:'🔥', name:'3 ימים רצופים',     desc:'3 ימים רצופים במערכת',        xp:75,  check: d => d.streak >= 3      },
+    { id:'streak_7',     icon:'⚡', name:'שבוע רצוף',         desc:'7 ימים רצופים',               xp:150, check: d => d.streak >= 7      },
+    { id:'streak_30',    icon:'💎', name:'חודש רצוף',         desc:'30 ימים רצופים — מדהים!',     xp:500, check: d => d.streak >= 30     },
+    { id:'ai_master',    icon:'🤖', name:'מאסטר AI',          desc:'השתמשת ב-AI 10 פעמים',        xp:100, check: d => d.aiUses >= 10     },
+    { id:'pipeline_100k',icon:'💼', name:'פייפליין 100K',      desc:'שווי פייפליין עולה על 100K ₪', xp:200, check: d => (State.leads?.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0)||0) >= 100000 },
+  ],
+  DAILY_CHALLENGES: [
+    'פנה ל-3 לידים שלא דיברת איתם השבוע',
+    'עדכן שלב של ליד אחד לפחות',
+    'הוסף ליד חדש למערכת',
+    'השלם 2 משימות פתוחות',
+    'השתמש ב-AI לכתיבת הודעת פולואפ',
+    'בדוק אם יש לידים קפואים וצור איתם קשר',
+    'הוסף הערה לפגישה שהייתה לך',
+    'תכנן 3 פולואפים לשבוע הבא',
+  ],
+
+  _d: null,
+
+  get() {
+    if (!this._d) {
+      const raw = localStorage.getItem('liders_gamify_v2');
+      this._d = raw ? JSON.parse(raw) : {
+        xp: 0, achievements: [], streak: 0,
+        lastLogin: null, aiUses: 0, tasksCompleted: 0,
+        dealsClosed: 0, leadsAdded: 0, dailyDone: null,
+      };
+    }
+    return this._d;
+  },
+
+  save() { localStorage.setItem('liders_gamify_v2', JSON.stringify(this._d)); },
+
+  getLevel(xp) {
+    let lv = this.LEVELS[0];
+    for (const l of this.LEVELS) { if (xp >= l.min) lv = l; }
+    return lv;
+  },
+
+  getProgress(xp) {
+    const lv  = this.getLevel(xp);
+    const idx = this.LEVELS.indexOf(lv);
+    const next = this.LEVELS[idx + 1];
+    if (!next) return { pct: 100, cur: xp, needed: 0 };
+    const pct = Math.min(100, ((xp - lv.min) / (next.min - lv.min)) * 100);
+    return { pct, cur: xp, needed: next.min - xp, nextMin: next.min };
+  },
+
+  event(type, extra) {
+    if (State.isDemo) return;
+    const d = this.get();
+    const pts = this.XP[type] || 0;
+    if (!pts) return;
+    const prevLevel = this.getLevel(d.xp);
+    d.xp += pts;
+    if (type === 'add_lead')      d.leadsAdded++;
+    if (type === 'close_deal')    { d.dealsClosed++; this.confetti(); }
+    if (type === 'complete_task') d.tasksCompleted++;
+    if (type === 'use_ai')        d.aiUses++;
+    this.save();
+    const newLevel = this.getLevel(d.xp);
+    if (newLevel.min > prevLevel.min) this.showLevelUp(newLevel);
+    this.checkAchievements();
+    this.renderSidebar();
+    this.renderWidget();
+    toast(`+${pts} XP ✨`, 'success');
+  },
+
+  checkDailyLogin() {
+    if (State.isDemo) return;
+    const d = this.get();
+    const today_ = new Date().toISOString().split('T')[0];
+    if (d.lastLogin === today_) return;
+    const yesterday = new Date(Date.now() - 864e5).toISOString().split('T')[0];
+    d.streak = d.lastLogin === yesterday ? (d.streak || 0) + 1 : 1;
+    d.lastLogin = today_;
+    const prevLevel = this.getLevel(d.xp);
+    d.xp += this.XP.daily_login;
+    const newLevel = this.getLevel(d.xp);
+    this.save();
+    if (newLevel.min > prevLevel.min) setTimeout(() => this.showLevelUp(newLevel), 1500);
+    this.checkAchievements();
+    this.renderSidebar();
+    this.renderWidget();
+    if (d.streak > 1) toast(`🔥 ${d.streak} ימים רצופים! +${this.XP.daily_login} XP`, 'success');
+  },
+
+  checkAchievements() {
+    const d = this.get();
+    const done = new Set(d.achievements);
+    let gained = false;
+    for (const a of this.ACHIEVEMENTS) {
+      if (done.has(a.id)) continue;
+      try { if (!a.check(d)) continue; } catch { continue; }
+      done.add(a.id);
+      d.achievements = [...done];
+      d.xp += a.xp;
+      gained = true;
+      this.save();
+      this.showAchievement(a);
+    }
+    if (gained) this.renderWidget();
+  },
+
+  showAchievement(a) {
+    const el = document.getElementById('achievement-toast');
+    if (!el) return;
+    document.getElementById('ach-toast-icon').textContent = a.icon;
+    document.getElementById('ach-toast-name').textContent = a.name;
+    document.getElementById('ach-toast-xp').textContent  = `+${a.xp} XP · ${a.desc}`;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 4000);
+  },
+
+  showLevelUp(level) {
+    document.getElementById('levelup-icon').textContent = level.icon;
+    document.getElementById('levelup-name').textContent = level.name;
+    document.getElementById('levelup-sub').textContent  = `ברכות! הגעת לרמה "${level.name}" — המשך כך 💪`;
+    document.getElementById('levelup-overlay').classList.add('show');
+  },
+
+  closeLevelUp() {
+    document.getElementById('levelup-overlay').classList.remove('show');
+  },
+
+  confetti() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    const colors = ['#C49A2A','#2563EB','#16A34A','#DC2626','#7C3AED','#F59E0B','#ffffff'];
+    for (let i = 0; i < 80; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random()*100}%;
+        background: ${colors[Math.floor(Math.random()*colors.length)]};
+        width: ${6+Math.random()*8}px;
+        height: ${10+Math.random()*10}px;
+        animation-duration: ${1.5+Math.random()*2}s;
+        animation-delay: ${Math.random()*.8}s;
+      `;
+      container.appendChild(el);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 4000);
+  },
+
+  getDailyChallenge() {
+    const d = this.get();
+    const today_ = new Date().toISOString().split('T')[0];
+    const idx = (new Date().getDate() + new Date().getMonth()) % this.DAILY_CHALLENGES.length;
+    return { text: this.DAILY_CHALLENGES[idx], done: d.dailyDone === today_ };
+  },
+
+  completeDailyChallenge() {
+    const d = this.get();
+    const today_ = new Date().toISOString().split('T')[0];
+    if (d.dailyDone === today_) return;
+    d.dailyDone = today_;
+    d.xp += 80;
+    this.save();
+    this.renderWidget();
+    toast('🎯 אתגר יומי הושלם! +80 XP', 'success');
+  },
+
+  renderSidebar() {
+    const d = this.get();
+    const lv = this.getLevel(d.xp);
+    const prog = this.getProgress(d.xp);
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    const setStyle = (id, k, v) => { const el = document.getElementById(id); if (el) el.style[k] = v; };
+    set('sidebar-level-icon', lv.icon);
+    set('sidebar-level-name', lv.name);
+    set('sidebar-level-xp', `${d.xp} XP`);
+    setStyle('sidebar-xp-fill', 'width', prog.pct + '%');
+  },
+
+  renderWidget() {
+    const d = this.get();
+    const lv = this.getLevel(d.xp);
+    const prog = this.getProgress(d.xp);
+    const done = new Set(d.achievements);
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    const setStyle = (id, k, v) => { const el = document.getElementById(id); if (el) el.style[k] = v; };
+
+    set('gamify-avatar', lv.icon);
+    set('gamify-level-name', `רמה: ${lv.name}`);
+    set('gamify-streak', `🔥 ${d.streak || 0} ימים רצופים`);
+    set('gamify-xp-cur', `${d.xp} XP`);
+    set('gamify-xp-next', prog.needed > 0 ? `עוד ${prog.needed} XP לרמה הבאה` : '🏆 רמה מקסימלית!');
+    setStyle('gamify-xp-fill', 'width', prog.pct + '%');
+
+    set('gamify-leads-count', d.leadsAdded || State.leads?.length || 0);
+    set('gamify-closed-count', d.dealsClosed || State.leads?.filter(l=>l.stage==='s5').length || 0);
+    set('gamify-tasks-count', d.tasksCompleted || 0);
+
+    // Badges row — show first 5 achievements
+    const badgesEl = document.getElementById('gamify-badges-row');
+    if (badgesEl) {
+      badgesEl.innerHTML = this.ACHIEVEMENTS.slice(0, 6).map(a => `
+        <div class="gamify-badge ${done.has(a.id) ? 'unlocked' : 'locked'}" title="${a.desc}">
+          ${a.icon} ${a.name}
+        </div>`).join('');
+    }
+
+    // Daily challenge
+    const ch = this.getDailyChallenge();
+    set('gamify-daily-text', ch.text);
+    const checkEl = document.getElementById('gamify-daily-check');
+    if (checkEl) {
+      if (ch.done) {
+        checkEl.textContent = '✅';
+      } else {
+        checkEl.innerHTML = '<button onclick="Gamify.completeDailyChallenge()" style="background:var(--gold-500);color:#0f2040;border:none;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">בוצע!</button>';
+      }
+    }
+  },
+
+  init() {
+    if (State.isDemo) return;
+    this.checkDailyLogin();
+    this.renderSidebar();
+    this.renderWidget();
   },
 };
 
@@ -4609,6 +5054,7 @@ const Dashboard = {
     this.renderActivity();
     this.renderAIBriefing();
     Billing.renderDashTrialCard();
+    Gamify.renderWidget();
   },
   renderHotLeads() {
     const el = document.getElementById('dash-hot-leads');
@@ -6109,7 +6555,7 @@ async function toggleTask(taskId) {
     return;
   }
   toast(task.done ? '✅ משימה סומנה כבוצעה' : 'משימה נפתחה מחדש', task.done ? 'success' : '');
-  if (task.done) { const lead = State.leads.find(l => l.id === task.lead_id); Make.taskDone(task, lead); }
+  if (task.done) { const lead = State.leads.find(l => l.id === task.lead_id); Make.taskDone(task, lead); Gamify.event('complete_task'); }
   App.updateBadges();
   if (State.screen === 'tasks') Tasks.render();
   else if (State.screen === 'dashboard') Dashboard.renderTasks();
@@ -6377,6 +6823,7 @@ async function addLead() {
     document.getElementById('new-lead-budget').value = '';
     document.getElementById('new-lead-source').value = 'other';
     toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
+    Gamify.event('add_lead');
     Make.newLead(lead);
     Twilio.notifyNewLead(lead);
     App.updateBadges();
@@ -6465,6 +6912,8 @@ async function moveLead(leadId, stageId) {
   Twilio.notifyStageChanged(lead, stage.name);
   closeModal('modal-move-stage');
   toast(`🔄 ${lead.name} הועבר ל-${stage.name}`, 'success');
+  if (stageId === 's5') Gamify.event('close_deal', lead);
+  else Gamify.event('advance_stage');
   if (State.screen === 'pipeline') Pipeline.render();
   else if (State.screen === 'lead-detail') LeadDetail.render(leadId);
 }
@@ -6705,6 +7154,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
           if (t?.whatsapp_number)  localStorage.setItem('whatsapp_number',  t.whatsapp_number);
           State.isNewTenant = isNew;
           App._showApp();
+          setTimeout(() => Gamify.init(), 800);
           overlay.classList.add('fade-out');
           setTimeout(() => overlay.classList.add('hidden'), 520);
         } catch(e) {
@@ -6723,6 +7173,8 @@ window.Voice      = Voice;
 window.Onboarding = Onboarding;
 window.Analytics  = Analytics;
 window.LeadDocs   = LeadDocs;
+window.Gamify     = Gamify;
+window.Tools      = Tools;
 
 // Bind login buttons — uses both click and pointerdown for maximum mobile compatibility
 (function bindLoginButtons() {
