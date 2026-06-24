@@ -5322,39 +5322,6 @@ const Settings = {
         })()}
       </div>
       <div class="settings-section">
-        <div class="settings-section-title">✏️ עריכת שמות</div>
-        ${(() => {
-          const ind = localStorage.getItem('liders_industry') || 'other';
-          const indLabels = INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other;
-          const custom = State.customLabels || {};
-          const fields = [
-            {key:'lead',    label:'שם רשומה (יחיד)', hint:'למשל: ג\'וב, קונה, ליד'},
-            {key:'leads',   label:'שם רשומה (רבים)',  hint:'למשל: ג\'ובים, קונים, לידים'},
-            {key:'client',  label:'שם הלקוח',          hint:'למשל: הומאונר, לקוח, קליינט'},
-            {key:'meeting', label:'סוג הפגישה',         hint:'למשל: וואלקת\'רו, ביקור נכס, תור'},
-            {key:'addLead', label:'כפתור הוספה',        hint:'למשל: ג\'וב חדש, קונה חדש'},
-          ];
-          const rows = fields.map(f => `
-            <div style="margin-bottom:12px;">
-              <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:3px;">${f.label}</div>
-              <input class="form-input" id="custom-label-${f.key}"
-                     placeholder="${escapeHtml(indLabels[f.key] || f.hint)}"
-                     value="${escapeHtml(custom[f.key] || '')}"
-                     style="font-size:13px;padding:8px 10px;">
-              <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">ברירת מחדל: ${escapeHtml(indLabels[f.key] || '')} — ${f.hint}</div>
-            </div>`).join('');
-          const hasCustom = Object.keys(custom).length > 0;
-          return `<div style="padding:12px 16px;">
-            ${hasCustom ? `<div style="font-size:11px;color:var(--blue-600);background:var(--blue-50);border-radius:6px;padding:6px 10px;margin-bottom:12px;">✨ שמות מותאמים פעילים</div>` : ''}
-            ${rows}
-            <div style="display:flex;gap:8px;margin-top:4px;">
-              ${hasCustom ? `<button class="btn btn-ghost btn-sm" onclick="Settings.resetCustomLabels()">↺ ברירת מחדל</button>` : ''}
-              <button class="btn btn-primary btn-sm" style="flex:1;" onclick="Settings.saveCustomLabels()">שמור שפה</button>
-            </div>
-          </div>`;
-        })()}
-      </div>
-      <div class="settings-section">
         <div class="settings-section-title">חיבורים</div>
         <div class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
