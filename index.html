@@ -3083,8 +3083,9 @@ const Onboarding = {
       render() {
         const ind = localStorage.getItem('liders_industry') || 'other';
         const defaults = INDUSTRY_LABELS[ind]?.stages || ['פנייה נכנסה','יצרנו קשר','הצעה נשלחה','במשא ומתן','עסקה נסגרה ✓'];
-        // Always show industry-specific defaults in onboarding — user just picked their industry
-        const names = defaults;
+        // For returning users: show their existing stages, not industry defaults
+        const existing = (State.stages || []).map(s => s.name).filter(Boolean);
+        const names = existing.length ? existing : defaults;
         return `
           <div>
             <div style="display:flex;flex-direction:column;gap:6px;" id="ob-stages-list">
@@ -3098,6 +3099,9 @@ const Onboarding = {
         const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
         if (names.length < 2) { toast('נדרשים לפחות 2 שלבים', 'error'); return false; }
         Onboarding._data.stageNames = names;
+        // Only mark as edited if user actually changed the stages
+        const existing = (State.stages || []).map(s => s.name);
+        Onboarding._data.stagesEdited = names.length !== existing.length || names.some((n, i) => n !== existing[i]);
         return true;
       },
     },
@@ -3227,8 +3231,8 @@ const Onboarding = {
       // Save industry to Supabase so it survives logout/login on any device
       const ind = localStorage.getItem('liders_industry') || 'other';
       DB.updateIndustry(ind);
-      // Save customized stage names to Supabase
-      if (this._data.stageNames?.length) {
+      // Save stage names only if user edited them or if this is a brand-new tenant (no stages yet)
+      if (this._data.stageNames?.length && (!State.stages?.length || this._data.stagesEdited)) {
         DB.updateStageNames(this._data.stageNames).catch(() => {});
       }
       if (this._data.agencyName) {
