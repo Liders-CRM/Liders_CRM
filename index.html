@@ -4008,6 +4008,30 @@ const App = {
     addBtns.forEach(b => { b.textContent = '+ ' + getLabel('addLead'); });
   },
   async logout() {
+    const curInd = localStorage.getItem('liders_industry');
+    if (curInd && !State.isDemo) {
+      const save = await new Promise(resolve => {
+        const el = document.createElement('div');
+        el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:flex-end;justify-content:center;';
+        el.innerHTML = `
+          <div style="background:white;border-radius:20px 20px 0 0;padding:28px 24px 44px;width:100%;max-width:480px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:12px;">💾</div>
+            <div style="font-size:18px;font-weight:700;color:var(--navy-500);margin-bottom:8px;">לפני שתצא</div>
+            <div style="font-size:14px;color:var(--gray-500);margin-bottom:24px;line-height:1.6;">האם לשמור את הגדרות הסוכנות לכניסה הבאה?</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <button id="_ls_yes" style="padding:15px;background:var(--blue-500);color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">כן, שמור הגדרות</button>
+              <button id="_ls_no"  style="padding:15px;background:var(--gray-100);color:var(--navy-500);border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">לא, בכניסה הבאה אבחר מחדש</button>
+            </div>
+          </div>`;
+        document.body.appendChild(el);
+        el.querySelector('#_ls_yes').onclick = () => { document.body.removeChild(el); resolve(true); };
+        el.querySelector('#_ls_no').onclick  = () => { document.body.removeChild(el); resolve(false); };
+      });
+      if (!save) await DB.updateIndustry(null);
+    }
+    await this._performLogout();
+  },
+  async _performLogout() {
     await DB.signOut();
     // Wipe per-tenant state so a different account signing in on this same
     // browser/device can never see (or be shown alongside) the previous
@@ -5443,6 +5467,14 @@ const Settings = {
       </div>` : ''}
       <div class="settings-section">
         <div class="settings-section-title">אחר</div>
+        <div class="settings-row" onclick="Settings.resetOnboarding()" style="cursor:pointer;">
+          <div class="settings-row-icon">🔄</div>
+          <div class="settings-row-body">
+            <div class="settings-row-label">הצג אשף הגדרות מחדש</div>
+            <div class="settings-row-sub">בחר תחום עסק מחדש עכשיו</div>
+          </div>
+          <div class="settings-arrow">›</div>
+        </div>
         <div class="settings-row" onclick="App.logout()">
           <div class="settings-row-icon">🚪</div>
           <div class="settings-row-body">
@@ -5451,6 +5483,16 @@ const Settings = {
         </div>
       </div>
     `;
+  },
+  async resetOnboarding() {
+    if (demoGuard()) return;
+    await DB.updateIndustry(null);
+    localStorage.removeItem('liders_industry');
+    localStorage.removeItem('onboarding_done');
+    State.customLabels = {};
+    localStorage.removeItem('liders_custom_labels');
+    toast('מפעיל אשף הגדרות...', 'info');
+    setTimeout(() => Onboarding.show(), 600);
   },
   getClientLang() {
     const saved = localStorage.getItem('liders_client_lang');
