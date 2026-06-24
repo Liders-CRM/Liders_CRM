@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liders CRM — הפלטפורמה שהופכת לידים לעסקאות</title>
+  <meta name="description" content="מערכת CRM לסוכני נדל״ן עם סוכן AI שמנהל את הפייפליין בשבילך. 21 יום חינם, ללא כרטיס אשראי.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:      #0F1F3D;
+      --navy-mid:  #1a3260;
+      --blue:      #2563EB;
+      --blue-light:#3B82F6;
+      --gray-bg:   #F1F5F9;
+      --gray-card: #F8FAFC;
+      --border:    #E2E8F0;
+      --text:      #0F172A;
+      --text-muted:#64748B;
+      --white:     #FFFFFF;
+      --gold:      #F59E0B;
+      --green:     #10B981;
+      --radius:    16px;
+      --radius-sm: 10px;
+      --shadow:    0 4px 24px rgba(15,31,61,0.10);
+      --shadow-lg: 0 12px 48px rgba(15,31,61,0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       ניווט עליון
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; right: 0; left: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15,31,61,0.96);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-cta {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       גיבור
+    ══════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(145deg, var(--navy) 0%, #162B52 60%, #1e3a6e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,158,11,0.10) 0%, transparent 70%);
+      bottom: -80px; right: -60px;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-30px); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37,99,235,0.20);
+      border: 1px solid rgba(59,130,246,0.40);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: #93C5FD;
+      font-weight: 600;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 58px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+    }
+    .hero h1 .highlight {
+      color: var(--gold);
+      position: relative;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: rgba(255,255,255,0.70);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 16px;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 16px 36px;
+      border-radius: 99px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.40);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,99,235,0.50); }
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.80);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      padding: 16px 28px;
+      border-radius: 99px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.60); color: var(--white); }
+
+    .hero-micro {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══════════════════════════════
+       מוקאפ מסך
+    ══════════════════════════════ */
+    .hero-mockup {
+      margin-top: 60px;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 860px;
+    }
+    .mockup-frame {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .mockup-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .mockup-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot:nth-child(1) { background: #FF5F56; }
+    .mockup-dot:nth-child(2) { background: #FFBD2E; }
+    .mockup-dot:nth-child(3) { background: #27C93F; }
+
+    .kanban-preview {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      overflow: hidden;
+    }
+    .kanban-col {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 10px 8px;
+    }
+    .kanban-col-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.50);
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }
+    .kanban-card {
+      background: rgba(255,255,255,0.09);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-right: 3px solid;
+      animation: cardIn 0.5s ease both;
+    }
+    .kanban-card:nth-child(2) { animation-delay: 0.1s; }
+    .kanban-card:nth-child(3) { animation-delay: 0.2s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .kanban-card.gray  { border-color: #94A3B8; }
+    .kanban-card.blue  { border-color: #3B82F6; }
+    .kanban-card.purple { border-color: #A855F7; }
+    .kanban-card.orange { border-color: #F97316; }
+    .kanban-card.green  { border-color: #10B981; }
+    .kc-name { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); }
+    .kc-val  { font-size: 9px;  color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .kc-ai   {
+      display: inline-block;
+      margin-top: 4px;
+      background: rgba(245,158,11,0.20);
+      color: #FCD34D;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* ══════════════════════════════
+       רצועת מספרים
+    ══════════════════════════════ */
+    .stats-bar {
+      background: var(--navy);
+      padding: 28px 24px;
+    }
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-num span { color: var(--gold); }
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.50);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    /* ══════════════════════════════
+       כאב (הזדהות)
+    ══════════════════════════════ */
+    .section {
+      padding: 80px 24px;
+    }
+    .section-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 900;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .pain-card {
+      background: var(--gray-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .pain-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .pain-emoji {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .pain-quote {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .pain-after {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .pain-after::before { content: "✓ "; }
+
+    /* ══════════════════════════════
+       תצוגת המערכת
+    ══════════════════════════════ */
+    .demo-section {
+      background: var(--gray-bg);
+      padding: 80px 24px;
+    }
+    .phone-mockup-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 48px;
+    }
+    .phone-frame {
+      width: 240px;
+      background: var(--navy);
+      border-radius: 32px;
+      padding: 16px 12px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .phone-notch {
+      width: 80px; height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+      margin: 0 auto 14px;
+    }
+    .phone-screen {
+      background: #0a1628;
+      border-radius: 20px;
+      padding: 14px 12px;
+      min-height: 360px;
+    }
+    .phone-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .screen-title-txt {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--white);
+    }
+    .screen-badge {
+      background: rgba(37,99,235,0.25);
+      color: #93C5FD;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    .lead-card-demo {
+      background: rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-right: 3px solid;
+    }
+    .lead-card-demo.active { border-color: #3B82F6; }
+    .lead-card-demo.hot    { border-color: #F97316; }
+    .lead-card-demo.done   { border-color: #10B981; }
+    .lcd-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.90); }
+    .lcd-info { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .lcd-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(245,158,11,0.20);
+      color: #FCD34D;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+
+    /* ══════════════════════════════
+       סוכן AI
+    ══════════════════════════════ */
+    .ai-section {
+      background: linear-gradient(160deg, var(--navy) 0%, #162B52 100%);
+      padding: 80px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-section::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);
+      top: -100px; right: -100px;
+    }
+    .ai-section .section-title { color: var(--white); }
+    .ai-section .section-sub { color: rgba(255,255,255,0.60); }
+    .ai-section .section-label { color: var(--gold); }
+
+    .chat-demo {
+      max-width: 540px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 16px;
+    }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .chat-agent-name { font-size: 14px; font-weight: 700; color: var(--white); }
+    .chat-agent-status { font-size: 11px; color: var(--green); }
+
+    .chat-msg {
+      margin-bottom: 12px;
+      animation: msgIn 0.4s ease both;
+    }
+    .chat-msg:nth-child(2) { animation-delay: 0.3s; }
+    .chat-msg:nth-child(3) { animation-delay: 0.8s; }
+    .chat-msg:nth-child(4) { animation-delay: 1.4s; }
+    .chat-msg:nth-child(5) { animation-delay: 2.0s; }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-user {
+      display: flex;
+      justify-content: flex-start;
+    }
+    .msg-ai {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .msg-bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+    .msg-user .msg-bubble {
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.85);
+      border-bottom-right-radius: 4px;
+    }
+    .msg-ai .msg-bubble {
+      background: var(--blue);
+      color: var(--white);
+      border-bottom-left-radius: 4px;
+    }
+    .msg-ai .msg-bubble strong { color: #FCD34D; }
+
+    /* ══════════════════════════════
+       איך זה עובד
+    ══════════════════════════════ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      position: relative;
+    }
+    .step-card {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      position: relative;
+    }
+    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .step-num {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: var(--white);
+      font-size: 20px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.30);
+    }
+    .step-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .step-desc  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .step-micro { font-size: 12px; color: var(--blue); font-weight: 700; margin-top: 10px; }
+
+    /* ══════════════════════════════
+       תמחור
+    ══════════════════════════════ */
+    .pricing-section {
+      background: var(--gray-bg);
+      padding: 80px 24px;
+    }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .plan-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .plan-card.featured {
+      border-color: var(--blue);
+      background: linear-gradient(160deg, #EFF6FF 0%, var(--white) 100%);
+      box-shadow: 0 8px 32px rgba(37,99,235,0.15);
+    }
+    .plan-popular {
+      position: absolute;
+      top: -14px;
+      right: 50%;
+      transform: translateX(50%);
+      background: var(--blue);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 99px;
+    }
+    .plan-name  { font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+    .plan-desc  { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .plan-price {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .plan-price small { font-size: 16px; font-weight: 500; color: var(--text-muted); }
+    .plan-limit {
+      display: inline-block;
+      background: #EFF6FF;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin: 12px 0;
+    }
+    .plan-features {
+      list-style: none;
+      text-align: right;
+      margin: 16px 0 24px;
+    }
+    .plan-features li {
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li::before { content: "✓"; color: var(--green); font-weight: 800; flex-shrink: 0; }
+    .plan-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 99px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .plan-btn.primary { background: var(--blue); color: var(--white); }
+    .plan-btn.primary:hover { background: var(--blue-light); transform: translateY(-1px); }
+    .plan-btn.outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+    .plan-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+
+    .pricing-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+
+    /* ══════════════════════════════
+       סגירה חזקה
+    ══════════════════════════════ */
+    .closing {
+      background: linear-gradient(145deg, var(--navy) 0%, #162B52 100%);
+      padding: 100px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .closing::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .closing h2 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .closing h2 .gold { color: var(--gold); }
+    .closing p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.60);
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .closing-actions {
+      position: relative;
+      z-index: 1;
+    }
+    .closing-micro {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 16px;
+    }
+
+    /* ══════════════════════════════
+       פוטר
+    ══════════════════════════════ */
+    footer {
+      background: #060D1A;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .footer-logo { font-size: 18px; font-weight: 900; color: var(--white); margin-bottom: 8px; }
+    .footer-logo span { color: var(--gold); }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.40); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.70); }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.20); }
+
+    /* ══════════════════════════════
+       רספונסיב
+    ══════════════════════════════ */
+    @media (max-width: 600px) {
+      .kanban-preview { grid-template-columns: repeat(3, 1fr); }
+      .kanban-col:nth-child(4),
+      .kanban-col:nth-child(5) { display: none; }
+      .stats-inner { grid-template-columns: repeat(3, 1fr); }
+      .stat-num { font-size: 26px; }
+      .phone-mockup-wrap { gap: 16px; }
+      .phone-frame { width: 200px; }
+    }
+
+    /* ══════════════════════════════
+       אנימציות כניסה
+    ══════════════════════════════ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ניווט -->
+<nav>
+  <div class="nav-logo">Liders<span>.</span>CRM</div>
+  <a href="https://liders-crm.com" class="nav-cta">התחל בחינם</a>
+</nav>
+
+<!-- גיבור -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    מערכת CRM חכמה לסוכני נדל"ן
+  </div>
+
+  <h1>הלידים שלך לא הולכים לשום מקום.<br><span class="highlight">העסקאות כן.</span></h1>
+
+  <p class="hero-sub">
+    מערכת CRM שמארגנת את הכאוס, מתזמנת בשבילך ומדרגת כל ליד באמצעות AI.
+    כי לא כל ליד שווה אותו הזמן.
+  </p>
+
+  <div class="hero-actions">
+    <a href="https://liders-crm.com" class="btn-primary">התחל 21 יום בחינם</a>
+    <a href="#demo" class="btn-ghost">תראה לי איך זה עובד</a>
+  </div>
+  <p class="hero-micro">ללא כרטיס אשראי. ללא התחייבות. כן ממש.</p>
+
+  <!-- מוקאפ קנבן -->
+  <div class="hero-mockup">
+    <div class="mockup-frame">
+      <div class="mockup-bar">
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+      </div>
+      <div class="kanban-preview">
+        <div class="kanban-col">
+          <div class="kanban-col-title">ליד חדש</div>
+          <div class="kanban-card gray">
+            <div class="kc-name">אבי כהן</div>
+            <div class="kc-val">2.4M ₪</div>
+            <div class="kc-ai">AI 72</div>
+          </div>
+          <div class="kanban-card gray">
+            <div class="kc-name">מיכל לוי</div>
+            <div class="kc-val">1.8M ₪</div>
+            <div class="kc-ai">AI 58</div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-title">יצרנו קשר</div>
+          <div class="kanban-card blue">
+            <div class="kc-name">דני ברקת</div>
+            <div class="kc-val">3.1M ₪</div>
+            <div class="kc-ai">AI 81</div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-title">הצעה נשלחה</div>
+          <div class="kanban-card purple">
+            <div class="kc-name">רחל מזרחי</div>
+            <div class="kc-val">4.5M ₪</div>
+            <div class="kc-ai">AI 88</div>
+          </div>
+          <div class="kanban-card purple">
+            <div class="kc-name">יוסי גבאי</div>
+            <div class="kc-val">2.9M ₪</div>
+            <div class="kc-ai">AI 76</div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-title">משא ומתן</div>
+          <div class="kanban-card orange">
+            <div class="kc-name">שרה אביב</div>
+            <div class="kc-val">5.2M ₪</div>
+            <div class="kc-ai">AI 94</div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-title">עסקה סגורה ✓</div>
+          <div class="kanban-card green">
+            <div class="kc-name">נועם פרץ</div>
+            <div class="kc-val">3.8M ₪</div>
+            <div class="kc-ai">AI 97</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- רצועת מספרים -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">21<span> יום</span></div>
+      <div class="stat-label">ניסיון חינם מלא</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5<span> דק'</span></div>
+      <div class="stat-label">מהרישום לפייפליין פעיל</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0<span> ₪</span></div>
+      <div class="stat-label">כרטיס אשראי להתחלה</div>
+    </div>
+  </div>
+</div>
+
+<!-- כאב -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label fade-up">רגע של כנות</p>
+    <h2 class="section-title fade-up">זה נשמע מוכר?</h2>
+    <p class="section-sub fade-up">כל סוכן נדל"ן חווה את זה. הפתרון קיים, רק צריך לדעת איפה.</p>
+    <div class="pain-grid">
+      <div class="pain-card fade-up">
+        <span class="pain-emoji">😬</span>
+        <div class="pain-quote">"שלחתי הצעה לפני שבועיים. אני חושב. אולי שלושה."</div>
+        <div class="pain-after">המערכת מזכירה לך בדיוק מתי לחזור</div>
+      </div>
+      <div class="pain-card fade-up">
+        <span class="pain-emoji">🤦</span>
+        <div class="pain-quote">"הליד הזה היה חם. בטוח. סתם שכחתי לחזור."</div>
+        <div class="pain-after">ציון AI מסמן מי דחוף לפני שתשכח</div>
+      </div>
+      <div class="pain-card fade-up">
+        <span class="pain-emoji">😵</span>
+        <div class="pain-quote">"יש לי 4 אקסלים, 2 קבוצות וואטסאפ ודוקטור גוגל."</div>
+        <div class="pain-after">כל הלידים במקום אחד, מסודר, נגיש</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- תצוגת המערכת -->
+<section class="demo-section" id="demo">
+  <div class="section-inner">
+    <p class="section-label fade-up">מה שתראה בפנים</p>
+    <h2 class="section-title fade-up">ממשק שתשמח לפתוח בבוקר</h2>
+    <p class="section-sub fade-up">מובייל ראשון, RTL מלא, מהיר. בנוי לסוכן שנמצא כל הזמן בתנועה.</p>
+
+    <div class="phone-mockup-wrap">
+      <!-- מסך לידים -->
+      <div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="screen-header">
+              <div class="screen-title-txt">הלידים שלי</div>
+              <div class="screen-badge">3 חמים</div>
+            </div>
+            <div class="lead-card-demo hot">
+              <div class="lcd-name">שרה אביב</div>
+              <div class="lcd-info">5.2M ₪ • תל אביב</div>
+              <div class="lcd-score">🔥 AI 94 • חם מאוד</div>
+            </div>
+            <div class="lead-card-demo active">
+              <div class="lcd-name">דני ברקת</div>
+              <div class="lcd-info">3.1M ₪ • הרצליה</div>
+              <div class="lcd-score">⚡ AI 81 • פנה אתמול</div>
+            </div>
+            <div class="lead-card-demo active">
+              <div class="lcd-name">רחל מזרחי</div>
+              <div class="lcd-info">4.5M ₪ • רמת גן</div>
+              <div class="lcd-score">📋 AI 88 • ממתין תשובה</div>
+            </div>
+            <div class="lead-card-demo done">
+              <div class="lcd-name">נועם פרץ</div>
+              <div class="lcd-info">3.8M ₪ • רעננה</div>
+              <div class="lcd-score">✓ עסקה סגורה</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">לוח לידים חכם</div>
+      </div>
+
+      <!-- מסך ליד בודד -->
+      <div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="screen-header">
+              <div class="screen-title-txt">שרה אביב</div>
+              <div class="screen-badge" style="background:rgba(249,115,22,0.25);color:#FCA572;">חם</div>
+            </div>
+            <div style="background:rgba(249,115,22,0.12);border-radius:8px;padding:10px;margin-bottom:10px;">
+              <div style="font-size:9px;color:rgba(255,255,255,0.50);margin-bottom:4px;">ציון AI</div>
+              <div style="font-size:22px;font-weight:900;color:#FCD34D;">94 / 100</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.50);margin-top:2px;">פוטנציאל גבוה מאוד</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+              <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:8px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.40);">תקציב</div>
+                <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);">5.2M ₪</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:8px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.40);">שלב</div>
+                <div style="font-size:11px;font-weight:700;color:#FCA572;">משא ומתן</div>
+              </div>
+            </div>
+            <div style="background:rgba(37,99,235,0.15);border-radius:8px;padding:10px;">
+              <div style="font-size:9px;color:#93C5FD;font-weight:700;margin-bottom:4px;">💡 המלצת AI</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.70);line-height:1.5;">לא פנית אליה 5 ימים. על פי הדפוס שלה, עדיף בוקר. שלח הודעה עכשיו.</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">כרטיס ליד חכם</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- סוכן AI -->
+<section class="ai-section">
+  <div class="section-inner">
+    <p class="section-label fade-up">הסוכן החכם שלך</p>
+    <h2 class="section-title fade-up">הסוכן שלא ישן. אף פעם.</h2>
+    <p class="section-sub fade-up">שאל אותו מה שאתה רוצה. הוא יודע יותר ממה שאתה חושב.</p>
+
+    <div class="chat-demo fade-up">
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div>
+          <div class="chat-agent-name">סוכן Liders AI</div>
+          <div class="chat-agent-status">● פעיל עכשיו</div>
+        </div>
+      </div>
+
+      <div class="chat-msg msg-user">
+        <div class="msg-bubble">אילו לידים לא טיפלתי בהם השבוע?</div>
+      </div>
+      <div class="chat-msg msg-ai">
+        <div class="msg-bubble">יש לך <strong>4 לידים</strong> שלא עודכנו מעל 5 ימים. הכי דחוף: שרה אביב, ציון 94, ממתינה לחזרה מאז ראשון.</div>
+      </div>
+      <div class="chat-msg msg-user">
+        <div class="msg-bubble">מי הכי קרוב לסגירה?</div>
+      </div>
+      <div class="chat-msg msg-ai">
+        <div class="msg-bubble">שרה אביב (94) ויוסי גבאי (88). שניהם בשלב משא ומתן. <strong>שרה לא ענתה 5 ימים</strong>, כדאי לפנות עכשיו.</div>
+      </div>
+      <div class="chat-msg msg-user">
+        <div class="msg-bubble">כמה עסקאות סגרתי החודש?</div>
+      </div>
+      <div class="chat-msg msg-ai">
+        <div class="msg-bubble"><strong>3 עסקאות</strong> בסכום כולל של 11.5M ₪. חודש מעולה. ממוצע הזמן לסגירה: 18 ימים.</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:13px;color:rgba(255,255,255,0.35);margin-top:20px;">כי לפעמים צריך מישהו שיגיד לך מה אתה כבר יודע.</p>
+  </div>
+</section>
+
+<!-- איך זה עובד -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label fade-up">פשוט כמו שזה נשמע</p>
+    <h2 class="section-title fade-up">שלושה צעדים. לא יותר.</h2>
+    <p class="section-sub fade-up">נרשמים, מכניסים לידים ומניחים ל AI לעשות את העבודה המשעממת.</p>
+
+    <div class="steps-grid">
+      <div class="step-card fade-up">
+        <div class="step-num">1</div>
+        <div class="step-title">נרשמים תוך 60 שניות</div>
+        <div class="step-desc">אימייל, סיסמה, שם הסוכנות. בלי טפסים ארוכים, בלי אימות זהות, בלי מתנות.</div>
+        <div class="step-micro">ממש 60 שניות, בדקנו.</div>
+      </div>
+      <div class="step-card fade-up">
+        <div class="step-num">2</div>
+        <div class="step-title">מכניסים את הלידים</div>
+        <div class="step-desc">מקלידים ידנית, מייבאים מאקסל או מתחילים מאפס. המערכת מסתדרת עם כולם.</div>
+        <div class="step-micro">ייבוא מ CSV בלחיצה אחת.</div>
+      </div>
+      <div class="step-card fade-up">
+        <div class="step-num">3</div>
+        <div class="step-title">AI עושה את העבודה</div>
+        <div class="step-desc">מדרג לידים, שולח תזכורות, מזהה הזדמנויות. אתה רק צריך להגיע לפגישה.</div>
+        <div class="step-micro">הסוכן עובד גם כשאתה לא.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- תמחור -->
+<section class="pricing-section">
+  <div class="section-inner">
+    <p class="section-label fade-up">שקוף לחלוטין</p>
+    <h2 class="section-title fade-up">בחר את הגודל שלך</h2>
+    <p class="section-sub fade-up">אפשר לשדרג בכל עת. אי אפשר לאבד את הנתונים.</p>
+
+    <div class="plans-grid">
+      <div class="plan-card fade-up">
+        <div class="plan-name">Solo</div>
+        <div class="plan-desc">לסוכן עצמאי</div>
+        <div class="plan-price">₪149<small>/חודש</small></div>
+        <div class="plan-limit">1 סוכן · עד 200 לידים</div>
+        <ul class="plan-features">
+          <li>לוח Kanban מלא</li>
+          <li>תזכורות WhatsApp</li>
+          <li>ציון AI לכל ליד</li>
+          <li>אפליקציה למובייל</li>
+          <li>21 יום ניסיון חינם</li>
+        </ul>
+        <a href="https://liders-crm.com" class="plan-btn outline">התחל בחינם</a>
+      </div>
+
+      <div class="plan-card featured fade-up">
+        <div class="plan-popular">⭐ הכי פופולרי</div>
+        <div class="plan-name">צוות</div>
+        <div class="plan-desc">לצוות קטן</div>
+        <div class="plan-price">₪299<small>/חודש</small></div>
+        <div class="plan-limit">5 סוכנים · עד 1,000 לידים</div>
+        <ul class="plan-features">
+          <li>כל מה שב Solo</li>
+          <li>עד 5 סוכנים</li>
+          <li>אנליטיקס צוות</li>
+          <li>דוחות ביצועים</li>
+          <li>21 יום ניסיון חינם</li>
+        </ul>
+        <a href="https://liders-crm.com" class="plan-btn primary">התחל בחינם</a>
+      </div>
+
+      <div class="plan-card fade-up">
+        <div class="plan-name">סוכנות</div>
+        <div class="plan-desc">לסוכנות נדל"ן</div>
+        <div class="plan-price">₪549<small>/חודש</small></div>
+        <div class="plan-limit">סוכנים ולידים ללא הגבלה</div>
+        <ul class="plan-features">
+          <li>כל מה שב צוות</li>
+          <li>סוכנים ללא הגבלה</li>
+          <li>לידים ללא הגבלה</li>
+          <li>תמיכה עדיפות</li>
+          <li>21 יום ניסיון חינם</li>
+        </ul>
+        <a href="https://liders-crm.com" class="plan-btn outline">התחל בחינם</a>
+      </div>
+    </div>
+
+    <p class="pricing-note">כל התוכניות כוללות 21 יום ניסיון מלא. ביטול בכל עת. ללא קנסות וללא שאלות.</p>
+  </div>
+</section>
+
+<!-- סגירה -->
+<section class="closing">
+  <h2>הליד הבא שלך<br>כבר <span class="gold">מחכה.</span></h2>
+  <p>אם לא אהבת אחרי 21 יום, לפחות הפייפליין שלך יהיה מסודר.</p>
+  <div class="closing-actions">
+    <a href="https://liders-crm.com" class="btn-primary" style="font-size:18px;padding:18px 48px;">מתחיל עכשיו, בחינם</a>
+    <p class="closing-micro">ללא כרטיס אשראי · ללא התחייבות · ניסיון מלא 21 יום</p>
+  </div>
+</section>
+
+<!-- פוטר -->
+<footer>
+  <div class="footer-logo">Liders<span>.</span>CRM</div>
+  <div class="footer-links">
+    <a href="https://liders-crm.com">כניסה למערכת</a>
+    <a href="https://liders-crm.com/privacy-policy.html">מדיניות פרטיות</a>
+  </div>
+  <div class="footer-copy">© 2026 Liders CRM · כל הזכויות שמורות</div>
+</footer>
+
+<script>
+  // אנימציית fade-up בגלילה
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
