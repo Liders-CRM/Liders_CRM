@@ -3023,6 +3023,7 @@ const Onboarding = {
           { id: 'construction', icon: '🏗️', label: 'קבלן' },
           { id: 'interior',     icon: '🎨', label: 'מעצב פנים' },
           { id: 'photography',  icon: '📸', label: 'צלם נכסים' },
+          { id: 'architect',    icon: '📐', label: 'אדריכל' },
           { id: 'mortgage',     icon: '💰', label: 'יועץ משכנתאות' },
           { id: 'appraiser',    icon: '📋', label: 'שמאי' },
           { id: 'other',        icon: '🎯', label: 'אחר' },
@@ -3056,6 +3057,7 @@ const Onboarding = {
           : industry === 'construction' ? 'לידרס קבלנות — תל אביב'
           : industry === 'interior'     ? 'לידרס עיצוב פנים — תל אביב'
           : industry === 'photography'  ? 'לידרס צילום נכסים — תל אביב'
+          : industry === 'architect'    ? 'לידרס אדריכלות — תל אביב'
           : industry === 'mortgage'     ? 'לידרס משכנתאות — תל אביב'
           : industry === 'appraiser'    ? 'לידרס שמאות — תל אביב'
           : 'שם העסק שלי';
@@ -3310,6 +3312,13 @@ const INDUSTRY_LABELS = {
     stages:['הזמנה התקבלה','ביקור נקבע','ביקור בוצע','דוח בהכנה','שומה הושלמה ✓'],
     notesPlaceholder:'הערות — סוג נכס, מיקום, שנת בנייה, מטרת השומה (בנק, מכירה, ירושה)...',
   },
+  architect: {
+    lead:'לקוח', leads:'לקוחות', property:'פרויקט', properties:'פרויקטים', deal:'פרויקט', client:'לקוח', meeting:'פגישת תדריך', agent:'אדריכל',
+    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין פרויקטים', propertiesIcon:'📐',
+    matchTab:'פרויקטים פעילים', docLabel:'תוכניות',
+    stages:['פנייה נכנסה','פגישת תדריך','הצעת שכ"ט','פרויקט פעיל','פרויקט הושלם ✓'],
+    notesPlaceholder:'הערות על הלקוח — סוג פרויקט, שטח, תקציב, לוח זמנים, העדפות עיצוב...',
+  },
   other: {
     lead:'ליד', leads:'לידים', property:'נכס', properties:'נכסים', deal:'עסקה', client:'לקוח', meeting:'פגישה', agent:'סוכן',
     addLead:'ליד חדש', allLeads:'כל הלידים', pipeline:'פייפליין לידים', propertiesIcon:'🎯',
@@ -3375,6 +3384,7 @@ const AI = {
       construction: 'קבלן בנייה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
       interior:     'מעצב פנים עם ניסיון בפרויקטי נדל"ן ומגורים',
       photography:  'צלם נכסים מקצועי המתמחה בצילום נדל"ן',
+      architect:    'אדריכל מוסמך המתמחה בתכנון ועיצוב פרויקטי נדל"ן ומגורים',
       mortgage:     'יועץ משכנתאות מוסמך עם ניסיון בהשוואת מסלולים',
       appraiser:    'שמאי מקרקעין מוסמך',
     };
@@ -5292,6 +5302,7 @@ const Settings = {
             construction:{ icon:'🏗️', label:'קבלן' },
             interior:    { icon:'🎨', label:'מעצב פנים' },
             photography: { icon:'📸', label:'צלם נכסים' },
+            architect:   { icon:'📐', label:'אדריכל' },
             mortgage:    { icon:'💰', label:'יועץ משכנתאות' },
             appraiser:   { icon:'📋', label:'שמאי' },
             other:       { icon:'🎯', label:'אחר' },
