@@ -3018,12 +3018,12 @@ const Onboarding = {
       subtitle: 'נגדיר את המערכת בדיוק עבורך — תוך 2 דקות',
       render() {
         const INDUSTRIES = [
-          { id: 'realestate',   icon: '🏠', label: 'נדל"ן' },
-          { id: 'construction', icon: '🏗️', label: 'קונסטרקשן' },
-          { id: 'sales',        icon: '💼', label: 'מכירות B2B' },
-          { id: 'ecommerce',    icon: '🛒', label: 'חנות אונליין' },
-          { id: 'beauty',       icon: '💅', label: 'יופי ובריאות' },
-          { id: 'services',     icon: '⚙️', label: 'שירות ותמיכה' },
+          { id: 'realestate',   icon: '🏠', label: 'סוכן נדל"ן' },
+          { id: 'construction', icon: '🏗️', label: 'קבלן' },
+          { id: 'interior',     icon: '🎨', label: 'מעצב פנים' },
+          { id: 'photography',  icon: '📸', label: 'צלם נכסים' },
+          { id: 'mortgage',     icon: '💰', label: 'יועץ משכנתאות' },
+          { id: 'appraiser',    icon: '📋', label: 'שמאי' },
           { id: 'other',        icon: '🎯', label: 'אחר' },
         ];
         const current = localStorage.getItem('liders_industry') || '';
@@ -3051,9 +3051,12 @@ const Onboarding = {
       render() {
         const val = State.tenant?.name || '';
         const industry = localStorage.getItem('liders_industry') || 'other';
-        const placeholder = industry === 'realestate' ? 'לידרס נדל"ן — תל אביב'
-          : industry === 'sales' ? 'לידרס מכירות — תל אביב'
-          : industry === 'beauty' ? 'לידרס ביוטי — רמת גן'
+        const placeholder = industry === 'realestate'  ? 'לידרס נדל"ן — תל אביב'
+          : industry === 'construction' ? 'לידרס קבלנות — תל אביב'
+          : industry === 'interior'     ? 'לידרס עיצוב פנים — תל אביב'
+          : industry === 'photography'  ? 'לידרס צילום נכסים — תל אביב'
+          : industry === 'mortgage'     ? 'לידרס משכנתאות — תל אביב'
+          : industry === 'appraiser'    ? 'לידרס שמאות — תל אביב'
           : 'שם העסק שלי';
         return `
           <div style="padding:8px 0;">
@@ -3272,38 +3275,38 @@ const INDUSTRY_LABELS = {
     stages:['פנייה נכנסה','יצרנו קשר','ביקור נקבע','הצעת מחיר הוגשה','חוזה נחתם ✓'],
     notesPlaceholder:'הערות על הקונה — תקציב, דרישות, אזור מועדף, מועד מבוקש...',
   },
-  sales: {
-    lead:'ליד', leads:'לידים', property:'מוצר', properties:'מוצרים', deal:'עסקה', client:'לקוח', meeting:'פגישה עסקית', agent:'מנהל מכירות',
-    addLead:'ליד חדש', allLeads:'כל הלידים', pipeline:'פייפליין מכירות', propertiesIcon:'📁',
-    matchTab:'מוצרים מתאימים', docLabel:'מסמכים',
-    stages:['ליד נכנס','שיחת גילוי','הצעה נשלחה','משא ומתן','עסקה נסגרה ✓'],
-    notesPlaceholder:'הערות — צרכי הלקוח, כאב, תקציב, מסגרת זמן, מקבלי החלטה...',
+  interior: {
+    lead:'לקוח', leads:'לקוחות', property:'פרויקט', properties:'פרויקטים', deal:'פרויקט', client:'לקוח', meeting:'ביקור ראשוני', agent:'מעצב',
+    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין פרויקטים', propertiesIcon:'🎨',
+    matchTab:'פרויקטים פעילים', docLabel:'מסמכים',
+    stages:['פנייה נכנסה','ביקור ראשוני','הצעת מחיר','חוזה נחתם','פרויקט הושלם ✓'],
+    notesPlaceholder:'הערות על הלקוח — סגנון עיצוב, תקציב, לוח זמנים, חדרים לעיצוב...',
   },
-  ecommerce: {
-    lead:'קונה', leads:'קונים', property:'פריט', properties:'מלאי', deal:'הזמנה', client:'קונה', meeting:'שיחה', agent:'נציג',
-    addLead:'קונה חדש', allLeads:'כל הקונים', pipeline:'פייפליין הזמנות', propertiesIcon:'🛒',
-    matchTab:'מוצרים מתאימים', docLabel:'מסמכים',
-    stages:['עגלה פתוחה','יצרנו קשר','הצעה נשלחה','ממתין לתשלום','הזמנה בוצעה ✓'],
-    notesPlaceholder:'הערות על הקונה — מוצרים שמעניינים, תקציב, כמות...',
+  photography: {
+    lead:'לקוח', leads:'לקוחות', property:'נכס', properties:'נכסים', deal:'הזמנה', client:'לקוח', meeting:'צילום', agent:'צלם',
+    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין הזמנות', propertiesIcon:'📸',
+    matchTab:'נכסים שצולמו', docLabel:'תמונות',
+    stages:['פנייה נכנסה','תיאום תאריך','צילום בוצע','עריכה בתהליך','הזמנה הושלמה ✓'],
+    notesPlaceholder:'הערות — סוג נכס, מיקום, מספר חדרים, מועד צילום מבוקש...',
   },
-  beauty: {
-    lead:'לקוחה', leads:'לקוחות', property:'שירות', properties:'שירותים', deal:'תור', client:'לקוחה', meeting:'טיפול', agent:'מטפלת',
-    addLead:'לקוחה חדשה', allLeads:'כל הלקוחות', pipeline:'פייפליין לקוחות', propertiesIcon:'💅',
-    matchTab:'שירותים מתאימים', docLabel:'מסמכים',
-    stages:['פנייה נכנסה','יצרנו קשר','תור נקבע','טיפול בוצע','לקוחה קבועה ✓'],
-    notesPlaceholder:'הערות — סוג טיפול, העדפות, אלרגיות, תדירות ביקורים...',
+  mortgage: {
+    lead:'לקוח', leads:'לקוחות', property:'תיק', properties:'תיקים', deal:'משכנתה', client:'לקוח', meeting:'ייעוץ', agent:'יועץ',
+    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין ייעוץ', propertiesIcon:'💰',
+    matchTab:'תיקים פעילים', docLabel:'מסמכים',
+    stages:['פנייה נכנסה','ייעוץ ראשוני','הגשת בקשה','אישור עקרוני','משכנתה נסגרה ✓'],
+    notesPlaceholder:'הערות — שכר, הון עצמי, ערך הנכס, בנק מועדף, מצב משפחתי...',
   },
-  services: {
-    lead:'לקוח', leads:'לקוחות', property:'שירות', properties:'שירותים', deal:'פרויקט', client:'לקוח', meeting:'פגישה', agent:'נציג',
-    addLead:'לקוח חדש', allLeads:'כל הלקוחות', pipeline:'פייפליין פרויקטים', propertiesIcon:'⚙️',
-    matchTab:'שירותים מתאימים', docLabel:'מסמכים',
-    stages:['פנייה נכנסה','בירור צרכים','הצעת מחיר','בביצוע','פרויקט הושלם ✓'],
-    notesPlaceholder:'הערות — סוג שירות, לוח זמנים, תקציב, דרישות טכניות...',
+  appraiser: {
+    lead:'נכס', leads:'נכסים', property:'נכס', properties:'נכסים', deal:'שומה', client:'לקוח', meeting:'ביקור שמאי', agent:'שמאי',
+    addLead:'נכס חדש', allLeads:'כל הנכסים', pipeline:'פייפליין שומות', propertiesIcon:'📋',
+    matchTab:'שומות קודמות', docLabel:'דוחות',
+    stages:['הזמנה התקבלה','ביקור נקבע','ביקור בוצע','דוח בהכנה','שומה הושלמה ✓'],
+    notesPlaceholder:'הערות — סוג נכס, מיקום, שנת בנייה, מטרת השומה (בנק, מכירה, ירושה)...',
   },
   other: {
-    lead:'ליד', leads:'לידים', property:'מוצר', properties:'מוצרים', deal:'עסקה', client:'לקוח', meeting:'פגישה', agent:'נציג',
-    addLead:'ליד חדש', allLeads:'כל הלידים', pipeline:'פייפליין לידים', propertiesIcon:'🏠',
-    matchTab:'מוצרים מתאימים', docLabel:'מסמכים',
+    lead:'ליד', leads:'לידים', property:'נכס', properties:'נכסים', deal:'עסקה', client:'לקוח', meeting:'פגישה', agent:'סוכן',
+    addLead:'ליד חדש', allLeads:'כל הלידים', pipeline:'פייפליין לידים', propertiesIcon:'🎯',
+    matchTab:'נכסים מתאימים', docLabel:'מסמכים',
     stages:['פנייה נכנסה','יצרנו קשר','הצעה נשלחה','במשא ומתן','עסקה נסגרה ✓'],
     notesPlaceholder:'הערות על הליד...',
   },
@@ -3361,15 +3364,12 @@ const AI = {
   _industryRole() {
     const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const map = {
-      realestate:   'מומחה נדל"ן ומתווך',
-      construction: 'קבלן בנייה ישראלי בפלורידה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
-      sales:        'מומחה מכירות B2B',
-      ecommerce:    'מומחה מסחר אלקטרוני',
-      beauty:       'מומחה תחום היופי והאסתטיקה',
-      services:     'מומחה שירות ותמיכה',
-      finance:      'מומחה פיננסי ויועץ השקעות',
-      health:       'מומחה שירותי בריאות',
-      education:    'מומחה חינוך והדרכה',
+      realestate:   'סוכן נדל"ן ומתווך מוסמך',
+      construction: 'קבלן בנייה עם ניסיון בשיפוצים, תוספות ובנייה חדשה',
+      interior:     'מעצב פנים עם ניסיון בפרויקטי נדל"ן ומגורים',
+      photography:  'צלם נכסים מקצועי המתמחה בצילום נדל"ן',
+      mortgage:     'יועץ משכנתאות מוסמך עם ניסיון בהשוואת מסלולים',
+      appraiser:    'שמאי מקרקעין מוסמך',
     };
     return map[ind] || 'מומחה מכירות ופיתוח עסקי';
   },
@@ -5257,12 +5257,12 @@ const Settings = {
         <div class="settings-section-title">תחום העסק</div>
         ${(() => {
           const IND_META = {
-            construction:{ icon:'🏗️', label:'קונסטרקשן' },
-            realestate:  { icon:'🏠', label:'נדל"ן' },
-            sales:       { icon:'💼', label:'מכירות B2B' },
-            ecommerce:   { icon:'🛒', label:'חנות אונליין' },
-            beauty:      { icon:'💅', label:'יופי ובריאות' },
-            services:    { icon:'⚙️', label:'שירות ותמיכה' },
+            realestate:  { icon:'🏠', label:'סוכן נדל"ן' },
+            construction:{ icon:'🏗️', label:'קבלן' },
+            interior:    { icon:'🎨', label:'מעצב פנים' },
+            photography: { icon:'📸', label:'צלם נכסים' },
+            mortgage:    { icon:'💰', label:'יועץ משכנתאות' },
+            appraiser:   { icon:'📋', label:'שמאי' },
             other:       { icon:'🎯', label:'אחר' },
           };
           const cur = localStorage.getItem('liders_industry') || 'other';
