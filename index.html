@@ -1148,6 +1148,83 @@
     }
 
     /* ═══════════════════════════════════════
+       TOOLS SCREEN
+    ═══════════════════════════════════════ */
+    .tools-header-strip {
+      background: linear-gradient(135deg, var(--navy-700), var(--navy-500));
+      color: white; padding: 20px; margin-bottom: 0;
+    }
+    .tools-header-strip h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .tools-header-strip p { font-size: 13px; opacity: .7; }
+    .tools-grid { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 14px; }
+    @media (min-width: 700px) { .tools-grid { grid-template-columns: 1fr 1fr; } }
+    .tool-card {
+      background: white; border-radius: 14px; padding: 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06); border: 1px solid var(--border);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .tool-card-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .tool-card-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .tool-icon-gold { background: var(--gold-100); }
+    .tool-icon-blue { background: var(--blue-100); }
+    .tool-icon-purple { background: var(--purple-100); }
+    .tool-icon-green { background: var(--green-100); }
+    .tool-card-title { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+    .tool-card-sub { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+    .tool-card-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .tool-input-row { display: flex; gap: 8px; }
+    .tool-input-row .form-input { flex: 1; }
+    .tool-label { font-size: 11px; font-weight: 700; color: var(--gray-600); margin-bottom: 4px; display: block; }
+    .tool-result {
+      background: var(--navy-50); border-radius: 10px; padding: 14px;
+      margin-top: 4px; display: none; border-right: 3px solid var(--navy-500);
+    }
+    .tool-result.visible { display: block; }
+    .tool-result-main { font-size: 22px; font-weight: 900; color: var(--navy-600); }
+    .tool-result-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .tool-ai-result {
+      background: var(--gray-50); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px; margin-top: 4px;
+      font-size: 13px; line-height: 1.75; color: var(--gray-800);
+      white-space: pre-wrap; display: none; direction: rtl;
+    }
+    .tool-ai-result.visible { display: block; }
+    .tool-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .tool-btn-copy {
+      font-size: 12px; padding: 6px 14px; border-radius: 8px;
+      background: var(--navy-50); color: var(--navy-500);
+      border: 1px solid var(--navy-200); cursor: pointer; font-family: inherit; font-weight: 700;
+      transition: all .15s;
+    }
+    .tool-btn-copy:hover { background: var(--navy-100); }
+    .tools-whatsapp-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .wa-template-btn {
+      background: var(--gray-50); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 10px; cursor: pointer;
+      text-align: center; font-size: 12px; font-weight: 600;
+      color: var(--gray-700); transition: all .15s; font-family: inherit;
+    }
+    .wa-template-btn:hover { background: var(--green-100); border-color: var(--green-500); color: var(--green-600); }
+    .wa-template-btn .wa-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .wa-template-preview {
+      display: none; background: #e7fcd6; border-radius: 12px; padding: 12px;
+      font-size: 13px; line-height: 1.7; color: #1a3a0a;
+      direction: rtl; margin-top: 10px; white-space: pre-wrap;
+      border: 1px solid #b7e8a0;
+    }
+    .wa-template-preview.visible { display: block; }
+
+    /* ═══════════════════════════════════════
        CALENDAR SCREEN
     ═══════════════════════════════════════ */
     .cal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; }
@@ -1464,6 +1541,9 @@
       <a class="nav-item" data-screen="calendar" onclick="App.go('calendar')">
         <span class="nav-icon">📅</span> לוח שנה
       </a>
+      <a class="nav-item" data-screen="tools" onclick="App.go('tools')">
+        <span class="nav-icon">🛠️</span> מרכז כלים
+      </a>
     </div>
     <div class="sidebar-footer">
       <div class="agent-info">
@@ -1684,6 +1764,209 @@
           <div class="analytics-chart-title">📅 לידים חדשים — 6 חודשים אחרונים</div>
           <canvas id="analytics-monthly-chart" height="160"></canvas>
         </div>
+      </div>
+    </div>
+
+    <!-- ── TOOLS ── -->
+    <div id="screen-tools" class="screen hidden">
+      <div class="tools-header-strip">
+        <h2>🛠️ מרכז כלים</h2>
+        <p>כלים חכמים שיעזרו לך לסגור יותר עסקאות — כלולים בכל החבילות</p>
+      </div>
+      <div class="tools-grid">
+
+        <!-- TOOL 1: Commission Calculator -->
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-icon tool-icon-gold">🧮</div>
+            <div>
+              <div class="tool-card-title">מחשבון עמלה</div>
+              <div class="tool-card-sub">חשב עמלה ורווח נקי בשניות</div>
+            </div>
+          </div>
+          <div class="tool-card-body">
+            <div>
+              <label class="tool-label">שווי עסקה (₪)</label>
+              <input class="form-input" id="comm-deal-value" type="number" placeholder="1,500,000" oninput="Tools.calcCommission()" />
+            </div>
+            <div class="tool-input-row">
+              <div style="flex:1">
+                <label class="tool-label">אחוז עמלה (%)</label>
+                <input class="form-input" id="comm-pct" type="number" step="0.1" value="2" oninput="Tools.calcCommission()" />
+              </div>
+              <div style="flex:1">
+                <label class="tool-label">מס הכנסה משוער (%)</label>
+                <input class="form-input" id="comm-tax" type="number" step="1" value="30" oninput="Tools.calcCommission()" />
+              </div>
+            </div>
+            <div class="tool-result" id="comm-result">
+              <div class="tool-result-main" id="comm-gross">—</div>
+              <div class="tool-result-sub">עמלה ברוטו</div>
+              <div style="margin-top:10px;display:flex;gap:16px;">
+                <div>
+                  <div style="font-size:16px;font-weight:800;color:var(--green-600)" id="comm-net">—</div>
+                  <div style="font-size:11px;color:var(--gray-500)">נטו אחרי מס</div>
+                </div>
+                <div>
+                  <div style="font-size:16px;font-weight:800;color:var(--orange-500)" id="comm-tax-amt">—</div>
+                  <div style="font-size:11px;color:var(--gray-500)">מס משוער</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOL 2: WhatsApp Templates -->
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-icon tool-icon-green">💬</div>
+            <div>
+              <div class="tool-card-title">תבניות WhatsApp מהירות</div>
+              <div class="tool-card-sub">הודעות מוכנות לכל שלב — העתק ושלח</div>
+            </div>
+          </div>
+          <div class="tool-card-body">
+            <div>
+              <label class="tool-label">שם הלקוח</label>
+              <input class="form-input" id="wa-client-name" type="text" placeholder="ישראל" />
+            </div>
+            <div class="tools-whatsapp-grid">
+              <button class="wa-template-btn" onclick="Tools.waTemplate('intro')">
+                <span class="wa-icon">👋</span>פנייה ראשונה
+              </button>
+              <button class="wa-template-btn" onclick="Tools.waTemplate('followup')">
+                <span class="wa-icon">🔔</span>פולואפ
+              </button>
+              <button class="wa-template-btn" onclick="Tools.waTemplate('proposal')">
+                <span class="wa-icon">📄</span>אחרי הצעה
+              </button>
+              <button class="wa-template-btn" onclick="Tools.waTemplate('closing')">
+                <span class="wa-icon">🤝</span>סגירה
+              </button>
+            </div>
+            <div class="wa-template-preview" id="wa-preview"></div>
+            <div class="tool-actions" id="wa-actions" style="display:none;">
+              <button class="tool-btn-copy" onclick="Tools.copyWa()">📋 העתק</button>
+              <a id="wa-send-link" href="#" target="_blank" style="font-size:12px;padding:6px 14px;border-radius:8px;background:#25d366;color:white;font-weight:700;text-decoration:none;display:inline-block;">📱 פתח WhatsApp</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOL 3: AI Call Script -->
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-icon tool-icon-blue">📞</div>
+            <div>
+              <div class="tool-card-title">מחולל תסריט שיחה</div>
+              <div class="tool-card-sub">AI מכין לך סקריפט לפני כל שיחה</div>
+            </div>
+          </div>
+          <div class="tool-card-body">
+            <div>
+              <label class="tool-label">שם הלקוח</label>
+              <input class="form-input" id="script-name" type="text" placeholder="שם הלקוח" />
+            </div>
+            <div>
+              <label class="tool-label">סוג השיחה</label>
+              <select class="form-input" id="script-type">
+                <option value="intro">שיחה ראשונה — היכרות</option>
+                <option value="followup">פולואפ — אחרי פגישה</option>
+                <option value="proposal">הצגת הצעה</option>
+                <option value="objection">טיפול בהתנגדות</option>
+                <option value="closing">סגירת עסקה</option>
+              </select>
+            </div>
+            <div>
+              <label class="tool-label">הערה קצרה (אופציונלי)</label>
+              <input class="form-input" id="script-note" type="text" placeholder="למשל: מתלבט על המחיר..." />
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="Tools.generateCallScript()" id="script-btn">✨ צור תסריט</button>
+            <div class="tool-ai-result" id="script-result"></div>
+            <div class="tool-actions" id="script-actions" style="display:none;">
+              <button class="tool-btn-copy" onclick="Tools.copyResult('script-result')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOL 4: AI Professional Email -->
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-icon tool-icon-purple">📧</div>
+            <div>
+              <div class="tool-card-title">מחולל אימייל מקצועי</div>
+              <div class="tool-card-sub">AI כותב אימייל רשמי בשבילך</div>
+            </div>
+          </div>
+          <div class="tool-card-body">
+            <div>
+              <label class="tool-label">שם הנמען</label>
+              <input class="form-input" id="email-name" type="text" placeholder="שם הלקוח / גורם" />
+            </div>
+            <div>
+              <label class="tool-label">נושא האימייל</label>
+              <input class="form-input" id="email-subject" type="text" placeholder="למשל: הצעת מחיר לדירה ברחוב..." />
+            </div>
+            <div>
+              <label class="tool-label">טון</label>
+              <select class="form-input" id="email-tone">
+                <option value="formal">רשמי</option>
+                <option value="friendly">ידידותי ומקצועי</option>
+                <option value="urgent">דחוף</option>
+                <option value="followup">פולואפ עדין</option>
+              </select>
+            </div>
+            <div>
+              <label class="tool-label">תוכן עיקרי (ב-2-3 מילים)</label>
+              <input class="form-input" id="email-content" type="text" placeholder="למשל: אישור פגישה, הצעת מחיר, תודה..." />
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="Tools.generateEmail()" id="email-btn">✨ צור אימייל</button>
+            <div class="tool-ai-result" id="email-result"></div>
+            <div class="tool-actions" id="email-actions" style="display:none;">
+              <button class="tool-btn-copy" onclick="Tools.copyResult('email-result')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOL 5: AI Proposal Generator -->
+        <div class="tool-card" style="grid-column: 1 / -1;">
+          <div class="tool-card-head">
+            <div class="tool-card-icon tool-icon-gold">📋</div>
+            <div>
+              <div class="tool-card-title">מחולל הצעת מחיר טקסטואלית</div>
+              <div class="tool-card-sub">AI מייצר הצעת מחיר מקצועית להעתקה לאיפה שתרצה</div>
+            </div>
+          </div>
+          <div class="tool-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label class="tool-label">שם הלקוח</label>
+                <input class="form-input" id="prop-client" type="text" placeholder="שם מלא / חברה" />
+              </div>
+              <div>
+                <label class="tool-label">השירות / המוצר</label>
+                <input class="form-input" id="prop-service" type="text" placeholder="למשל: תיווך מכירת דירה" />
+              </div>
+              <div>
+                <label class="tool-label">מחיר / עמלה</label>
+                <input class="form-input" id="prop-price" type="text" placeholder="2% + מע&quot;מ / 15,000 ₪" />
+              </div>
+              <div>
+                <label class="tool-label">לוח זמנים</label>
+                <input class="form-input" id="prop-timeline" type="text" placeholder="למשל: 3-6 חודשים" />
+              </div>
+            </div>
+            <div>
+              <label class="tool-label">3 יתרונות עיקריים שלך (מופרדים בפסיק)</label>
+              <input class="form-input" id="prop-benefits" type="text" placeholder="14 שנות ניסיון, רשת קשרים רחבה, ליווי מלא עד רישום" />
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="Tools.generateProposal()" id="prop-btn">✨ צור הצעת מחיר</button>
+            <div class="tool-ai-result" id="prop-result"></div>
+            <div class="tool-actions" id="prop-actions" style="display:none;">
+              <button class="tool-btn-copy" onclick="Tools.copyResult('prop-result')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -3493,6 +3776,204 @@ function copyAIText(elId) {
 }
 
 /* ═══════════════════════════════════════════
+   TOOLS MODULE — מרכז כלים
+═══════════════════════════════════════════ */
+const Tools = {
+  render() {
+    // nothing to load async — tools are stateless forms
+  },
+
+  // ── Commission Calculator ──
+  calcCommission() {
+    const val  = parseFloat(document.getElementById('comm-deal-value')?.value) || 0;
+    const pct  = parseFloat(document.getElementById('comm-pct')?.value) || 2;
+    const tax  = parseFloat(document.getElementById('comm-tax')?.value) || 30;
+    const res  = document.getElementById('comm-result');
+    if (!val || val <= 0) { if (res) res.classList.remove('visible'); return; }
+    const gross = val * (pct / 100);
+    const taxAmt = gross * (tax / 100);
+    const net  = gross - taxAmt;
+    const fmt  = n => '₪ ' + Math.round(n).toLocaleString('he-IL');
+    document.getElementById('comm-gross').textContent  = fmt(gross);
+    document.getElementById('comm-net').textContent    = fmt(net);
+    document.getElementById('comm-tax-amt').textContent = fmt(taxAmt);
+    res.classList.add('visible');
+  },
+
+  // ── WhatsApp Templates ──
+  _waTemplates: {
+    intro:    n => `היי ${n||'שם'}! 😊\nשמי [שם שלך] ואני [תפקיד].\nראיתי שאתה מחפש [נושא] ורציתי להציג בפניך כמה אפשרויות שיכולות להתאים לך בול.\nמתי נוח לך ל-10 דקות שיחה?`,
+    followup: n => `היי ${n||'שם'} 😊\nרק רציתי לוודא שקיבלת את מה ששלחתי.\nיש לי כמה עדכונים קטנים שחשבתי שיעניינו אותך — מתי תהיה פנוי לדקה?`,
+    proposal: n => `היי ${n||'שם'},\nשלחתי לך קצת קודם את ההצעה — הכל מגיע בסדר?\nאם יש לך שאלות או רוצה לשנות משהו, אני כאן 🙌`,
+    closing:  n => `היי ${n||'שם'}, תודה על הפגישה — ממש נהניתי!\nכמו שדיברנו, אני שולח לך עכשיו את הפרטים הסופיים.\nאשמח לדעת — מה עוד צריך ממני כדי להתקדם? 🤝`,
+  },
+
+  waTemplate(type) {
+    const name = (document.getElementById('wa-client-name')?.value || '').trim();
+    const text = this._waTemplates[type]?.(name) || '';
+    const el = document.getElementById('wa-preview');
+    const actions = document.getElementById('wa-actions');
+    if (!el) return;
+    el.textContent = text;
+    el.classList.add('visible');
+    if (actions) actions.style.display = 'flex';
+    const link = document.getElementById('wa-send-link');
+    if (link) link.href = 'https://wa.me/?text=' + encodeURIComponent(text);
+  },
+
+  copyWa() {
+    const el = document.getElementById('wa-preview');
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent)
+      .then(() => toast('📋 הועתק — מוכן לשליחה ב-WhatsApp', 'success'));
+  },
+
+  // ── AI Call Script ──
+  async generateCallScript() {
+    const name  = document.getElementById('script-name')?.value?.trim() || 'הלקוח';
+    const type  = document.getElementById('script-type')?.value || 'intro';
+    const note  = document.getElementById('script-note')?.value?.trim() || '';
+    const res   = document.getElementById('script-result');
+    const btn   = document.getElementById('script-btn');
+    const acts  = document.getElementById('script-actions');
+    const typeLabels = {
+      intro: 'שיחת היכרות ראשונה', followup: 'פולואפ אחרי פגישה',
+      proposal: 'הצגת הצעת מחיר', objection: 'טיפול בהתנגדות',
+      closing: 'סגירת עסקה'
+    };
+    if (!res || !btn) return;
+    btn.textContent = '⏳ מייצר תסריט...'; btn.disabled = true;
+    res.classList.remove('visible'); if (acts) acts.style.display = 'none';
+    try {
+      const role = AI._industryRole();
+      const prompt = `אתה ${role} ישראלי מנוסה.
+צור תסריט שיחה קצר ומעשי לשיחה מסוג: ${typeLabels[type]}
+שם הלקוח: ${name}
+${note ? `הערה חשובה: ${note}` : ''}
+
+הפורמט:
+**פתיחה (15 שניות):**
+[מה לומר)
+
+**גוף השיחה:**
+[3-4 נקודות מרכזיות לכסות]
+
+**שאלות פתיחה מומלצות:**
+[2-3 שאלות שיגרמו ללקוח לדבר]
+
+**סגירת השיחה:**
+[איך לסיים עם הצעד הבא]
+
+${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[2-3 התנגדויות + תשובות]' : ''}
+
+שמור על טון חם, מקצועי ואנושי. עברית בלבד.`;
+      const text = await AI.call([{ role: 'user', content: prompt }], 600);
+      res.textContent = text || 'לא הצלחתי לייצר תסריט — נסה שוב';
+      res.classList.add('visible');
+      if (acts) acts.style.display = 'flex';
+    } catch(e) {
+      res.textContent = 'שגיאה: ' + e.message;
+      res.classList.add('visible');
+    }
+    btn.textContent = '✨ צור תסריט'; btn.disabled = false;
+  },
+
+  // ── AI Professional Email ──
+  async generateEmail() {
+    const name    = document.getElementById('email-name')?.value?.trim() || 'לקוח';
+    const subject = document.getElementById('email-subject')?.value?.trim() || '';
+    const tone    = document.getElementById('email-tone')?.value || 'formal';
+    const content = document.getElementById('email-content')?.value?.trim() || '';
+    const res     = document.getElementById('email-result');
+    const btn     = document.getElementById('email-btn');
+    const acts    = document.getElementById('email-actions');
+    const toneLabel = { formal:'רשמי ומקצועי', friendly:'ידידותי ומקצועי', urgent:'דחוף אך מנומס', followup:'עדין ולא פולשני' };
+    if (!res || !btn) return;
+    btn.textContent = '⏳ כותב אימייל...'; btn.disabled = true;
+    res.classList.remove('visible'); if (acts) acts.style.display = 'none';
+    try {
+      const role = AI._industryRole();
+      const prompt = `אתה ${role} ישראלי. כתוב אימייל מקצועי בעברית.
+נמען: ${name}
+נושא: ${subject || 'לא צוין'}
+תוכן עיקרי: ${content || 'לא צוין'}
+טון: ${toneLabel[tone]}
+
+כתוב אימייל שלם כולל: שורת נושא, פנייה, גוף, סיום וחתימה.
+פורמט:
+**נושא:** [כתוב כאן]
+
+[גוף האימייל]
+
+עברית בלבד, טון ${toneLabel[tone]}, לא יותר מ-150 מילה.`;
+      const text = await AI.call([{ role: 'user', content: prompt }], 500);
+      res.textContent = text || 'לא הצלחתי לייצר אימייל';
+      res.classList.add('visible');
+      if (acts) acts.style.display = 'flex';
+    } catch(e) {
+      res.textContent = 'שגיאה: ' + e.message;
+      res.classList.add('visible');
+    }
+    btn.textContent = '✨ צור אימייל'; btn.disabled = false;
+  },
+
+  // ── AI Proposal Generator ──
+  async generateProposal() {
+    const client   = document.getElementById('prop-client')?.value?.trim() || 'לקוח';
+    const service  = document.getElementById('prop-service')?.value?.trim() || '';
+    const price    = document.getElementById('prop-price')?.value?.trim() || '';
+    const timeline = document.getElementById('prop-timeline')?.value?.trim() || '';
+    const benefits = document.getElementById('prop-benefits')?.value?.trim() || '';
+    const res      = document.getElementById('prop-result');
+    const btn      = document.getElementById('prop-btn');
+    const acts     = document.getElementById('prop-actions');
+    if (!res || !btn) return;
+    btn.textContent = '⏳ מייצר הצעה...'; btn.disabled = true;
+    res.classList.remove('visible'); if (acts) acts.style.display = 'none';
+    try {
+      const role = AI._industryRole();
+      const firm = State.tenant?.name || 'החברה שלנו';
+      const agent = State.agent?.name || 'הסוכן';
+      const prompt = `אתה ${role} ישראלי מקצועי. כתוב הצעת מחיר מקצועית.
+
+לקוח: ${client}
+שירות: ${service || 'לא צוין'}
+מחיר/עמלה: ${price || 'לא צוין'}
+לוח זמנים: ${timeline || 'לא צוין'}
+יתרונות עיקריים: ${benefits || 'לא צוין'}
+חברה: ${firm} | איש קשר: ${agent}
+תאריך: ${new Date().toLocaleDateString('he-IL')}
+
+כתוב הצעת מחיר מקצועית מובנית בעברית הכוללת:
+1. כותרת ופנייה
+2. תיאור השירות
+3. מה כלול
+4. מחיר ותנאי תשלום
+5. לוח זמנים
+6. למה לבחור בנו (בסיס היתרונות)
+7. הצעד הבא + חתימה
+
+טון מקצועי ומשדר ביטחון. עברית בלבד.`;
+      const text = await AI.call([{ role: 'user', content: prompt }], 800);
+      res.textContent = text || 'לא הצלחתי לייצר הצעה';
+      res.classList.add('visible');
+      if (acts) acts.style.display = 'flex';
+    } catch(e) {
+      res.textContent = 'שגיאה: ' + e.message;
+      res.classList.add('visible');
+    }
+    btn.textContent = '✨ צור הצעת מחיר'; btn.disabled = false;
+  },
+
+  copyResult(elId) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent)
+      .then(() => toast('📋 הועתק ללוח', 'success'));
+  },
+};
+
+/* ═══════════════════════════════════════════
    LEAD DOCUMENTS MODULE
 ═══════════════════════════════════════════ */
 const LeadDocs = {
@@ -4096,6 +4577,7 @@ const App = {
       case 'analytics':   Analytics.render(); break;
       case 'calendar':    Calendar.render(); break;
       case 'settings':    Settings.render();  break;
+      case 'tools':       Tools.render();     break;
     }
     window.scrollTo(0, 0);
   },
