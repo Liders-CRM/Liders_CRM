@@ -2354,13 +2354,13 @@ const DB = {
 
   async updateStageNames(names) {
     if (State.isDemo || !this.tenantId) return;
-    const existing = [...State.stages].sort((a,b) => (a.order_idx||0) - (b.order_idx||0));
+    const existing = [...State.stages].sort((a,b) => (a.order||0) - (b.order||0));
     const COLORS = ['#94A3B8','#3B82F6','#8B5CF6','#F59E0B','#10B981','#EF4444','#6366F1','#EC4899'];
     for (let i = 0; i < names.length; i++) {
       if (i < existing.length) {
         await sbClient.from('pipeline_stages')
           .update({ name: names[i] })
-          .eq('id', existing[i].id);
+          .eq('id', existing[i]._uuid);
         existing[i].name = names[i];
       } else {
         const { data } = await sbClient.from('pipeline_stages').insert({
@@ -2372,9 +2372,10 @@ const DB = {
           is_won: false,
         }).select().single();
         if (data) {
-          existing.push(data);
-          this.stageMap[data.id]  = data.name;
-          this.stageRev[data.name] = data.id;
+          const sid = 's' + (i + 1);
+          existing.push({ id: sid, name: data.name, color: data.color, order: data.order_idx, is_terminal: data.is_terminal, _uuid: data.id });
+          this.stageMap[data.id] = sid;
+          this.stageRev[sid] = data.id;
         }
       }
     }
@@ -5607,6 +5608,7 @@ const Settings = {
     try {
       await DB.updateStageNames(names);
       closeModal('modal-edit-stages');
+      Pipeline._renderTabs();
       toast('✅ שלבי הפייפליין עודכנו', 'success');
     } catch(e) {
       toast('שגיאה: ' + e.message, 'error');
