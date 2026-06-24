@@ -1283,7 +1283,10 @@
       margin-top: 12px; background: rgba(255,255,255,.06);
       border-radius: 10px; padding: 10px 14px;
       display: flex; align-items: center; gap: 10px;
+      cursor: pointer; transition: background .15s;
     }
+    .gamify-daily-challenge:hover { background: rgba(255,255,255,.12); }
+    .gamify-daily-challenge.done-today { cursor: default; opacity: .7; }
     .gamify-daily-icon { font-size: 1.3rem; }
     .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.75); flex: 1; line-height: 1.4; }
     .gamify-daily-done { font-size: 1rem; color: var(--gold-300); }
@@ -1617,10 +1620,12 @@
       <button id="btn-login-email" type="button" class="btn btn-primary w-full" style="padding:13px; font-size:15px; touch-action:manipulation;">
         כניסה למערכת
       </button>
-      <div class="login-divider">או</div>
-      <button id="btn-login-demo" type="button" class="login-demo-btn" style="touch-action:manipulation;">
-        👀 לצפייה זריזה בדמו
-      </button>
+      <div style="text-align:center;margin-top:10px;">
+        <button id="btn-login-demo" type="button"
+          style="background:none;border:none;color:var(--gray-400);font-size:12px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px;touch-action:manipulation;">
+          רוצה לראות דמו קצר קודם?
+        </button>
+      </div>
       <p style="text-align:center;font-size:0.78rem;color:var(--gray-400);margin-top:16px;">
         בהרשמה אתה מסכים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
       </p>
@@ -1780,7 +1785,7 @@
           </div>
         </div>
         <div class="gamify-achievements" id="gamify-badges-row"></div>
-        <div class="gamify-daily-challenge" id="gamify-daily">
+        <div class="gamify-daily-challenge" id="gamify-daily" onclick="Gamify.dailyAction()">
           <div class="gamify-daily-icon">⚡</div>
           <div class="gamify-daily-text" id="gamify-daily-text">טוען אתגר יומי...</div>
           <div class="gamify-daily-done" id="gamify-daily-check"></div>
@@ -1790,6 +1795,18 @@
       <div class="ai-card" id="dash-ai-briefing" style="margin: 0 20px 14px;">
         <div class="ai-card-title">✨ עוזר AI אישי — תדרוך יומי על המערכת</div>
         <div id="dash-ai-briefing-body"></div>
+      </div>
+      <div id="dash-import-banner" class="hidden" style="margin:0 20px 14px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:16px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span style="font-size:28px;">📋</span>
+          <div>
+            <div style="font-weight:700;font-size:14px;color:#1e3a5f;">יש לך רשימת לידים?</div>
+            <div style="font-size:12px;color:#3b82f6;margin-top:2px;">ייבא ישירות מ-Excel / CSV / יד2</div>
+          </div>
+        </div>
+        <button class="btn btn-primary w-full" onclick="LeadImport.open()" style="padding:11px;">
+          📁 ייבוא לידים מקובץ
+        </button>
       </div>
       <div class="kpi-row" id="kpi-row"></div>
       <div class="section-header">
@@ -4400,14 +4417,69 @@ const Gamify = {
     // Daily challenge
     const ch = this.getDailyChallenge();
     set('gamify-daily-text', ch.text);
-    const checkEl = document.getElementById('gamify-daily-check');
-    if (checkEl) {
+    const dailyEl = document.getElementById('gamify-daily');
+    if (dailyEl) {
       if (ch.done) {
-        checkEl.textContent = '✅';
+        dailyEl.classList.add('done-today');
+        dailyEl.onclick = () => toast('✅ האתגר היומי כבר הושלם — כל הכבוד!', 'success');
       } else {
-        checkEl.innerHTML = '<button onclick="Gamify.completeDailyChallenge()" style="background:var(--gold-500);color:#0f2040;border:none;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">בוצע!</button>';
+        dailyEl.classList.remove('done-today');
+        dailyEl.onclick = () => Gamify.dailyAction();
       }
     }
+    const checkEl = document.getElementById('gamify-daily-check');
+    if (checkEl) {
+      checkEl.textContent = ch.done ? '✅' : '›';
+      checkEl.style.cssText = ch.done ? '' : 'font-size:1.3rem;color:rgba(255,255,255,.5);';
+    }
+  },
+
+  CHALLENGE_ACTIONS: {
+    'פנה ל-3 לידים שלא דיברת איתם השבוע': () => App.go('pipeline'),
+    'עדכן שלב של ליד אחד לפחות':           () => App.go('pipeline'),
+    'הוסף ליד חדש למערכת':                  () => openModal('modal-add-lead'),
+    'השלם 2 משימות פתוחות':                 () => App.go('tasks'),
+    'השתמש ב-AI לכתיבת הודעת פולואפ':      () => App.go('tools'),
+    'בדוק אם יש לידים קפואים וצור איתם קשר': () => App.go('pipeline'),
+    'הוסף הערה לפגישה שהייתה לך':           () => Gamify.openQuickNote(),
+    'תכנן 3 פולואפים לשבוע הבא':            () => App.go('pipeline'),
+  },
+
+  dailyAction() {
+    const ch = this.getDailyChallenge();
+    if (ch.done) { toast('✅ האתגר היומי כבר הושלם!', 'success'); return; }
+    const action = this.CHALLENGE_ACTIONS[ch.text];
+    if (action) action();
+    else App.go('pipeline');
+  },
+
+  openQuickNote() {
+    const leads = State.leads || [];
+    if (!leads.length) {
+      toast('עדיין אין לידים — הוסף ליד ראשון', 'info');
+      openModal('modal-add-lead');
+      return;
+    }
+    // Inject lead selector into activity modal
+    const existingSel = document.getElementById('gamify-lead-sel-group');
+    if (existingSel) existingSel.remove();
+    const modal = document.querySelector('#modal-add-activity .modal > div:not(.modal-handle):not(.modal-header):not(.modal-footer)');
+    if (modal) {
+      const selGroup = document.createElement('div');
+      selGroup.id = 'gamify-lead-sel-group';
+      selGroup.className = 'form-group';
+      selGroup.innerHTML = `
+        <label class="form-label">על איזה ליד?</label>
+        <select id="gamify-lead-sel" class="form-input"
+          onchange="State.currentLeadId=this.value">
+          ${leads.map(l=>`<option value="${escapeHtml(l.id)}">${escapeHtml(l.name||l.full_name||'ליד')}</option>`).join('')}
+        </select>`;
+      modal.insertBefore(selGroup, modal.firstChild);
+    }
+    State.currentLeadId = leads[0].id;
+    const typeEl = document.getElementById('new-activity-type');
+    if (typeEl) typeEl.value = 'meeting';
+    openModal('modal-add-activity');
   },
 
   init() {
@@ -5047,6 +5119,8 @@ const Dashboard = {
     document.getElementById('dash-date').textContent = hebrewDate();
     const gs = document.getElementById('dash-getting-started');
     if (gs) gs.style.display = State.leads.length === 0 ? '' : 'none';
+    const importBanner = document.getElementById('dash-import-banner');
+    if (importBanner) importBanner.classList.toggle('hidden', State.leads.length >= 5);
     this.renderKPIs();
     this.renderTasks();
     this.renderHotLeads();
@@ -6858,10 +6932,14 @@ async function addActivity() {
     State.activities.unshift(act);
     const lead = State.leads.find(l => l.id === State.currentLeadId);
     if (lead) lead.last_contact = today();
+    const wasFromChallenge = !!document.getElementById('gamify-lead-sel-group');
     closeModal('modal-add-activity');
     document.getElementById('new-activity-content').value = '';
     const asel = document.getElementById('new-activity-type');
     if (asel) asel.value = 'call';
+    const gamifySelGrp = document.getElementById('gamify-lead-sel-group');
+    if (gamifySelGrp) gamifySelGrp.remove();
+    if (wasFromChallenge) Gamify.completeDailyChallenge();
     toast('📝 פעילות נרשמה', 'success');
     if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
   } catch(e) {
