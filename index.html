@@ -3084,9 +3084,10 @@ const Onboarding = {
       render() {
         const ind = localStorage.getItem('liders_industry') || 'other';
         const defaults = INDUSTRY_LABELS[ind]?.stages || ['פנייה נכנסה','יצרנו קשר','הצעה נשלחה','במשא ומתן','עסקה נסגרה ✓'];
-        // For returning users: show their existing stages, not industry defaults
+        const industryChanged = Onboarding._data.prevIndustry && Onboarding._data.prevIndustry !== ind;
         const existing = (State.stages || []).map(s => s.name).filter(Boolean);
-        const names = existing.length ? existing : defaults;
+        // If industry changed → show new defaults. Otherwise → keep existing stages.
+        const names = (!industryChanged && existing.length) ? existing : defaults;
         return `
           <div>
             <div style="display:flex;flex-direction:column;gap:6px;" id="ob-stages-list">
@@ -3204,7 +3205,7 @@ const Onboarding = {
   show() {
     if (localStorage.getItem('onboarding_done') === '1') return;
     this._step = 0;
-    this._data = {};
+    this._data = { prevIndustry: localStorage.getItem('liders_industry') };
     document.getElementById('modal-onboarding').classList.remove('hidden');
     this._renderStep();
   },
@@ -3232,8 +3233,9 @@ const Onboarding = {
       // Save industry to Supabase so it survives logout/login on any device
       const ind = localStorage.getItem('liders_industry') || 'other';
       DB.updateIndustry(ind);
-      // Save stage names only if user edited them or if this is a brand-new tenant (no stages yet)
-      if (this._data.stageNames?.length && (!State.stages?.length || this._data.stagesEdited)) {
+      // Save stages if: new user, user edited them, OR industry changed (new defaults)
+      const industryChanged = this._data.prevIndustry !== ind;
+      if (this._data.stageNames?.length && (!State.stages?.length || this._data.stagesEdited || industryChanged)) {
         DB.updateStageNames(this._data.stageNames).catch(() => {});
       }
       if (this._data.agencyName) {
