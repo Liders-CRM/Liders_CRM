@@ -714,22 +714,22 @@
       border: 1px solid var(--border); overflow: hidden; margin-bottom: 16px;
     }
     .settings-section-title {
-      padding: 14px 16px; font-size: 13px; font-weight: 700; color: var(--gray-500);
-      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 14px 16px; font-size: 12px; font-weight: 700; color: var(--gray-500);
+      text-transform: uppercase; letter-spacing: 0.8px;
       border-bottom: 1px solid var(--border); background: var(--gray-50);
     }
     .settings-row {
       display: flex; align-items: center; padding: 14px 16px;
       border-bottom: 1px solid var(--gray-100); gap: 12px; cursor: pointer;
-      transition: var(--transition);
+      transition: var(--transition); min-height: 56px;
     }
     .settings-row:last-child { border-bottom: none; }
     .settings-row:hover { background: var(--gray-50); }
-    .settings-row-icon { font-size: 20px; width: 28px; text-align: center; }
+    .settings-row-icon { font-size: 22px; width: 30px; text-align: center; }
     .settings-row-body { flex: 1; }
-    .settings-row-label { font-size: 14px; font-weight: 600; }
-    .settings-row-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
-    .settings-arrow { color: var(--gray-400); font-size: 14px; }
+    .settings-row-label { font-size: 15px; font-weight: 600; }
+    .settings-row-sub { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+    .settings-arrow { color: var(--gray-300); font-size: 20px; line-height: 1; }
 
     /* ═══════════════════════════════════════
        EMPTY STATES
@@ -844,9 +844,9 @@
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     }
     .kpi-icon { font-size: 22px; margin-bottom: 8px; }
-    .kpi-label { font-size: 11px; color: var(--gray-500); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .4px; }
-    .kpi-value { font-size: 26px; font-weight: 900; color: var(--gray-900); line-height: 1; }
-    .kpi-sub { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+    .kpi-label { font-size: 12px; color: var(--gray-500); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .4px; }
+    .kpi-value { font-size: 28px; font-weight: 900; color: var(--gray-900); line-height: 1; }
+    .kpi-sub { font-size: 12px; color: var(--gray-400); margin-top: 5px; }
 
     /* ═══════════════════════════════════════
        PIPELINE CHART
@@ -1367,7 +1367,7 @@
       padding: 8px 6px; text-align: center;
     }
     .gamify-stat-val { font-size: 1.3rem; font-weight: 900; color: var(--gold-300); }
-    .gamify-stat-label { font-size: 11px; color: rgba(255,255,255,.60); margin-top: 2px; }
+    .gamify-stat-label { font-size: 12px; color: rgba(255,255,255,.60); margin-top: 2px; }
     .gamify-achievements { display: flex; gap: 6px; flex-wrap: wrap; }
     .gamify-badge {
       background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
@@ -1455,7 +1455,7 @@
     .cal-nav-btn:hover { background:var(--gray-200); }
     .cal-today-btn { background:var(--navy-50); border:1.5px solid var(--navy-200); color:var(--navy-500); border-radius:var(--radius-md); padding:6px 14px; font-size:13px; font-weight:700; cursor:pointer; }
     .cal-day-labels { display:grid; grid-template-columns:repeat(7,1fr); padding:0 12px; }
-    .cal-day-label { text-align:center; font-size:11px; font-weight:700; color:var(--gray-400); padding:4px 0; }
+    .cal-day-label { text-align:center; font-size:12px; font-weight:700; color:var(--gray-400); padding:4px 0; }
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; padding:0 12px 12px; }
     .cal-cell {
       min-height:68px; background:var(--surface); border-radius:var(--radius-md);
@@ -1477,7 +1477,7 @@
     .cal-event-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
     .cal-cell.selected { border-color:var(--gold-400); border-width:2px; background:var(--gold-100); }
     .cal-event-name { font-size:13px; font-weight:700; color:var(--gray-900); }
-    .cal-event-sub { font-size:11px; color:var(--gray-500); margin-top:2px; }
+    .cal-event-sub { font-size:12px; color:var(--gray-500); margin-top:2px; }
 
     /* ═══════════════════════════════════════
        ANALYTICS SCREEN
@@ -1756,7 +1756,7 @@
           רוצה לראות דמו קצר קודם?
         </button>
       </div>
-      <p style="text-align:center;font-size:0.78rem;color:var(--gray-400);margin-top:12px;">
+      <p style="text-align:center;font-size:0.82rem;color:var(--gray-400);margin-top:12px;">
         בהרשמה אתה מסכים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
       </p>
     </div>
@@ -2921,9 +2921,9 @@
     <div></div>
   </div>
   <div style="margin-top:32px; text-align:center;">
-    <button onclick="App.logout()" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:13px; cursor:pointer; font-family:inherit; display:block; margin:0 auto; padding:12px 16px; min-height:44px;">שכחתי קוד — יציאה</button>
+    <button onclick="App.logout()" style="background:none; border:none; color:rgba(255,255,255,0.35); font-size:14px; cursor:pointer; font-family:inherit; display:block; margin:0 auto; padding:12px 16px; min-height:44px;">שכחתי קוד — יציאה</button>
     <button onclick="AppLock._goToSettings=true; document.getElementById('lock-hint').style.opacity='1';"
-      style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:12px; cursor:pointer; font-family:inherit; text-decoration:underline; text-underline-offset:3px; padding:12px 16px; min-height:44px;">
+      style="background:none; border:none; color:rgba(255,255,255,0.55); font-size:14px; cursor:pointer; font-family:inherit; text-decoration:underline; text-underline-offset:3px; padding:12px 16px; min-height:44px;">
       לא רוצה קוד בכל כניסה? לחץ כאן
     </button>
     <div id="lock-hint" style="opacity:0; transition:opacity 0.3s; margin-top:10px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
@@ -3961,9 +3961,9 @@ const Onboarding = {
                 💡 <strong>איך מגדירים?</strong> לך ל-make.com → צור Scenario → Webhook trigger → העתק את ה-URL לכאן
               </p>
             </div>
-            <div style="margin-top:12px;text-align:center;">
-              <span style="font-size:0.82rem;color:var(--gray-400);">אפשר לדלג עכשיו ולהגדיר מאוחר יותר דרך</span>
-              <span onclick="document.getElementById('modal-onboarding').classList.add('hidden');localStorage.setItem('onboarding_done','1');App.go('settings');" style="font-size:0.82rem;color:var(--blue-500);text-decoration:underline;cursor:pointer;"> הגדרות ←</span>
+            <div style="margin-top:14px;text-align:center;padding:10px 0;">
+              <span style="font-size:0.88rem;color:var(--gray-400);">אפשר לדלג עכשיו ולהגדיר מאוחר יותר דרך</span>
+              <span onclick="document.getElementById('modal-onboarding').classList.add('hidden');localStorage.setItem('onboarding_done','1');App.go('settings');" style="font-size:0.88rem;color:var(--blue-500);text-decoration:underline;cursor:pointer;font-weight:600;"> הגדרות ←</span>
             </div>
           </div>`;
       },
@@ -3985,7 +3985,7 @@ const Onboarding = {
             <div style="font-size:56px;margin-bottom:12px;">🎉</div>
             <p style="font-size:0.95rem;line-height:1.7;color:var(--gray-500);margin-bottom:20px;">
               <strong style="color:var(--gray-900);">הגדרת הסוכנות הושלמה בהצלחה!</strong><br>
-              איפה תרצה להתחיל?
+              בחר איפה תרצה להתחיל:
             </p>
             <div style="display:flex;flex-direction:column;gap:10px;text-align:right;">
               <button onclick="Onboarding._pendingAction='addlead';Onboarding.next();"
@@ -3993,7 +3993,7 @@ const Onboarding = {
                 <span style="font-size:1.3rem;">➕</span>
                 <div>
                   <div>הוסף את הליד הראשון</div>
-                  <div style="font-size:0.78rem;font-weight:400;opacity:0.85;">התחל לבנות את הפייפליין שלך</div>
+                  <div style="font-size:0.85rem;font-weight:400;opacity:0.85;">התחל לבנות את הפייפליין שלך</div>
                 </div>
               </button>
               <button onclick="Onboarding._pendingAction='pipeline';Onboarding.next();"
@@ -4001,7 +4001,7 @@ const Onboarding = {
                 <span style="font-size:1.3rem;">📊</span>
                 <div>
                   <div>ראה את הפייפליין</div>
-                  <div style="font-size:0.78rem;font-weight:400;color:var(--gray-500);">סקירה של כל השלבים</div>
+                  <div style="font-size:0.85rem;font-weight:400;color:var(--gray-500);">סקירה של כל השלבים</div>
                 </div>
               </button>
               <button onclick="Onboarding._pendingAction='settings';Onboarding.next();"
@@ -4009,7 +4009,7 @@ const Onboarding = {
                 <span style="font-size:1.3rem;">⚙️</span>
                 <div>
                   <div>חבר WhatsApp אוטומציות</div>
-                  <div style="font-size:0.78rem;font-weight:400;color:var(--gray-500);">הגדר Make.com ועוד</div>
+                  <div style="font-size:0.85rem;font-weight:400;color:var(--gray-500);">הגדר Make.com ועוד</div>
                 </div>
               </button>
             </div>
@@ -5827,10 +5827,10 @@ const Dashboard = {
     const closedTotal= State.leads.filter(l => l.stage === 's5').length;
     const pipelineVal= State.leads.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0);
     const kpis = [
-      { label:'לידים חדשים היום', value: newToday,               sub:'לידים חדשים', accent:'#2563EB', icon:'🆕', nav:'leads' },
-      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור',      accent:'#7C3AED', icon:'📋', nav:'pipeline' },
-      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'סה"כ',        accent:'#16A34A', icon:'🎉', nav:'pipeline' },
-      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'פוטנציאל',    accent:'#C49A2A', icon:'💰', nav:'pipeline' },
+      { label:'לידים חדשים היום', value: newToday,               sub:'נרשמו היום',     accent:'#2563EB', icon:'🆕', nav:'leads' },
+      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור כעת',    accent:'#7C3AED', icon:'📋', nav:'pipeline' },
+      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'כולל הכל',      accent:'#16A34A', icon:'🎉', nav:'pipeline' },
+      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'ערך פוטנציאלי', accent:'#C49A2A', icon:'💰', nav:'pipeline' },
     ];
     document.getElementById('kpi-row').innerHTML = kpis.map(k => `
       <div class="kpi-card" style="--kpi-accent:${k.accent};cursor:pointer;" onclick="App.go('${k.nav}')">
@@ -7640,7 +7640,7 @@ const LeadImport = {
             📁 בחירת קובץ CSV
             <input type="file" id="import-file-input" accept=".csv,.txt,text/csv" style="display:none;" onchange="LeadImport.handleFile(this)">
           </label>
-          <div style="color:var(--gray-400);font-size:0.78rem;margin-top:12px;">
+          <div style="color:var(--gray-400);font-size:0.84rem;margin-top:12px;">
             תומך בקבצי CSV (מיוצא מ-Excel, Google Sheets, יד2 ועוד)
           </div>
         </div>`;
@@ -7686,7 +7686,7 @@ const LeadImport = {
           <div style="background:var(--bg-app);border-radius:8px;padding:10px 12px;font-size:0.85rem;">
             <div style="font-weight:700;">${escapeHtml(l.name)}</div>
             <div style="color:var(--gray-500);direction:ltr;text-align:right;">${escapeHtml(l.phone)}${l.email ? ' · ' + escapeHtml(l.email) : ''}</div>
-            ${l.desired_area ? `<div style="color:var(--gray-400);font-size:0.78rem;">📍 ${escapeHtml(l.desired_area)}</div>` : ''}
+            ${l.desired_area ? `<div style="color:var(--gray-400);font-size:0.83rem;">📍 ${escapeHtml(l.desired_area)}</div>` : ''}
           </div>
         `).join('')}
       </div>
