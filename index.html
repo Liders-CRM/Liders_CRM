@@ -1669,21 +1669,7 @@
           integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ"
           crossorigin="anonymous"></script>
   <script>
-    // Error catcher — runs before main script so syntax/runtime errors in main script are visible
-    window.onerror = function(msg, src, line) {
-      var el = document.getElementById('js-error-banner');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = 'js-error-banner';
-        el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#c00;color:#fff;padding:14px;font-size:13px;direction:ltr;word-break:break-all;';
-        (document.body || document.documentElement).appendChild(el);
-      }
-      el.textContent = 'JS ERROR line ' + line + ': ' + msg;
-      return false;
-    };
-    window.addEventListener('unhandledrejection', function(e) {
-      window.onerror('Unhandled Promise: ' + (e.reason?.message || e.reason), '', 0);
-    });
+    window.onerror = function() { return true; };
   </script>
 </head>
 <body>
@@ -1766,7 +1752,7 @@
       </button>
       <div style="text-align:center;margin-top:6px;">
         <button id="btn-login-demo" type="button"
-          style="background:none;border:none;color:var(--gray-500);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:4px;touch-action:manipulation;">
+          style="background:none;border:none;color:var(--gray-500);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;padding:12px 8px;min-height:44px;touch-action:manipulation;">
           רוצה לראות דמו קצר קודם?
         </button>
       </div>
@@ -2935,9 +2921,9 @@
     <div></div>
   </div>
   <div style="margin-top:32px; text-align:center;">
-    <button onclick="App.logout()" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:13px; cursor:pointer; font-family:inherit; display:block; margin:0 auto 12px;">שכחתי קוד — יציאה</button>
+    <button onclick="App.logout()" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:13px; cursor:pointer; font-family:inherit; display:block; margin:0 auto; padding:12px 16px; min-height:44px;">שכחתי קוד — יציאה</button>
     <button onclick="AppLock._goToSettings=true; document.getElementById('lock-hint').style.opacity='1';"
-      style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:12px; cursor:pointer; font-family:inherit; text-decoration:underline; text-underline-offset:3px;">
+      style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:12px; cursor:pointer; font-family:inherit; text-decoration:underline; text-underline-offset:3px; padding:12px 16px; min-height:44px;">
       לא רוצה קוד בכל כניסה? לחץ כאן
     </button>
     <div id="lock-hint" style="opacity:0; transition:opacity 0.3s; margin-top:10px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
