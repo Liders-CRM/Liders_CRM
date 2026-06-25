@@ -10,10 +10,10 @@
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
   <title>Liders CRM — הפלטפורמה שהופכת לידים לעסקאות</title>
-  <meta name="description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 21 יום.">
+  <meta name="description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 30 יום.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Liders CRM — הפלטפורמה שהופכת לידים לעסקאות">
-  <meta property="og:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 21 יום.">
+  <meta property="og:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 30 יום.">
   <meta property="og:locale" content="he_IL">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -1581,7 +1581,7 @@
       </div>
     </div>
     <div class="login-trial-badge" style="margin-bottom:4px;">
-      🎁 21 ימי ניסיון חינמי — בלי כרטיס אשראי!
+      🎁 30 ימי ניסיון חינמי — בלי כרטיס אשראי!
     </div>
     <div class="login-form">
       <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation; padding:13px; font-size:15px;">
@@ -2184,7 +2184,7 @@
     <div class="paywall-icon">🔒</div>
     <div class="paywall-title">הנתונים שלך בטוחים 🔒</div>
     <div class="paywall-sub" id="paywall-sub-text">
-      21 ימי הניסיון החינמי הסתיימו.<br>
+      30 ימי הניסיון החינמי הסתיימו.<br>
       כל הלידים, הנכסים והמשימות שלך <strong>שמורים ומחכים לך</strong> — בחר תוכנית להמשיך:
     </div>
     <div class="paywall-trial-note" id="paywall-trial-note">
@@ -2612,7 +2612,7 @@
       Liders CRM הוא שירות SaaS לניהול פייפליין מכירות עבור עסקים. השירות מסופק "כפי שהוא" עם מאמץ מקסימאלי לזמינות.</p>
 
       <p><strong>ניסיון חינמי</strong><br>
-      ניסיון חינמי של 21 יום ניתן לכל חשבון חדש ללא צורך בכרטיס אשראי. לאחר 21 יום יידרש מנוי בתשלום להמשך גישה.</p>
+      ניסיון חינמי של 30 יום ניתן לכל חשבון חדש ללא צורך בכרטיס אשראי. לאחר 30 יום יידרש מנוי בתשלום להמשך גישה.</p>
 
       <p><strong>ביטול ומחיקה</strong><br>
       ניתן לבטל בכל עת דרך פורטל החיוב. ביטול תקף לסוף תקופת החיוב הנוכחית. נתוניך יישמרו 30 יום נוספים ולאחר מכן יימחקו.</p>
@@ -2783,7 +2783,7 @@ const DB = {
   async signOut() { await sbClient.auth.signOut(); },
 
   // Resolves (and on first login, creates) the caller's own tenant — every
-  // brand-new auth identity gets an isolated tenant + a 21-day trial clock
+  // brand-new auth identity gets an isolated tenant + a 30-day trial clock
   // that starts NOW, not whenever the shared demo tenant happened to start.
   // Returning users (existing agent_users row) are untouched — idempotent.
   async ensureAgent(email, name, agencyName) {
@@ -3251,7 +3251,7 @@ const Billing = {
       price: 149,
       priceLabel: '₪149',
       desc: 'לסוכן עצמאי',
-      features: ['סוכן 1 בלבד', 'עד 200 לידים פעילים', 'לוח Kanban', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'ניסיון חינם 21 יום'],
+      features: ['סוכן 1 בלבד', 'עד 200 לידים פעילים', 'לוח Kanban', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'ניסיון חינם 30 יום'],
       featured: false,
       agentLimit: '1 סוכן · 200 לידים',
     },
@@ -3335,7 +3335,7 @@ const Billing = {
       const rDays = this.retentionDaysLeft();
       if (rDays > 0) {
         subEl.innerHTML = `
-          21 ימי הניסיון החינמי הסתיימו.<br>
+          30 ימי הניסיון החינמי הסתיימו.<br>
           הלידים, הנכסים והמשימות שלך <strong>שמורים בחינם למשך ${rDays} ימים נוספים</strong> — בלי כרטיס אשראי ובלי לבחור תוכנית.<br>
           כדי <strong>להמשיך להשתמש</strong> במערכת — בחר תוכנית עכשיו:
         `;
@@ -3355,7 +3355,7 @@ const Billing = {
     const days = this.daysLeft();
     const banner = document.getElementById('trial-banner');
     if (!banner) return;
-    const pct = Math.max(4, Math.round(days / 21 * 100));
+    const pct = Math.max(4, Math.round(days / 30 * 100));
     const label = days === 0 ? '⚠️ הניסיון פג'
                 : days === 1 ? '⚠️ יום אחרון'
                 : `⏳ ${days} ימים`;
@@ -3364,7 +3364,7 @@ const Billing = {
       <div class="trial-bar-track">
         <div class="trial-bar-fill" style="width:${pct}%"></div>
       </div>
-      <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 21</span>
+      <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 30</span>
       <button onclick="Billing.showPaywall()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
         שדרג →
       </button>
@@ -3378,7 +3378,7 @@ const Billing = {
     if (this.isPaid() || State.isDemo) { el.innerHTML = ''; return; }
     const days = this.daysLeft();
     if (days > 3) { el.innerHTML = ''; return; }
-    const pct = Math.max(4, Math.round(days / 21 * 100));
+    const pct = Math.max(4, Math.round(days / 30 * 100));
     const urgMsg = days <= 3
       ? '⚠️ עוד מעט הגישה נעצרת — שמור על הלידים שלך'
       : `נשארו ${days} ימים — אל תפסיד את הלידים שלך`;
@@ -3386,7 +3386,7 @@ const Billing = {
       <div class="dash-trial-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
           <span style="color:#F59E0B;font-weight:800;font-size:14px;">⏳ ניסיון חינמי</span>
-          <span style="color:rgba(255,255,255,0.5);font-size:11px;">נשארו ${days} ימים מתוך 21</span>
+          <span style="color:rgba(255,255,255,0.5);font-size:11px;">נשארו ${days} ימים מתוך 30</span>
         </div>
         <div style="background:rgba(255,255,255,0.13);border-radius:99px;height:8px;margin-bottom:12px;overflow:hidden;">
           <div style="width:${pct}%;background:linear-gradient(90deg,#10B981,#F59E0B);height:100%;border-radius:99px;"></div>
@@ -3460,7 +3460,7 @@ const Billing = {
     if (p === 'premium') return { text:'Premium ✓', color:'var(--purple-500)', bg:'var(--purple-100)' };
     if (p === 'pro')     return { text:'Pro ✓',     color:'var(--blue-500)',   bg:'var(--blue-100)'   };
     if (p === 'basic')   return { text:'Basic ✓',   color:'var(--green-600)',  bg:'var(--green-100)'  };
-    if (p === 'trial')    return { text:'ניסיון חינם 21 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
+    if (p === 'trial')    return { text:'ניסיון חינם 30 יום', color:'var(--gold-600)', bg:'var(--gold-100)' };
     if (p === 'lifetime') return { text:'Lifetime ♾️', color:'var(--blue-500)', bg:'var(--blue-100)' };
     return { text:'לא פעיל', color:'var(--red-600)', bg:'var(--red-100)' };
   },
