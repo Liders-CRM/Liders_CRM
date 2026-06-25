@@ -1249,11 +1249,11 @@ async function grantFreePlan(tenantId) {
 }
 
 async function resetToTrial(tenantId) {
-  if (!confirm('להחזיר טנאנט זה לניסיון של 21 יום?')) return;
+  if (!confirm('להחזיר טנאנט זה לניסיון של 30 יום?')) return;
   const { error } = await sb.rpc('admin_set_plan', {
     p_tenant_id:    tenantId,
     p_plan:         'trial',
-    p_trial_ends_at: new Date(Date.now() + 21 * 864e5).toISOString(),
+    p_trial_ends_at: new Date(Date.now() + 30 * 864e5).toISOString(),
   });
   if (error) { alert('שגיאה: ' + error.message); return; }
   toast('↩ הוחזר לניסיון', '');
