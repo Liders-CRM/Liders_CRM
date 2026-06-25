@@ -2954,13 +2954,14 @@
       <button class="modal-close" onclick="document.getElementById('modal-pin-setup').classList.add('hidden')">×</button>
     </div>
     <div class="modal-body" style="padding:24px 20px;">
-      <p style="color:var(--gray-500);font-size:0.88rem;margin-bottom:16px;line-height:1.6;">
-        הקוד ישמר רק במכשיר זה ויידרש בכל כניסה לאפליקציה.
-      </p>
       <input id="pin-setup-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4"
         placeholder="• • • •" class="form-input"
-        style="font-size:2rem; letter-spacing:12px; text-align:center; dir:ltr;"
+        style="font-size:2rem; letter-spacing:12px; text-align:center; margin-bottom:14px;"
         onkeydown="if(event.key==='Enter')AppLock.confirmSetup()">
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:0.82rem;color:#0369a1;line-height:1.7;">
+        💡 <strong>טיפ:</strong> בחר קוד שתזכור בקלות — שנת לידה, 4 ספרות מהטלפון, או תאריך משמעותי.<br>
+        <span style="color:#64748b;">אבל לא 1234 😉 — עדיף משהו שרק אתה יודע.</span>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="document.getElementById('modal-pin-setup').classList.add('hidden')">ביטול</button>
