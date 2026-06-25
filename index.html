@@ -1225,6 +1225,103 @@
     .wa-template-preview.visible { display: block; }
 
     /* ═══════════════════════════════════════
+       MARKETING SCREEN
+    ═══════════════════════════════════════ */
+    .marketing-header-strip {
+      background: linear-gradient(135deg, #78350F 0%, #B45309 100%);
+      color: white; padding: 24px 20px 20px; margin-bottom: 20px;
+    }
+    .marketing-header-strip h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+    .marketing-header-strip p  { font-size: 13px; opacity: .75; }
+    .marketing-addon-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 99px; padding: 3px 12px; font-size: 11px; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    /* locked upsell */
+    .mktg-locked {
+      margin: 24px 20px; background: var(--white);
+      border: 2px solid #F59E0B; border-radius: 20px; padding: 32px 24px; text-align: center;
+      box-shadow: 0 4px 24px rgba(245,158,11,.12);
+    }
+    .mktg-locked-icon { font-size: 48px; margin-bottom: 12px; }
+    .mktg-locked h3   { font-size: 20px; font-weight: 900; color: var(--navy-700); margin-bottom: 8px; }
+    .mktg-locked p    { font-size: 14px; color: var(--gray-500); line-height: 1.7; margin-bottom: 20px; max-width: 360px; margin-inline: auto; }
+    .mktg-locked-features { list-style: none; text-align: right; margin: 0 auto 24px; max-width: 320px; }
+    .mktg-locked-features li { font-size: 14px; color: var(--gray-600); padding: 6px 0; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 8px; }
+    .mktg-locked-features li:last-child { border: none; }
+    .mktg-locked-features li::before { content: "✓"; color: #F59E0B; font-weight: 800; flex-shrink: 0; }
+    .mktg-upgrade-btn {
+      display: inline-block; background: linear-gradient(135deg,#F59E0B,#F97316);
+      color: white; border: none; padding: 14px 32px; border-radius: 99px;
+      font-family: 'Heebo',sans-serif; font-size: 15px; font-weight: 800;
+      cursor: pointer; box-shadow: 0 6px 24px rgba(245,158,11,.35); transition: all .2s;
+    }
+    .mktg-upgrade-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(245,158,11,.45); }
+    .mktg-upgrade-micro { font-size: 12px; color: var(--gray-400); margin-top: 10px; }
+    /* active tools grid */
+    .mktg-grid { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 20px; }
+    @media (min-width: 700px) { .mktg-grid { flex-direction: row; flex-wrap: wrap; } .mktg-card { flex: 1 1 calc(50% - 8px); } }
+    .mktg-card {
+      background: var(--white); border: 1.5px solid var(--gray-100); border-radius: 18px;
+      overflow: hidden; box-shadow: 0 2px 12px rgba(15,31,61,.06);
+    }
+    .mktg-card-head {
+      padding: 16px 18px 12px; border-bottom: 1px solid var(--gray-100);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .mktg-card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .mktg-icon-gold   { background: var(--gold-100); }
+    .mktg-icon-blue   { background: var(--blue-100); }
+    .mktg-icon-green  { background: var(--green-100); }
+    .mktg-icon-orange { background: #FFF7ED; }
+    .mktg-card-title { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+    .mktg-card-sub   { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+    .mktg-card-body  { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .mktg-output {
+      display: none; background: #FFF7ED; border: 1px solid #FCD34D; border-radius: 12px;
+      padding: 14px; font-size: 13px; line-height: 1.75; color: #78350F;
+      direction: rtl; white-space: pre-wrap; margin-top: 4px;
+    }
+    .mktg-output.visible { display: block; }
+    .mktg-actions { display: none; gap: 8px; margin-top: 4px; }
+    .mktg-actions.visible { display: flex; }
+    .mktg-btn-copy {
+      background: var(--gray-100); color: var(--gray-700); border: none;
+      padding: 8px 16px; border-radius: 8px; font-family: 'Heebo',sans-serif;
+      font-size: 12px; font-weight: 700; cursor: pointer; flex: 1;
+    }
+    .mktg-btn-copy:hover { background: var(--gray-200); }
+    /* full-service card */
+    .mktg-fullservice-card {
+      margin: 0 20px 28px; background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-500) 100%);
+      border-radius: 20px; padding: 28px 24px; color: white; text-align: center;
+    }
+    .mktg-fs-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+    .mktg-fs-desc  { font-size: 13px; opacity: .75; line-height: 1.7; margin-bottom: 20px; max-width: 400px; margin-inline: auto; }
+    .mktg-fs-btn {
+      display: inline-block; background: white; color: var(--navy-700);
+      border: none; padding: 12px 28px; border-radius: 99px;
+      font-family: 'Heebo',sans-serif; font-size: 14px; font-weight: 800;
+      cursor: pointer; transition: all .2s;
+    }
+    .mktg-fs-btn:hover { background: var(--gold-100); color: var(--gold-700); }
+    .mktg-fs-micro { font-size: 11px; opacity: .45; margin-top: 12px; }
+    .mktg-fs-form { display: none; margin-top: 16px; text-align: right; }
+    .mktg-fs-form.visible { display: flex; flex-direction: column; gap: 8px; }
+    .mktg-fs-form input, .mktg-fs-form textarea {
+      padding: 10px 14px; border-radius: 10px; border: none; font-family: 'Heebo',sans-serif;
+      font-size: 13px; background: rgba(255,255,255,.12); color: white;
+    }
+    .mktg-fs-form input::placeholder, .mktg-fs-form textarea::placeholder { color: rgba(255,255,255,.45); }
+    .mktg-fs-form textarea { resize: none; height: 80px; }
+    .mktg-fs-submit {
+      background: #F59E0B; color: white; border: none; padding: 12px; border-radius: 10px;
+      font-family: 'Heebo',sans-serif; font-size: 14px; font-weight: 800; cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════
        GAMIFICATION SYSTEM
     ═══════════════════════════════════════ */
     /* Sidebar level badge */
@@ -1678,6 +1775,9 @@
       </a>
       <a class="nav-item" data-screen="tools" onclick="App.go('tools')">
         <span class="nav-icon">🛠️</span> מרכז כלים
+      </a>
+      <a class="nav-item" data-screen="marketing" onclick="App.go('marketing')">
+        <span class="nav-icon">📣</span> שירותי שיווק
       </a>
     </div>
     <div class="sidebar-footer">
@@ -2180,6 +2280,9 @@
       <div class="screen-header"><div class="screen-title">⚙️ הגדרות</div></div>
       <div class="screen-body" id="settings-body"></div>
     </div>
+
+    <!-- MARKETING SCREEN -->
+    <div id="screen-marketing" class="screen hidden"></div>
 
   </main>
 
@@ -4322,6 +4425,263 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 };
 
 /* ═══════════════════════════════════════════
+   MARKETING MODULE
+═══════════════════════════════════════════ */
+const Marketing = {
+  _outputId: null,
+
+  render() {
+    const el = document.getElementById('screen-marketing');
+    const hasAddon = State.tenant?.marketing_addon === true;
+
+    if (!hasAddon) {
+      el.innerHTML = `
+        <div class="marketing-header-strip">
+          <div class="marketing-addon-badge">⭐ תוספת פרימיום</div>
+          <h2>📣 שירותי שיווק</h2>
+          <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
+        </div>
+        <div class="mktg-locked">
+          <div class="mktg-locked-icon">🔒</div>
+          <h3>תוסף שיווק — ₪100 לחודש</h3>
+          <p>גישה לכלים מקצועיים שיעזרו לך ליצור הצעות מיוחדות, פוסטים לסושיאל וקמפיינים ללקוחות — הכל מתוך המערכת, בלי לצאת החוצה.</p>
+          <ul class="mktg-locked-features">
+            <li>מחולל הצעה מיוחדת מותאמת לכל ליד</li>
+            <li>יוצר פוסטים לסושיאל לכל נכס</li>
+            <li>מחולל קמפיין WhatsApp לרשימת לקוחות</li>
+            <li>שליחת בקשה לשירות מלא מנציג Liders</li>
+          </ul>
+          <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
+            הוסף שירותי שיווק — ₪100/חודש
+          </button>
+          <p class="mktg-upgrade-micro">ניתן להוסיף בכל עת · ביטול ללא קנסות</p>
+        </div>`;
+      return;
+    }
+
+    const leads = State.leads || [];
+    const properties = State.properties || [];
+    const leadOptions = leads.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+    const propOptions = `<option value="">ללא נכס ספציפי</option>` +
+      properties.map(p => `<option value="${p.id}">${p.title || p.city}</option>`).join('');
+
+    el.innerHTML = `
+      <div class="marketing-header-strip">
+        <div class="marketing-addon-badge">✅ תוסף פעיל</div>
+        <h2>📣 שירותי שיווק</h2>
+        <p>צור תוכן שיווקי מקצועי ישירות מהמערכת — בשניות</p>
+      </div>
+      <div class="mktg-grid">
+
+        <!-- כלי 1: הצעה מיוחדת ללקוח -->
+        <div class="mktg-card">
+          <div class="mktg-card-head">
+            <div class="mktg-card-icon mktg-icon-gold">🎯</div>
+            <div>
+              <div class="mktg-card-title">הצעה מיוחדת ללקוח</div>
+              <div class="mktg-card-sub">הודעה אישית מותאמת לכל ליד</div>
+            </div>
+          </div>
+          <div class="mktg-card-body">
+            <div>
+              <label class="tool-label">בחר ליד</label>
+              <select class="form-input" id="mktg-lead-sel">${leadOptions || '<option>אין לידים עדיין</option>'}</select>
+            </div>
+            <div>
+              <label class="tool-label">בחר נכס (אופציונלי)</label>
+              <select class="form-input" id="mktg-prop-sel">${propOptions}</select>
+            </div>
+            <div>
+              <label class="tool-label">סוג ההצעה</label>
+              <select class="form-input" id="mktg-offer-type">
+                <option value="exclusive">ביקור בלעדי לפני השוק</option>
+                <option value="special_price">תנאים מיוחדים שלא לכולם</option>
+                <option value="limited">הצעה מוגבלת לשבוע הקרוב</option>
+                <option value="first">אתה הראשון שאני פונה אליו</option>
+              </select>
+            </div>
+            <button class="tool-btn tool-btn-primary" onclick="Marketing.genOffer()">✨ צור הצעה</button>
+            <div class="mktg-output" id="mktg-offer-out"></div>
+            <div class="mktg-actions" id="mktg-offer-act">
+              <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-offer-out')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- כלי 2: פוסט לסושיאל -->
+        <div class="mktg-card">
+          <div class="mktg-card-head">
+            <div class="mktg-card-icon mktg-icon-blue">📸</div>
+            <div>
+              <div class="mktg-card-title">פוסט לסושיאל</div>
+              <div class="mktg-card-sub">פוסט מוכן לאינסטגרם / פייסבוק / WhatsApp</div>
+            </div>
+          </div>
+          <div class="mktg-card-body">
+            <div>
+              <label class="tool-label">בחר נכס</label>
+              <select class="form-input" id="mktg-post-prop">${properties.length ? properties.map(p=>`<option value="${p.id}">${p.title||p.city}</option>`).join('') : '<option>אין נכסים עדיין</option>'}</select>
+            </div>
+            <div>
+              <label class="tool-label">פלטפורמה</label>
+              <select class="form-input" id="mktg-platform">
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="whatsapp">WhatsApp Status</option>
+              </select>
+            </div>
+            <button class="tool-btn tool-btn-primary" onclick="Marketing.genPost()">✨ צור פוסט</button>
+            <div class="mktg-output" id="mktg-post-out"></div>
+            <div class="mktg-actions" id="mktg-post-act">
+              <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-post-out')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- כלי 3: קמפיין WhatsApp -->
+        <div class="mktg-card">
+          <div class="mktg-card-head">
+            <div class="mktg-card-icon mktg-icon-green">📢</div>
+            <div>
+              <div class="mktg-card-title">קמפיין WhatsApp</div>
+              <div class="mktg-card-sub">הודעת שידור לרשימת לקוחות</div>
+            </div>
+          </div>
+          <div class="mktg-card-body">
+            <div>
+              <label class="tool-label">נושא הקמפיין</label>
+              <select class="form-input" id="mktg-campaign-topic">
+                <option value="new_listing">נכס חדש בשוק</option>
+                <option value="price_drop">ירידת מחיר — הזדמנות</option>
+                <option value="market_update">עדכון שוק הנדל"ן</option>
+                <option value="holiday">ברכת חג ועדכון שוטף</option>
+                <option value="exclusive">מבצע בלעדי ללקוחות קיימים</option>
+              </select>
+            </div>
+            <div>
+              <label class="tool-label">שם הסוכנות / חתימה</label>
+              <input class="form-input" id="mktg-campaign-sig" type="text" placeholder="${State.tenant?.name || 'הסוכנות שלי'}" />
+            </div>
+            <button class="tool-btn tool-btn-primary" onclick="Marketing.genCampaign()">✨ צור הודעה</button>
+            <div class="mktg-output" id="mktg-campaign-out"></div>
+            <div class="mktg-actions" id="mktg-campaign-act">
+              <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-campaign-out')">📋 העתק</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- שירות מלא -->
+      <div class="mktg-fullservice-card">
+        <div class="mktg-fs-title">🌟 רוצה שנבנה הכל עבורך?</div>
+        <div class="mktg-fs-desc">
+          אם תרצה שצוות Liders יבנה עבורך את דפי המכירה, התוכן וההצעות המיוחדות שתשלח ללקוחות — זה אפשרי בתמחור נפרד לכל בקשה.<br>
+          נציג שלנו יפנה אליך עם מספר שאלות שיעזרו לנו לכוון ולבנות בדיוק מה שתרצה.
+        </div>
+        <button class="mktg-fs-btn" onclick="Marketing.toggleFsForm()">שלח בקשה לנציג →</button>
+        <div class="mktg-fs-form" id="mktg-fs-form">
+          <input type="text" id="mktg-fs-name" placeholder="שמך המלא" />
+          <input type="tel" id="mktg-fs-phone" placeholder="מספר טלפון לחזרה" />
+          <textarea id="mktg-fs-need" placeholder="תאר בקצרה מה תרצה שנבנה עבורך..."></textarea>
+          <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שלח בקשה</button>
+        </div>
+        <p class="mktg-fs-micro">כמובן שהכל נתון לבחירתך החופשית</p>
+      </div>`;
+  },
+
+  _templates: {
+    offer: {
+      exclusive: (name, prop, agency) => `שלום ${name}! 👋\n\nרציתי לשתף אותך בהזדמנות שמחכה לך לפני שהיא יוצאת לשוק הרחב.\n${prop ? `\n🏠 ${prop}\n` : ''}\nלפני שאני מפרסם את הנכס לכולם — אני פונה אליך ראשון. יש לי כמה ימים לפני שיוצא לאוויר.\n\nאם מעניין אותך — נתאם ביקור בלעדי השבוע, ללא לחץ ולפי הזמן שלך.\n\nמחכה לשמוע 🙏\n${agency}`,
+      special_price: (name, prop, agency) => `שלום ${name} 👋\n\nיש לי עבורך הצעה שאינה זמינה לכולם — ואתה בין המועמדים הראשונים שאני פונה אליהם.\n${prop ? `\n🏠 ${prop}\n` : ''}\nבשל סיום מהיר שחשוב למוכר, יש אפשרות לתנאים מיוחדים שלא יוצגו ברשת. הפרטים — ישירות בשיחה.\n\nכדאי שנדבר השבוע ⚡\n${agency}`,
+      limited: (name, prop, agency) => `שלום ${name}!\n\nהצעה שתקפה לשבוע הקרוב בלבד — וחשבתי עליך 🎯\n${prop ? `\n🏠 ${prop}\n` : ''}\nמסיבות שאסביר לך בשיחה, יש הזדמנות מעניינת שנפתחה לאחרונה. לא מדובר במשהו שיחכה הרבה.\n\nאם רלוונטי — שלח לי הודעה והדאג\n${agency}`,
+      first: (name, prop, agency) => `שלום ${name} 😊\n\nאתה האדם הראשון שאני פונה אליו בקשר לנכס הזה.\n${prop ? `\n🏠 ${prop}\n` : ''}\nעדיין לא פרסמתי — רציתי שיהיה לך ראש ראשון לראות את זה לפני כולם.\n\nמתי נוח לך לדבר? 📞\n${agency}`,
+    },
+    post: {
+      instagram: (p) => `🏡 ${p.title || 'נכס חדש'} — ${p.city || ''}\n\n✨ הנכס שחיכית לו\n\n${p.rooms ? `🛏 ${p.rooms} חדרים` : ''} ${p.area ? `| 📐 ${p.area} מ״ר` : ''} ${p.floor ? `| 🏢 קומה ${p.floor}` : ''}\n📍 ${p.city || ''}${p.address ? ', ' + p.address : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר למתעניינים'}\n\n${p.description ? p.description.slice(0,120) + '...' : 'נכס מרהיב שמחכה לדיירים הבאים שלו.'}\n\n📞 לתיאום ביקור והפרטים המלאים — כתבו לי ישירות\n\n#נדלן #${(p.city||'').replace(/\s/g,'')} #נכסחדש #קניתדירה #RealEstate`,
+      facebook: (p) => `🏠 נכס מצוין בשוק — ${p.city || ''}\n\n${p.title || 'נכס ייחודי'} ${p.rooms ? `| ${p.rooms} חדרים` : ''} ${p.area ? `| ${p.area} מ״ר` : ''}\n📍 ${p.city || ''}${p.address ? ', ' + p.address : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר לפי פניה'}\n\n${p.description ? p.description.slice(0,200) : 'נכס בתנאים מצוינים — מתאים למשפחה, ממוקם היטב.'}\n\nלפרטים נוספים ותיאום ביקור — שלחו הודעה פרטית 📩`,
+      whatsapp: (p) => `*${p.title || 'נכס חדש'}* 🏡\n\n📍 *${p.city || ''}*${p.address ? ', ' + p.address : ''}\n${p.rooms ? `🛏 ${p.rooms} חדרים` : ''}${p.area ? ` | 📐 ${p.area} מ״ר` : ''}${p.floor ? ` | קומה ${p.floor}` : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר למתעניינים'}\n\n${p.description ? p.description.slice(0,150) : 'נכס מעולה — פרטים נוספים בשיחה.'}\n\nלתיאום ביקור ▶️ כתבו לי`,
+    },
+    campaign: {
+      new_listing: (sig) => `שלום! 👋\n\nרציתי לעדכן אתכם — *נכס חדש* זה עתה נכנס לפורטפוליו שלנו!\n\nטרם פורסם ברשת, ואתם — כלקוחות קיימים — מקבלים ראשונים את האפשרות לראות אותו.\n\nאם מעניין — שלחו הודעה ואשמח לתאם ביקור בימים הקרובים 📅\n\n${sig}`,
+      price_drop: (sig) => `📉 *ירידת מחיר — הזדמנות לפעול!*\n\nנכס שעקבתם אחריו (או שיכול לעניין אתכם) ירד במחיר לאחרונה.\n\nזה הזמן הנכון לשיחה — לפני שמישהו אחר יזוז ראשון.\n\nשלחו לי הודעה ואעביר לכם את הפרטים 💬\n\n${sig}`,
+      market_update: (sig) => `📊 *עדכון שוק — ${new Date().toLocaleDateString('he-IL', {month:'long',year:'numeric'})}*\n\nהשוק ממשיך להניב הזדמנויות למי שיודע איפה להסתכל.\n\nאם אתם שוקלים לרכוש, למכור או פשוט לשמוע מה קורה — כדאי שנדבר בימים הקרובים.\n\nכרגיל — תמיד כאן בשבילכם 🙏\n\n${sig}`,
+      holiday: (sig) => `✨ *חג שמח וברכות חמות!*\n\nמאחל לכם ולמשפחותיכם בריאות, שמחה והרבה הצלחות — בעסקים ובחיים.\n\nאם עלה בכם רעיון לנכס חלומי חדש — אני כאן 😊\n\nבברכה ובהוקרה,\n${sig}`,
+      exclusive: (sig) => `🎁 *מבצע בלעדי ללקוחות קיימים!*\n\nבחרתי לפנות אליכם לפני כולם — כי אתם לקוחות שמיוחדים לי.\n\nיש לי כמה הזדמנויות שלא פרסמתי ברשת, ואשמח להעמיד אתכם ראשונים בתור.\n\nרק שלחו לי הודעה ונדבר 📞\n\n${sig}`,
+    },
+  },
+
+  genOffer() {
+    const leadId = document.getElementById('mktg-lead-sel')?.value;
+    const propId  = document.getElementById('mktg-prop-sel')?.value;
+    const type    = document.getElementById('mktg-offer-type')?.value;
+    const lead    = State.leads.find(l => l.id === leadId);
+    const prop    = State.properties.find(p => p.id === propId);
+    if (!lead) { toast('בחר ליד קודם', 'warning'); return; }
+    const propStr = prop ? `${prop.title || 'נכס'} ב${prop.city || ''}${prop.price ? ` — ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
+    const agency  = State.tenant?.name || 'הסוכנות שלי';
+    const text    = this._templates.offer[type](lead.name.split(' ')[0], propStr, agency);
+    this._show('mktg-offer-out', 'mktg-offer-act', text);
+  },
+
+  genPost() {
+    const propId = document.getElementById('mktg-post-prop')?.value;
+    const plat   = document.getElementById('mktg-platform')?.value;
+    const prop   = State.properties.find(p => p.id === propId) || {};
+    const text   = this._templates.post[plat](prop);
+    this._show('mktg-post-out', 'mktg-post-act', text);
+  },
+
+  genCampaign() {
+    const topic = document.getElementById('mktg-campaign-topic')?.value;
+    const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
+    const sig   = sigInput || State.tenant?.name || 'הסוכנות שלי';
+    const text  = this._templates.campaign[topic](sig);
+    this._show('mktg-campaign-out', 'mktg-campaign-act', text);
+  },
+
+  _show(outId, actId, text) {
+    const out = document.getElementById(outId);
+    const act = document.getElementById(actId);
+    if (!out) return;
+    out.textContent = text;
+    out.classList.add('visible');
+    if (act) act.classList.add('visible');
+  },
+
+  copy(outId) {
+    const text = document.getElementById(outId)?.textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => toast('הועתק ✓', 'success'));
+  },
+
+  toggleFsForm() {
+    const form = document.getElementById('mktg-fs-form');
+    if (!form) return;
+    form.classList.toggle('visible');
+  },
+
+  async submitFsRequest() {
+    const name  = document.getElementById('mktg-fs-name')?.value.trim();
+    const phone = document.getElementById('mktg-fs-phone')?.value.trim();
+    const need  = document.getElementById('mktg-fs-need')?.value.trim();
+    if (!name || !phone) { toast('נא למלא שם וטלפון', 'warning'); return; }
+    const card = document.querySelector('.mktg-fullservice-card');
+    if (card) card.innerHTML = `
+      <div class="mktg-fs-title">✅ הבקשה נשלחה!</div>
+      <div class="mktg-fs-desc">נציג שלנו יחזור אליך בהקדם עם מספר שאלות שיעזרו לנו לבנות בדיוק מה שתרצה.<br><br>תודה שבחרת ב-Liders 🙏</div>
+      <p class="mktg-fs-micro">כמובן שהכל נתון לבחירתך החופשית</p>`;
+    try {
+      await fetch('https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ type: 'full_service_request', name, phone, need,
+          tenant: State.tenant?.name, email: State.agent?.email })
+      });
+    } catch(_) {}
+  },
+};
+
+/* ═══════════════════════════════════════════
    GAMIFICATION MODULE
 ═══════════════════════════════════════════ */
 const Gamify = {
@@ -5096,7 +5456,8 @@ const App = {
       const t = loaded.tenant;
       State.tenant = t
         ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
-            make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null }
+            make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null,
+            marketing_addon: t.marketing_addon || false }
         : { name: 'הסוכנות שלי', plan: 'trial' };
       // Seed localStorage from DB so Make.getWebhook() works offline too
       if (t?.make_webhook_url) localStorage.setItem('make_webhook_url', t.make_webhook_url);
@@ -5250,6 +5611,7 @@ const App = {
       case 'calendar':    Calendar.render(); break;
       case 'settings':    Settings.render();  break;
       case 'tools':       Tools.render();     break;
+      case 'marketing':   Marketing.render(); break;
     }
     window.scrollTo(0, 0);
   },
