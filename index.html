@@ -2934,7 +2934,16 @@
     <button class="pin-key pin-del" onclick="AppLock.backspace()">⌫</button>
     <div></div>
   </div>
-  <button onclick="App.logout()" style="margin-top:36px; background:none; border:none; color:rgba(255,255,255,0.35); font-size:13px; cursor:pointer; font-family:inherit;">שכחתי קוד — יציאה</button>
+  <div style="margin-top:32px; text-align:center;">
+    <button onclick="App.logout()" style="background:none; border:none; color:rgba(255,255,255,0.3); font-size:13px; cursor:pointer; font-family:inherit; display:block; margin:0 auto 12px;">שכחתי קוד — יציאה</button>
+    <button onclick="AppLock._goToSettings=true; document.getElementById('lock-hint').style.opacity='1';"
+      style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:12px; cursor:pointer; font-family:inherit; text-decoration:underline; text-underline-offset:3px;">
+      לא רוצה קוד בכל כניסה? לחץ כאן
+    </button>
+    <div id="lock-hint" style="opacity:0; transition:opacity 0.3s; margin-top:10px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
+      הכנס את הקוד ← תועבר ישירות להגדרות לביטול
+    </div>
+  </div>
 </div>
 
 <!-- PIN Setup Modal -->
@@ -6935,7 +6944,14 @@ const AppLock = {
       document.getElementById('screen-lock').classList.add('hidden');
       this._pin = '';
       this._renderDots();
-      this.startTimer();
+      const hint = document.getElementById('lock-hint');
+      if (hint) { hint.style.opacity = '0'; }
+      if (this._goToSettings) {
+        this._goToSettings = false;
+        App.go('settings');
+      } else {
+        this.startTimer();
+      }
     } else {
       const dots = document.getElementById('lock-dots');
       dots.classList.add('lock-shake');
@@ -7050,7 +7066,7 @@ const Settings = {
         </div>
       </div>
       <div class="settings-section">
-        <div class="settings-section-title">🔒 אבטחה</div>
+        <div class="settings-section-title">🛡️ שירותי אבטחה</div>
         ${AppLock.isEnabled() ? `
         <div class="settings-row" onclick="AppLock.lock()" style="cursor:pointer;">
           <div class="settings-row-icon">🔒</div>
@@ -7083,8 +7099,8 @@ const Settings = {
         <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
           <div class="settings-row-icon">🔒</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">הגדר נעילת PIN</div>
-            <div class="settings-row-sub">הגן על הנתונים שלך עם קוד 4 ספרות</div>
+            <div class="settings-row-label">הפעל נעילת PIN</div>
+            <div class="settings-row-sub">אופציונלי — הגן על הנתונים עם קוד 4 ספרות. ניתן לבטל בכל עת.</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
