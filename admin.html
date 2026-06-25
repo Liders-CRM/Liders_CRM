@@ -722,12 +722,13 @@
               <th>ימים לניסיון</th>
               <th>לידים</th>
               <th>משימות</th>
+              <th>שיווק</th>
               <th>נרשם</th>
               <th>פעולות</th>
             </tr>
           </thead>
           <tbody id="saas-tbody">
-            <tr><td colspan="8"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+            <tr><td colspan="9"><div class="empty-state"><div class="spinner"></div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -816,6 +817,41 @@
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-invoice')">ביטול</button>
       <button class="btn-primary btn-sm" onclick="saveInvoice()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tenant Management Modal -->
+<div class="modal-overlay hidden" id="modal-tenant-mgmt">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>ניהול: <span id="mgmt-tenant-name"></span></h3>
+      <button class="modal-close" onclick="closeModal('modal-tenant-mgmt')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-form-group">
+        <label>שירותי שיווק (₪100/חודש)</label>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <input type="checkbox" id="mgmt-marketing" style="width:18px;height:18px;cursor:pointer;accent-color:var(--green);">
+          <label for="mgmt-marketing" style="cursor:pointer;font-size:14px;">מופעל</label>
+        </div>
+      </div>
+      <div class="modal-form-group">
+        <label>הארכת ניסיון</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;">
+          <button class="btn-outline btn-sm" onclick="extendTrial(_mgmtTenant?.id,7)">+ 7 ימים</button>
+          <button class="btn-outline btn-sm" onclick="extendTrial(_mgmtTenant?.id,14)">+ 14 ימים</button>
+          <button class="btn-outline btn-sm" onclick="extendTrial(_mgmtTenant?.id,30)">+ 30 ימים</button>
+        </div>
+      </div>
+      <div class="modal-form-group">
+        <label>הערות פנימיות</label>
+        <textarea id="mgmt-notes" placeholder="הערות שיראו רק לאדמין..." rows="4"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline btn-sm" onclick="closeModal('modal-tenant-mgmt')">סגור</button>
+      <button class="btn-primary btn-sm" onclick="saveTenantMgmt()">שמור</button>
     </div>
   </div>
 </div>
@@ -1179,7 +1215,7 @@ async function loadSaasTenants() {
   tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="spinner"></div></div></td></tr>';
   const { data, error } = await sb.rpc('get_saas_tenants_admin');
   if (error) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
     return;
   }
   allSaasTenants = data || [];
@@ -1204,7 +1240,7 @@ function renderSaasStats(tenants) {
 function renderSaasTable(tenants) {
   const tbody = document.getElementById('saas-tbody');
   if (!tenants.length) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="icon">🏢</div><p>אין נתונים</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon">🏢</div><p>אין נתונים</p></div></td></tr>';
     return;
   }
   tbody.innerHTML = tenants.map(t => {
@@ -1216,18 +1252,24 @@ function renderSaasTable(tenants) {
       : '<span style="color:var(--text-dim)">–</span>';
     const planMap = {trial:'badge-dim',basic:'badge-blue',pro:'badge-gold',premium:'badge-green'};
     const planBadgeHtml = `<span class="badge ${planMap[t.plan]||'badge-dim'}">${esc(t.plan||'?')}</span>`;
+    const mktg = t.marketing_addon;
+    const mktgCell = mktg
+      ? `<button class="btn-icon" title="כבה שיווק" onclick="toggleMarketing('${t.id}',false)" style="color:var(--green);font-size:.75rem;">📣 פעיל</button>`
+      : `<button class="btn-icon" title="הפעל שיווק" onclick="toggleMarketing('${t.id}',true)" style="color:var(--text-dim);font-size:.75rem;">📣 כבוי</button>`;
     return `
       <tr>
-        <td><strong>${esc(t.name||'?')}</strong></td>
+        <td><strong>${esc(t.name||'?')}</strong>${t.notes ? `<div style="font-size:.72rem;color:var(--text-dim);margin-top:2px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(t.notes)}">📝 ${esc(t.notes)}</div>` : ''}</td>
         <td style="font-size:.82rem;color:var(--text-muted)">${esc(t.billing_email||'–')}</td>
         <td>${planBadgeHtml}</td>
         <td>${daysCell}</td>
         <td style="font-weight:600;color:${(t.lead_count||0)>0?'var(--text)':'var(--red)'}">${t.lead_count||0}</td>
         <td style="color:var(--text-muted)">${t.task_count||0}</td>
+        <td>${mktgCell}</td>
         <td style="font-size:.78rem;color:var(--text-dim)">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') : '–'}</td>
         <td>
           <div class="action-btns">
             <button class="btn-icon" title="פתח CRM" onclick="window.open('https://liders-crm.com/','_blank')" style="font-size:.75rem;">↗</button>
+            <button class="btn-icon" title="ניהול לקוח" onclick="openTenantMgmt('${t.id}')" style="font-size:.75rem;color:var(--blue);">⚙</button>
             ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענק גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
             ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזר לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">↩</button>` : ''}
           </div>
@@ -1268,6 +1310,60 @@ function filterSaas() {
     return matchQ && (!plan || t.plan === plan);
   });
   renderSaasTable(filtered);
+}
+
+/* ── TENANT MANAGEMENT ── */
+async function toggleMarketing(tenantId, enabled) {
+  const { error } = await sb.rpc('admin_toggle_marketing_addon', {
+    p_tenant_id: tenantId,
+    p_enabled:   enabled,
+  });
+  if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+  toast(enabled ? '📣 שיווק הופעל' : '⭕ שיווק הושבת', 'success');
+  loadSaasTenants();
+}
+
+async function extendTrial(tenantId, days) {
+  const { error } = await sb.rpc('admin_extend_trial', {
+    p_tenant_id: tenantId,
+    p_days:      days,
+  });
+  if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+  toast(`✅ הניסיון הוארך ב-${days} ימים`, 'success');
+  loadSaasTenants();
+}
+
+let _mgmtTenant = null;
+
+function openTenantMgmt(id) {
+  const tenant = allSaasTenants.find(t => t.id === id);
+  if (!tenant) return;
+  _mgmtTenant = tenant;
+  document.getElementById('mgmt-tenant-name').textContent = tenant.name || '?';
+  document.getElementById('mgmt-marketing').checked = !!tenant.marketing_addon;
+  document.getElementById('mgmt-notes').value = tenant.notes || '';
+  openModal('modal-tenant-mgmt');
+}
+
+async function saveTenantMgmt() {
+  if (!_mgmtTenant) return;
+  const newMktg  = document.getElementById('mgmt-marketing').checked;
+  const newNotes = document.getElementById('mgmt-notes').value.trim();
+  const tid      = _mgmtTenant.id;
+
+  const calls = [];
+  if (!!_mgmtTenant.marketing_addon !== newMktg) {
+    calls.push(sb.rpc('admin_toggle_marketing_addon', { p_tenant_id: tid, p_enabled: newMktg }));
+  }
+  calls.push(sb.rpc('admin_set_tenant_notes', { p_tenant_id: tid, p_notes: newNotes }));
+
+  const results = await Promise.all(calls);
+  const err = results.find(r => r.error)?.error;
+  if (err) { toast('שגיאה: ' + err.message, 'error'); return; }
+
+  toast('✅ נשמר בהצלחה', 'success');
+  closeModal('modal-tenant-mgmt');
+  loadSaasTenants();
 }
 
 /* ── INIT ── */
