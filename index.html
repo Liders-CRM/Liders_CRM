@@ -3780,10 +3780,11 @@ const Onboarding = {
       },
     },
     {
-      title: 'שם העסק שלך',
-      subtitle: 'איך קוראים לעסק שלך?',
+      title: 'ספר לנו עליך 👋',
+      subtitle: 'נגדיר את הפרופיל האישי והעסקי שלך',
       render() {
-        const val = State.tenant?.name || '';
+        const agentVal = State.agent?.name || '';
+        const agencyVal = State.tenant?.name || '';
         const industry = localStorage.getItem('liders_industry') || 'other';
         const placeholder = industry === 'realestate'  ? 'לידרס נדל"ן — תל אביב'
           : industry === 'construction' ? 'לידרס קבלנות — תל אביב'
@@ -3794,19 +3795,21 @@ const Onboarding = {
           : 'שם העסק שלי';
         return `
           <div style="padding:8px 0;">
-            <label class="form-label">שם העסק *</label>
-            <input class="form-input" id="ob-agency-name" placeholder='${placeholder}' value="${escapeHtml(val)}" style="font-size:1.1rem;">
-            <label class="form-label" style="margin-top:16px;">טלפון ראשי (אופציונלי)</label>
-            <input class="form-input" id="ob-agency-phone" placeholder="050-0000000" type="tel" style="direction:ltr;">
+            <label class="form-label">שם מלא שלך *</label>
+            <input class="form-input" id="ob-agent-name" placeholder="ישראל ישראלי" value="${escapeHtml(agentVal)}" style="font-size:1.05rem;">
+            <label class="form-label" style="margin-top:16px;">שם העסק *</label>
+            <input class="form-input" id="ob-agency-name" placeholder='${placeholder}' value="${escapeHtml(agencyVal)}" style="font-size:1.05rem;">
             <label class="form-label" style="margin-top:16px;">עיר / אזור עיקרי</label>
             <input class="form-input" id="ob-agency-city" placeholder="תל אביב">
           </div>`;
       },
       validate() {
+        const agentName = document.getElementById('ob-agent-name')?.value?.trim();
+        if (!agentName) { toast('נא הכנס שם מלא', 'error'); return false; }
+        Onboarding._data.agentName = agentName;
         const name = document.getElementById('ob-agency-name')?.value?.trim();
-        if (!name) { toast('נא הכנס שם סוכנות', 'error'); return false; }
+        if (!name) { toast('נא הכנס שם עסק', 'error'); return false; }
         Onboarding._data.agencyName = name;
-        Onboarding._data.agencyPhone = document.getElementById('ob-agency-phone')?.value?.trim();
         Onboarding._data.agencyCity = document.getElementById('ob-agency-city')?.value?.trim();
         return true;
       },
@@ -3857,6 +3860,10 @@ const Onboarding = {
                 💡 <strong>איך מגדירים?</strong> לך ל-make.com → צור Scenario → Webhook trigger → העתק את ה-URL לכאן
               </p>
             </div>
+            <div style="margin-top:12px;text-align:center;">
+              <span style="font-size:0.82rem;color:var(--gray-400);">אפשר לדלג עכשיו ולהגדיר מאוחר יותר דרך</span>
+              <span onclick="document.getElementById('modal-onboarding').classList.add('hidden');localStorage.setItem('onboarding_done','1');App.go('settings');" style="font-size:0.82rem;color:var(--blue-500);text-decoration:underline;cursor:pointer;"> הגדרות ←</span>
+            </div>
           </div>`;
       },
       validate() {
@@ -3873,22 +3880,37 @@ const Onboarding = {
       subtitle: 'המערכת שלך מוכנה לעבודה',
       render() {
         return `
-          <div style="text-align:center;padding:16px 0;">
-            <div style="font-size:64px;margin-bottom:16px;">🎉</div>
-            <p style="font-size:1rem;line-height:1.7;color:var(--gray-500);">
+          <div style="text-align:center;padding:8px 0;">
+            <div style="font-size:56px;margin-bottom:12px;">🎉</div>
+            <p style="font-size:0.95rem;line-height:1.7;color:var(--gray-500);margin-bottom:20px;">
               <strong style="color:var(--gray-900);">הגדרת הסוכנות הושלמה בהצלחה!</strong><br>
-              עכשיו תוכל להוסיף לידים, לנהל נכסים,<br>ולעקוב אחרי כל העסקאות במקום אחד.
+              איפה תרצה להתחיל?
             </p>
-            <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;text-align:right;">
-              <div style="display:flex;align-items:center;gap:10px;background:var(--bg-app);padding:10px 14px;border-radius:8px;">
-                <span>✅</span><span>הוסף את הליד הראשון שלך</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--bg-app);padding:10px 14px;border-radius:8px;">
-                <span>✅</span><span>הוסף נכס לניהול</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--bg-app);padding:10px 14px;border-radius:8px;">
-                <span>✅</span><span>הגדר את ה-Claude API Key בהגדרות</span>
-              </div>
+            <div style="display:flex;flex-direction:column;gap:10px;text-align:right;">
+              <button onclick="Onboarding._pendingAction='addlead';Onboarding.next();"
+                style="display:flex;align-items:center;gap:12px;background:var(--blue-500);color:white;border:none;border-radius:10px;padding:14px 16px;cursor:pointer;font-size:0.95rem;font-weight:600;font-family:inherit;width:100%;text-align:right;">
+                <span style="font-size:1.3rem;">➕</span>
+                <div>
+                  <div>הוסף את הליד הראשון</div>
+                  <div style="font-size:0.78rem;font-weight:400;opacity:0.85;">התחל לבנות את הפייפליין שלך</div>
+                </div>
+              </button>
+              <button onclick="Onboarding._pendingAction='pipeline';Onboarding.next();"
+                style="display:flex;align-items:center;gap:12px;background:var(--bg-app);color:var(--gray-900);border:1px solid var(--gray-200);border-radius:10px;padding:14px 16px;cursor:pointer;font-size:0.95rem;font-weight:600;font-family:inherit;width:100%;text-align:right;">
+                <span style="font-size:1.3rem;">📊</span>
+                <div>
+                  <div>ראה את הפייפליין</div>
+                  <div style="font-size:0.78rem;font-weight:400;color:var(--gray-500);">סקירה של כל השלבים</div>
+                </div>
+              </button>
+              <button onclick="Onboarding._pendingAction='settings';Onboarding.next();"
+                style="display:flex;align-items:center;gap:12px;background:var(--bg-app);color:var(--gray-900);border:1px solid var(--gray-200);border-radius:10px;padding:14px 16px;cursor:pointer;font-size:0.95rem;font-weight:600;font-family:inherit;width:100%;text-align:right;">
+                <span style="font-size:1.3rem;">⚙️</span>
+                <div>
+                  <div>חבר WhatsApp אוטומציות</div>
+                  <div style="font-size:0.78rem;font-weight:400;color:var(--gray-500);">הגדר Make.com ועוד</div>
+                </div>
+              </button>
             </div>
           </div>`;
       },
@@ -3955,7 +3977,9 @@ const Onboarding = {
     const backBtn = document.getElementById('ob-back-btn');
     const nextBtn = document.getElementById('ob-next-btn');
     backBtn.style.display = this._step > 0 ? 'block' : 'none';
-    nextBtn.textContent = this._step === total - 1 ? '🚀 בוא נתחיל!' : 'הבא ←';
+    const isLast = this._step === total - 1;
+    nextBtn.textContent = isLast ? '🚀 בוא נתחיל!' : 'הבא ←';
+    nextBtn.style.display = isLast ? 'none' : '';
   },
 
   async next() {
@@ -3970,6 +3994,14 @@ const Onboarding = {
       const industryChanged = this._data.prevIndustry !== ind;
       if (this._data.stageNames?.length && (!State.stages?.length || this._data.stagesEdited || industryChanged)) {
         DB.updateStageNames(this._data.stageNames).catch(() => {});
+      }
+      if (this._data.agentName) {
+        try {
+          await DB.updateAgentName(this._data.agentName);
+          if (State.agent) State.agent.name = this._data.agentName;
+          const sidebarAgent = document.getElementById('sidebar-agent-name');
+          if (sidebarAgent) sidebarAgent.textContent = this._data.agentName;
+        } catch (e) { /* non-fatal */ }
       }
       if (this._data.agencyName) {
         localStorage.setItem('liders_agency_name', this._data.agencyName);
@@ -3986,6 +4018,16 @@ const Onboarding = {
       if (this._data.agencyCity) localStorage.setItem('liders_agency_city', this._data.agencyCity);
       document.getElementById('modal-onboarding').classList.add('hidden');
       toast('🎉 ברוך הבא ל-Liders!', 'success');
+      const action = this._pendingAction;
+      this._pendingAction = null;
+      if (action === 'addlead') {
+        document.getElementById('modal-add-lead')?.classList.remove('hidden');
+        document.getElementById('lead-name')?.focus();
+      } else if (action === 'pipeline') {
+        App.go('pipeline');
+      } else if (action === 'settings') {
+        App.go('settings');
+      }
       return;
     }
     this._step++;
