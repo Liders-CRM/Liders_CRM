@@ -1371,6 +1371,11 @@
     .mktg-output.visible { display: block; }
     .mktg-actions { display: none; gap: 8px; margin-top: 4px; }
     .mktg-actions.visible { display: flex; }
+    .mktg-watermark {
+      font-size: 11px; color: var(--gray-400); text-align: center;
+      padding: 4px 0; border-top: 1px dashed var(--gray-200); margin-top: 2px;
+    }
+    .mktg-watermark.hidden { display: none; }
     .mktg-btn-copy {
       background: var(--gray-100); color: var(--gray-700); border: none;
       padding: 8px 16px; border-radius: 8px; font-family: 'Heebo',sans-serif;
@@ -2810,6 +2815,33 @@
     <div style="margin-top:16px; display:flex; gap:10px;">
       <button class="btn btn-danger" onclick="confirmLeadRegression()" style="flex:1;">אשר החזרה</button>
       <button class="btn btn-secondary" onclick="closeModal('modal-regression-note')" style="flex:1;">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: MARKETING CONSENT
+═══════════════════════════════════════ -->
+<div id="modal-mktg-consent" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-mktg-consent')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📣 שירותי שיווק — כמה דברים שחשוב לדעת</div>
+      <button class="modal-close" onclick="closeModal('modal-mktg-consent')">×</button>
+    </div>
+    <div style="background:var(--blue-100);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:14px;font-size:0.88rem;color:var(--gray-800);line-height:1.6;">
+      לפני שתתחיל ליצור תוכן שיווקי, חשוב שתדע:
+    </div>
+    <ul style="font-size:0.88rem;line-height:2.1;color:var(--gray-700);padding-right:18px;margin:0 0 14px;">
+      <li>📁 כל התוכן שתצור <strong>שייך ושמור בלעדית</strong> במערכת Liders CRM</li>
+      <li>🏷️ בכל תוכן שנוצר תופיע <strong>חותמת שיווקית</strong> של Liders CRM</li>
+      <li>🚫 לא ניתן לייצא תוכן למערכות אחרות</li>
+      <li>⏳ אם המנוי יסתיים — הנתונים נשמרים <strong>30 יום נוספים</strong> ואז נמחקים</li>
+    </ul>
+    <div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:16px;">בלחיצה על "הבנתי ומסכים" אתה מאשר את תנאי שימוש Liders CRM לשירותי שיווק.</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="Marketing.acceptConsent()" style="flex:1;">✅ הבנתי ומסכים — בואו נתחיל!</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-mktg-consent')">ביטול</button>
     </div>
   </div>
 </div>
@@ -4616,13 +4648,21 @@ function toast(msg, type='') {
    AI MODULE — Phase 3
 ═══════════════════════════════════════════ */
 const AI = {
-  async call(messages, maxTokens = 400) {
+  async call(messages, maxTokens = 400, opts = {}) {
+    const type = opts.type || 'general';
+    if (!AiLimits.canUse(type)) {
+      const lim = AiLimits._lim()[type];
+      throw new Error(type === 'marketing'
+        ? `הגעת למגבלת כלי השיווק — ${lim} שימושים/יום בחבילה שלך`
+        : `הגעת למגבלת ה-AI היומית — ${lim} שימושים/יום בחבילה שלך`);
+    }
     const { data, error } = await sbClient.functions.invoke('ai-proxy', {
       body: { messages, max_tokens: maxTokens },
     });
     if (error) throw new Error(error.message || 'שגיאת שירות AI');
     if (data?.error) throw new Error(data.error?.message || data.error || 'שגיאת Claude API');
-    Gamify.event('use_ai');
+    AiLimits.consume(type);
+    if (type === 'general') Gamify.event('use_ai');
     return data?.content?.[0]?.text || null;
   },
 
@@ -4955,16 +4995,55 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 };
 
 /* ═══════════════════════════════════════════
+   AI LIMITS MODULE — per-plan daily quotas
+═══════════════════════════════════════════ */
+const AiLimits = {
+  PLANS: {
+    trial:    { general: 2, marketing: 3 },
+    basic:    { general: 2, marketing: 3 },
+    pro:      { general: 5, marketing: 7 },
+    premium:  { general: 10, marketing: 15 },
+    lifetime: { general: 10, marketing: 15 },
+    internal: { general: 999, marketing: 999 },
+  },
+  _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
+  _k: 'liders_ai_v1',
+  _today: () => new Date().toISOString().split('T')[0],
+  _isAdmin() { return this._ADMIN.includes((State.agent?.email||'').toLowerCase()); },
+  _get() {
+    try {
+      const d = JSON.parse(localStorage.getItem(this._k)||'{}');
+      return d.date === this._today() ? d : { date: this._today(), general: 0, marketing: 0 };
+    } catch { return { date: this._today(), general: 0, marketing: 0 }; }
+  },
+  _save(d) { localStorage.setItem(this._k, JSON.stringify(d)); },
+  _lim() { return this.PLANS[State.tenant?.plan||'trial'] || this.PLANS.trial; },
+  canUse(t) { if (this._isAdmin()) return true; const d=this._get(); return (d[t]||0) < this._lim()[t]; },
+  consume(t) { const d=this._get(); d[t]=(d[t]||0)+1; this._save(d); },
+  remaining(t) { if (this._isAdmin()) return 999; const d=this._get(); return Math.max(0,this._lim()[t]-(d[t]||0)); },
+  limitLabel(t) {
+    if (this._isAdmin()) return '';
+    const rem = this.remaining(t); const lim = this._lim()[t];
+    return `${rem}/${lim} שימושים נותרו היום`;
+  },
+};
+
+/* ═══════════════════════════════════════════
    MARKETING MODULE
 ═══════════════════════════════════════════ */
 const Marketing = {
   _outputId: null,
+  _pendingAction: null,
+  _CONSENT_KEY: 'liders_mktg_consent_v1',
+  _TRIAL_KEY_PFX: 'liders_mktg_trial_',
 
   render() {
     const el = document.getElementById('screen-marketing');
-    const hasAddon = State.tenant?.marketing_addon === true;
+    const isAddon   = State.tenant?.marketing_addon === true;
+    const hasAccess = this.hasMktgAccess();
+    const trialLeft = this.trialDaysLeft();
 
-    if (!hasAddon) {
+    if (!hasAccess) {
       el.innerHTML = `
         <div class="marketing-header-strip">
           <div class="marketing-addon-badge">⭐ תוספת פרימיום</div>
@@ -4976,10 +5055,10 @@ const Marketing = {
           <h3>תוסף שיווק — ₪100 לחודש</h3>
           <p>גישה לכלים מקצועיים שיעזרו לך ליצור הצעות מיוחדות, פוסטים לסושיאל וקמפיינים ללקוחות — הכל מתוך המערכת, בלי לצאת החוצה.</p>
           <ul class="mktg-locked-features">
-            <li>מחולל הצעה מיוחדת מותאמת לכל ליד</li>
-            <li>יוצר פוסטים לסושיאל לכל נכס</li>
-            <li>מחולל קמפיין WhatsApp לרשימת לקוחות</li>
-            <li>שליחת בקשה לשירות מלא מנציג Liders</li>
+            <li>✨ מחולל הצעה אישית ללקוח — מבוסס AI</li>
+            <li>📸 יוצר פוסטים לסושיאל — מבוסס AI</li>
+            <li>📢 מחולל קמפיין WhatsApp — מבוסס AI</li>
+            <li>🌟 שירות בנייה מלא ע"י צוות Liders</li>
           </ul>
           <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
             הוסף שירותי שיווק — ₪100/חודש
@@ -4994,13 +5073,22 @@ const Marketing = {
     const leadOptions = leads.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
     const propOptions = `<option value="">ללא נכס ספציפי</option>` +
       properties.map(p => `<option value="${p.id}">${p.title || p.city}</option>`).join('');
+    const usageLabel = AiLimits.limitLabel('marketing');
+
+    const trialBanner = (!isAddon && trialLeft > 0) ? `
+      <div style="background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;padding:10px 18px;border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:600;font-size:0.9rem;">⏰ ניסיון חינמי — ${trialLeft} ימים נותרו</span>
+        <span onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">שדרג ל-₪100/חודש →</span>
+      </div>` : '';
 
     el.innerHTML = `
       <div class="marketing-header-strip">
-        <div class="marketing-addon-badge">✅ תוסף פעיל</div>
+        <div class="marketing-addon-badge">${isAddon ? '✅ תוסף פעיל' : '🎁 ניסיון חינמי'}</div>
         <h2>📣 שירותי שיווק</h2>
         <p>צור תוכן שיווקי מקצועי ישירות מהמערכת — בשניות</p>
       </div>
+      ${trialBanner}
+      ${usageLabel ? `<div style="font-size:0.8rem;color:var(--gray-500);text-align:center;margin-bottom:10px;"><span class="mktg-usage-counter">${usageLabel}</span></div>` : ''}
       <div class="mktg-grid">
 
         <!-- כלי 1: הצעה מיוחדת ללקוח -->
@@ -5009,7 +5097,7 @@ const Marketing = {
             <div class="mktg-card-icon mktg-icon-gold">🎯</div>
             <div>
               <div class="mktg-card-title">הצעה מיוחדת ללקוח</div>
-              <div class="mktg-card-sub">הודעה אישית מותאמת לכל ליד</div>
+              <div class="mktg-card-sub">הודעת WhatsApp אישית — מבוסס AI ✨</div>
             </div>
           </div>
           <div class="mktg-card-body">
@@ -5032,6 +5120,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genOffer()">✨ צור הצעה</button>
             <div class="mktg-output" id="mktg-offer-out"></div>
+            <div class="mktg-watermark hidden" id="mktg-offer-wm">🏷️ נבנה ע"י Liders CRM | liders-crm.com</div>
             <div class="mktg-actions" id="mktg-offer-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-offer-out')">📋 העתק</button>
             </div>
@@ -5044,7 +5133,7 @@ const Marketing = {
             <div class="mktg-card-icon mktg-icon-blue">📸</div>
             <div>
               <div class="mktg-card-title">פוסט לסושיאל</div>
-              <div class="mktg-card-sub">פוסט מוכן לאינסטגרם / פייסבוק / WhatsApp</div>
+              <div class="mktg-card-sub">פוסט מוכן לאינסטגרם / פייסבוק — מבוסס AI ✨</div>
             </div>
           </div>
           <div class="mktg-card-body">
@@ -5062,6 +5151,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genPost()">✨ צור פוסט</button>
             <div class="mktg-output" id="mktg-post-out"></div>
+            <div class="mktg-watermark hidden" id="mktg-post-wm">🏷️ נבנה ע"י Liders CRM | liders-crm.com</div>
             <div class="mktg-actions" id="mktg-post-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-post-out')">📋 העתק</button>
             </div>
@@ -5074,7 +5164,7 @@ const Marketing = {
             <div class="mktg-card-icon mktg-icon-green">📢</div>
             <div>
               <div class="mktg-card-title">קמפיין WhatsApp</div>
-              <div class="mktg-card-sub">הודעת שידור לרשימת לקוחות</div>
+              <div class="mktg-card-sub">הודעת שידור לרשימת לקוחות — מבוסס AI ✨</div>
             </div>
           </div>
           <div class="mktg-card-body">
@@ -5094,6 +5184,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genCampaign()">✨ צור הודעה</button>
             <div class="mktg-output" id="mktg-campaign-out"></div>
+            <div class="mktg-watermark hidden" id="mktg-campaign-wm">🏷️ נבנה ע"י Liders CRM | liders-crm.com</div>
             <div class="mktg-actions" id="mktg-campaign-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-campaign-out')">📋 העתק</button>
             </div>
@@ -5116,7 +5207,7 @@ const Marketing = {
           <textarea id="mktg-fs-need" placeholder="תאר בקצרה מה תרצה שנבנה עבורך..."></textarea>
           <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שלח בקשה</button>
         </div>
-        <p class="mktg-fs-micro">כמובן שהכל נתון לבחירתך החופשית</p>
+        <p class="mktg-fs-micro">כמובל שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
       </div>`;
   },
 
@@ -5141,42 +5232,138 @@ const Marketing = {
     },
   },
 
-  genOffer() {
+  async genOffer() {
+    if (!this._checkConsent(() => this.genOffer())) return;
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק — ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
     const leadId = document.getElementById('mktg-lead-sel')?.value;
     const propId  = document.getElementById('mktg-prop-sel')?.value;
     const type    = document.getElementById('mktg-offer-type')?.value;
     const lead    = State.leads.find(l => l.id === leadId);
     const prop    = State.properties.find(p => p.id === propId);
     if (!lead) { toast('בחר ליד קודם', 'warning'); return; }
-    const propStr = prop ? `${prop.title || 'נכס'} ב${prop.city || ''}${prop.price ? ` — ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
-    const agency  = State.tenant?.name || 'הסוכנות שלי';
-    const text    = this._templates.offer[type](lead.name.split(' ')[0], propStr, agency);
-    this._show('mktg-offer-out', 'mktg-offer-act', text);
+    const outEl = document.getElementById('mktg-offer-out');
+    if (outEl) { outEl.textContent = '✨ יוצר הצעה מותאמת אישית...'; outEl.classList.add('visible'); }
+    try {
+      const propStr = prop ? `${prop.title||'נכס'} ב${prop.city||''}${prop.price ? ` — ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
+      const agency  = State.tenant?.name || 'הסוכנות שלי';
+      const typeMap = { exclusive: 'ביקור בלעדי לפני פרסום בשוק', special_price: 'תנאים מיוחדים שלא לכולם', limited: 'הצעה מוגבלת לשבוע הקרוב', first: 'הלקוח הראשון שפונים אליו' };
+      const text = await AI.call([{ role: 'user', content:
+        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp אישית ומשכנעת בעברית עבור הליד הבא.
+שם: ${lead.name.split(' ')[0]} | שלב: ${State.stages.find(s=>s.id===lead.stage)?.name||'ראשוני'}
+${propStr ? `נכס: ${propStr}` : ''}
+סוג הצעה: ${typeMap[type]||type}
+סוכנות: ${agency}
+כתוב הודעה קצרה (3-5 שורות), אנושית, בגוף ראשון. אל תכלול כותרות. סיים בחתימת הסוכנות. החזר רק את ההודעה עצמה.`
+      }], 400, { type: 'marketing' });
+      if (text) { this._show('mktg-offer-out', 'mktg-offer-act', text, 'mktg-offer-wm'); this._updateUsageLabels(); }
+    } catch(e) {
+      toast(e.message, 'error');
+      if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
+    }
   },
 
-  genPost() {
+  async genPost() {
+    if (!this._checkConsent(() => this.genPost())) return;
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק — ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
     const propId = document.getElementById('mktg-post-prop')?.value;
     const plat   = document.getElementById('mktg-platform')?.value;
     const prop   = State.properties.find(p => p.id === propId) || {};
-    const text   = this._templates.post[plat](prop);
-    this._show('mktg-post-out', 'mktg-post-act', text);
+    const outEl  = document.getElementById('mktg-post-out');
+    if (outEl) { outEl.textContent = '✨ יוצר פוסט...'; outEl.classList.add('visible'); }
+    try {
+      const platMap = { instagram: 'Instagram (כלול האשטאגים רלוונטיים בסוף)', facebook: 'Facebook', whatsapp: 'WhatsApp Status' };
+      const text = await AI.call([{ role: 'user', content:
+        `אתה ${AI._industryRole()} ישראלי. כתוב פוסט שיווקי לנכס עבור ${platMap[plat]||plat}.
+נכס: ${prop.title||'נכס חדש'} | עיר: ${prop.city||'לא צוין'}
+${prop.rooms ? `חדרים: ${prop.rooms}` : ''}${prop.area ? ` | שטח: ${prop.area} מ״ר` : ''}
+${prop.price ? `מחיר: ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}
+${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
+כתוב פוסט בעברית, קצר ומושך, כולל קריאה לפעולה. החזר רק את הפוסט.`
+      }], 450, { type: 'marketing' });
+      if (text) { this._show('mktg-post-out', 'mktg-post-act', text, 'mktg-post-wm'); this._updateUsageLabels(); }
+    } catch(e) {
+      toast(e.message, 'error');
+      if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
+    }
   },
 
-  genCampaign() {
-    const topic = document.getElementById('mktg-campaign-topic')?.value;
+  async genCampaign() {
+    if (!this._checkConsent(() => this.genCampaign())) return;
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק — ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    const topic    = document.getElementById('mktg-campaign-topic')?.value;
     const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
-    const sig   = sigInput || State.tenant?.name || 'הסוכנות שלי';
-    const text  = this._templates.campaign[topic](sig);
-    this._show('mktg-campaign-out', 'mktg-campaign-act', text);
+    const sig      = sigInput || State.tenant?.name || 'הסוכנות שלי';
+    const outEl    = document.getElementById('mktg-campaign-out');
+    if (outEl) { outEl.textContent = '✨ יוצר קמפיין...'; outEl.classList.add('visible'); }
+    try {
+      const topicMap = { new_listing: 'נכס חדש שנכנס לפורטפוליו', price_drop: 'ירידת מחיר בנכס — הזדמנות לפעול', market_update: 'עדכון שוק הנדל"ן החודשי', holiday: 'ברכת חג + עדכון שוטף', exclusive: 'מבצע בלעדי ללקוחות קיימים' };
+      const text = await AI.call([{ role: 'user', content:
+        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.
+חתימה: ${sig}
+כתוב הודעה קצרה (4-6 שורות), מקצועית ואנושית, בגוף ראשון. סיים בחתימה. החזר רק את ההודעה.`
+      }], 400, { type: 'marketing' });
+      if (text) { this._show('mktg-campaign-out', 'mktg-campaign-act', text, 'mktg-campaign-wm'); this._updateUsageLabels(); }
+    } catch(e) {
+      toast(e.message, 'error');
+      if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
+    }
   },
 
-  _show(outId, actId, text) {
+  initTrial() {
+    if (State.isDemo) return;
+    const k = this._TRIAL_KEY_PFX + (State.tenant?.id || '');
+    if (!localStorage.getItem(k)) localStorage.setItem(k, new Date().toISOString());
+  },
+
+  trialDaysLeft() {
+    const k = this._TRIAL_KEY_PFX + (State.tenant?.id || '');
+    const raw = localStorage.getItem(k);
+    if (!raw) return 0;
+    return Math.max(0, Math.ceil(14 - (Date.now() - new Date(raw)) / 864e5));
+  },
+
+  hasMktgAccess() {
+    if (State.isDemo) return false;
+    if (State.tenant?.marketing_addon === true) return true;
+    return this.trialDaysLeft() > 0;
+  },
+
+  hasConsent() { return !!localStorage.getItem(this._CONSENT_KEY); },
+
+  acceptConsent() {
+    localStorage.setItem(this._CONSENT_KEY, '1');
+    closeModal('modal-mktg-consent');
+    const cb = this._pendingAction;
+    this._pendingAction = null;
+    if (cb) setTimeout(cb, 150);
+  },
+
+  _checkConsent(cb) {
+    if (this.hasConsent()) return true;
+    this._pendingAction = cb;
+    openModal('modal-mktg-consent');
+    return false;
+  },
+
+  _updateUsageLabels() {
+    const label = AiLimits.limitLabel('marketing');
+    document.querySelectorAll('.mktg-usage-counter').forEach(el => {
+      el.textContent = label;
+      const rem = AiLimits.remaining('marketing');
+      const lim = AiLimits._lim().marketing;
+      el.style.color = rem === 0 ? 'var(--red-500)' : rem <= Math.ceil(lim/3) ? 'var(--orange-500)' : 'var(--gray-500)';
+    });
+  },
+
+  _show(outId, actId, text, wmId) {
     const out = document.getElementById(outId);
     const act = document.getElementById(actId);
+    const wm  = wmId ? document.getElementById(wmId) : null;
     if (!out) return;
     out.textContent = text;
     out.classList.add('visible');
     if (act) act.classList.add('visible');
+    if (wm) wm.classList.remove('hidden');
   },
 
   copy(outId) {
@@ -6187,6 +6374,8 @@ const App = {
     history.pushState({ screen: 'dashboard' }, '', location.pathname + '?s=dashboard');
     this.go('dashboard');
     this.updateBadges();
+    // Start 14-day marketing trial for new users (localStorage-based)
+    if (!State.isDemo) Marketing.initTrial();
     // Show onboarding wizard for new users (not in demo)
     if (!State.isDemo) setTimeout(() => Onboarding.show(), 800);
     // Show billing reminder for days 7-1 (not in demo)
