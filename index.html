@@ -1592,6 +1592,54 @@
       50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
     }
 
+    /* ── Milestone Reward Overlay ── */
+    .milestone-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.88);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s;
+    }
+    .milestone-overlay.show { opacity: 1; pointer-events: all; }
+    .milestone-card {
+      background: linear-gradient(145deg, #0F1F3D, #1a3060);
+      border-radius: 24px; padding: 32px 24px; text-align: center;
+      max-width: 320px; width: 90%; color: white;
+      border: 2px solid #C49A2A;
+      box-shadow: 0 0 50px rgba(196,154,42,0.35);
+    }
+    .milestone-fireworks { font-size: 52px; margin-bottom: 10px; animation: pulse 1s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+    .milestone-label { font-size: 10px; font-weight: 800; color: #C49A2A; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .milestone-xp-badge { display:inline-block; background:rgba(196,154,42,0.15); border:1px solid rgba(196,154,42,0.4); border-radius:20px; padding:4px 14px; font-size:13px; font-weight:700; color:#F0C040; margin-bottom:14px; }
+    .milestone-prize-name { font-size: 22px; font-weight: 900; margin-bottom: 8px; line-height:1.3; }
+    .milestone-prize-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.65; margin-bottom: 22px; }
+    .milestone-claim-btn { background: linear-gradient(135deg,#C49A2A,#F0C040); color: #000; border: none; border-radius: 14px; padding: 14px 28px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; width: 100%; margin-bottom: 10px; }
+    .milestone-close-btn { background: none; color: rgba(255,255,255,0.4); border: none; font-size: 13px; cursor: pointer; padding: 8px; font-family: inherit; }
+    /* Next milestone in gamify widget */
+    .gamify-milestone { margin-top: 12px; padding: 10px 12px; background: rgba(255,255,255,0.07); border-radius: 10px; }
+    .gamify-milestone-label { font-size: 9px; color: rgba(255,255,255,.45); margin-bottom: 3px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+    .gamify-milestone-name { font-size: 12px; font-weight: 700; color: #F0C040; margin-bottom: 5px; }
+    .gamify-milestone-bar { height: 5px; background: rgba(255,255,255,.12); border-radius: 5px; overflow: hidden; }
+    .gamify-milestone-fill { height: 100%; background: linear-gradient(90deg, #C49A2A, #F0C040); border-radius: 5px; transition: width .8s ease; }
+    .gamify-milestone-xp { font-size: 10px; color: rgba(255,255,255,.4); margin-top: 4px; display: flex; justify-content: space-between; }
+    /* Mortgage Calculator */
+    .mortgage-result { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-md); padding: 16px; margin-top: 4px; text-align: center; }
+    .mortgage-monthly { font-size: 32px; font-weight: 900; color: var(--navy-500); }
+    .mortgage-monthly-label { font-size: 12px; color: var(--gray-500); margin-bottom: 14px; }
+    .mortgage-breakdown { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .mortgage-stat { background: white; border-radius: 8px; padding: 8px; }
+    .mortgage-stat-val { font-size: 13px; font-weight: 800; color: var(--navy-600); }
+    .mortgage-stat-label { font-size: 10px; color: var(--gray-500); }
+    /* WhatsApp share button on property card */
+    .prop-share-btn {
+      position: absolute; top: 8px; right: 8px;
+      background: #25D366; color: white; border: none; border-radius: 20px;
+      padding: 4px 10px; font-size: 11px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 2;
+    }
+    .prop-share-btn:active { transform: scale(0.96); }
+
     /* ── Print / PDF Export ── */
     @media print {
       #sidebar, #bottom-nav, #fab-btn, #trial-banner, .btn, nav { display: none !important; }
@@ -1984,8 +2032,59 @@
 
       <div id="dash-trial-card"></div>
 
-      <!-- KPI CARDS — primary data, top position -->
+      <!-- AI BRIEFING — first thing the agent sees -->
+      <div class="ai-card" id="dash-ai-briefing" style="margin: 0 20px 14px;">
+        <div class="ai-card-title">✨ עוזר AI אישי — תדרוך יומי על המערכת</div>
+        <div id="dash-ai-briefing-body" style="min-height:40px;"></div>
+      </div>
+
+      <!-- KPI CARDS — primary data -->
       <div class="kpi-row" id="kpi-row"></div>
+
+      <!-- GAMIFICATION WIDGET — motivation & XP progress -->
+      <div class="gamify-widget" id="gamify-widget">
+        <div class="gamify-top">
+          <div class="gamify-avatar" id="gamify-avatar">🌱</div>
+          <div>
+            <div class="gamify-level-name" id="gamify-level-name">מתחיל</div>
+            <div class="gamify-streak" id="gamify-streak">🔥 0 ימים רצופים</div>
+          </div>
+        </div>
+        <div class="gamify-xp-area">
+          <div class="gamify-xp-label">
+            <span id="gamify-xp-cur">0 XP</span>
+            <span id="gamify-xp-next">לרמה הבאה: 200 XP</span>
+          </div>
+          <div class="gamify-bar"><div class="gamify-fill" id="gamify-xp-fill" style="width:0%"></div></div>
+        </div>
+        <!-- Next milestone progress -->
+        <div class="gamify-milestone" id="gamify-milestone-bar" style="display:none;">
+          <div class="gamify-milestone-label">🎁 פרס הבא</div>
+          <div class="gamify-milestone-name" id="gamify-ms-name">—</div>
+          <div class="gamify-milestone-bar"><div class="gamify-milestone-fill" id="gamify-ms-fill" style="width:0%"></div></div>
+          <div class="gamify-milestone-xp"><span id="gamify-ms-cur">0 XP</span><span id="gamify-ms-next">—</span></div>
+        </div>
+        <div class="gamify-stats">
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-leads-count">0</div>
+            <div class="gamify-stat-label">לידים</div>
+          </div>
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-closed-count">0</div>
+            <div class="gamify-stat-label">עסקאות שנסגרו</div>
+          </div>
+          <div class="gamify-stat">
+            <div class="gamify-stat-val" id="gamify-tasks-count">0</div>
+            <div class="gamify-stat-label">משימות שבוצעו</div>
+          </div>
+        </div>
+        <div class="gamify-achievements" id="gamify-badges-row"></div>
+        <div class="gamify-daily-challenge" id="gamify-daily" onclick="Gamify.dailyAction()">
+          <div class="gamify-daily-icon">⚡</div>
+          <div class="gamify-daily-text" id="gamify-daily-text">טוען אתגר יומי...</div>
+          <div class="gamify-daily-done" id="gamify-daily-check"></div>
+        </div>
+      </div>
 
       <!-- URGENT TASKS — actionable items -->
       <div class="section-header">
@@ -2013,50 +2112,6 @@
         <button class="btn btn-primary w-full" onclick="LeadImport.open()" style="padding:11px;">
           📁 ייבוא לידים מקובץ
         </button>
-      </div>
-
-      <!-- GAMIFICATION WIDGET — motivational, secondary position -->
-      <div class="gamify-widget" id="gamify-widget">
-        <div class="gamify-top">
-          <div class="gamify-avatar" id="gamify-avatar">🌱</div>
-          <div>
-            <div class="gamify-level-name" id="gamify-level-name">מתחיל</div>
-            <div class="gamify-streak" id="gamify-streak">🔥 0 ימים רצופים</div>
-          </div>
-        </div>
-        <div class="gamify-xp-area">
-          <div class="gamify-xp-label">
-            <span id="gamify-xp-cur">0 XP</span>
-            <span id="gamify-xp-next">לרמה הבאה: 200 XP</span>
-          </div>
-          <div class="gamify-bar"><div class="gamify-fill" id="gamify-xp-fill" style="width:0%"></div></div>
-        </div>
-        <div class="gamify-stats">
-          <div class="gamify-stat">
-            <div class="gamify-stat-val" id="gamify-leads-count">0</div>
-            <div class="gamify-stat-label">לידים</div>
-          </div>
-          <div class="gamify-stat">
-            <div class="gamify-stat-val" id="gamify-closed-count">0</div>
-            <div class="gamify-stat-label">עסקאות שנסגרו</div>
-          </div>
-          <div class="gamify-stat">
-            <div class="gamify-stat-val" id="gamify-tasks-count">0</div>
-            <div class="gamify-stat-label">משימות שבוצעו</div>
-          </div>
-        </div>
-        <div class="gamify-achievements" id="gamify-badges-row"></div>
-        <div class="gamify-daily-challenge" id="gamify-daily" onclick="Gamify.dailyAction()">
-          <div class="gamify-daily-icon">⚡</div>
-          <div class="gamify-daily-text" id="gamify-daily-text">טוען אתגר יומי...</div>
-          <div class="gamify-daily-done" id="gamify-daily-check"></div>
-        </div>
-      </div>
-
-      <!-- AI BRIEFING -->
-      <div class="ai-card" id="dash-ai-briefing" style="margin: 0 20px 14px;">
-        <div class="ai-card-title">✨ עוזר AI אישי — תדרוך יומי על המערכת</div>
-        <div id="dash-ai-briefing-body" style="min-height:40px;"></div>
       </div>
 
       <!-- COLD LEADS & CHART -->
@@ -2394,6 +2449,20 @@
           </div>
         </div>
 
+        <!-- TOOL 6: Mortgage Calculator -->
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-icon" style="background:#EFF6FF;">🧮</div>
+            <div>
+              <div class="tool-card-title">מחשבון משכנתא</div>
+              <div class="tool-card-sub">חשב תשלום חודשי ושתף לקוח ב-WhatsApp</div>
+            </div>
+          </div>
+          <div class="tool-card-body" style="display:flex;align-items:center;justify-content:center;padding:8px 0;">
+            <button class="btn btn-primary btn-sm" onclick="MortgageCalc.open()">🧮 פתח מחשבון</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -2486,6 +2555,67 @@
     <div class="levelup-name" id="levelup-name">מקצוען</div>
     <div class="levelup-sub" id="levelup-sub">כל הכבוד — אתה הולך וגדל!</div>
     <button class="levelup-btn" onclick="Gamify.closeLevelUp()">🚀 המשך</button>
+  </div>
+</div>
+
+<!-- MILESTONE REWARD OVERLAY -->
+<div class="milestone-overlay" id="milestone-overlay" onclick="Gamify.closeMilestone()">
+  <div class="milestone-card" onclick="event.stopPropagation()">
+    <div class="milestone-fireworks" id="milestone-fireworks">🎁</div>
+    <div class="milestone-label">🏆 פרס XP הושג!</div>
+    <div class="milestone-xp-badge" id="milestone-xp-badge">0 XP</div>
+    <div class="milestone-prize-name" id="milestone-prize-name">פרס</div>
+    <div class="milestone-prize-desc" id="milestone-prize-desc"></div>
+    <button class="milestone-claim-btn" onclick="Gamify.claimMilestone()">🎁 מימש את הפרס →</button>
+    <button class="milestone-close-btn" onclick="Gamify.closeMilestone()">אמשיך אחר כך</button>
+  </div>
+</div>
+
+<!-- MORTGAGE CALCULATOR MODAL -->
+<div id="modal-mortgage" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-mortgage')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">🧮 מחשבון משכנתא</div>
+      <button class="modal-close" onclick="closeModal('modal-mortgage')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">מחיר הנכס (₪)</label>
+        <input type="number" id="mtg-price" class="form-input" placeholder="1,500,000" min="0" oninput="MortgageCalc.calc()">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">הון עצמי (%)</label>
+          <input type="number" id="mtg-down-pct" class="form-input" value="25" min="0" max="100" step="1" oninput="MortgageCalc.syncDown('pct')">
+        </div>
+        <div class="form-group">
+          <label class="form-label">הון עצמי (₪)</label>
+          <input type="number" id="mtg-down-ils" class="form-input" placeholder="375,000" min="0" oninput="MortgageCalc.syncDown('ils')">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ריבית שנתית (%)</label>
+          <input type="number" id="mtg-rate" class="form-input" value="4.5" min="0" max="20" step="0.1" oninput="MortgageCalc.calc()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">תקופה</label>
+          <select id="mtg-years" class="form-input" onchange="MortgageCalc.calc()">
+            <option value="10">10 שנים</option>
+            <option value="15">15 שנים</option>
+            <option value="20" selected>20 שנים</option>
+            <option value="25">25 שנים</option>
+            <option value="30">30 שנים</option>
+          </select>
+        </div>
+      </div>
+      <div id="mtg-result"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-mortgage')">סגור</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="MortgageCalc.shareWhatsApp()">📤 שתף ב-WhatsApp</button>
+    </div>
   </div>
 </div>
 
@@ -4120,6 +4250,14 @@ const Onboarding = {
               בחר איפה תרצה להתחיל:
             </p>
             <div style="display:flex;flex-direction:column;gap:10px;text-align:right;">
+              <button onclick="Onboarding._pendingAction='dashboard';Onboarding.next();"
+                style="display:flex;align-items:center;gap:12px;background:var(--navy-500);color:white;border:none;border-radius:10px;padding:14px 16px;cursor:pointer;font-size:0.95rem;font-weight:600;font-family:inherit;width:100%;text-align:right;">
+                <span style="font-size:1.3rem;">🏠</span>
+                <div>
+                  <div>עבור ללוח הבית</div>
+                  <div style="font-size:0.85rem;font-weight:400;opacity:0.85;">סקירה מלאה של מה שמחכה לך</div>
+                </div>
+              </button>
               <button onclick="Onboarding._pendingAction='addlead';Onboarding.next();"
                 style="display:flex;align-items:center;gap:12px;background:var(--blue-500);color:white;border:none;border-radius:10px;padding:14px 16px;cursor:pointer;font-size:0.95rem;font-weight:600;font-family:inherit;width:100%;text-align:right;">
                 <span style="font-size:1.3rem;">➕</span>
@@ -4292,6 +4430,8 @@ const Onboarding = {
         App.go('pipeline');
       } else if (action === 'settings') {
         App.go('settings');
+      } else if (action === 'dashboard') {
+        App.go('dashboard');
       }
       return;
     }
@@ -5033,7 +5173,16 @@ const Gamify = {
     'תכנן 3 פולואפים לשבוע הבא',
   ],
 
+  MILESTONES: [
+    { xp:  1000, icon: '🌐', name: 'דף נחיתה מקצועי',    desc: 'בניית דף נחיתה ממירה בשבילך — שווי ₪500' },
+    { xp:  2500, icon: '💼', name: 'דף מכירה מקצועי',    desc: 'עמוד מכירה + CTA מותאם לנדל"ן — שווי ₪800' },
+    { xp:  5000, icon: '🏢', name: 'אתר תדמית מלא',      desc: 'אתר תדמית מקצועי + דומיין — שווי ₪2,500' },
+    { xp: 15000, icon: '📣', name: 'חבילת שיווק דיגיטלי', desc: 'ניהול רשתות + קמפיין ממומן — שווי ₪5,000' },
+    { xp: 30000, icon: '✈️', name: 'כרטיס טיסה עסקית',   desc: 'כנס נדל"ן בינלאומי + כרטיס טיסה — שווי ₪10,000' },
+  ],
+
   _d: null,
+  _pendingMilestone: null,
 
   get() {
     if (!this._d) {
@@ -5079,6 +5228,7 @@ const Gamify = {
     const newLevel = this.getLevel(d.xp);
     if (newLevel.min > prevLevel.min) this.showLevelUp(newLevel);
     this.checkAchievements();
+    this.checkMilestones();
     this.renderSidebar();
     this.renderWidget();
     toast(`+${pts} XP ✨`, 'success');
@@ -5098,6 +5248,7 @@ const Gamify = {
     this.save();
     if (newLevel.min > prevLevel.min) setTimeout(() => this.showLevelUp(newLevel), 1500);
     this.checkAchievements();
+    this.checkMilestones();
     this.renderSidebar();
     this.renderWidget();
     if (d.streak > 1) toast(`🔥 ${d.streak} ימים רצופים! +${this.XP.daily_login} XP`, 'success');
@@ -5237,6 +5388,25 @@ const Gamify = {
       checkEl.textContent = ch.done ? '✅' : '›';
       checkEl.style.cssText = ch.done ? '' : 'font-size:1.3rem;color:rgba(255,255,255,.5);';
     }
+
+    // Milestone progress bar
+    const claimed = new Set(d.milestoneClaimed || []);
+    const nextMs  = this.MILESTONES.find(m => !claimed.has(m.xp));
+    const msBar   = document.getElementById('gamify-milestone-bar');
+    if (msBar) {
+      if (nextMs) {
+        msBar.style.display = '';
+        set('gamify-ms-name', nextMs.icon + ' ' + nextMs.name);
+        set('gamify-ms-cur', d.xp.toLocaleString('he-IL') + ' XP');
+        set('gamify-ms-next', nextMs.xp.toLocaleString('he-IL') + ' XP');
+        const msIdx   = this.MILESTONES.indexOf(nextMs);
+        const fromXp  = msIdx > 0 ? this.MILESTONES[msIdx - 1].xp : 0;
+        const pct     = Math.min(100, Math.max(0, ((d.xp - fromXp) / (nextMs.xp - fromXp)) * 100));
+        setStyle('gamify-ms-fill', 'width', pct + '%');
+      } else {
+        msBar.style.display = 'none';
+      }
+    }
   },
 
   CHALLENGE_ACTIONS: {
@@ -5285,6 +5455,42 @@ const Gamify = {
     const typeEl = document.getElementById('new-activity-type');
     if (typeEl) typeEl.value = 'meeting';
     openModal('modal-add-activity');
+  },
+
+  checkMilestones() {
+    if (State.isDemo) return;
+    const d = this.get();
+    const claimed = new Set(d.milestoneClaimed || []);
+    for (const m of this.MILESTONES) {
+      if (claimed.has(m.xp)) continue;
+      if (d.xp >= m.xp) { setTimeout(() => this.showMilestone(m), 800); break; }
+    }
+  },
+
+  showMilestone(m) {
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('milestone-fireworks', m.icon);
+    set('milestone-xp-badge', m.xp.toLocaleString('he-IL') + ' XP');
+    set('milestone-prize-name', m.name);
+    set('milestone-prize-desc', m.desc);
+    this._pendingMilestone = m;
+    document.getElementById('milestone-overlay')?.classList.add('show');
+  },
+
+  closeMilestone() {
+    document.getElementById('milestone-overlay')?.classList.remove('show');
+    this._pendingMilestone = null;
+  },
+
+  claimMilestone() {
+    if (!this._pendingMilestone) return;
+    const d = this.get();
+    if (!d.milestoneClaimed) d.milestoneClaimed = [];
+    d.milestoneClaimed.push(this._pendingMilestone.xp);
+    this.save();
+    this.renderWidget();
+    this.closeMilestone();
+    toast('🎁 הפרס נרשם! נציג Liders יצור איתך קשר בקרוב 📞', 'success');
   },
 
   init() {
@@ -6676,6 +6882,7 @@ const PropertiesScreen = {
             ${p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
           </div>
           ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
+          <button class="prop-share-btn" onclick="event.stopPropagation();sharePropertyWhatsApp('${p.id}')">📤 שתף ב-WhatsApp</button>
         </div>
       </div>
     `).join('') || '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🏠</div><div class="empty-title">אין נכסים עדיין</div></div>';
@@ -8167,6 +8374,80 @@ const PropImages = {
   },
 };
 
+/* ═══════════════════════════════════════════
+   MORTGAGE CALCULATOR
+═══════════════════════════════════════════ */
+const MortgageCalc = {
+  _lastResult: null,
+
+  calc() {
+    const price   = parseFloat(document.getElementById('mtg-price')?.value)    || 0;
+    const downPct = parseFloat(document.getElementById('mtg-down-pct')?.value) || 0;
+    const rate    = parseFloat(document.getElementById('mtg-rate')?.value)      || 0;
+    const years   = parseInt(document.getElementById('mtg-years')?.value)       || 0;
+    const res     = document.getElementById('mtg-result');
+    if (!res) return;
+    if (!price || !rate || !years) {
+      res.innerHTML = '<div style="text-align:center;padding:12px;color:var(--gray-400)">הזן פרטי הנכס לחישוב</div>';
+      return;
+    }
+    const downAmt = price * (downPct / 100);
+    const loan    = price - downAmt;
+    const r       = rate / 100 / 12;
+    const n       = years * 12;
+    const monthly = r > 0 ? (loan * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1) : (n > 0 ? loan / n : 0);
+    const total   = monthly * n;
+    const interest = total - loan;
+    this._lastResult = { price, downPct, downAmt, loan, monthly, interest, total, rate, years };
+    res.innerHTML = `
+      <div class="mortgage-result">
+        <div class="mortgage-monthly">${formatMoney(monthly)}</div>
+        <div class="mortgage-monthly-label">תשלום חודשי</div>
+        <div class="mortgage-breakdown">
+          <div class="mortgage-stat">
+            <div class="mortgage-stat-val">${formatMoney(loan)}</div>
+            <div class="mortgage-stat-label">סכום הלוואה</div>
+          </div>
+          <div class="mortgage-stat">
+            <div class="mortgage-stat-val">${formatMoney(interest)}</div>
+            <div class="mortgage-stat-label">סה"כ ריבית</div>
+          </div>
+          <div class="mortgage-stat">
+            <div class="mortgage-stat-val">${formatMoney(total)}</div>
+            <div class="mortgage-stat-label">סה"כ תשלום</div>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  syncDown(from) {
+    const price = parseFloat(document.getElementById('mtg-price')?.value) || 0;
+    if (!price) { this.calc(); return; }
+    if (from === 'pct') {
+      const pct = parseFloat(document.getElementById('mtg-down-pct')?.value) || 0;
+      const el  = document.getElementById('mtg-down-ils');
+      if (el) el.value = Math.round(price * pct / 100);
+    } else {
+      const ils = parseFloat(document.getElementById('mtg-down-ils')?.value) || 0;
+      const el  = document.getElementById('mtg-down-pct');
+      if (el) el.value = Math.round((ils / price) * 1000) / 10;
+    }
+    this.calc();
+  },
+
+  shareWhatsApp() {
+    const r = this._lastResult;
+    if (!r) { toast('חשב קודם את המשכנתא', 'info'); return; }
+    const msg = `💰 חישוב משכנתא — Liders CRM\n\n🏠 מחיר נכס: ${formatMoney(r.price)}\n💵 הון עצמי: ${formatMoney(r.downAmt)} (${r.downPct}%)\n🏦 סכום הלוואה: ${formatMoney(r.loan)}\n📊 ריבית שנתית: ${r.rate}%\n📅 תקופה: ${r.years} שנים\n\n✅ תשלום חודשי: ${formatMoney(r.monthly)}\n💸 סה"כ ריבית: ${formatMoney(r.interest)}\n🔢 סה"כ תשלום: ${formatMoney(r.total)}`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  },
+
+  open() {
+    openModal('modal-mortgage');
+    this.calc();
+  },
+};
+
 async function addProperty() {
   if (demoGuard()) return;
   const title = document.getElementById('new-prop-title').value.trim();
@@ -8288,6 +8569,25 @@ async function deleteProperty() {
   } catch(e) {
     toast('שגיאה במחיקה: ' + e.message, 'error');
   }
+}
+
+function sharePropertyWhatsApp(propId) {
+  const p = State.properties.find(x => x.id === propId);
+  if (!p) return;
+  const typeLabels = { apartment:'דירה', house:'בית', penthouse:'פנטהאוז', commercial:'מסחרי', land:'מגרש' };
+  const type = typeLabels[p.type] || p.type || '';
+  const lines = [
+    `🏠 ${escapeHtml(p.title)}`,
+    `💰 ${formatMoney(p.price)}`,
+    type ? `📋 ${type}` : '',
+    p.rooms  ? `🛏 ${p.rooms} חדרים` : '',
+    p.area   ? `📐 ${p.area} מ"ר` : '',
+    p.floor > 0 ? `🏢 קומה ${p.floor}` : '',
+    (p.address || p.city) ? `📍 ${[p.address, p.city].filter(Boolean).join(', ')}` : '',
+    p.description ? `\n${p.description.slice(0, 200)}` : '',
+    '\n📞 לפרטים נוספים צרו קשר',
+  ].filter(Boolean);
+  window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')), '_blank');
 }
 
 function openEditLead(leadId) {
