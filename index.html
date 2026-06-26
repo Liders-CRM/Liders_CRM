@@ -1571,10 +1571,23 @@
       width: 10px; height: 14px; border-radius: 2px;
       animation: confettiFall linear forwards;
     }
+    .confetti-emoji {
+      position: absolute; top: -30px;
+      font-size: 22px; line-height: 1;
+      animation: confettiEmojiFall linear forwards;
+      user-select: none;
+    }
     @keyframes confettiFall {
-      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      0%   { transform: translateY(0) rotate(0deg) scaleX(1); opacity: 1; }
+      50%  { transform: translateY(55vh) rotate(360deg) scaleX(-1); opacity: 1; }
       80%  { opacity: 1; }
-      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+      100% { transform: translateY(110vh) rotate(720deg) scaleX(1); opacity: 0; }
+    }
+    @keyframes confettiEmojiFall {
+      0%   { transform: translateY(0) rotate(-15deg) scale(1); opacity: 1; }
+      30%  { transform: translateY(30vh) rotate(15deg) scale(1.1); opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(115vh) rotate(-10deg) scale(0.8); opacity: 0; }
     }
 
     /* ═══════════════════════════════════════
@@ -6300,8 +6313,23 @@ const Gamify = {
   confetti() {
     const container = document.getElementById('confetti-container');
     if (!container) return;
-    const colors = ['#C49A2A','#2563EB','#16A34A','#DC2626','#7C3AED','#F59E0B','#ffffff'];
-    for (let i = 0; i < 80; i++) {
+
+    // מונדיאל 2026: יוני 21 — יולי 19, 2026
+    const now   = new Date();
+    const month = now.getMonth() + 1; // 1-based
+    const day   = now.getDate();
+    const year  = now.getFullYear();
+    const isWorldCup = year === 2026 &&
+      ((month === 6 && day >= 21) || (month === 7 && day <= 19));
+
+    const colors = isWorldCup
+      ? ['#16A34A','#ffffff','#1D4ED8','#F59E0B','#DC2626','#ffffff','#16A34A']
+      : ['#C49A2A','#2563EB','#16A34A','#DC2626','#7C3AED','#F59E0B','#ffffff'];
+
+    const worldCupEmojis = ['⚽','🏆','⭐','🥅','🎽','🏅','🌟','🎯'];
+
+    // 60 חלקיקי צבע רגילים
+    for (let i = 0; i < 60; i++) {
       const el = document.createElement('div');
       el.className = 'confetti-piece';
       el.style.cssText = `
@@ -6311,10 +6339,27 @@ const Gamify = {
         height: ${10+Math.random()*10}px;
         animation-duration: ${1.5+Math.random()*2}s;
         animation-delay: ${Math.random()*.8}s;
+        border-radius: ${isWorldCup ? '50%' : '2px'};
       `;
       container.appendChild(el);
     }
-    setTimeout(() => { container.innerHTML = ''; }, 4000);
+
+    // 20 אמוג׳י מונדיאל (או כוכבים בלי מונדיאל)
+    const emojiSet = isWorldCup ? worldCupEmojis : ['🌟','✨','🎉','🎊','💫','⭐','🏆','🎯'];
+    for (let i = 0; i < 20; i++) {
+      const em = document.createElement('span');
+      em.className = 'confetti-emoji';
+      em.textContent = emojiSet[Math.floor(Math.random()*emojiSet.length)];
+      em.style.cssText = `
+        left: ${Math.random()*100}%;
+        animation-duration: ${2+Math.random()*2.5}s;
+        animation-delay: ${Math.random()*1.2}s;
+        font-size: ${18+Math.random()*14}px;
+      `;
+      container.appendChild(em);
+    }
+
+    setTimeout(() => { container.innerHTML = ''; }, 5000);
   },
 
   getDailyChallenge() {
