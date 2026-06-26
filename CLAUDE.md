@@ -13,16 +13,12 @@
 
 ## 🚨 LAUNCH BLOCKER — חובה להזכיר בכל שיחה
 
-> **Stripe Live Mode ממתין לאישור עסקי**
-> - מס עוסק מורשה — בתהליך פתיחה, צפוי **שבוע הבא (סביב 19–20 יוני 2026)**
-> - חשבון בנק עסקי — נפתח במקביל
-> - **עד שאלה מוכנים — לא ניתן לעבור ל-Live ולגבות כסף אמיתי**
+> **ספק התשלום הוא Tranzila (ישראלי) — לא Stripe**
+> - Stripe קיים בקוד כ-**demo בלבד** (edge function `stripe-webhook`) — אל תבנה/תשנה עליו
+> - ממתינים לפתיחת מס עוסק מורשה + חשבון בנק עסקי (~יוני 2026)
+> - כשיהיו מוכנים: לבנות `tranzila-webhook` edge function בפורמט Tranzila ולחבר
 >
-> כשיהיו מוכנים — דרוש:
-> 1. להשלים אימות Stripe (העלאת מסמכים)
-> 2. ליצור Payment Links חדשים ב-Live mode (ללא `test_` prefix)
-> 3. ליצור Webhook חדש ב-Live mode ← לעדכן `STRIPE_WEBHOOK_SECRET` ב-Supabase
-> 4. לשלוח את 4 ה-URLs לקלוד ← יעדכן `index.html` ויעלה ל-main
+> 🔑 **לא גובים כסף אמיתי עד שהוגדר Tranzila live**
 
 ---
 
@@ -151,11 +147,60 @@
 
 ```
 index.html     — האפליקציה המלאה (HTML + CSS + JS)
+admin.html     — פאנל SaaS admin (ניהול tenants)
 CLAUDE.md      — קובץ זה
+supabase/
+  functions/
+    ai-proxy/         — Edge Function: ממשק ל-Claude Haiku (ANTHROPIC_API_KEY)
+    stripe-webhook/   — Edge Function: demo בלבד — אל תפעיל ב-production
 .claude/
   settings.json
   skills/
 ```
+
+### Supabase Edge Functions
+
+| Function | תיאור | סטטוס |
+|----------|-------|-------|
+| `ai-proxy` | קריאה ל-Claude Haiku 4.5 | פעיל ✅ |
+| `stripe-webhook` | demo/test בלבד | demo ⚠️ |
+
+**ANTHROPIC_API_KEY** מוגדר ב-Supabase Secrets. מודל נוכחי: `claude-haiku-4-5-20251001`.
+מדרג עלויות: Haiku → Sonnet כשיש הכנסות.
+
+---
+
+## Marketing Addon
+
+| נושא | פרטים |
+|------|--------|
+| State | `State.tenant.marketing_addon === true` |
+| הפעלה ידנית | Admin → modal ניהול tenant → checkbox שיווק |
+| הפעלה אוטומטית | Tranzila webhook → `marketing_addon: true` (עתידי) |
+| כלים | `Marketing.genOffer()`, `genPost()`, `genCampaign()` — Claude Haiku |
+| מחיר | ₪100/חודש לתוסף |
+| Payment Link URL | `Marketing._STRIPE_MARKETING_URL` ב-index.html — ריק עד שיוגדר Tranzila |
+
+---
+
+## מה בוצע — סשן 26/6/2026
+
+### ✅ הושלם
+1. **Onboarding Step 2** — שדות שם/טלפון/אימייל/עסק ריקים עם placeholder
+2. **Onboarding Step 4** — קישור "אפשר לדלג" מתחת לשדה Webhook
+3. **Onboarding Step 5** — 3 כפתורי פעולה, כפתור 🚀 מוסתר בשלב האחרון
+4. **PIN lock** — הגדרת PIN + מסך נעילה אחרי setup (תוקן: `lock()` נקרא אוטומטית)
+5. **admin.html** — עמודת שיווק בטבלה, modal ניהול tenant עם checkbox/הארכת ניסיון/הערות
+6. **Claude AI בשיווק** — genOffer/genPost/genCampaign קוראים ל-ai-proxy (לא עוד תבניות)
+7. **auto-activate marketing addon** — stripe-webhook מטפל ב-`addon: marketing` (demo)
+
+### 📋 ממתין לפעולה חיצונית
+- פתיחת מס עוסק + חשבון בנק → לאחר מכן: Tranzila live + `tranzila-webhook`
+- Deploy של `stripe-webhook` לאחר שינויים (Supabase Dashboard → Functions)
+- הגדרת `Marketing._STRIPE_MARKETING_URL` כשיהיה Payment Link
+
+### 🔧 ענף עבודה
+- `claude/onboarding-bonus-features-n12mqu` — כל השינויים מהסשן
 
 ---
 
