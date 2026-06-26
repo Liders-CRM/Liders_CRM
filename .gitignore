@@ -1,2 +1,5 @@
 # dist/ — ignore from git (build artifact)
 dist/
+
+# local CDN copies for offline dev/testing
+local_cdn/
