@@ -6055,12 +6055,12 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 ═══════════════════════════════════════════ */
 const AiLimits = {
   PLANS: {
-    trial:    { general: 2, marketing: 3 },
-    basic:    { general: 2, marketing: 3 },
-    pro:      { general: 5, marketing: 7 },
-    premium:  { general: 10, marketing: 15 },
-    lifetime: { general: 10, marketing: 15 },
-    internal: { general: 999, marketing: 999 },
+    trial:    { general: 2, marketing: 3,  quicklog: 3  },
+    basic:    { general: 2, marketing: 3,  quicklog: 5  },
+    pro:      { general: 5, marketing: 7,  quicklog: 15 },
+    premium:  { general: 10, marketing: 15, quicklog: 30 },
+    lifetime: { general: 10, marketing: 15, quicklog: 30 },
+    internal: { general: 999, marketing: 999, quicklog: 999 },
   },
   _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
   _k: 'liders_ai_v1',
@@ -6069,8 +6069,8 @@ const AiLimits = {
   _get() {
     try {
       const d = JSON.parse(localStorage.getItem(this._k)||'{}');
-      return d.date === this._today() ? d : { date: this._today(), general: 0, marketing: 0 };
-    } catch { return { date: this._today(), general: 0, marketing: 0 }; }
+      return d.date === this._today() ? d : { date: this._today(), general: 0, marketing: 0, quicklog: 0 };
+    } catch { return { date: this._today(), general: 0, marketing: 0, quicklog: 0 }; }
   },
   _save(d) { localStorage.setItem(this._k, JSON.stringify(d)); },
   _lim() { return this.PLANS[State.tenant?.plan||'trial'] || this.PLANS.trial; },
@@ -11427,18 +11427,21 @@ const Support = {
         .select().single();
       if (insErr) throw insErr;
 
-      // 2. AI instant response
+      // 2. AI instant response (only if within daily quota)
       btn.textContent = '🤖 AI מנתח...';
       let aiText = '';
-      try {
-        const { data: fn } = await sbClient.functions.invoke('ai-proxy', {
-          body: {
-            system: 'אתה נציג תמיכה טכנית של Liders CRM — מערכת CRM לסוכני נדל"ן ישראלים. ענה בעברית בצורה קצרה, ברורה וידידותית (עד 120 מילים). אם אינך יכול לפתור, כתוב שהאדמין יחזור בהקדם.',
-            messages: [{ role: 'user', content: msg }]
-          }
-        });
-        aiText = fn?.content || '';
-      } catch(_) {}
+      if (AiLimits.canUse('general')) {
+        try {
+          const { data: fn } = await sbClient.functions.invoke('ai-proxy', {
+            body: {
+              system: 'אתה נציג תמיכה טכנית של Liders CRM — מערכת CRM לסוכני נדל"ן ישראלים. ענה בעברית בצורה קצרה, ברורה וידידותית (עד 120 מילים). אם אינך יכול לפתור, כתוב שהאדמין יחזור בהקדם.',
+              messages: [{ role: 'user', content: msg }]
+            }
+          });
+          aiText = fn?.content || '';
+          if (aiText) AiLimits.consume('general');
+        } catch(_) {}
+      }
 
       // 3. Save AI response
       if (aiText) {
@@ -11504,6 +11507,12 @@ const QuickLog = {
   },
 
   async process() {
+    if (State.isDemo) { toast('⚡ יומן מהיר AI זמין לחשבונות פעילים בלבד — פתח חשבון חינמי', 'warning'); this._setState('input'); return; }
+    if (!AiLimits.canUse('quicklog')) {
+      const lim = AiLimits._lim().quicklog;
+      toast(`הגעת למגבלת היומן המהיר — ${lim} שימושים/יום בחבילה שלך`, 'warning');
+      this._setState('input'); return;
+    }
     const text = (document.getElementById('ql-input')?.value || '').trim();
     if (text.length < 10) { toast('נא לכתוב לפחות משפט אחד על השיחה', 'warning'); return; }
     this._setState('loading');
@@ -11539,6 +11548,7 @@ const QuickLog = {
 
       const raw = (fn?.content || '').replace(/```json?\n?/g,'').replace(/```/g,'').trim();
       this._parsed = JSON.parse(raw);
+      AiLimits.consume('quicklog');
 
       const name = (this._parsed.lead_name || '').toLowerCase().trim();
       if (!name || name.length < 2) {
