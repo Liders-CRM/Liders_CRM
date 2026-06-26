@@ -2442,6 +2442,46 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── Lead Card — stage progress bar ── */
+  .lead-stage-bar {
+    height: 3px; border-radius: 99px;
+    background: var(--gray-100); overflow: hidden;
+    margin-top: 8px;
+  }
+  .lead-stage-bar-fill {
+    height: 100%; border-radius: 99px;
+    background: var(--stage-color, var(--navy-400));
+    transition: width 0.4s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* ── Lead Card — quick action buttons ── */
+  .lead-card-actions {
+    display: flex; gap: 6px; margin-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.06); padding-top: 8px;
+  }
+  .lca-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 3px;
+    background: var(--gray-50); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 4px; font-size: 11px; font-weight: 700;
+    color: var(--gray-600); cursor: pointer; font-family: inherit;
+    text-decoration: none; white-space: nowrap;
+    transition: all 0.15s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lca-btn:hover  { transform: translateY(-1px); }
+  .lca-btn:active { transform: scale(0.92); }
+  .lca-btn.lca-wa:hover    { background: #F0FDF4; border-color: #86EFAC; color: #16A34A; }
+  .lca-btn.lca-call:hover  { background: var(--navy-50); border-color: var(--navy-200); color: var(--navy-600); }
+  .lca-btn.lca-next:hover  { background: var(--navy-100); border-color: var(--navy-300); color: var(--navy-700); }
+  .lca-btn[disabled]       { opacity: 0.38; cursor: not-allowed; transform: none !important; }
+
+  /* ── Pipeline — empty stage hint ── */
+  .kanban-empty-hint {
+    text-align: center; padding: 16px 8px; color: var(--gray-400);
+    font-size: 12px; line-height: 1.6;
+  }
+  .kanban-empty-hint .hint-icon { font-size: 22px; margin-bottom: 4px; }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2/dist/umd/supabase.js"
           integrity="sha384-nD3dwv4+ZqdYnmZKe/249ImlV04om7xTCcsoSeQYI+RO+XlKPoqAWaJR1M5SJH9p"
@@ -6246,6 +6286,7 @@ const Gamify = {
   },
 
   showLevelUp(level) {
+    this.confetti();
     document.getElementById('levelup-icon').textContent = level.icon;
     document.getElementById('levelup-name').textContent = level.name;
     document.getElementById('levelup-sub').textContent  = `ברכות! הגעת לרמה "${level.name}" — המשך כך 💪`;
@@ -7611,7 +7652,13 @@ const Pipeline = {
           <div class="kanban-cards">
             ${leads.length
               ? leads.map(l => this.renderCard(l, stage.color)).join('')
-              : q ? '<div style="padding:14px 10px;text-align:center;color:var(--gray-400);font-size:13px;">אין תוצאות בשלב זה</div>' : ''
+              : q
+                ? '<div style="padding:14px 10px;text-align:center;color:var(--gray-400);font-size:13px;">אין תוצאות בשלב זה</div>'
+                : `<div class="kanban-empty-hint">
+                     <div class="hint-icon">🎯</div>
+                     <div>אין לידים בשלב זה</div>
+                     <div style="font-size:11px;margin-top:2px;color:var(--gray-300);">גרור ליד לכאן או לחץ הוסף</div>
+                   </div>`
             }
           </div>
           <button class="kanban-add-btn" onclick="openModal('modal-add-lead')">+ הוסף ליד</button>
@@ -7659,8 +7706,29 @@ const Pipeline = {
   renderCard(lead, color) {
     const task = State.tasks.find(t => t.lead_id === lead.id && !t.done);
     const isOverdue = task && diffDays(task.due) < 0;
-    const isToday = task && diffDays(task.due) === 0;
-    const initials = escapeHtml(lead.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase());
+    const isToday   = task && diffDays(task.due) === 0;
+    const initials  = escapeHtml(lead.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase());
+
+    // Stage progress bar
+    const stageIdx  = State.stages.findIndex(s => s.id === lead.stage);
+    const stagePct  = State.stages.length > 1
+      ? Math.round((stageIdx / (State.stages.length - 1)) * 100) : 100;
+
+    // Quick advance
+    const curStage  = State.stages[stageIdx];
+    const nextStage = State.stages[stageIdx + 1];
+    const isTerminal = curStage?.is_terminal;
+
+    // Phone links
+    const rawPhone = (lead.phone || '').replace(/\D/g, '');
+    const intl     = rawPhone ? '972' + rawPhone.replace(/^0/, '') : null;
+    const waHref   = intl ? `https://wa.me/${intl}` : null;
+    const callHref = lead.phone ? `tel:${lead.phone}` : null;
+
+    const advanceBtn = !isTerminal && nextStage
+      ? `<button class="lca-btn lca-next" onclick="event.stopPropagation();quickAdvance('${lead.id}','${nextStage.id}')">⬆️ ${escapeHtml(nextStage.name)}</button>`
+      : `<button class="lca-btn lca-next" disabled>✅ סגור</button>`;
+
     return `
       <div class="lead-card" style="--stage-color:${color}"
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
@@ -7678,6 +7746,22 @@ const Pipeline = {
           ${task ? `<span style="font-size:11px; color:${isOverdue?'var(--red-600)':isToday?'var(--orange-500)':'var(--gray-400)'}; font-weight:600;">
             ${typeEmoji(task.type)} ${formatRelDate(task.due)}
           </span>` : ''}
+        </div>
+        <!-- Stage progress bar -->
+        <div class="lead-stage-bar">
+          <div class="lead-stage-bar-fill" style="width:${stagePct}%"></div>
+        </div>
+        <!-- Quick actions — stopPropagation keeps card navigation intact -->
+        <div class="lead-card-actions" onclick="event.stopPropagation()">
+          ${waHref
+            ? `<a class="lca-btn lca-wa" href="${waHref}" target="_blank" onclick="event.stopPropagation()">📱 WA</a>`
+            : `<button class="lca-btn lca-wa" disabled>📱 WA</button>`
+          }
+          ${callHref
+            ? `<a class="lca-btn lca-call" href="${callHref}" onclick="event.stopPropagation()">📞 שיחה</a>`
+            : `<button class="lca-btn lca-call" disabled>📞 שיחה</button>`
+          }
+          ${advanceBtn}
         </div>
       </div>
     `;
@@ -9435,6 +9519,10 @@ function confirmLeadRegression() {
   State._pendingRegression = null;
   closeModal('modal-regression-note');
   moveLeadActual(leadId, stageId, note);
+}
+
+async function quickAdvance(leadId, nextStageId) {
+  await moveLead(leadId, nextStageId);
 }
 
 function openMoveStage(leadId) {
