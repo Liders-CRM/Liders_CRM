@@ -1080,16 +1080,26 @@
        LOGIN FEATURE TILES
     ═══════════════════════════════════════ */
     .login-features {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
       margin: 18px 0 20px;
     }
     .login-feature-tile {
-      background: var(--gray-50); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 11px;
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--navy-700); font-weight: 600; line-height: 1.25;
+      border-radius: 14px; padding: 14px 12px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+      font-size: 12px; font-weight: 700; line-height: 1.35;
+      color: #fff; position: relative; overflow: hidden; cursor: default;
     }
-    .login-feature-tile .ft-icon { font-size: 18px; flex-shrink: 0; }
+    .login-feature-tile::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,.07); pointer-events: none;
+    }
+    .lft-mortgage { background: linear-gradient(135deg,#1a5f8a,#2196c4); }
+    .lft-ai       { background: linear-gradient(135deg,#5b21b6,#7c3aed); }
+    .lft-agent    { background: linear-gradient(135deg,#0f4c2a,#16a34a); }
+    .lft-prizes   { background: linear-gradient(135deg,#8a4a00,#d4a82a); }
+    .lft-icon { font-size: 26px; line-height: 1; }
+    .lft-title { font-size: 12px; font-weight: 800; line-height: 1.3; }
+    .lft-sub { font-size: 10px; opacity: .75; font-weight: 500; }
 
     /* ═══════════════════════════════════════
        SETUP / LOADING SCREEN (post-onboarding)
@@ -1429,53 +1439,91 @@
     /* Dashboard gamification widget */
     .gamify-widget {
       margin: 0 20px 14px;
-      background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-500) 100%);
-      border-radius: 16px; padding: 18px 20px; color: white;
+      background: linear-gradient(145deg, #0d1e3d 0%, #15325a 60%, #1a4080 100%);
+      border-radius: 20px; padding: 20px; color: white;
       position: relative; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(15,31,61,.5), inset 0 1px 0 rgba(255,255,255,.08);
     }
     .gamify-widget::before {
-      content: ''; position: absolute; top: -30px; left: -20px;
+      content: ''; position: absolute; top: -40px; left: -30px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,168,67,.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .gamify-widget::after {
+      content: ''; position: absolute; bottom: -20px; right: -10px;
       width: 120px; height: 120px; border-radius: 50%;
-      background: rgba(201,168,76,.08); pointer-events: none;
+      background: radial-gradient(circle, rgba(37,99,235,.12) 0%, transparent 70%);
+      pointer-events: none;
     }
     .gamify-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
     .gamify-avatar {
-      width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--gold-500), var(--gold-300));
-      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+      width: 58px; height: 58px; border-radius: 16px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold-600), var(--gold-400));
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+      box-shadow: 0 4px 16px rgba(201,168,76,.4);
+      animation: avatar-glow 3s ease-in-out infinite;
     }
-    .gamify-level-name { font-size: 15px; font-weight: 900; }
-    .gamify-streak { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+    @keyframes avatar-glow {
+      0%,100%{ box-shadow: 0 4px 16px rgba(201,168,76,.3); }
+      50%    { box-shadow: 0 4px 24px rgba(201,168,76,.6); }
+    }
+    .gamify-level-name { font-size: 16px; font-weight: 900; letter-spacing: -.3px; }
+    .gamify-streak { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 3px; }
     .gamify-xp-area { margin-bottom: 14px; }
-    .gamify-xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.55); margin-bottom: 5px; }
-    .gamify-bar { height: 8px; background: rgba(255,255,255,.12); border-radius: 8px; overflow: hidden; }
-    .gamify-fill { height: 100%; background: linear-gradient(90deg, var(--gold-500), var(--gold-300)); border-radius: 8px; transition: width .8s ease; }
+    .gamify-xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.55); margin-bottom: 6px; }
+    .gamify-bar {
+      height: 10px; background: rgba(255,255,255,.1); border-radius: 10px;
+      overflow: hidden; position: relative;
+    }
+    .gamify-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-600), var(--gold-400), #f5d87a);
+      border-radius: 10px; transition: width .8s cubic-bezier(.34,1.1,.64,1);
+      position: relative;
+    }
+    .gamify-fill::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg,transparent 60%,rgba(255,255,255,.35) 80%,transparent 100%);
+      animation: xp-shimmer 2s linear infinite;
+    }
+    @keyframes xp-shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
     .gamify-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
     .gamify-stat {
-      background: rgba(255,255,255,.06); border-radius: 10px;
-      padding: 8px 6px; text-align: center;
+      background: rgba(255,255,255,.07); border-radius: 12px;
+      padding: 10px 6px; text-align: center;
+      border: 1px solid rgba(255,255,255,.06);
     }
-    .gamify-stat-val { font-size: 1.3rem; font-weight: 900; color: var(--gold-300); }
-    .gamify-stat-label { font-size: 12px; color: rgba(255,255,255,.60); margin-top: 2px; }
+    .gamify-stat-val { font-size: 1.4rem; font-weight: 900; color: var(--gold-300); }
+    .gamify-stat-label { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
     .gamify-achievements { display: flex; gap: 6px; flex-wrap: wrap; }
     .gamify-badge {
-      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
-      border-radius: 8px; padding: 5px 9px; font-size: 11px; display: flex; align-items: center; gap: 5px;
-      color: rgba(255,255,255,.8); cursor: pointer; transition: all .2s;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px; padding: 6px 10px; font-size: 11px; display: flex; align-items: center; gap: 5px;
+      color: rgba(255,255,255,.75); cursor: pointer; transition: all .2s;
     }
-    .gamify-badge.unlocked { background: rgba(201,168,76,.2); border-color: rgba(201,168,76,.4); color: var(--gold-300); }
-    .gamify-badge.locked { opacity: .4; filter: grayscale(.8); }
+    .gamify-badge.unlocked {
+      background: rgba(201,168,76,.2); border-color: rgba(201,168,76,.5);
+      color: var(--gold-300); font-weight: 700;
+      animation: badge-pop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes badge-pop { from{ transform:scale(.8); opacity:0 } to{ transform:scale(1); opacity:1 } }
+    .gamify-badge.locked { opacity: .35; filter: grayscale(.9); }
     .gamify-daily-challenge {
-      margin-top: 12px; background: rgba(255,255,255,.06);
-      border-radius: 10px; padding: 10px 14px;
-      display: flex; align-items: center; gap: 10px;
+      margin-top: 12px; background: rgba(255,255,255,.07);
+      border-radius: 12px; padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
       cursor: pointer; transition: background .15s;
+      border: 1px solid rgba(255,255,255,.08);
     }
-    .gamify-daily-challenge:hover { background: rgba(255,255,255,.12); }
-    .gamify-daily-challenge.done-today { cursor: default; opacity: .7; }
-    .gamify-daily-icon { font-size: 1.3rem; }
-    .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.75); flex: 1; line-height: 1.4; }
-    .gamify-daily-done { font-size: 1rem; color: var(--gold-300); }
+    .gamify-daily-challenge:active { background: rgba(255,255,255,.13); }
+    .gamify-daily-challenge.done-today { cursor: default; opacity: .65; }
+    .gamify-daily-icon { font-size: 1.5rem; }
+    .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.8); flex: 1; line-height: 1.5; font-weight: 600; }
+    .gamify-daily-done { font-size: 1.1rem; color: var(--gold-300); }
 
     /* Achievement toast */
     .achievement-toast {
@@ -1646,18 +1694,34 @@
     .prop-share-btn:active { transform: scale(0.96); }
 
     /* Gamify prizes grid */
-    .gamify-prizes-title { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: rgba(255,255,255,.4); margin: 14px 0 8px; }
-    .gamify-prizes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .gamify-prize-card { background: rgba(255,255,255,.07); border-radius: 10px; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; border: 1px solid transparent; transition: all .2s; }
-    .gamify-prize-card.prize-locked { opacity: .45; }
-    .gamify-prize-card.prize-reached { border-color: rgba(240,192,64,.6); background: rgba(240,192,64,.12); cursor: pointer; animation: prize-pulse 2s infinite; }
-    .gamify-prize-card.prize-claimed { border-color: rgba(34,197,94,.4); background: rgba(34,197,94,.07); }
-    @keyframes prize-pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(240,192,64,.3) } 50%{ box-shadow:0 0 0 5px rgba(240,192,64,0) } }
-    .gamify-prize-icon { font-size: 22px; line-height: 1.1; }
-    .gamify-prize-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.85); line-height: 1.3; margin-top: 2px; }
-    .gamify-prize-xp-tag { font-size: 10px; color: rgba(255,255,255,.35); }
-    .gamify-prize-reached-tag { font-size: 10px; color: #F0C040; font-weight: 700; }
-    .gamify-prize-claimed-tag { font-size: 10px; color: #4ade80; font-weight: 700; }
+    .gamify-prizes-title {
+      font-size: 11px; font-weight: 800; letter-spacing: .5px;
+      color: var(--gold-300); margin: 16px 0 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .gamify-prizes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .gamify-prize-card {
+      background: rgba(255,255,255,.07); border-radius: 12px; padding: 12px 10px;
+      display: flex; flex-direction: column; gap: 3px;
+      border: 1px solid rgba(255,255,255,.06); transition: all .2s;
+    }
+    .gamify-prize-card.prize-locked { opacity: .4; }
+    .gamify-prize-card.prize-reached {
+      border-color: rgba(240,192,64,.65); background: rgba(240,192,64,.13);
+      cursor: pointer; animation: prize-pulse 2s infinite;
+    }
+    .gamify-prize-card.prize-claimed {
+      border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.08);
+    }
+    @keyframes prize-pulse {
+      0%,100%{ box-shadow:0 0 0 0 rgba(240,192,64,.4) }
+      50%    { box-shadow:0 0 0 6px rgba(240,192,64,0) }
+    }
+    .gamify-prize-icon { font-size: 26px; line-height: 1.1; margin-bottom: 2px; }
+    .gamify-prize-name { font-size: 11px; font-weight: 800; color: rgba(255,255,255,.9); line-height: 1.35; }
+    .gamify-prize-xp-tag { font-size: 10px; color: rgba(255,255,255,.38); font-weight: 600; margin-top: 2px; }
+    .gamify-prize-reached-tag { font-size: 10px; color: #F0C040; font-weight: 800; }
+    .gamify-prize-claimed-tag { font-size: 10px; color: #4ade80; font-weight: 800; }
 
     /* Quick features row */
     .dash-features-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 4px; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -2167,12 +2231,26 @@
       <div class="login-tagline">הפלטפורמה שהופכת לידים לעסקאות</div>
     </div>
     <div class="login-features">
-      <div class="login-feature-tile"><span class="ft-icon">📋</span>פייפליין מכירות</div>
-      <div class="login-feature-tile"><span class="ft-icon">📊</span>לוח מחוונים</div>
-      <div class="login-feature-tile"><span class="ft-icon">💬</span>התראות WhatsApp</div>
-      <div class="login-feature-tile"><span class="ft-icon">✅</span>ניהול משימות</div>
-      <div class="login-feature-tile"><span class="ft-icon">📅</span>יומן אירועים</div>
-      <div class="login-feature-tile"><span class="ft-icon">🔒</span>אבטחה מלאה</div>
+      <div class="login-feature-tile lft-mortgage">
+        <div class="lft-icon">🧮</div>
+        <div class="lft-title">מחשבון משכנתא</div>
+        <div class="lft-sub">ריבית, החזר וכדאיות — בשניות</div>
+      </div>
+      <div class="login-feature-tile lft-ai">
+        <div class="lft-icon">🎯</div>
+        <div class="lft-title">הצעות שיווק AI</div>
+        <div class="lft-sub">כותב לך פוסטים ומסרים בלחיצה</div>
+      </div>
+      <div class="login-feature-tile lft-agent">
+        <div class="lft-icon">🤖</div>
+        <div class="lft-title">סוכן AI צמוד</div>
+        <div class="lft-sub">מנתח לידים ומציע את הצעד הבא</div>
+      </div>
+      <div class="login-feature-tile lft-prizes">
+        <div class="lft-icon">🏆</div>
+        <div class="lft-title">פרסים יומיים</div>
+        <div class="lft-sub">XP ומתנות על שימוש יומי במערכת</div>
+      </div>
     </div>
     <div class="login-trial-badge" style="margin-bottom:4px;">
       🎁 30 יום ניסיון בחינם — ללא כרטיס אשראי
@@ -2311,9 +2389,9 @@
   <!-- MAIN CONTENT -->
   <main id="main-content">
     <!-- DEMO BANNER -->
-    <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,var(--gold-500),var(--gold-700));color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
-      <span>👀 מצב דמו — הנתונים לא נשמרים · AI וכלים מתקדמים מנוטרלים</span>
-      <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:#fff;color:var(--gold-700);border:none;border-radius:8px;padding:6px 16px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;">
+    <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,#0F1F3D,#1a3a6a);border-bottom:2px solid var(--gold-500);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
+      <span style="color:var(--gold-300);">👀 מצב דמו</span><span style="color:rgba(255,255,255,0.75);font-weight:500;font-size:12px;">— הנתונים לא נשמרים · AI מנוטרל</span>
+      <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:var(--gold-500);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;">
         🚀 פתח חשבון חינמי →
       </button>
     </div>
@@ -2378,7 +2456,7 @@
             <div class="gamify-milestone-xp"><span id="gamify-ms-cur">0 XP</span><span id="gamify-ms-next">—</span></div>
           </div>
           <!-- Prizes showcase -->
-          <div class="gamify-prizes-title">🏆 פרסים שמחכים לך</div>
+          <div class="gamify-prizes-title">🎁 פרסים שמחכים לך</div>
           <div class="gamify-prizes-grid" id="gamify-prizes-grid"></div>
           <div class="gamify-stats">
             <div class="gamify-stat">
@@ -2453,6 +2531,10 @@
         <div class="dash-feat-tile dash-feat-tile-pro" onclick="App.go('pro')">
           <div class="dash-feat-tile-icon">✨</div>
           <div class="dash-feat-tile-label">פיצ'רים<br>PRO</div>
+        </div>
+        <div class="dash-feat-tile" style="background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;border-color:transparent;" onclick="App.go('marketing')">
+          <div class="dash-feat-tile-icon">🎯</div>
+          <div class="dash-feat-tile-label" style="color:#fff;">שיווק<br>AI</div>
         </div>
         <div class="dash-feat-tile" onclick="MortgageCalc.open()">
           <div class="dash-feat-tile-icon">🧮</div>
@@ -7545,7 +7627,7 @@ const App = {
   go(screen, params = {}) {
     // Demo: allow only dashboard, pipeline and marketing (as teasers); block all else
     if (State.isDemo) {
-      const DEMO_PASS = new Set(['dashboard', 'pipeline', 'marketing', 'login', 'pro', 'analytics']);
+      const DEMO_PASS = new Set(['dashboard', 'pipeline', 'marketing', 'login', 'pro', 'analytics', 'properties', 'tools']);
       if (!DEMO_PASS.has(screen)) { DemoLock.showPrompt(); return; }
     }
     Object.assign(State, params);
