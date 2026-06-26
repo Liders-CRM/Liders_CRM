@@ -2320,6 +2320,95 @@
     .screen-body { padding: 24px; }
   }
 
+  /* ── Warm Up Engine ── */
+  .warmup-card {
+    background: linear-gradient(135deg, #FFF9EE 0%, #FFF4E0 100%);
+    border: 1px solid rgba(245,158,11,0.22);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(245,158,11,0.10);
+  }
+  .warmup-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #F59E0B, #EA580C);
+  }
+  .warmup-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245,158,11,0.2);
+  }
+  .warmup-card:active { transform: scale(0.98); }
+  .warmup-avatar {
+    width: 42px; height: 42px; border-radius: 13px; flex-shrink: 0;
+    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    color: white; font-size: 14px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(245,158,11,0.35);
+  }
+  .warmup-lead-name { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+  .warmup-cold-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 700; color: #92400E;
+    background: #FEF3C7; border-radius: 99px; padding: 2px 8px;
+    margin-top: 2px;
+  }
+  .warmup-prop-box {
+    display: flex; align-items: center; gap: 10px;
+    background: white; border-radius: var(--radius-md);
+    padding: 10px 12px; border: 1px solid rgba(245,158,11,0.18);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .warmup-prop-icon {
+    width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+    background: linear-gradient(135deg, #DBEAFE, #EFF6FF);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .warmup-prop-title { font-size: 13px; font-weight: 700; color: var(--gray-800); line-height: 1.3; }
+  .warmup-prop-price { font-size: 13px; color: var(--navy-500); font-weight: 800; margin-top: 1px; }
+  .warmup-match-tag {
+    font-size: 11px; color: #78350F;
+    background: rgba(251,191,36,0.2); border-radius: 8px;
+    padding: 5px 10px; border: 1px solid rgba(245,158,11,0.2);
+    line-height: 1.4;
+  }
+  .warmup-actions { display: flex; gap: 8px; }
+  .warmup-wa-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: linear-gradient(135deg, #22C55E, #16A34A);
+    color: white; border: none; border-radius: var(--radius-md);
+    padding: 11px; font-size: 13px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 3px 10px rgba(34,197,94,0.3);
+    transition: all 0.18s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .warmup-wa-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(34,197,94,0.4); }
+  .warmup-wa-btn:active { transform: scale(0.95); }
+  .warmup-detail-btn {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    background: white; color: var(--navy-600);
+    border: 1.5px solid var(--navy-200); border-radius: var(--radius-md);
+    padding: 11px 16px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .warmup-detail-btn:hover { background: var(--navy-50); border-color: var(--navy-400); }
+  .warmup-detail-btn:active { transform: scale(0.96); }
+  .warmup-dismiss {
+    position: absolute; top: 8px; left: 10px;
+    background: none; border: none; color: rgba(180,130,50,0.5);
+    font-size: 16px; cursor: pointer; padding: 4px; line-height: 1;
+    transition: color 0.12s;
+  }
+  .warmup-dismiss:hover { color: rgba(180,130,50,0.9); }
+  #dash-warmup-section:empty { display: none; }
+
   /* ── Activity items ── */
   .activity-item {
     transition: background 0.12s;
@@ -2704,6 +2793,9 @@
         <div class="section-link" onclick="App.go('pipeline')">כל הפייפליין</div>
       </div>
       <div id="dash-hot-leads" style="padding:0 20px 4px;display:flex;flex-direction:column;gap:8px;"></div>
+
+      <!-- WARM UP COLD LEADS — matches cold leads to fitting properties -->
+      <div id="dash-warmup-section"></div>
 
       <!-- IMPORT BANNER (1–4 leads) -->
       <div id="dash-import-banner" class="hidden dash-import-banner">
@@ -4387,8 +4479,8 @@ const DEMO = {
       phone:'055-9962494', phone2:'', email:'',
       source:'madlan', stage:'s1', score:45,
       budget_min:1200000, budget_max:1500000, desired_area:'פתח תקווה', rooms:'3',
-      last_contact:addDays(-8), next_followup:addDays(-3),
-      notes:'יצרה קשר דרך מדלן ונעלמה. לא ענתה לשלוש שיחות ולוואטסאפ. לנסות שוב בשעות הערב — ייתכן שעובדת משמרות.', created_at:addDays(-8) },
+      last_contact:addDays(-20), next_followup:addDays(-15),
+      notes:'יצרה קשר דרך מדלן ונעלמה. לא ענתה לשלוש שיחות ולוואטסאפ ולאורך שלושה שבועות — ליד קר. שווה לנסות עם נכס חדש שנכנס לאזור שחיפשה.', created_at:addDays(-22) },
 
     { id:'l10', name:'ברוך כהן',
       phone:'055-9962494', phone2:'', email:'demo12@liders-demo.com',
@@ -7052,6 +7144,154 @@ const App = {
 };
 
 /* ═══════════════════════════════════════════
+   WARM UP ENGINE — matches cold leads to fitting properties
+═══════════════════════════════════════════ */
+const WarmUpEngine = {
+  // IDs dismissed this session so we don't keep nagging
+  _dismissed: new Set(),
+
+  render() {
+    const el = document.getElementById('dash-warmup-section');
+    if (!el) return;
+    const matches = this._findMatches();
+    if (!matches.length) { el.innerHTML = ''; return; }
+
+    el.innerHTML = `
+      <div class="section-header" style="margin-top:16px;">
+        <div class="section-title" style="display:flex;align-items:center;gap:8px;">
+          🔥 הזדמנויות לחימום לידים
+          <span style="background:#FEF3C7;color:#B45309;font-size:11px;font-weight:800;padding:2px 9px;border-radius:99px;">${matches.length}</span>
+        </div>
+        <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
+      </div>
+      <div style="padding:0 20px;">
+        ${matches.map((m, i) => this._renderCard(m, i)).join('')}
+      </div>
+    `;
+  },
+
+  _findMatches() {
+    const props = State.properties || [];
+    const avail = props.filter(p => p.status !== 'sold');
+    const coldLeads = State.leads.filter(l => {
+      if (l.stage === 's5') return false;
+      if (this._dismissed.has(l.id)) return false;
+      const ref = l.last_contact || l.created_at;
+      return diffDays(ref) < -14;
+    });
+
+    const matches = [];
+    for (const lead of coldLeads) {
+      const fits = avail.filter(p => this._isMatch(lead, p));
+      if (!fits.length) continue;
+      // prefer property added most recently
+      const prop = fits.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))[0];
+      const coldDays = Math.abs(diffDays(lead.last_contact || lead.created_at));
+      matches.push({ lead, prop, coldDays });
+    }
+    // Show coldest leads first, max 3
+    return matches.sort((a, b) => b.coldDays - a.coldDays).slice(0, 3);
+  },
+
+  _isMatch(lead, prop) {
+    // Budget: property price must not exceed lead's max budget by more than 10%
+    if (lead.budget_max && prop.price && prop.price > lead.budget_max * 1.1) return false;
+    // Budget: property must be at least 70% of lead's min budget (if set)
+    if (lead.budget_min && prop.price && prop.price < lead.budget_min * 0.7) return false;
+
+    // Area: at least one keyword from lead's desired_area must appear in property city/neighborhood
+    if (lead.desired_area && prop.city) {
+      const words = lead.desired_area
+        .split(/[\s\/\-—,\/]+/)
+        .map(w => w.trim())
+        .filter(w => w.length > 1);
+      const propStr = ((prop.city || '') + ' ' + (prop.neighborhood || '')).toLowerCase();
+      if (!words.some(w => propStr.includes(w.toLowerCase()))) return false;
+    }
+    return true;
+  },
+
+  _renderCard({ lead, prop, coldDays }, i) {
+    const initials = (lead.name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    const phone    = (lead.phone || '').replace(/\D/g, '');
+    const intl     = phone ? '972' + phone.replace(/^0/, '') : null;
+    const msg      = encodeURIComponent(
+      `שלום ${lead.name} 👋\n\nנזכרתי בך ובמה שחיפשת.\n\nנכנס לי נכס שיכול להתאים בדיוק — ${prop.title || prop.city}${prop.city ? ' ב' + prop.city : ''}.\n\n💰 מחיר: ${Number(prop.price).toLocaleString('he-IL')} ₪\n\nאשמח לתאם לך סיור קצר, ממש שווה לראות. מתי נוח לך?`
+    );
+    const waHref   = intl ? `https://wa.me/${intl}?text=${msg}` : null;
+    const propIcon = prop.type === 'house' ? '🏡' : prop.type === 'penthouse' ? '🏢' : '🏠';
+    const areaTag  = lead.desired_area ? `📍 ${lead.desired_area}` : '';
+
+    return `
+      <div class="warmup-card" id="warmup-${lead.id}" style="animation:itemFadeIn 0.32s ${i * 0.09}s both;">
+        <button class="warmup-dismiss" onclick="WarmUpEngine.dismiss('${lead.id}')" title="הסתר">×</button>
+
+        <!-- Lead row -->
+        <div style="display:flex;align-items:center;gap:10px;padding-left:18px;">
+          <div class="warmup-avatar">${initials}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="warmup-lead-name">${escapeHtml(lead.name)}</div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;">
+              <span class="warmup-cold-badge">❄️ ${coldDays} ימים ללא קשר</span>
+              ${areaTag ? `<span style="font-size:11px;color:var(--gray-500);">${escapeHtml(areaTag)}</span>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- Matching property -->
+        <div class="warmup-prop-box">
+          <div class="warmup-prop-icon">${propIcon}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="warmup-prop-title">${escapeHtml(prop.title || prop.city)}</div>
+            <div class="warmup-prop-price">${Number(prop.price).toLocaleString('he-IL')} ₪ · ${escapeHtml(prop.city || '')}</div>
+          </div>
+          <button onclick="App.go('properties')" style="background:var(--navy-50);border:1px solid var(--navy-200);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--navy-500);cursor:pointer;font-family:inherit;white-space:nowrap;">
+            לנכס ›
+          </button>
+        </div>
+
+        <!-- Match reason -->
+        <div class="warmup-match-tag">
+          ✨ הנכס תואם לאזור ולתקציב של הליד — זה הזמן לפנות!
+        </div>
+
+        <!-- Actions -->
+        <div class="warmup-actions">
+          ${waHref
+            ? `<button class="warmup-wa-btn" onclick="window.open('${waHref}','_blank');WarmUpEngine.markSent('${lead.id}');">📱 שלח WhatsApp</button>`
+            : `<button class="warmup-wa-btn" style="background:var(--gray-300);cursor:not-allowed;" disabled>📱 אין טלפון</button>`
+          }
+          <button class="warmup-detail-btn" onclick="App.go('lead-detail',{currentLeadId:'${lead.id}'})">📋 פרטי ליד</button>
+        </div>
+      </div>
+    `;
+  },
+
+  dismiss(leadId) {
+    this._dismissed.add(leadId);
+    const card = document.getElementById(`warmup-${leadId}`);
+    if (card) {
+      card.style.transition = 'opacity 0.25s, transform 0.25s';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(20px) scale(0.97)';
+      setTimeout(() => { card.remove(); this._checkEmpty(); }, 260);
+    }
+  },
+
+  markSent(leadId) {
+    toast('📨 WhatsApp נשלח! XP נזכז כשהליד יגיב 🚀', 'success');
+    Gamify.awardXP('rescue_cold');
+    // Dismiss after short delay so user sees the success
+    setTimeout(() => this.dismiss(leadId), 1800);
+  },
+
+  _checkEmpty() {
+    const section = document.getElementById('dash-warmup-section');
+    if (section && !section.querySelector('.warmup-card')) section.innerHTML = '';
+  },
+};
+
+/* ═══════════════════════════════════════════
    DASHBOARD
 ═══════════════════════════════════════════ */
 const Dashboard = {
@@ -7068,6 +7308,7 @@ const Dashboard = {
     this.renderHotLeads();
     this.renderColdLeads();
     this.renderActivity();
+    WarmUpEngine.render();
     this.renderAIBriefing();
     Billing.renderDashTrialCard();
     Gamify.renderWidget();
@@ -9463,6 +9704,7 @@ async function addProperty() {
     PropImages.resetNew();
     toast(`🏠 נכס "${title}" נוסף בהצלחה`, 'success');
     if (State.screen === 'properties') PropertiesScreen.render();
+    if (State.screen === 'dashboard') WarmUpEngine.render();
   } catch(e) {
     toast('שגיאה בשמירה: ' + e.message, 'error');
   } finally {
