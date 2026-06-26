@@ -400,6 +400,14 @@
     /* ═══════════════════════════════════════
        TASK ITEM
     ═══════════════════════════════════════ */
+    .quick-del-btn {
+      flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(239,68,68,0.08); border: none; outline: none;
+      color: var(--red-500); font-size: 14px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; line-height: 1;
+    }
+    .quick-del-btn:hover { background: rgba(239,68,68,0.22); }
     .task-item {
       display: flex; align-items: flex-start; gap: 12px;
       padding: 12px 16px; background: var(--surface);
@@ -933,6 +941,7 @@
       cursor: pointer; border: 1px solid var(--border);
       transition: box-shadow 0.15s, transform 0.15s;
       border-right: 3px solid var(--stage-color, var(--gray-300));
+      position: relative;
     }
     .lead-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
     .lead-card-name { font-size: 14px; font-weight: 800; color: var(--gray-900); }
@@ -4526,6 +4535,18 @@ const DB = {
     if (error) throw error;
   },
 
+  async deleteTask(id) {
+    const { error } = await sbClient.from('tasks').delete()
+      .eq('id', id).eq('tenant_id', this.tenantId);
+    if (error) throw error;
+  },
+
+  async deleteLead(id) {
+    const { error } = await sbClient.from('leads').delete()
+      .eq('id', id).eq('tenant_id', this.tenantId);
+    if (error) throw error;
+  },
+
   async moveLead(leadId, shortStageId) {
     const uuid = this.stageRev[shortStageId];
     if (!uuid) return;
@@ -8095,6 +8116,7 @@ const Pipeline = {
     return `
       <div class="lead-card card-enter" style="--stage-color:${color}; animation-delay:${idx * 55}ms"
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
+        <button class="quick-del-btn" style="position:absolute;top:6px;left:6px;" onclick="event.stopPropagation();quickDeleteLead('${lead.id}')">✕</button>
         <div style="display:flex; align-items:flex-start; gap:8px;">
           <div class="lead-card-avatar">${initials}</div>
           <div style="flex:1; min-width:0;">
@@ -8168,6 +8190,7 @@ const Leads = {
           <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:${stage?.color+'22'};color:${stage?.color};">${escapeHtml(stage?.name||'—')}</span>
           ${task?`<span style="font-size:11px;color:${diffDays(task.due)<0?'var(--red-600)':'var(--gray-400)'};">${typeEmoji(task.type)} ${formatRelDate(task.due)}</span>`:''}
         </div>
+        <button class="quick-del-btn" onclick="event.stopPropagation();quickDeleteLead('${lead.id}')">✕</button>
       </div>
     `;
   }
@@ -8483,7 +8506,10 @@ const PropertiesScreen = {
         <div class="property-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div class="property-price">${formatMoney(p.price)}</div>
-            <span class="badge ${statusClass[p.status]||'badge-status-new'}">${escapeHtml(statusBadge[p.status]||p.status)}</span>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span class="badge ${statusClass[p.status]||'badge-status-new'}">${escapeHtml(statusBadge[p.status]||p.status)}</span>
+              <button class="quick-del-btn" onclick="event.stopPropagation();quickDeleteProp('${p.id}')">✕</button>
+            </div>
           </div>
           <div class="property-title">${escapeHtml(p.title)}</div>
           <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${escapeHtml(p.address)}, ${escapeHtml(p.city)}</div>
@@ -8549,6 +8575,7 @@ function renderTaskItem(task) {
           <span style="opacity:0.6">${escapeHtml(priorityLabel(task.priority))}</span>
         </div>
       </div>
+      <button class="quick-del-btn" onclick="event.stopPropagation();quickDeleteTask('${task.id}')">✕</button>
     </div>
   `;
 }
@@ -10251,6 +10278,54 @@ async function deleteProperty() {
     closeModal('modal-edit-property');
     toast('🗑 הנכס נמחק', 'success');
     if (State.screen === 'properties') PropertiesScreen.render();
+  } catch(e) {
+    toast('שגיאה במחיקה: ' + e.message, 'error');
+  }
+}
+
+async function quickDeleteTask(id) {
+  if (demoGuard()) return;
+  const task = State.tasks.find(t => t.id === id);
+  if (!task) return;
+  if (!confirm(`למחוק את המשימה "${task.title}"?`)) return;
+  try {
+    await DB.deleteTask(id);
+    State.tasks = State.tasks.filter(t => t.id !== id);
+    toast('🗑 המשימה נמחקה', 'success');
+    Tasks.render();
+  } catch(e) {
+    toast('שגיאה במחיקה: ' + e.message, 'error');
+  }
+}
+
+async function quickDeleteLead(id) {
+  if (demoGuard()) return;
+  const lead = State.leads.find(l => l.id === id);
+  if (!lead) return;
+  if (!confirm(`למחוק את הליד "${lead.name}"?`)) return;
+  try {
+    await DB.deleteLead(id);
+    State.leads = State.leads.filter(l => l.id !== id);
+    State.tasks = State.tasks.filter(t => t.lead_id !== id);
+    if (State.activities) State.activities = State.activities.filter(a => a.lead_id !== id);
+    toast('🗑 הליד נמחק', 'success');
+    if (State.screen === 'pipeline') Pipeline.render();
+    else if (State.screen === 'leads') Leads.render();
+  } catch(e) {
+    toast('שגיאה במחיקה: ' + e.message, 'error');
+  }
+}
+
+async function quickDeleteProp(id) {
+  if (demoGuard()) return;
+  const prop = State.properties.find(p => p.id === id);
+  if (!prop) return;
+  if (!confirm(`למחוק את הנכס "${prop.title}"?`)) return;
+  try {
+    await DB.deleteProperty(id);
+    State.properties = State.properties.filter(p => p.id !== id);
+    toast('🗑 הנכס נמחק', 'success');
+    PropertiesScreen.render();
   } catch(e) {
     toast('שגיאה במחיקה: ' + e.message, 'error');
   }
