@@ -4637,23 +4637,43 @@ const Onboarding = {
       },
     },
     {
-      title: 'הכל מוכן! 🎉',
-      subtitle: 'המערכת שלך מוכנה — מוכנ להמריא?',
+      title: 'הכיר את הסוכן שלך 🤖',
+      subtitle: 'עוזר AI אישי שמנטר ומניע אותך',
       render() {
+        const firstName = (Onboarding._data.agentName || 'יזם').split(' ')[0];
+        const ind = localStorage.getItem('liders_industry') || 'other';
+        const AGENT_TIPS = {
+          realestate:        'רוב הקונים בוחרים סוכן תוך 72 שעות מהפנייה הראשונה. אני אזהיר אותך על כל ליד שלא קיבל מענה תוך יום.',
+          construction:      'ג\'וב שלא ענית עליו 3 פעמים — הלך למתחרה. אני אנהל את מעקב השיחות שלך אוטומטית.',
+          interior:          'לקוח עיצוב מחליט אחרי ראיית Portfolio. אני אזכיר לך מתי לשלוח דוגמאות עבודה לכל ליד.',
+          photography:       'פניות צילום מתקררות מהר — מהירות מענה היא הכל. אני אגדיר לך תזכורות חכמות.',
+          mortgage:          'שינוי ריבית = לקוחות ישנים שזקוקים למחזור. אני אזהיר אותך על לידים שכדאי לחזור אליהם.',
+          appraiser:         'שמאים מצליחים עוקבים אחרי כל ליד 3 פעמים. אני אנהל את מעקב הפניות שלך.',
+          realestate_lawyer: 'עסקאות נדל"ן נסגרות בממוצע 60–90 יום. אני אעקוב אחרי כל תיק ואזהיר על עיכובים.',
+          architect:         'פרויקטים מתחילים בסיור ראשוני. אני אזכיר לך לתאם תוך 48 שעות מכל פנייה חדשה.',
+          other:             'לידים שלא מקבלים מענה תוך 24 שעות — 80% הולכים למתחרה. אני אשמור אותך על כדור.',
+        };
+        const tip = AGENT_TIPS[ind] || AGENT_TIPS.other;
         return `
-          <div style="text-align:center;padding:16px 0 8px;">
-            <div style="font-size:72px;margin-bottom:6px;filter:drop-shadow(0 4px 16px rgba(37,99,235,0.35));">🚀</div>
-            <p style="font-size:1rem;line-height:1.7;color:var(--gray-500);margin-bottom:28px;">
-              <strong style="color:var(--gray-900);font-size:1.05rem;">הגדרת הסוכנות הושלמה בהצלחה!</strong><br>
-              הכל מוכן ומחכה לך — לחץ על הכפתור ונמריא יחד 🌟
-            </p>
+          <div style="text-align:center;padding:4px 0 0;">
+            <div style="font-size:54px;margin-bottom:4px;line-height:1;">🤖</div>
+            <div style="font-size:17px;font-weight:900;color:var(--navy);margin-bottom:2px;">שלום ${firstName}, אני הסוכן שלך</div>
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:14px;letter-spacing:.3px;">מוטיבציה · ניתוח פייפליין · תזכורות חכמות</div>
+            <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:16px 16px 16px 4px;padding:13px 15px;text-align:right;margin-bottom:16px;">
+              <div style="font-size:13px;color:var(--gray-600);line-height:1.75;">
+                אני מנטר את הפייפליין שלך, מזהה לידים שמסתכנים להיאבד, ונותן לך טיפ בכל כניסה למערכת.
+              </div>
+              <div style="margin-top:10px;background:linear-gradient(135deg,rgba(37,99,235,0.07),rgba(124,58,237,0.07));border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--gray-700);line-height:1.7;text-align:right;">
+                💡 <strong>הטיפ הראשון שלי:</strong><br>${tip}
+              </div>
+            </div>
             <button onclick="Onboarding._launchRocket()"
-              style="width:100%;padding:20px 24px;background:linear-gradient(135deg,#0F1F3D 0%,#2563EB 100%);color:white;border:none;border-radius:18px;cursor:pointer;font-size:1.15rem;font-weight:800;font-family:inherit;box-shadow:0 8px 28px rgba(37,99,235,0.45);transition:transform 0.18s,box-shadow 0.18s;letter-spacing:0.01em;"
+              style="width:100%;padding:18px 24px;background:linear-gradient(135deg,#0F1F3D 0%,#2563EB 100%);color:white;border:none;border-radius:16px;cursor:pointer;font-size:1.1rem;font-weight:800;font-family:inherit;box-shadow:0 8px 28px rgba(37,99,235,0.45);transition:transform 0.18s;"
               onmousedown="this.style.transform='scale(0.97)'"
               onmouseup="this.style.transform=''"
               ontouchstart="this.style.transform='scale(0.97)'"
               ontouchend="this.style.transform=''">
-              🚀 שגר אותי למערכת!
+              🚀 הפעל את Liders שלי!
             </button>
           </div>`;
       },
@@ -7033,6 +7053,7 @@ const App = {
     await this._performLogout();
   },
   async _performLogout() {
+    sessionStorage.removeItem('liders_auth_active');
     await DB.signOut();
     // Wipe per-tenant state so a different account signing in on this same
     // browser/device can never see (or be shown alongside) the previous
@@ -9786,6 +9807,20 @@ sbClient.auth.onAuthStateChange((event, session) => {
   if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
     const loginScreen = document.getElementById('screen-login');
     if (!loginScreen.classList.contains('hidden')) {
+      // INITIAL_SESSION = Supabase auto-restored a session from localStorage.
+      // We only allow this when the same browser tab is still open (sessionStorage
+      // persists across refreshes but is wiped when the tab/window is closed).
+      // If sessionStorage has no flag the user reopened the browser → force re-auth.
+      if (event === 'INITIAL_SESSION') {
+        if (!sessionStorage.getItem('liders_auth_active')) {
+          setTimeout(() => sbClient.auth.signOut(), 0);
+          return;
+        }
+      }
+      // Mark this browser session as authenticated (cleared on tab close)
+      if (event === 'SIGNED_IN') {
+        sessionStorage.setItem('liders_auth_active', '1');
+      }
       // User just signed in via OAuth redirect.
       // IMPORTANT: supabase-js holds an internal auth lock for the duration of
       // this callback — awaiting sbClient.rpc()/from() calls in here deadlocks
