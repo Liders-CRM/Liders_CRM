@@ -2080,10 +2080,10 @@
   <!-- MAIN CONTENT -->
   <main id="main-content">
     <!-- DEMO BANNER -->
-    <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,var(--gold-400),var(--gold-600));color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
-      <span>⚡ מצב דמו — הנתונים לא נשמרים ולא מחוברים לענן</span>
-      <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:#fff;color:var(--gold-600);border:none;border-radius:8px;padding:5px 14px;font-weight:800;font-size:12px;cursor:pointer;">
-        הרשם / התחבר →
+    <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,var(--gold-500),var(--gold-700));color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
+      <span>👀 מצב דמו — הנתונים לא נשמרים · AI וכלים מתקדמים מנוטרלים</span>
+      <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:#fff;color:var(--gold-700);border:none;border-radius:8px;padding:6px 16px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;">
+        🚀 פתח חשבון חינמי →
       </button>
     </div>
     <!-- PWA INSTALL BANNER -->
@@ -4752,6 +4752,7 @@ function toast(msg, type='') {
 ═══════════════════════════════════════════ */
 const AI = {
   async call(messages, maxTokens = 400, opts = {}) {
+    if (State.isDemo) throw Object.assign(new Error('demo_locked'), { isDemo: true });
     const type = opts.type || 'general';
     if (!AiLimits.canUse(type)) {
       const lim = AiLimits._lim()[type];
@@ -5147,27 +5148,52 @@ const Marketing = {
     const trialLeft = this.trialDaysLeft();
 
     if (!hasAccess) {
-      el.innerHTML = `
-        <div class="marketing-header-strip">
-          <div class="marketing-addon-badge">⭐ תוספת פרימיום</div>
-          <h2>📣 שירותי שיווק</h2>
-          <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
-        </div>
-        <div class="mktg-locked">
-          <div class="mktg-locked-icon">🔒</div>
-          <h3>תוסף שיווק — ₪100 לחודש</h3>
-          <p>גישה לכלים מקצועיים שיעזרו לך ליצור הצעות מיוחדות, פוסטים לסושיאל וקמפיינים ללקוחות — הכל מתוך המערכת, בלי לצאת החוצה.</p>
-          <ul class="mktg-locked-features">
-            <li>✨ מחולל הצעה אישית ללקוח — מבוסס AI</li>
-            <li>📸 יוצר פוסטים לסושיאל — מבוסס AI</li>
-            <li>📢 מחולל קמפיין WhatsApp — מבוסס AI</li>
-            <li>🌟 שירות בנייה מלא ע"י צוות Liders</li>
-          </ul>
-          <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
-            הוסף שירותי שיווק — ₪100/חודש
-          </button>
-          <p class="mktg-upgrade-micro">ניתן להוסיף בכל עת · ביטול ללא קנסות</p>
-        </div>`;
+      if (State.isDemo) {
+        el.innerHTML = `
+          <div class="marketing-header-strip">
+            <div class="marketing-addon-badge">👀 מצב תצוגה</div>
+            <h2>📣 שירותי שיווק AI</h2>
+            <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
+          </div>
+          <div class="mktg-locked">
+            <div class="mktg-locked-icon">🚀</div>
+            <h3>רוצה לנסות את זה באמת?</h3>
+            <p>בדמו אפשר לראות — בחשבון אמיתי אפשר לעשות. פתח חשבון חינמי ותקבל 14 יום ניסיון מלא עם כלי השיווק:</p>
+            <ul class="mktg-locked-features">
+              <li>✨ מחולל הצעה אישית ללקוח — מבוסס AI</li>
+              <li>📸 יוצר פוסטים לסושיאל — מבוסס AI</li>
+              <li>📢 מחולל קמפיין WhatsApp — מבוסס AI</li>
+              <li>🌟 שירות בנייה מלא ע"י צוות Liders</li>
+            </ul>
+            <button class="mktg-upgrade-btn"
+              onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
+              🚀 פתח חשבון חינמי — 14 יום ניסיון
+            </button>
+            <p class="mktg-upgrade-micro">ללא כרטיס אשראי · ביטול בכל עת</p>
+          </div>`;
+      } else {
+        el.innerHTML = `
+          <div class="marketing-header-strip">
+            <div class="marketing-addon-badge">⭐ תוספת פרימיום</div>
+            <h2>📣 שירותי שיווק</h2>
+            <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
+          </div>
+          <div class="mktg-locked">
+            <div class="mktg-locked-icon">🔒</div>
+            <h3>תוסף שיווק — ₪100 לחודש</h3>
+            <p>גישה לכלים מקצועיים שיעזרו לך ליצור הצעות מיוחדות, פוסטים לסושיאל וקמפיינים ללקוחות — הכל מתוך המערכת, בלי לצאת החוצה.</p>
+            <ul class="mktg-locked-features">
+              <li>✨ מחולל הצעה אישית ללקוח — מבוסס AI</li>
+              <li>📸 יוצר פוסטים לסושיאל — מבוסס AI</li>
+              <li>📢 מחולל קמפיין WhatsApp — מבוסס AI</li>
+              <li>🌟 שירות בנייה מלא ע"י צוות Liders</li>
+            </ul>
+            <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
+              הוסף שירותי שיווק — ₪100/חודש
+            </button>
+            <p class="mktg-upgrade-micro">ניתן להוסיף בכל עת · ביטול ללא קנסות</p>
+          </div>`;
+      }
       return;
     }
 
@@ -7187,30 +7213,47 @@ const LeadDetail = {
 
         <!-- AI TAB -->
         <div class="tab-content" id="tab-ai">
-          <div class="ai-panel">
-            <!-- Score -->
-            <button class="btn btn-primary w-full" onclick="LeadDetail.runScore()">
-              🎯 נתח ליד וקבל ציון AI
-            </button>
-            <div id="ai-score-result" class="hidden"></div>
-            <!-- Follow-up -->
-            <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runFollowup()">
-              💬 כתוב הודעת מעקב ל-WhatsApp
-            </button>
-            <div id="ai-followup-result" class="hidden"></div>
-            <!-- Rescue (only if cold lead) -->
-            ${(!lead.last_contact || diffDays(lead.last_contact) < -7) ? `
-            <button class="btn btn-ghost w-full" style="border-color:var(--orange-500);color:var(--orange-500);" onclick="LeadDetail.runRescue()">
-              ❄️ הודעת החייאה — ליד לא פעיל
-            </button>
-            <div id="ai-rescue-result" class="hidden"></div>
-            ` : ''}
-            <!-- Deal Advisor -->
-            <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runAdvice()">
-              🧠 יועץ עסקה — מה הצעד הבא?
-            </button>
-            <div id="ai-advice-result" class="hidden"></div>
-          </div>
+          ${State.isDemo ? `
+            <div style="text-align:center;padding:24px 12px 20px;">
+              <div style="font-size:52px;margin-bottom:10px;">🤖</div>
+              <div style="font-weight:800;font-size:1.05rem;color:var(--gray-900);margin-bottom:6px;">כלי AI — זמינים בחשבון אמיתי</div>
+              <div style="font-size:0.87rem;color:var(--gray-500);line-height:1.6;margin-bottom:16px;">
+                14 יום ניסיון מלא בחינם. גישה לכל כלי ה-AI:
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;text-align:right;margin-bottom:20px;">
+                <div style="background:var(--bg-app);border-radius:9px;padding:10px 13px;font-size:13px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);">🎯 <span><strong>ניתוח ציון ליד</strong> — מי שווה לסגור קודם</span></div>
+                <div style="background:var(--bg-app);border-radius:9px;padding:10px 13px;font-size:13px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);">💬 <span><strong>הודעת WhatsApp בלחיצה</strong> — מותאמת לכל ליד</span></div>
+                <div style="background:var(--bg-app);border-radius:9px;padding:10px 13px;font-size:13px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);">❄️ <span><strong>החייאת לידים קפואים</strong> — ה-AI כותב, אתה שולח</span></div>
+                <div style="background:var(--bg-app);border-radius:9px;padding:10px 13px;font-size:13px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);">🧠 <span><strong>יועץ עסקה</strong> — מה הצעד הנכון הבא</span></div>
+              </div>
+              <button class="btn btn-primary w-full" style="padding:15px;font-size:1rem;font-weight:800;"
+                onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
+                🚀 פתח חשבון חינמי — 14 יום ניסיון
+              </button>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">ללא כרטיס אשראי · ביטול בכל עת</div>
+            </div>
+          ` : `
+            <div class="ai-panel">
+              <button class="btn btn-primary w-full" onclick="LeadDetail.runScore()">
+                🎯 נתח ליד וקבל ציון AI
+              </button>
+              <div id="ai-score-result" class="hidden"></div>
+              <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runFollowup()">
+                💬 כתוב הודעת מעקב ל-WhatsApp
+              </button>
+              <div id="ai-followup-result" class="hidden"></div>
+              ${(!lead.last_contact || diffDays(lead.last_contact) < -7) ? `
+              <button class="btn btn-ghost w-full" style="border-color:var(--orange-500);color:var(--orange-500);" onclick="LeadDetail.runRescue()">
+                ❄️ הודעת החייאה — ליד לא פעיל
+              </button>
+              <div id="ai-rescue-result" class="hidden"></div>
+              ` : ''}
+              <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runAdvice()">
+                🧠 יועץ עסקה — מה הצעד הבא?
+              </button>
+              <div id="ai-advice-result" class="hidden"></div>
+            </div>
+          `}
         </div>
 
       </div>
