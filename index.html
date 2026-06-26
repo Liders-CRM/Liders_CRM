@@ -1764,7 +1764,7 @@
       <div class="login-feature-tile"><span class="ft-icon">🔒</span>אבטחה מלאה</div>
     </div>
     <div class="login-trial-badge" style="margin-bottom:4px;">
-      🎁 30 ימי ניסיון חינמי — בלי כרטיס אשראי!
+      🎁 30 יום ניסיון בחינם — ללא כרטיס אשראי
     </div>
     <div class="login-form">
       <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation; padding:13px; font-size:15px;">
@@ -1798,11 +1798,7 @@
         </button>
       </div>
       <button id="btn-login-email" type="button" class="btn btn-primary w-full" style="padding:13px; font-size:15px; touch-action:manipulation;">
-        כניסה למערכת
-      </button>
-      <button id="btn-signup-email" type="button" class="btn w-full"
-        style="padding:12px; font-size:14px; touch-action:manipulation; background:var(--gray-100); color:var(--navy-700); border:1.5px solid var(--border); border-radius:var(--radius-lg);">
-        משתמש חדש? התחל ניסיון חינמי 30 יום
+        כניסה / הרשמה בחינם
       </button>
       <div style="text-align:center;margin-top:6px;">
         <button id="btn-login-demo" type="button"
@@ -2926,7 +2922,7 @@
       נתוניך נשמרים כל עוד המנוי פעיל + 30 יום נוספים לאחר סיומו. לאחר מכן נמחקים אוטומטית.</p>
 
       <p><strong>האם מידע משותף עם צדדים שלישיים?</strong><br>
-      לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים. שירותי תשתית (Supabase לאחסון, Stripe לחיוב) מקבלים גישה מוגבלת לנדרש בלבד.</p>
+      לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים. שירותי תשתית (Supabase לאחסון, Tranzila לחיוב) מקבלים גישה מוגבלת לנדרש בלבד.</p>
 
       <p><strong>זכות מחיקה</strong><br>
       לבקשת מחיקת כל הנתונים שלך, שלח אימייל ל-<a href="mailto:liders.crm@gmail.com" style="color:var(--blue-500);">liders.crm@gmail.com</a></p>
@@ -5661,7 +5657,7 @@ const App = {
     const password = document.getElementById('login-password').value.trim();
     if (!email) { toast('נא הכנס אימייל', 'error'); return; }
     if (!password) { toast('נא הכנס סיסמה', 'error'); return; }
-    await this._authAndEnter(email, password, false);
+    await this._authAndEnter(email, password);
   },
   async signupWithEmail() {
     const email    = document.getElementById('login-email').value.trim();
@@ -5706,28 +5702,31 @@ const App = {
       if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
   },
-  async _authAndEnter(email, password, isSignup = false) {
-    const loginBtn  = document.getElementById('btn-login-email');
-    const signupBtn = document.getElementById('btn-signup-email');
-    const overlay   = document.getElementById('loading-overlay');
-    if (loginBtn)  { loginBtn.disabled  = true; loginBtn.textContent  = isSignup ? 'כניסה...' : 'מתחבר...'; }
-    if (signupBtn) { signupBtn.disabled = true; }
+  async _authAndEnter(email, password) {
+    const loginBtn = document.getElementById('btn-login-email');
+    const overlay  = document.getElementById('loading-overlay');
+    if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'מתחבר...'; }
     try {
-      const { data, error } = isSignup
-        ? await DB.signUp(email, password)
-        : await DB.signIn(email, password);
-      if (error || !data?.user) {
-        const msg = error?.message || '';
-        const hint = isSignup
-          ? (msg.includes('already') || msg.includes('registered') ? 'אימייל זה רשום כבר — נסה להתחבר' : 'שגיאת הרשמה: ' + msg)
-          : msg.includes('confirm') || msg.includes('email')
-          ? 'נא אשר את האימייל שנשלח אליך ואז נסה שוב'
-          : msg.includes('Invalid') || msg.includes('credentials') || msg.includes('invalid')
-          ? 'סיסמה או אימייל שגויים'
-          : 'שגיאת התחברות — נסה שנית';
-        toast(hint, 'error');
-        return;
+      // Try login first; if credentials unknown → auto-signup for new users
+      let result = await DB.signIn(email, password);
+      if (result.error) {
+        const em = result.error.message || '';
+        if (em.includes('confirm') || em.includes('email')) {
+          toast('נא אשר את האימייל שנשלח אליך ואז נסה שוב', 'error'); return;
+        }
+        // Try signup — distinguishes new user from wrong password
+        if (loginBtn) loginBtn.textContent = 'יוצר חשבון...';
+        result = await DB.signUp(email, password);
+        if (result.error) {
+          const sm = result.error.message || '';
+          toast(sm.includes('already') || sm.includes('registered')
+            ? 'סיסמה שגויה — לחץ "שכחתי סיסמה" לאיפוס'
+            : 'שגיאה: ' + sm, 'error');
+          return;
+        }
       }
+      const { data } = result;
+      if (!data?.user) { toast('שגיאת התחברות — נסה שנית', 'error'); return; }
       if (!data?.session) {
         toast('📧 נשלח אימייל אישור — אשר ואז התחבר שוב', 'success');
         return;
@@ -5765,8 +5764,7 @@ const App = {
       toast('שגיאה: ' + e.message, 'error');
       overlay.classList.add('hidden');
     } finally {
-      if (loginBtn)  { loginBtn.disabled  = false; loginBtn.textContent  = 'כניסה למערכת'; }
-      if (signupBtn) { signupBtn.disabled = false; signupBtn.textContent = 'משתמש חדש? התחל ניסיון חינמי 30 יום'; }
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'כניסה / הרשמה בחינם'; }
     }
   },
   _showApp() {
@@ -8376,8 +8374,7 @@ window.LeadImport = LeadImport;
     });
     el.addEventListener('click', guarded);
   }
-  bind('btn-login-email',  function(){ App.loginWithEmail(); });
-  bind('btn-signup-email', function(){ App.signupWithEmail(); });
+  bind('btn-login-email', function(){ App.loginWithEmail(); });
   bind('btn-login-demo',   function(){ App.loginDemo(); });
   bind('btn-login-google', function(){ App.loginWithGoogle(); });
 })();
