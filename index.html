@@ -2004,6 +2004,69 @@
   .demo-lock-features { text-align:right; background:var(--gray-50); border-radius:12px; padding:12px 14px; margin:14px 0 18px; list-style:none; }
   .demo-lock-features li { font-size:13px; color:var(--gray-700); padding:3px 0; }
 
+  /* ── PRO HUB ── */
+  .pro-hub-hero { background:linear-gradient(135deg,var(--navy-700) 0%,var(--navy-500) 55%,#2563EB 100%); color:#fff; padding:26px 20px 30px; text-align:center; border-radius:0 0 28px 28px; margin-bottom:4px; }
+  .pro-hub-hero-emoji { font-size:38px; margin-bottom:10px; }
+  .pro-hub-hero-title { font-size:23px; font-weight:900; margin-bottom:6px; letter-spacing:-0.3px; }
+  .pro-hub-hero-sub { font-size:13px; opacity:0.88; line-height:1.6; margin-bottom:14px; }
+  .pro-hub-pills { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .pro-hub-pill { background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); border-radius:99px; padding:5px 12px; font-size:11px; font-weight:700; }
+  .pro-cat-label { font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; letter-spacing:0.08em; padding:16px 20px 6px; }
+  .pro-grid { display:flex; flex-direction:column; gap:8px; padding:0 14px 4px; }
+  .pro-card { background:var(--surface); border:1.5px solid var(--border); border-radius:14px; padding:13px 12px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:.15s; box-shadow:var(--shadow-sm); }
+  .pro-card:active { transform:scale(0.97); background:var(--gray-50); }
+  .pro-card-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:21px; flex-shrink:0; }
+  .pci-blue { background:#EFF6FF; } .pci-purple { background:#F5F3FF; } .pci-green { background:#F0FDF4; }
+  .pci-gold { background:#FEFCE8; } .pci-orange { background:#FFF7ED; } .pci-red { background:#FEF2F2; }
+  .pci-teal { background:#F0FDFA; } .pci-pink { background:#FDF4FF; } .pci-navy { background:#EFF6FF; }
+  .pro-card-info { flex:1; min-width:0; }
+  .pro-card-title { font-size:14px; font-weight:700; color:var(--navy); line-height:1.3; }
+  .pro-card-sub { font-size:11.5px; color:var(--gray-500); margin-top:2px; }
+  .pro-chip { font-size:9px; font-weight:900; padding:3px 8px; border-radius:99px; white-space:nowrap; flex-shrink:0; letter-spacing:0.04em; }
+  .pro-chip-pro  { background:linear-gradient(135deg,#7C3AED,#2563EB); color:#fff; }
+  .pro-chip-free { background:var(--green-500); color:#fff; }
+  .pro-chip-ai   { background:linear-gradient(135deg,#EA580C,#F59E0B); color:#fff; }
+  /* score list */
+  .pro-score-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .pro-score-item:last-child { border-bottom:none; }
+  .pro-score-name { font-size:13px; font-weight:600; color:var(--navy); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pro-score-bar-wrap { width:72px; }
+  .pro-score-bar { background:var(--gray-200); border-radius:99px; height:6px; overflow:hidden; }
+  .pro-score-fill { height:6px; border-radius:99px; transition:width .7s cubic-bezier(.4,0,.2,1); }
+  .pro-score-num { font-size:12px; font-weight:800; min-width:26px; text-align:left; }
+  /* forecast */
+  .pro-forecast-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .pro-forecast-row:last-child { border-bottom:none; }
+  .pro-forecast-label { color:var(--gray-600); }
+  .pro-forecast-val { font-weight:700; color:var(--navy); }
+  .pro-forecast-total { background:linear-gradient(135deg,var(--navy-600),var(--blue-500)); color:white; border-radius:14px; padding:16px; text-align:center; margin-top:14px; }
+  .pro-forecast-total-label { font-size:12px; opacity:0.85; margin-bottom:4px; }
+  .pro-forecast-total-val { font-size:26px; font-weight:900; }
+  /* broadcast */
+  .pro-bc-lead { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .pro-bc-lead:last-child { border-bottom:none; }
+  /* source */
+  .pro-src-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); }
+  .pro-src-row:last-child { border-bottom:none; }
+  .pro-src-name { font-size:13px; color:var(--navy); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pro-src-bar { flex:2; }
+  .pro-src-cnt { font-size:12px; font-weight:700; color:var(--gray-500); min-width:24px; text-align:center; }
+  /* templates */
+  .pro-tmpl-item { background:var(--gray-50); border-radius:10px; padding:10px 12px; margin-bottom:8px; border:1px solid var(--border); }
+  .pro-tmpl-name { font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+  .pro-tmpl-text { font-size:12px; color:var(--gray-600); line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+  .pro-tmpl-actions { display:flex; gap:6px; margin-top:8px; }
+  /* locked preview */
+  .pro-locked-hero { background:linear-gradient(135deg,var(--navy-700),#2563EB); color:white; padding:22px 16px 18px; border-radius:16px 16px 0 0; text-align:center; }
+  .pro-preview-mockup { background:var(--gray-50); border-radius:12px; padding:14px; margin:12px 0; border:1px solid var(--border); }
+  .pro-preview-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px dashed var(--border); font-size:12px; color:var(--gray-600); }
+  .pro-preview-row:last-child { border-bottom:none; }
+  .pro-preview-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  /* dashboard PRO tile special */
+  .dash-feat-tile-pro { background:linear-gradient(135deg,#7C3AED 0%,#2563EB 100%) !important; border-color:transparent !important; }
+  .dash-feat-tile-pro .dash-feat-tile-icon { filter:none; }
+  .dash-feat-tile-pro .dash-feat-tile-label { color:#fff !important; }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2/dist/umd/supabase.js"
           integrity="sha384-nD3dwv4+ZqdYnmZKe/249ImlV04om7xTCcsoSeQYI+RO+XlKPoqAWaJR1M5SJH9p"
@@ -2156,6 +2219,9 @@
       </a>
       <a class="nav-item" data-screen="marketing" onclick="App.go('marketing')">
         <span class="nav-icon">📣</span> שירותי שיווק
+      </a>
+      <a class="nav-item" data-screen="pro" onclick="App.go('pro')" style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.12));border:1px solid rgba(124,58,237,0.2);border-radius:8px;margin-top:4px;">
+        <span class="nav-icon">✨</span> <span style="background:linear-gradient(135deg,#7C3AED,#2563EB);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">פיצ'רים PRO</span>
       </a>
     </div>
     <div class="sidebar-footer">
@@ -2328,6 +2394,10 @@
 
       <!-- QUICK FEATURES ROW -->
       <div class="dash-features-row" id="dash-features-row">
+        <div class="dash-feat-tile dash-feat-tile-pro" onclick="App.go('pro')">
+          <div class="dash-feat-tile-icon">✨</div>
+          <div class="dash-feat-tile-label">פיצ'רים<br>PRO</div>
+        </div>
         <div class="dash-feat-tile" onclick="MortgageCalc.open()">
           <div class="dash-feat-tile-icon">🧮</div>
           <div class="dash-feat-tile-label">מחשבון<br>משכנתא</div>
@@ -2744,6 +2814,168 @@
     <!-- MARKETING SCREEN -->
     <div id="screen-marketing" class="screen hidden"></div>
 
+    <!-- ── PRO HUB ── -->
+    <div id="screen-pro" class="screen hidden">
+      <div class="pro-hub-hero">
+        <div class="pro-hub-hero-emoji">✨</div>
+        <div class="pro-hub-hero-title">פיצ'רים PRO</div>
+        <div class="pro-hub-hero-sub">כלים מתקדמים שיעזרו לך לסגור יותר עסקאות<br>ולנהל את העסק שלך בצורה חכמה יותר</div>
+        <div class="pro-hub-pills">
+          <div class="pro-hub-pill">🟢 4 פיצ'רים חינם</div>
+          <div class="pro-hub-pill">🔥 4 פיצ'רים AI</div>
+          <div class="pro-hub-pill">⚡ 8 פיצ'רים PRO</div>
+        </div>
+      </div>
+
+      <!-- AI ובינה מלאכותית -->
+      <div class="pro-cat-label">🤖 בינה מלאכותית</div>
+      <div class="pro-grid">
+        <div class="pro-card" onclick="ProHub.open('lead-score')">
+          <div class="pro-card-icon pci-blue">🎯</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">ניקוד לידים AI</div>
+            <div class="pro-card-sub">דירוג אוטומטי 0–100 לפי סיכויי סגירה</div>
+          </div>
+          <div class="pro-chip pro-chip-ai">AI</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('forecast')">
+          <div class="pro-card-icon pci-green">📈</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">חיזוי מכירות</div>
+            <div class="pro-card-sub">צפי הכנסות לפי הפייפליין הנוכחי</div>
+          </div>
+          <div class="pro-chip pro-chip-ai">AI</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('smart-remind')">
+          <div class="pro-card-icon pci-purple">⏰</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">תזכורות חכמות</div>
+            <div class="pro-card-sub">AI מציע מתי לעשות פולואפ לכל ליד</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('auto-rules')">
+          <div class="pro-card-icon pci-orange">⚡</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">אוטומציה חכמה</div>
+            <div class="pro-card-sub">העבר לידים שלב אוטומטית לפי כללים</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+      </div>
+
+      <!-- תקשורת מתקדמת -->
+      <div class="pro-cat-label">📱 תקשורת מתקדמת</div>
+      <div class="pro-grid">
+        <div class="pro-card" onclick="ProHub.open('broadcast')">
+          <div class="pro-card-icon pci-green">📢</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">שידור WhatsApp</div>
+            <div class="pro-card-sub">שלח הודעה לכל הלידים בשלב אחד</div>
+          </div>
+          <div class="pro-chip pro-chip-ai">AI</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('email-campaign')">
+          <div class="pro-card-icon pci-blue">📧</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">קמפיין אימייל</div>
+            <div class="pro-card-sub">שלח אימייל מקצועי לרשימת לידים</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('pdf-proposal')">
+          <div class="pro-card-icon pci-gold">📄</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">הצעת מחיר PDF</div>
+            <div class="pro-card-sub">יצא הצעת מחיר מעוצבת ב-PDF</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('saved-templates')">
+          <div class="pro-card-icon pci-teal">💾</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">תבניות שמורות</div>
+            <div class="pro-card-sub">שמור הודעות WA מותאמות אישית</div>
+          </div>
+          <div class="pro-chip pro-chip-free">חינם</div>
+        </div>
+      </div>
+
+      <!-- אינטגרציות -->
+      <div class="pro-cat-label">🔗 אינטגרציות</div>
+      <div class="pro-grid">
+        <div class="pro-card" onclick="ProHub.open('csv-export')">
+          <div class="pro-card-icon pci-green">📊</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">ייצוא לאקסל / CSV</div>
+            <div class="pro-card-sub">הורד את כל הלידים שלך לקובץ</div>
+          </div>
+          <div class="pro-chip pro-chip-free">חינם</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('fb-leads')">
+          <div class="pro-card-icon pci-blue">📘</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">ייבוא לידים מ-Facebook</div>
+            <div class="pro-card-sub">חיבור אוטומטי ל-Facebook Lead Ads</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('digital-card')">
+          <div class="pro-card-icon pci-purple">🤳</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">כרטיס ביקור דיגיטלי</div>
+            <div class="pro-card-sub">דף פרופיל שניתן לשתף עם לקוחות</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('esign')">
+          <div class="pro-card-icon pci-teal">✍️</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">חתימה דיגיטלית</div>
+            <div class="pro-card-sub">שלח חוזים לחתימה אלקטרונית</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+      </div>
+
+      <!-- עסקי מתקדם -->
+      <div class="pro-cat-label">💼 עסקי מתקדם</div>
+      <div class="pro-grid" style="margin-bottom:32px;">
+        <div class="pro-card" onclick="ProHub.open('source-analysis')">
+          <div class="pro-card-icon pci-gold">🔍</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">ניתוח מקורות לידים</div>
+            <div class="pro-card-sub">איזה ערוץ מביא הכי הרבה עסקאות</div>
+          </div>
+          <div class="pro-chip pro-chip-free">חינם</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('client-portal')">
+          <div class="pro-card-icon pci-navy">🏪</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">פורטל לקוח</div>
+            <div class="pro-card-sub">הלקוח רואה את הסטטוס של העסקה שלו</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('reviews')">
+          <div class="pro-card-icon pci-gold">⭐</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">ביקורות לקוחות</div>
+            <div class="pro-card-sub">אסוף ביקורות אוטומטית אחרי עסקה</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+        <div class="pro-card" onclick="ProHub.open('weekly-report')">
+          <div class="pro-card-icon pci-pink">📋</div>
+          <div class="pro-card-info">
+            <div class="pro-card-title">דוח שבועי אוטומטי</div>
+            <div class="pro-card-sub">PDF עם ניתוח ביצועים שנשלח אוטומטית</div>
+          </div>
+          <div class="pro-chip pro-chip-pro">PRO</div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- BOTTOM NAV (mobile) -->
@@ -2890,6 +3122,110 @@
     </ul>
     <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתח חשבון ניסיון — חינם</button>
     <button onclick="DemoLock.hide()" style="width:100%;padding:10px;border-radius:12px;background:var(--gray-100);color:var(--gray-500);font-size:13px;font-weight:600;border:none;cursor:pointer;">המשך לסייר בדמו</button>
+  </div>
+</div>
+
+<!-- ═══ PRO: LEAD SCORE ═══ -->
+<div id="modal-pro-lead-score" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-lead-score')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">🎯 ניקוד לידים AI</div>
+      <button class="modal-close" onclick="closeModal('modal-pro-lead-score')">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;background:var(--blue-100);border-radius:8px;padding:8px 10px;line-height:1.5;">
+      ✨ הניקוד מחושב לפי שלב, שווי עסקה, פעילות אחרונה ושלמות הנתונים
+    </div>
+    <div id="pro-ls-body" style="min-height:60px;"></div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+      <div style="display:flex;gap:10px;font-size:11px;color:var(--gray-500);">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16A34A;margin-left:4px;"></span>80–100 חם מאוד</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2563EB;margin-left:4px;"></span>60–79 מבטיח</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#EA580C;margin-left:4px;"></span>40–59 בינוני</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9CA3AF;margin-left:4px;"></span>0–39 קר</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRO: SALES FORECAST ═══ -->
+<div id="modal-pro-forecast" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-forecast')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📈 חיזוי מכירות</div>
+      <button class="modal-close" onclick="closeModal('modal-pro-forecast')">×</button>
+    </div>
+    <div id="pro-fc-body" style="min-height:60px;"></div>
+  </div>
+</div>
+
+<!-- ═══ PRO: WA BROADCAST ═══ -->
+<div id="modal-pro-broadcast" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-broadcast')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📢 שידור WhatsApp</div>
+      <button class="modal-close" onclick="closeModal('modal-pro-broadcast')">×</button>
+    </div>
+    <div id="pro-bc-body" style="min-height:60px;"></div>
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary w-full" onclick="ProHub._bcSendAll()" style="padding:13px;">📢 שלח לכולם</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRO: SOURCE ANALYSIS ═══ -->
+<div id="modal-pro-source" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-source')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">🔍 ניתוח מקורות לידים</div>
+      <button class="modal-close" onclick="closeModal('modal-pro-source')">×</button>
+    </div>
+    <div id="pro-src-body" style="min-height:60px;"></div>
+  </div>
+</div>
+
+<!-- ═══ PRO: SAVED TEMPLATES ═══ -->
+<div id="modal-pro-templates" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-templates')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">💾 תבניות שמורות</div>
+      <button class="modal-close" onclick="closeModal('modal-pro-templates')">×</button>
+    </div>
+    <div id="pro-tmpl-list" style="min-height:40px;max-height:260px;overflow-y:auto;margin-bottom:14px;"></div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:8px;">➕ תבנית חדשה</div>
+      <div class="form-group">
+        <input class="form-input" id="pro-tmpl-name-input" type="text" placeholder="שם התבנית (למשל: פולואפ ראשון)" />
+      </div>
+      <div class="form-group">
+        <textarea class="form-input" id="pro-tmpl-text-input" rows="3" placeholder="תוכן ההודעה... ניתן להשתמש בـ {שם}"></textarea>
+      </div>
+      <button class="btn btn-primary w-full" onclick="ProHub._addTemplate()">💾 שמור תבנית</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRO: LOCKED PREVIEW (generic) ═══ -->
+<div id="modal-pro-locked" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-locked')">
+  <div class="modal" style="padding:0;overflow:hidden;">
+    <div class="pro-locked-hero">
+      <div style="font-size:46px;margin-bottom:8px;" id="pro-locked-icon">⚡</div>
+      <div style="font-size:18px;font-weight:900;margin-bottom:4px;" id="pro-locked-title">פיצ'ר PRO</div>
+      <div style="font-size:13px;opacity:0.85;" id="pro-locked-sub">תיאור הפיצ'ר</div>
+    </div>
+    <div style="padding:16px 16px 8px;">
+      <div id="pro-locked-mockup"></div>
+      <div style="background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(37,99,235,0.08));border-radius:12px;padding:12px 14px;margin-bottom:14px;border:1px solid rgba(124,58,237,0.15);">
+        <div style="font-size:12px;font-weight:700;color:#7C3AED;margin-bottom:6px;">✨ מה כלול בגרסה PRO</div>
+        <div id="pro-locked-perks"></div>
+      </div>
+      <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#7C3AED,#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתח חשבון ניסיון — חינם</button>
+      <button onclick="closeModal('modal-pro-locked')" style="width:100%;padding:10px;border-radius:12px;background:var(--gray-100);color:var(--gray-500);font-size:13px;font-weight:600;border:none;cursor:pointer;">חזור לרשימת הפיצ'רים</button>
+    </div>
   </div>
 </div>
 
@@ -7165,6 +7501,7 @@ const App = {
       case 'settings':    Settings.render();  break;
       case 'tools':       Tools.render();     break;
       case 'marketing':   Marketing.render(); break;
+      case 'pro':         ProHub.render();    break;
     }
     window.scrollTo(0, 0);
   },
@@ -10042,6 +10379,466 @@ if ('serviceWorker' in navigator) {
     localStorage.setItem('pwa_banner_dismissed', '1');
   }
 })();
+
+/* ═══════════════════════════════════════════
+   PRO HUB
+═══════════════════════════════════════════ */
+const ProHub = {
+  render() { /* screen is static HTML — nothing to update dynamically */ },
+
+  open(id) {
+    switch (id) {
+      case 'lead-score':      this._openLeadScore();    return;
+      case 'forecast':        this._openForecast();     return;
+      case 'broadcast':       this._openBroadcast();    return;
+      case 'source-analysis': this._openSource();       return;
+      case 'csv-export':      this._exportCSV();        return;
+      case 'saved-templates': this._openTemplates();    return;
+      default:
+        this._openLockedPreview(id);
+    }
+  },
+
+  /* ── helpers ── */
+  _stageNames() {
+    const m = {};
+    State.stages.forEach(s => { m[s.id] = s.name; });
+    return m;
+  },
+  _scoreColor(s) {
+    if (s >= 80) return '#16A34A';
+    if (s >= 60) return '#2563EB';
+    if (s >= 40) return '#EA580C';
+    return '#9CA3AF';
+  },
+
+  /* ── AI LEAD SCORING ── */
+  _scoreLead(lead) {
+    let s = 0;
+    // Stage (0–35)
+    s += ({s1:0, s2:8, s3:16, s4:28, s5:35}[lead.stage] || 0);
+    // Deal value (0–25)
+    const val = parseFloat(lead.value) || 0;
+    if (val >= 5000000) s += 25;
+    else if (val >= 2000000) s += 18;
+    else if (val >= 500000) s += 12;
+    else if (val >= 100000) s += 6;
+    // Recency of last activity (0–20)
+    const acts = (State.activities || []).filter(a => a.lead_id === lead.id);
+    const lastMs = acts.length ? Math.max(...acts.map(a => new Date(a.created_at || 0).getTime())) : 0;
+    const days = lastMs ? Math.floor((Date.now() - lastMs) / 86400000) : 99;
+    if (days < 2) s += 20;
+    else if (days < 7) s += 13;
+    else if (days < 14) s += 7;
+    else if (days < 30) s += 3;
+    // Contact completeness (0–12)
+    if (lead.phone) s += 4;
+    if (lead.email) s += 4;
+    if (lead.company) s += 4;
+    // Completed tasks (0–8)
+    const done = (State.tasks || []).filter(t => t.lead_id === lead.id && t.done).length;
+    s += Math.min(done * 2, 8);
+    return Math.min(Math.round(s), 100);
+  },
+
+  _openLeadScore() {
+    const leads = [...(State.leads || [])]
+      .filter(l => l.stage !== 's5')
+      .map(l => ({ ...l, score: this._scoreLead(l) }))
+      .sort((a, b) => b.score - a.score);
+
+    const rows = leads.slice(0, 12).map(l => `
+      <div class="pro-score-item">
+        <div class="pro-score-name">${l.name}</div>
+        <div class="pro-score-bar-wrap">
+          <div class="pro-score-bar">
+            <div class="pro-score-fill" style="width:${l.score}%;background:${this._scoreColor(l.score)};"></div>
+          </div>
+        </div>
+        <div class="pro-score-num" style="color:${this._scoreColor(l.score)};">${l.score}</div>
+      </div>`).join('');
+
+    document.getElementById('pro-ls-body').innerHTML = leads.length
+      ? rows
+      : '<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:13px;">אין לידים פעילים לניקוד</div>';
+
+    openModal('modal-pro-lead-score');
+  },
+
+  /* ── SALES FORECAST ── */
+  _openForecast() {
+    const prob = { s1: 0.05, s2: 0.15, s3: 0.35, s4: 0.60, s5: 1.0 };
+    const stageNames = this._stageNames();
+    const byStage = {};
+    (State.leads || []).filter(l => l.stage !== 's5').forEach(l => {
+      if (!byStage[l.stage]) byStage[l.stage] = { count: 0, value: 0, prob: prob[l.stage] || 0.05 };
+      byStage[l.stage].count++;
+      byStage[l.stage].value += parseFloat(l.value) || 0;
+    });
+
+    let totalForecast = 0;
+    const rows = Object.entries(byStage)
+      .sort((a, b) => parseInt(a[0].slice(1)) - parseInt(b[0].slice(1)))
+      .map(([sid, d]) => {
+        const fc = Math.round(d.value * d.prob);
+        totalForecast += fc;
+        return `<div class="pro-forecast-row">
+          <span class="pro-forecast-label">${stageNames[sid] || sid} <span style="color:var(--gray-400)">(${d.count})</span></span>
+          <span class="pro-forecast-val">₪${fc.toLocaleString('he-IL')}</span>
+        </div>`;
+      }).join('');
+
+    const closedVal = (State.leads || []).filter(l => l.stage === 's5')
+      .reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
+
+    document.getElementById('pro-fc-body').innerHTML = `
+      <div style="font-size:12px;color:var(--gray-600);background:var(--blue-100);border-radius:8px;padding:8px 10px;margin-bottom:12px;line-height:1.5;">
+        ✨ מחושב לפי הסתברות סגירה: 5% בשלב 1 עד 60% בשלב 4
+      </div>
+      ${rows || '<div style="text-align:center;color:var(--gray-400);padding:14px;font-size:13px;">אין לידים פעילים</div>'}
+      <div class="pro-forecast-total">
+        <div class="pro-forecast-total-label">💰 צפי הכנסות מהפייפליין הנוכחי</div>
+        <div class="pro-forecast-total-val">₪${Math.round(totalForecast).toLocaleString('he-IL')}</div>
+      </div>
+      ${closedVal > 0 ? `<div style="text-align:center;margin-top:12px;font-size:13px;color:var(--gray-600);">✅ כבר נסגר: <strong>₪${Math.round(closedVal).toLocaleString('he-IL')}</strong></div>` : ''}
+    `;
+    openModal('modal-pro-forecast');
+  },
+
+  /* ── WA BROADCAST ── */
+  _openBroadcast() {
+    const stageNames = this._stageNames();
+    const opts = (State.stages || []).filter(s => s.id !== 's5')
+      .map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+
+    document.getElementById('pro-bc-body').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">שלח אל</label>
+        <select class="form-input" id="bc-stage" onchange="ProHub._bcUpdateList()">
+          <option value="">כל הלידים הפעילים</option>
+          ${opts}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">הודעה — השתמש בـ {שם} לשם הלקוח</label>
+        <textarea class="form-input" id="bc-msg" rows="4" placeholder="היי {שם}! 😊&#10;רציתי לעדכן אותך..."></textarea>
+      </div>
+      <div id="bc-list-wrap" style="margin-bottom:4px;max-height:200px;overflow-y:auto;"></div>
+      <div style="font-size:11.5px;color:var(--gray-500);background:var(--orange-100);border-radius:8px;padding:8px 10px;line-height:1.5;">
+        ⚠️ כל לחיצה פותחת WhatsApp עם ההודעה המוכנה — שלח ידנית
+      </div>`;
+    this._bcUpdateList();
+    openModal('modal-pro-broadcast');
+  },
+
+  _bcUpdateList() {
+    const stage = document.getElementById('bc-stage')?.value || '';
+    const stageNames = this._stageNames();
+    const leads = (State.leads || []).filter(l => l.stage !== 's5' && (!stage || l.stage === stage));
+    const wrap = document.getElementById('bc-list-wrap');
+    if (!wrap) return;
+    if (!leads.length) {
+      wrap.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:10px;font-size:13px;">אין לידים בשלב זה</div>';
+      return;
+    }
+    wrap.innerHTML = `<div style="font-size:12px;font-weight:700;color:var(--gray-500);padding:6px 0 8px;">${leads.length} לידים — לחץ לשליחה:</div>` +
+      leads.map(l => `
+        <div class="pro-bc-lead">
+          <span style="font-size:15px;">💬</span>
+          <span style="flex:1;font-size:13px;font-weight:600;">${l.name}</span>
+          <span style="font-size:11px;color:var(--gray-400);margin-left:4px;">${stageNames[l.stage] || ''}</span>
+          <button onclick="ProHub._sendWa('${l.id}')" style="background:#25d366;color:white;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">שלח</button>
+        </div>`).join('');
+  },
+
+  _sendWa(leadId) {
+    const lead = (State.leads || []).find(l => l.id === leadId);
+    if (!lead?.phone) { toast('לליד זה אין מספר טלפון', 'error'); return; }
+    const msg = document.getElementById('bc-msg')?.value || 'היי {שם}!';
+    const text = msg.replace(/\{שם\}/g, lead.name.split(' ')[0]);
+    const phone = lead.phone.replace(/\D/g, '');
+    const intl = phone.startsWith('0') ? '972' + phone.slice(1) : phone;
+    window.open(`https://wa.me/${intl}?text=${encodeURIComponent(text)}`, '_blank');
+  },
+
+  _bcSendAll() {
+    const stage = document.getElementById('bc-stage')?.value || '';
+    const leads = (State.leads || []).filter(l => l.stage !== 's5' && (!stage || l.stage === stage) && l.phone);
+    if (!leads.length) { toast('אין לידים עם טלפון בשלב זה', 'error'); return; }
+    toast(`📢 פותח WhatsApp עבור ${leads.length} לידים — לחץ על כל אחד`);
+    leads.forEach((l, i) => setTimeout(() => this._sendWa(l.id), i * 800));
+  },
+
+  /* ── SOURCE ANALYSIS ── */
+  _openSource() {
+    const src = {};
+    (State.leads || []).forEach(l => {
+      const s = l.source || 'לא ידוע';
+      if (!src[s]) src[s] = { total: 0, closed: 0, value: 0 };
+      src[s].total++;
+      if (l.stage === 's5') src[s].closed++;
+      src[s].value += parseFloat(l.value) || 0;
+    });
+    const sorted = Object.entries(src).sort((a, b) => b[1].total - a[1].total);
+    const maxTotal = Math.max(...sorted.map(([, v]) => v.total), 1);
+    const colors = ['#2563EB', '#16A34A', '#EA580C', '#7C3AED', '#F59E0B', '#EC4899', '#14B8A6', '#6B7280'];
+
+    document.getElementById('pro-src-body').innerHTML = sorted.length ? `
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray-400);padding:0 0 6px;border-bottom:1px solid var(--border);margin-bottom:2px;">
+        <span>מקור</span><span>כמות / סגורות</span>
+      </div>
+      ${sorted.map(([name, d], i) => `
+        <div class="pro-src-row">
+          <div class="pro-src-name">${name}</div>
+          <div class="pro-src-bar">
+            <div class="pro-score-bar">
+              <div class="pro-score-fill" style="width:${Math.round(d.total / maxTotal * 100)}%;background:${colors[i % colors.length]};"></div>
+            </div>
+          </div>
+          <div class="pro-src-cnt">${d.total}</div>
+          <div style="font-size:11px;color:var(--green-600);min-width:28px;text-align:center;font-weight:700;">${d.closed ? d.closed + '✓' : ''}</div>
+        </div>`).join('')}
+      <div style="font-size:12px;color:var(--gray-500);margin-top:12px;background:var(--blue-100);border-radius:8px;padding:8px 10px;line-height:1.5;">
+        💡 הגדר מקור בעת יצירת ליד לניתוח מדויק יותר
+      </div>` :
+      '<div style="text-align:center;color:var(--gray-400);padding:20px;font-size:13px;">אין לידים לניתוח</div>';
+
+    openModal('modal-pro-source');
+  },
+
+  /* ── CSV EXPORT ── */
+  _exportCSV() {
+    const leads = State.leads || [];
+    if (!leads.length) { toast('אין לידים לייצוא', 'error'); return; }
+    const stageNames = this._stageNames();
+    const headers = ['שם', 'חברה', 'טלפון', 'אימייל', 'שלב', 'ערך עסקה (₪)', 'מקור', 'הערות', 'תאריך יצירה'];
+    const rows = leads.map(l => [
+      l.name || '', l.company || '', l.phone || '', l.email || '',
+      stageNames[l.stage] || l.stage || '', l.value || '',
+      l.source || '', (l.notes || '').replace(/\n/g, ' '),
+      l.created_at ? new Date(l.created_at).toLocaleDateString('he-IL') : ''
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csv = '﻿' + [headers.join(','), ...rows].join('\r\n');
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })),
+      download: `liders-leads-${new Date().toISOString().slice(0, 10)}.csv`
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast(`✅ יוצאו ${leads.length} לידים בהצלחה`);
+  },
+
+  /* ── SAVED TEMPLATES ── */
+  _templates: null,
+
+  _getTemplates() {
+    if (!this._templates) {
+      try { this._templates = JSON.parse(localStorage.getItem('pro_templates') || '[]'); }
+      catch (e) { this._templates = []; }
+    }
+    return this._templates;
+  },
+
+  _saveTemplates() {
+    localStorage.setItem('pro_templates', JSON.stringify(this._templates));
+  },
+
+  _openTemplates() {
+    this._renderTemplates();
+    openModal('modal-pro-templates');
+  },
+
+  _renderTemplates() {
+    const wrap = document.getElementById('pro-tmpl-list');
+    if (!wrap) return;
+    const tpls = this._getTemplates();
+    if (!tpls.length) {
+      wrap.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:16px;font-size:13px;">עדיין אין תבניות שמורות<br>הוסף את הראשונה מטה 👇</div>';
+      return;
+    }
+    wrap.innerHTML = tpls.map((t, i) => `
+      <div class="pro-tmpl-item">
+        <div class="pro-tmpl-name">${t.name}</div>
+        <div class="pro-tmpl-text">${t.text}</div>
+        <div class="pro-tmpl-actions">
+          <button onclick="ProHub._copyTemplate(${i})" style="flex:1;padding:6px;background:var(--blue-100);color:var(--blue-500);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">📋 העתק</button>
+          <button onclick="ProHub._deleteTemplate(${i})" style="padding:6px 10px;background:var(--red-100);color:var(--red-500);border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️</button>
+        </div>
+      </div>`).join('');
+  },
+
+  _copyTemplate(i) {
+    const t = this._getTemplates()[i];
+    if (!t) return;
+    navigator.clipboard?.writeText(t.text).catch(() => {});
+    toast('✅ תבנית הועתקה');
+  },
+
+  _deleteTemplate(i) {
+    this._getTemplates().splice(i, 1);
+    this._saveTemplates();
+    this._renderTemplates();
+  },
+
+  _addTemplate() {
+    const nameEl = document.getElementById('pro-tmpl-name-input');
+    const textEl = document.getElementById('pro-tmpl-text-input');
+    const name = nameEl?.value.trim();
+    const text = textEl?.value.trim();
+    if (!name || !text) { toast('יש למלא שם ותוכן', 'error'); return; }
+    this._getTemplates().unshift({ name, text, ts: Date.now() });
+    this._saveTemplates();
+    if (nameEl) nameEl.value = '';
+    if (textEl) textEl.value = '';
+    this._renderTemplates();
+    toast('✅ תבנית נשמרה');
+  },
+
+  /* ── LOCKED PREVIEWS ── */
+  _previews: {
+    'smart-remind': {
+      icon: '⏰', title: 'תזכורות חכמות', sub: 'AI מציע מתי לפנות לכל ליד',
+      perks: ['🧠 ניתוח AI של דפוסי תגובה לכל ליד', '🔔 התראות Push בזמן הנכון', '📊 אחוז מענה גבוה ב-40%'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📋 לידים שמחכים לפנייה</div>
+        <div class="pro-preview-mockup">
+          <div class="pro-preview-row"><div class="pro-preview-dot" style="background:#EA580C;"></div><span>דוד כהן — <strong>5 ימים</strong> ללא קשר — ⚠️ דחוף</span></div>
+          <div class="pro-preview-row"><div class="pro-preview-dot" style="background:#F59E0B;"></div><span>שרה לוי — <strong>3 ימים</strong> ללא קשר — 📞 מומלץ</span></div>
+          <div class="pro-preview-row"><div class="pro-preview-dot" style="background:#16A34A;"></div><span>יוסי מזרחי — <strong>1 יום</strong> ללא קשר — ✅ בסדר</span></div>
+        </div>
+        <div style="background:var(--blue-100);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--navy-600);">
+          🤖 AI: "דוד לא ענה להצעה שנשלחה לפני 5 ימים. כדאי להתקשר עכשיו לפני שיתקרר."
+        </div>`
+    },
+    'auto-rules': {
+      icon: '⚡', title: 'אוטומציה חכמה', sub: 'כללים שמזיזים לידים ומשלחים הודעות',
+      perks: ['⚡ העברת לידים אוטומטית בין שלבים', '📱 WA אוטומטי כשמגיע ליד חדש', '🔔 תזכורת אוטומטית אחרי X ימים'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">⚡ כללי אוטומציה פעילים</div>
+        <div class="pro-preview-mockup">
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>אחרי שיחה → העבר ל"יצרנו קשר" אוטומטית</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>נשלח הצעה → שלח תזכורת פולואפ בעוד 3 ימים</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>7 ימים ללא קשר → שלח התראה לסוכן</span></div>
+        </div>`
+    },
+    'email-campaign': {
+      icon: '📧', title: 'קמפיין אימייל', sub: 'שלח אימייל מקצועי לרשימת לידים',
+      perks: ['📧 תבניות מקצועיות בעברית', '📊 מעקב פתיחות וקליקים', '🎯 פילוח לפי שלב בפייפליין'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📤 שלח קמפיין</div>
+        <div class="pro-preview-mockup">
+          <div class="pro-preview-row"><span>נמענים:</span><span style="font-weight:700;">12 לידים בשלב "הצעה נשלחה"</span></div>
+          <div class="pro-preview-row"><span>נושא:</span><span style="font-weight:700;">עדכון על הנכס שמצא לך...</span></div>
+          <div class="pro-preview-row"><span>תבנית:</span><span style="font-weight:700;">פולואפ אחרי הצעה</span></div>
+        </div>
+        <div style="background:var(--green-100);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--green-600);">✅ קמפיין אחרון: 68% שיעור פתיחה</div>`
+    },
+    'pdf-proposal': {
+      icon: '📄', title: 'הצעת מחיר PDF', sub: 'יצא הצעת מחיר מעוצבת בלחיצה אחת',
+      perks: ['🎨 עיצוב מקצועי עם הלוגו שלך', '📱 נשלח כלינק או קובץ PDF', '✏️ ניתן לעריכה לפני שליחה'],
+      mockup: `<div style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--navy-700);padding:12px 14px;color:white;font-size:13px;font-weight:700;">📄 הצעת מחיר — Liders</div>
+        <div style="padding:14px;font-size:13px;color:var(--gray-600);line-height:1.8;text-align:right;">
+          <div><strong>לכבוד:</strong> ישראל ישראלי</div>
+          <div><strong>שירות:</strong> תיווך מכירת דירה</div>
+          <div><strong>עמלה:</strong> 2% + מע"מ</div>
+          <div><strong>תוקף:</strong> 30 יום</div>
+        </div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:var(--gray-500);">PDF מעוצב עם לוגו ופרטי חברה</div>`
+    },
+    'fb-leads': {
+      icon: '📘', title: 'ייבוא לידים מ-Facebook', sub: 'לידים מ-Facebook Ads ישירות לפייפליין',
+      perks: ['⚡ לידים נכנסים תוך שניות', '🔄 חיבור לכל טופס Lead Ad', '🏷️ תיוג אוטומטי לפי קמפיין'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">🔄 לידים שנכנסו אוטומטית</div>
+        <div class="pro-preview-mockup">
+          <div class="pro-preview-row"><span style="font-size:15px;">📘</span><span><strong>רחל אברהם</strong> — קמפיין "דירות למכירה ת"א"</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">📘</span><span><strong>מיכאל כץ</strong> — קמפיין "נכסים מסחריים"</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">⚡</span><span>עוד 3 לידים בתור — נכנסים אוטומטית</span></div>
+        </div>`
+    },
+    'digital-card': {
+      icon: '🤳', title: 'כרטיס ביקור דיגיטלי', sub: 'דף פרופיל שניתן לשתף עם לקוחות',
+      perks: ['🌐 לינק אישי לשיתוף ב-WA', '📸 תמונה, פרטים ולוגו', '📞 לחיצה להתקשרות ישירה'],
+      mockup: `<div style="border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;">
+        <div style="background:linear-gradient(135deg,var(--navy-700),#2563EB);padding:18px;text-align:center;color:white;">
+          <div style="font-size:36px;margin-bottom:6px;">👤</div>
+          <div style="font-size:16px;font-weight:800;">ישראל ישראלי</div>
+          <div style="font-size:12px;opacity:0.85;">סוכן נדל"ן בכיר</div>
+        </div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;"><span>📱</span><span>050-0000000</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;"><span>🌐</span><span>liders-crm.com/card/israel</span></div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:12px;color:var(--gray-500);">שתף ב-WA — הלקוח מקבל דף הפרופיל שלך</div>`
+    },
+    'esign': {
+      icon: '✍️', title: 'חתימה דיגיטלית', sub: 'שלח חוזים לחתימה אלקטרונית חוקית',
+      perks: ['📜 חתימה חוקית לפי חוק', '📲 הלקוח חותם מהטלפון', '🗂️ ארכיון מסמכים חתומים'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📋 מסמכים לחתימה</div>
+        <div class="pro-preview-mockup">
+          <div class="pro-preview-row"><span style="font-size:15px;">⏳</span><span>הסכם בלעדיות — <strong>דוד כהן</strong> — ממתין לחתימה</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>הסכם מכר — <strong>שרה לוי</strong> — נחתם 12/06</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>ייפוי כוח — <strong>יוסי מזרחי</strong> — נחתם 08/06</span></div>
+        </div>`
+    },
+    'client-portal': {
+      icon: '🏪', title: 'פורטל לקוח', sub: 'הלקוח רואה את הסטטוס של העסקה שלו',
+      perks: ['🔗 לינק אישי לכל לקוח', '📍 מעקב שלב בפייפליין בזמן אמת', '📞 כפתור יצירת קשר עם הסוכן'],
+      mockup: `<div style="border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;">
+        <div style="background:var(--navy-700);padding:12px 16px;color:white;font-size:13px;font-weight:700;">📊 העסקה שלי</div>
+        <div style="padding:14px;">
+          <div style="display:flex;gap:4px;margin-bottom:12px;">
+            ${['ליד','קשר','הצעה','מו"מ','סגור'].map((n, i) => `<div style="flex:1;text-align:center;padding:5px 2px;border-radius:6px;font-size:9px;font-weight:700;background:${i <= 2 ? 'var(--blue-500)' : 'var(--gray-200)'};color:${i <= 2 ? 'white' : 'var(--gray-500)'};">${n}</div>`).join('')}
+          </div>
+          <div style="font-size:12.5px;color:var(--gray-600);line-height:1.7;">
+            <div>👤 הסוכן שלך: <strong>ישראל ישראלי</strong></div>
+            <div>📅 עדכון אחרון: <strong>היום, 14:30</strong></div>
+          </div>
+        </div>
+      </div>`
+    },
+    'reviews': {
+      icon: '⭐', title: 'ביקורות לקוחות', sub: 'אסוף המלצות אוטומטית אחרי כל עסקה',
+      perks: ['🚀 בקשה אוטומטית עם סגירת עסקה', '⭐ ציון ממוצע בפרופיל שלך', '📲 שיתוף ביקורות ב-WhatsApp'],
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">⭐ ביקורות שנאספו</div>
+        <div class="pro-preview-mockup">
+          <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <div style="font-size:13px;font-weight:600;">דוד כהן ⭐⭐⭐⭐⭐</div>
+            <div style="font-size:12px;color:var(--gray-500);">"שירות מעולה, ממליץ בחום!"</div>
+          </div>
+          <div style="padding:8px 0;">
+            <div style="font-size:13px;font-weight:600;">רחל מזרחי ⭐⭐⭐⭐⭐</div>
+            <div style="font-size:12px;color:var(--gray-500);">"מקצועי ואמין, מצא לנו את הדירה המושלמת"</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:var(--gray-500);">בקשה נשלחת אוטומטית עם סגירת עסקה</div>`
+    },
+    'weekly-report': {
+      icon: '📋', title: 'דוח שבועי אוטומטי', sub: 'PDF ביצועים שנשלח לאימייל שלך',
+      perks: ['📊 ניתוח שבועי מלא', '📧 נשלח כל יום ראשון', '📈 השוואה לשבוע הקודם'],
+      mockup: `<div style="border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div style="font-size:15px;font-weight:900;color:var(--navy);margin-bottom:12px;">📊 דוח ביצועים — שבוע 25</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div style="background:var(--blue-100);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:22px;font-weight:900;color:var(--blue-500);">7</div><div style="font-size:11px;color:var(--gray-600);">לידים חדשים</div></div>
+          <div style="background:var(--green-100);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:22px;font-weight:900;color:var(--green-600);">2</div><div style="font-size:11px;color:var(--gray-600);">עסקאות שנסגרו</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--gray-500);text-align:center;">נשלח כל יום ראשון לאימייל שלך</div>
+      </div>`
+    },
+  },
+
+  _openLockedPreview(id) {
+    const p = this._previews[id];
+    if (!p) return;
+    document.getElementById('pro-locked-icon').textContent = p.icon;
+    document.getElementById('pro-locked-title').textContent = p.title;
+    document.getElementById('pro-locked-sub').textContent = p.sub;
+    document.getElementById('pro-locked-mockup').innerHTML = p.mockup || '';
+    document.getElementById('pro-locked-perks').innerHTML = (p.perks || [])
+      .map(pt => `<div style="font-size:12px;color:var(--gray-700);padding:3px 0;">${pt}</div>`).join('');
+    openModal('modal-pro-locked');
+  },
+};
+
 </script>
 </body>
 </html>
