@@ -2790,6 +2790,31 @@
 </div>
 
 <!-- ═══════════════════════════════════════
+     MODAL: STAGE REGRESSION NOTE
+═══════════════════════════════════════ -->
+<div id="modal-regression-note" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">⚠️ החזרת ליד לשלב נמוך יותר</div>
+      <button class="modal-close" onclick="closeModal('modal-regression-note')">×</button>
+    </div>
+    <div style="background:#fffbeb; border:1px solid #fbbf24; border-radius:var(--radius-md); padding:12px; margin-bottom:16px; font-size:0.85rem; color:#92400e; line-height:1.5;">
+      ⚠️ החזרה לשלב נמוך יותר תגרור ניכוי XP שנצבר עבור ליד זה. חובה לציין את הסיבה.
+    </div>
+    <div class="form-group">
+      <label class="form-label">סיבת ההחזרה (חובה) *</label>
+      <textarea id="regression-note-text" class="form-input" rows="3" placeholder="למשל: הלקוח ביקש לחזור לשלב יצירת הקשר לפני שמתקדמים..."></textarea>
+    </div>
+    <div id="regression-xp-preview" style="font-size:0.85rem; color:#ef4444; font-weight:600; margin-top:8px; min-height:20px;"></div>
+    <div style="margin-top:16px; display:flex; gap:10px;">
+      <button class="btn btn-danger" onclick="confirmLeadRegression()" style="flex:1;">אשר החזרה</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-regression-note')" style="flex:1;">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
      MODAL: ADD TASK
 ═══════════════════════════════════════ -->
 <div id="modal-add-task" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-add-task')">
@@ -3906,6 +3931,7 @@ const State = {
   agent:  { ...DEMO.agent },
   tenant: { ...DEMO.tenant },
   customLabels: {},
+  _pendingRegression: null,
 };
 
 /* ═══════════════════════════════════════════
@@ -5248,6 +5274,9 @@ const Gamify = {
         xp: 0, achievements: [], streak: 0,
         lastLogin: null, aiUses: 0, tasksCompleted: 0,
         dealsClosed: 0, leadsAdded: 0, dailyDone: null,
+        acDate: '', acAdvanced: [], acClosed: [],
+        acTasks: 0, acLeads: 0, acAi: 0,
+        milestoneClaimed: [],
       };
     }
     return this._d;
@@ -5270,17 +5299,72 @@ const Gamify = {
     return { pct, cur: xp, needed: next.min - xp, nextMin: next.min };
   },
 
+  _resetDaily(d) {
+    const today_ = new Date().toISOString().split('T')[0];
+    if (!d.acAdvanced) d.acAdvanced = [];
+    if (!d.acClosed)   d.acClosed   = [];
+    if (d.acTasks  === undefined) d.acTasks  = 0;
+    if (d.acLeads  === undefined) d.acLeads  = 0;
+    if (d.acAi     === undefined) d.acAi     = 0;
+    if (!d.milestoneClaimed) d.milestoneClaimed = [];
+    if (d.acDate !== today_) {
+      d.acDate = today_;
+      d.acAdvanced = [];
+      d.acTasks = 0;
+      d.acLeads = 0;
+      d.acAi    = 0;
+    }
+  },
+
+  _canEarn(d, type, leadId) {
+    switch (type) {
+      case 'advance_stage':
+        return !!leadId && !d.acAdvanced.includes(leadId);
+      case 'close_deal':
+        return !!leadId && !d.acClosed.includes(leadId);
+      case 'complete_task':
+        return d.acTasks < 8;
+      case 'add_lead':
+        return d.acLeads < 10;
+      case 'use_ai':
+        return d.acAi < 3;
+      default:
+        return true;
+    }
+  },
+
+  _deductXP(pts) {
+    if (State.isDemo) return;
+    const d = this.get();
+    d.xp = Math.max(0, d.xp - pts);
+    this.save();
+    this.renderSidebar();
+    this.renderWidget();
+    toast(`-${pts} XP ⚠️`, 'warning');
+  },
+
   event(type, extra) {
     if (State.isDemo) return;
     const d = this.get();
     const pts = this.XP[type] || 0;
     if (!pts) return;
+    this._resetDaily(d);
+    const leadId = extra?.id || null;
+    if (!this._canEarn(d, type, leadId)) {
+      if (type === 'advance_stage' || type === 'close_deal') {
+        toast('XP כבר נצבר עבור ליד זה', 'info');
+      } else {
+        toast('הגעת למגבלת ה-XP היומית לפעולה זו', 'info');
+      }
+      return;
+    }
     const prevLevel = this.getLevel(d.xp);
     d.xp += pts;
-    if (type === 'add_lead')      d.leadsAdded++;
-    if (type === 'close_deal')    { d.dealsClosed++; this.confetti(); }
-    if (type === 'complete_task') d.tasksCompleted++;
-    if (type === 'use_ai')        d.aiUses++;
+    if (type === 'add_lead')      { d.leadsAdded++;      d.acLeads++;  }
+    if (type === 'close_deal')    { d.dealsClosed++;      if (leadId) d.acClosed.push(leadId);   this.confetti(); }
+    if (type === 'advance_stage') { if (leadId) d.acAdvanced.push(leadId); }
+    if (type === 'complete_task') { d.tasksCompleted++;   d.acTasks++;  }
+    if (type === 'use_ai')        { d.aiUses++;           d.acAi++;     }
     this.save();
     const newLevel = this.getLevel(d.xp);
     if (newLevel.min > prevLevel.min) this.showLevelUp(newLevel);
@@ -8214,7 +8298,7 @@ async function addLead() {
     document.getElementById('new-lead-budget').value = '';
     document.getElementById('new-lead-source').value = 'other';
     toast(`✅ ליד "${name}" נוסף בהצלחה`, 'success');
-    Gamify.event('add_lead');
+    Gamify.event('add_lead', lead);
     Make.newLead(lead);
     Twilio.notifyNewLead(lead);
     App.updateBadges();
@@ -8289,6 +8373,34 @@ async function moveLead(leadId, stageId) {
   const lead = State.leads.find(l => l.id === leadId);
   const stage = State.stages.find(s => s.id === stageId);
   if (!lead || !stage || lead.stage === stageId) return;
+
+  const oldIdx = State.stages.findIndex(s => s.id === lead.stage);
+  const newIdx = State.stages.findIndex(s => s.id === stageId);
+
+  if (newIdx < oldIdx) {
+    // Regression — compute expected XP deduction for preview
+    const d = Gamify.get();
+    Gamify._resetDaily(d);
+    let deduct = 0;
+    if (d.acAdvanced.includes(leadId)) deduct += Gamify.XP.advance_stage;
+    if (d.acClosed.includes(leadId))   deduct += Gamify.XP.close_deal;
+    const prev = document.getElementById('regression-xp-preview');
+    if (prev) prev.textContent = deduct > 0 ? `ניכוי XP צפוי: -${deduct} XP` : '';
+    const noteEl = document.getElementById('regression-note-text');
+    if (noteEl) noteEl.value = '';
+    State._pendingRegression = { leadId, stageId };
+    closeModal('modal-move-stage');
+    openModal('modal-regression-note');
+    return;
+  }
+
+  await moveLeadActual(leadId, stageId, null);
+}
+
+async function moveLeadActual(leadId, stageId, regressionNote) {
+  const lead = State.leads.find(l => l.id === leadId);
+  const stage = State.stages.find(s => s.id === stageId);
+  if (!lead || !stage) return;
   const oldStage = State.stages.find(s => s.id === lead.stage);
   const prevStage = lead.stage;
   lead.stage = stageId;
@@ -8299,19 +8411,46 @@ async function moveLead(leadId, stageId) {
     toast('שגיאה בשמירה', 'error');
     return;
   }
-  State.activities.unshift({
-    id: uid(), lead_id: leadId, type: 'stage_change',
-    content: `🔄 הועבר מ-"${oldStage?.name}" ל-"${stage.name}"`,
-    created_at: today()
-  });
+  const actContent = regressionNote
+    ? `🔄 הועבר מ-"${oldStage?.name}" ל-"${stage.name}" — סיבה: ${regressionNote}`
+    : `🔄 הועבר מ-"${oldStage?.name}" ל-"${stage.name}"`;
+  State.activities.unshift({ id: uid(), lead_id: leadId, type: 'stage_change', content: actContent, created_at: today() });
   Make.stageChanged(lead, oldStage?.name, stage.name);
   Twilio.notifyStageChanged(lead, stage.name);
   closeModal('modal-move-stage');
   toast(`🔄 ${lead.name} הועבר ל-${stage.name}`, 'success');
-  if (stageId === 's5') Gamify.event('close_deal', lead);
-  else Gamify.event('advance_stage');
+  if (regressionNote) {
+    const d = Gamify.get();
+    Gamify._resetDaily(d);
+    let deducted = false;
+    if (d.acAdvanced.includes(leadId)) {
+      d.acAdvanced = d.acAdvanced.filter(id => id !== leadId);
+      Gamify._deductXP(Gamify.XP.advance_stage);
+      deducted = true;
+    }
+    if (d.acClosed.includes(leadId)) {
+      d.acClosed = d.acClosed.filter(id => id !== leadId);
+      Gamify._deductXP(Gamify.XP.close_deal);
+      deducted = true;
+    }
+    if (!deducted) Gamify.save();
+  } else if (stageId === 's5') {
+    Gamify.event('close_deal', lead);
+  } else {
+    Gamify.event('advance_stage', lead);
+  }
   if (State.screen === 'pipeline') Pipeline.render();
   else if (State.screen === 'lead-detail') LeadDetail.render(leadId);
+}
+
+function confirmLeadRegression() {
+  const note = document.getElementById('regression-note-text')?.value.trim();
+  if (!note) { toast('חובה לציין סיבה להחזרת השלב', 'warning'); return; }
+  const { leadId, stageId } = State._pendingRegression || {};
+  if (!leadId || !stageId) return;
+  State._pendingRegression = null;
+  closeModal('modal-regression-note');
+  moveLeadActual(leadId, stageId, note);
 }
 
 function openMoveStage(leadId) {
