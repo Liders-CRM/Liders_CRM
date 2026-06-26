@@ -280,6 +280,39 @@
       border-radius: var(--radius-md); display: none; margin-top: 8px;
     }
     .prop-img-preview.visible { display: block; }
+    /* Multi-image gallery */
+    .prop-gallery-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px;
+    }
+    .prop-gallery-thumb {
+      position: relative; aspect-ratio: 1; border-radius: var(--radius-md);
+      overflow: hidden; background: var(--gray-100);
+    }
+    .prop-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .prop-gallery-thumb .gal-remove {
+      position: absolute; top: 4px; left: 4px;
+      background: rgba(0,0,0,0.65); color: #fff; border: none; border-radius: 50%;
+      width: 22px; height: 22px; cursor: pointer; font-size: 11px;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .prop-gallery-thumb .gal-main {
+      position: absolute; bottom: 4px; right: 4px;
+      background: var(--blue-500); color: #fff;
+      font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 700;
+    }
+    .prop-gallery-add {
+      aspect-ratio: 1; border: 2px dashed var(--border); border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; background: var(--gray-50); font-size: 22px;
+      color: var(--gray-400); position: relative; transition: var(--transition);
+    }
+    .prop-gallery-add:hover { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-500); }
+    .prop-gallery-add input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .property-photo .img-count-badge {
+      position: absolute; bottom: 8px; right: 8px;
+      background: rgba(0,0,0,0.55); color: #fff;
+      font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+    }
     .property-body { padding: 14px; }
     .property-price { font-size: 18px; font-weight: 800; color: var(--navy-500); }
     .property-title { font-size: 14px; font-weight: 600; margin-top: 2px; }
@@ -2094,7 +2127,7 @@
     <div id="screen-properties" class="screen hidden">
       <div class="screen-header">
         <div class="screen-title">🏠 נכסים</div>
-        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-property')">+ נכס</button>
+        <button class="btn btn-primary btn-sm" onclick="PropImages.resetNew(); openModal('modal-add-property')">+ נכס</button>
       </div>
       <div class="properties-grid" id="properties-grid"></div>
     </div>
@@ -2787,17 +2820,8 @@
         <textarea id="new-prop-description" class="form-input form-textarea" placeholder="פרטים נוספים על הנכס..."></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">תמונת נכס</label>
-        <div class="prop-img-upload-zone" id="prop-upload-zone">
-          <input type="file" id="new-prop-image" accept="image/jpeg,image/png,image/webp,image/heic" onchange="previewPropImage(this)">
-          <div id="prop-upload-placeholder">
-            <div style="font-size:28px; margin-bottom:6px;">📷</div>
-            <div style="font-size:13px; font-weight:600; color:var(--gray-600);">הוסף תמונה</div>
-            <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">JPG, PNG, WEBP עד 10MB</div>
-          </div>
-        </div>
-        <img id="prop-img-preview" class="prop-img-preview" src="" alt="תצוגה מקדימה">
-        <button id="prop-img-remove" class="btn btn-ghost" style="display:none; margin-top:4px; font-size:12px; padding:4px 10px;" onclick="removePropImage()">✕ הסר תמונה</button>
+        <label class="form-label">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
+        <div id="new-prop-gallery" class="prop-gallery-grid"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -2874,19 +2898,8 @@
         <textarea id="edit-prop-description" class="form-input form-textarea"></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">תמונת נכס</label>
-        <div id="edit-prop-current-img" style="display:none; margin-bottom:8px; border-radius:var(--radius-lg); overflow:hidden;">
-          <img id="edit-prop-img-display" src="" alt="תמונה נוכחית" style="width:100%; max-height:160px; object-fit:cover;">
-        </div>
-        <div class="prop-img-upload-zone" style="margin-top:4px;">
-          <input type="file" id="edit-prop-image" accept="image/jpeg,image/png,image/webp,image/heic" onchange="previewEditPropImage(this)">
-          <div id="edit-prop-upload-placeholder">
-            <div style="font-size:24px; margin-bottom:4px;">📷</div>
-            <div style="font-size:13px; font-weight:600; color:var(--gray-600);">החלף תמונה</div>
-            <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">JPG, PNG, WEBP עד 10MB</div>
-          </div>
-        </div>
-        <img id="edit-prop-img-preview" class="prop-img-preview" src="" alt="תצוגה מקדימה">
+        <label class="form-label">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
+        <div id="edit-prop-gallery" class="prop-gallery-grid"></div>
       </div>
     </div>
     <div class="modal-footer" style="flex-direction:column; gap:8px;">
@@ -3342,6 +3355,7 @@ const DB = {
         rooms: p.rooms, floor: p.floor, address: p.address, city: p.city,
         neighborhood: p.neighborhood || '', description: p.description || '',
         image_url: p.image_url || null,
+        image_urls: p.image_urls?.length ? p.image_urls : (p.image_url ? [p.image_url] : []),
       })),
       activities: (actsR.data || []).map(a => ({
         id: a.id, lead_id: a.lead_id, type: a.type,
@@ -3452,6 +3466,7 @@ const DB = {
       city: prop.city || null,
       description: prop.description || '',
       image_url: prop.image_url || null,
+      image_urls: prop.image_urls || [],
     }).select().single();
     if (error) throw error;
     return {
@@ -3461,6 +3476,7 @@ const DB = {
       address: data.address || '', city: data.city || '',
       neighborhood: '', description: data.description || '',
       image_url: data.image_url || null,
+      image_urls: data.image_urls || [],
     };
   },
 
@@ -3476,7 +3492,8 @@ const DB = {
       address: updates.address,
       city: updates.city,
       description: updates.description,
-      ...(updates.image_url !== undefined ? { image_url: updates.image_url } : {}),
+      ...(updates.image_url  !== undefined ? { image_url:  updates.image_url  } : {}),
+      ...(updates.image_urls !== undefined ? { image_urls: updates.image_urls } : {}),
     }).eq('id', propId).eq('tenant_id', this.tenantId);
     if (error) throw error;
   },
@@ -6642,7 +6659,10 @@ const PropertiesScreen = {
     const statusClass = { available:'badge-status-available', under_offer:'badge-status-offer', sold:'badge-status-sold' };
     document.getElementById('properties-grid').innerHTML = State.properties.map(p => `
       <div class="property-card" onclick="openEditProperty('${p.id}')">
-        <div class="property-photo">${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : '🏠'}</div>
+        <div class="property-photo">
+          ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : '🏠'}
+          ${(p.image_urls?.length || 0) > 1 ? `<span class="img-count-badge">📷 ${p.image_urls.length}</span>` : ''}
+        </div>
         <div class="property-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div class="property-price">${formatMoney(p.price)}</div>
@@ -8028,40 +8048,124 @@ function togglePasswordVisibility() {
   else { input.type = 'password'; btn.textContent = '👁'; }
 }
 
-function previewPropImage(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const preview = document.getElementById('prop-img-preview');
-  const removeBtn = document.getElementById('prop-img-remove');
-  const placeholder = document.getElementById('prop-upload-placeholder');
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.classList.add('visible');
-    removeBtn.style.display = 'inline-flex';
-    placeholder.style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-}
+/* ═══════════════════════════════════════════
+   PROPERTY MULTI-IMAGE MODULE
+═══════════════════════════════════════════ */
+const PropImages = {
+  newFiles:  [],   // File objects for new property
+  editUrls:  [],   // Existing URLs in edit mode
+  editFiles: [],   // New File objects added in edit mode
 
-function removePropImage() {
-  document.getElementById('new-prop-image').value = '';
-  const preview = document.getElementById('prop-img-preview');
-  const removeBtn = document.getElementById('prop-img-remove');
-  const placeholder = document.getElementById('prop-upload-placeholder');
-  preview.src = ''; preview.classList.remove('visible');
-  removeBtn.style.display = 'none';
-  placeholder.style.display = '';
-}
+  _readFile(file, cb) {
+    const reader = new FileReader();
+    reader.onload = e => { file._preview = e.target.result; cb(); };
+    reader.readAsDataURL(file);
+  },
 
-async function uploadPropertyImage(file, propId) {
-  const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
-  const path = `${DB.tenantId}/${propId}.${ext}`;
-  const { error } = await sbClient.storage.from('property-images').upload(path, file, { upsert: true, contentType: file.type });
-  if (error) throw error;
-  const { data } = sbClient.storage.from('property-images').getPublicUrl(path);
-  return data.publicUrl;
-}
+  _emptyZone(gridId, isEdit) {
+    const fn = isEdit ? 'PropImages.addEditFile(this)' : 'PropImages.addNewFiles(this)';
+    return `<label class="prop-img-upload-zone" style="grid-column:1/-1; padding:18px; display:flex; flex-direction:column; align-items:center;">
+      <input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="${fn}">
+      <div style="font-size:26px; margin-bottom:6px;">📷</div>
+      <div style="font-size:13px; font-weight:600; color:var(--gray-600);">הוסף תמונות</div>
+      <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">עד 5 תמונות · JPG PNG WEBP</div>
+    </label>`;
+  },
+
+  renderNew() {
+    const grid = document.getElementById('new-prop-gallery');
+    if (!grid) return;
+    const files = this.newFiles;
+    if (!files.length) { grid.innerHTML = this._emptyZone('new-prop-gallery', false); return; }
+    grid.innerHTML = files.map((f, i) => `
+      <div class="prop-gallery-thumb">
+        <img src="${f._preview}">
+        ${i === 0 ? '<span class="gal-main">ראשי</span>' : ''}
+        <button class="gal-remove" onclick="PropImages.removeNew(${i})">✕</button>
+      </div>`).join('')
+      + (files.length < 5 ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="PropImages.addNewFiles(this)"></label>` : '');
+  },
+
+  addNewFiles(input) {
+    const files = Array.from(input.files || []);
+    for (const f of files) {
+      if (this.newFiles.length >= 5) break;
+      if (f.size > 10 * 1024 * 1024) { toast('קובץ גדול מדי (מקס׳ 10MB)', 'error'); continue; }
+      this.newFiles.push(f);
+      this._readFile(f, () => this.renderNew());
+    }
+    input.value = '';
+  },
+
+  removeNew(i) { this.newFiles.splice(i, 1); this.renderNew(); },
+  resetNew()   { this.newFiles = []; this.renderNew(); },
+
+  renderEdit() {
+    const grid = document.getElementById('edit-prop-gallery');
+    if (!grid) return;
+    const total = this.editUrls.length + this.editFiles.length;
+    if (!total) { grid.innerHTML = this._emptyZone('edit-prop-gallery', true); return; }
+    const existing = this.editUrls.map((url, i) => `
+      <div class="prop-gallery-thumb">
+        <img src="${escapeHtml(url)}" onerror="this.style.display='none'">
+        ${i === 0 && !this.editFiles.length ? '<span class="gal-main">ראשי</span>' : ''}
+        <button class="gal-remove" onclick="PropImages.removeEditUrl(${i})">✕</button>
+      </div>`).join('');
+    const added = this.editFiles.map((f, i) => `
+      <div class="prop-gallery-thumb" style="outline:2px solid var(--blue-400);">
+        <img src="${f._preview}">
+        ${i === 0 && !this.editUrls.length ? '<span class="gal-main">ראשי</span>' : ''}
+        <button class="gal-remove" onclick="PropImages.removeEditFile(${i})">✕</button>
+      </div>`).join('');
+    const addBtn = total < 5 ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="PropImages.addEditFile(this)"></label>` : '';
+    grid.innerHTML = existing + added + addBtn;
+  },
+
+  addEditFile(input) {
+    const files = Array.from(input.files || []);
+    for (const f of files) {
+      if (this.editUrls.length + this.editFiles.length >= 5) break;
+      if (f.size > 10 * 1024 * 1024) { toast('קובץ גדול מדי (מקס׳ 10MB)', 'error'); continue; }
+      this.editFiles.push(f);
+      this._readFile(f, () => this.renderEdit());
+    }
+    input.value = '';
+  },
+
+  removeEditUrl(i)  { this.editUrls.splice(i, 1);  this.renderEdit(); },
+  removeEditFile(i) { this.editFiles.splice(i, 1); this.renderEdit(); },
+
+  resetEdit(existingUrls) {
+    this.editUrls  = [...(existingUrls || [])];
+    this.editFiles = [];
+    this.renderEdit();
+  },
+
+  async _uploadOne(file, propId, suffix) {
+    const ext  = file.name.split('.').pop().toLowerCase() || 'jpg';
+    const path = `${DB.tenantId}/${propId}_${suffix}.${ext}`;
+    const { error } = await sbClient.storage.from('property-images').upload(path, file, { upsert: true, contentType: file.type });
+    if (error) throw error;
+    return sbClient.storage.from('property-images').getPublicUrl(path).data.publicUrl;
+  },
+
+  async uploadNewAll(propId) {
+    const urls = [];
+    for (let i = 0; i < this.newFiles.length; i++) {
+      urls.push(await this._uploadOne(this.newFiles[i], propId, i));
+    }
+    return urls;
+  },
+
+  async uploadEditNew(propId) {
+    const ts   = Date.now();
+    const urls = [...this.editUrls];
+    for (let i = 0; i < this.editFiles.length; i++) {
+      urls.push(await this._uploadOne(this.editFiles[i], propId, `${ts}_${i}`));
+    }
+    return urls;
+  },
+};
 
 async function addProperty() {
   if (demoGuard()) return;
@@ -8069,38 +8173,40 @@ async function addProperty() {
   const price = parseFloat(document.getElementById('new-prop-price').value) || 0;
   if (!title) { toast('נא הכנס כותרת לנכס', 'error'); return; }
   if (!price) { toast('נא הכנס מחיר', 'error'); return; }
-  const imageFile = document.getElementById('new-prop-image').files[0] || null;
   const saveBtn = document.querySelector('#modal-add-property .btn-primary');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   try {
-    const data = {
+    const propData = {
       title,
       type:        document.getElementById('new-prop-type').value,
       status:      document.getElementById('new-prop-status').value,
       price,
       rooms:       parseFloat(document.getElementById('new-prop-rooms').value) || null,
       area:        parseFloat(document.getElementById('new-prop-area').value) || null,
-      floor:       parseInt(document.getElementById('new-prop-floor').value) || null,
+      floor:       parseInt(document.getElementById('new-prop-floor').value)  || null,
       address:     document.getElementById('new-prop-address').value.trim(),
       city:        document.getElementById('new-prop-city').value.trim(),
       description: document.getElementById('new-prop-description').value.trim(),
     };
-    // save property first to get ID, then upload image
-    const prop = await DB.addProperty(data);
-    if (imageFile) {
+    const prop = await DB.addProperty(propData);
+    if (PropImages.newFiles.length) {
       try {
-        const imageUrl = await uploadPropertyImage(imageFile, prop.id);
-        await sbClient.from('properties').update({ image_url: imageUrl }).eq('id', prop.id);
-        prop.image_url = imageUrl;
+        const urls = await PropImages.uploadNewAll(prop.id);
+        const { error } = await sbClient.from('properties')
+          .update({ image_url: urls[0], image_urls: urls })
+          .eq('id', prop.id).eq('tenant_id', DB.tenantId);
+        if (error) throw error;
+        prop.image_url  = urls[0];
+        prop.image_urls = urls;
       } catch(imgErr) {
-        toast('הנכס נשמר אבל התמונה לא הועלתה: ' + imgErr.message, 'warning');
+        toast('הנכס נשמר אבל התמונות לא הועלו: ' + imgErr.message, 'warning');
       }
     }
     State.properties.unshift(prop);
     closeModal('modal-add-property');
     ['new-prop-title','new-prop-price','new-prop-rooms','new-prop-area','new-prop-floor','new-prop-address','new-prop-city','new-prop-description']
-      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-    removePropImage();
+      .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    PropImages.resetNew();
     toast(`🏠 נכס "${title}" נוסף בהצלחה`, 'success');
     if (State.screen === 'properties') PropertiesScreen.render();
   } catch(e) {
@@ -8124,38 +8230,14 @@ function openEditProperty(propId) {
   document.getElementById('edit-prop-address').value     = p.address || '';
   document.getElementById('edit-prop-city').value        = p.city   || '';
   document.getElementById('edit-prop-description').value = p.description || '';
-  // Show current image if exists
-  const currentImgDiv = document.getElementById('edit-prop-current-img');
-  const imgDisplay    = document.getElementById('edit-prop-img-display');
-  if (p.image_url) {
-    imgDisplay.src = p.image_url;
-    currentImgDiv.style.display = 'block';
-  } else {
-    currentImgDiv.style.display = 'none';
-    imgDisplay.src = '';
-  }
-  // Reset new image upload
-  const fileInput = document.getElementById('edit-prop-image');
-  if (fileInput) fileInput.value = '';
-  const preview = document.getElementById('edit-prop-img-preview');
-  if (preview) { preview.src = ''; preview.classList.remove('visible'); }
+  PropImages.resetEdit(p.image_urls?.length ? p.image_urls : (p.image_url ? [p.image_url] : []));
   openModal('modal-edit-property');
-}
-
-function previewEditPropImage(input) {
-  const file = input.files?.[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) { toast('הקובץ גדול מדי (מקס׳ 10MB)', 'error'); input.value = ''; return; }
-  const preview = document.getElementById('edit-prop-img-preview');
-  const reader = new FileReader();
-  reader.onload = e => { preview.src = e.target.result; preview.classList.add('visible'); };
-  reader.readAsDataURL(file);
 }
 
 async function saveEditProperty() {
   if (demoGuard()) return;
   const propId = State.currentPropId;
-  const prop = State.properties.find(x => x.id === propId);
+  const prop   = State.properties.find(x => x.id === propId);
   if (!prop) return;
   const title = document.getElementById('edit-prop-title').value.trim();
   const price = parseFloat(document.getElementById('edit-prop-price').value) || 0;
@@ -8164,24 +8246,21 @@ async function saveEditProperty() {
   const saveBtn = document.getElementById('edit-prop-save-btn');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   try {
+    const allUrls = await PropImages.uploadEditNew(propId);
     const updates = {
       title,
       type:        document.getElementById('edit-prop-type').value,
       status:      document.getElementById('edit-prop-status').value,
       price,
       rooms:       parseFloat(document.getElementById('edit-prop-rooms').value) || null,
-      area:        parseFloat(document.getElementById('edit-prop-area').value) || null,
-      floor:       parseInt(document.getElementById('edit-prop-floor').value) || null,
+      area:        parseFloat(document.getElementById('edit-prop-area').value)  || null,
+      floor:       parseInt(document.getElementById('edit-prop-floor').value)   || null,
       address:     document.getElementById('edit-prop-address').value.trim(),
       city:        document.getElementById('edit-prop-city').value.trim(),
       description: document.getElementById('edit-prop-description').value.trim(),
+      image_url:   allUrls[0] || null,
+      image_urls:  allUrls,
     };
-    const imageFile = document.getElementById('edit-prop-image').files[0] || null;
-    if (imageFile) {
-      const imageUrl = await uploadPropertyImage(imageFile, propId);
-      await sbClient.from('properties').update({ image_url: imageUrl }).eq('id', propId);
-      updates.image_url = imageUrl;
-    }
     await DB.updateProperty(propId, updates);
     Object.assign(prop, updates);
     closeModal('modal-edit-property');
