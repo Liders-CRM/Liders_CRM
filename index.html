@@ -4512,7 +4512,7 @@ const Marketing = {
             <li>מחולל קמפיין WhatsApp לרשימת לקוחות</li>
             <li>שליחת בקשה לשירות מלא מנציג Liders</li>
           </ul>
-          <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
+          <button class="mktg-upgrade-btn" onclick="Marketing.openUpgradeLink()">
             הוסף שירותי שיווק — ₪100/חודש
           </button>
           <p class="mktg-upgrade-micro">ניתן להוסיף בכל עת · ביטול ללא קנסות</p>
@@ -4672,33 +4672,109 @@ const Marketing = {
     },
   },
 
-  genOffer() {
+  // Stripe Payment Link URL for marketing addon — set after Stripe approval
+  // Create a Payment Link with metadata: { addon: 'marketing' } and add client_reference_id via query param
+  _STRIPE_MARKETING_URL: '',
+
+  openUpgradeLink() {
+    if (!this._STRIPE_MARKETING_URL) {
+      toast('לשדרוג צור קשר — biz@liders-crm.com', 'info');
+      return;
+    }
+    const tenantId = State.tenant?.id || '';
+    window.open(`${this._STRIPE_MARKETING_URL}?client_reference_id=${tenantId}`, '_blank');
+  },
+
+  async _callAI(userPrompt, systemPrompt) {
+    const { data, error } = await sbClient.functions.invoke('ai-proxy', {
+      body: {
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+        max_tokens: 600,
+      },
+    });
+    if (error) throw new Error(error.message || 'שגיאת שירות AI');
+    if (data?.error) throw new Error(data.error?.message || data.error || 'שגיאת Claude API');
+    return data?.content?.[0]?.text?.trim() || '';
+  },
+
+  _showLoading(outId) {
+    const out = document.getElementById(outId);
+    if (out) { out.textContent = '⏳ מייצר תוכן...'; out.classList.add('visible'); }
+  },
+
+  async genOffer() {
     const leadId = document.getElementById('mktg-lead-sel')?.value;
     const propId  = document.getElementById('mktg-prop-sel')?.value;
     const type    = document.getElementById('mktg-offer-type')?.value;
     const lead    = State.leads.find(l => l.id === leadId);
     const prop    = State.properties.find(p => p.id === propId);
     if (!lead) { toast('בחר ליד קודם', 'warning'); return; }
-    const propStr = prop ? `${prop.title || 'נכס'} ב${prop.city || ''}${prop.price ? ` — ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
-    const agency  = State.tenant?.name || 'הסוכנות שלי';
-    const text    = this._templates.offer[type](lead.name.split(' ')[0], propStr, agency);
-    this._show('mktg-offer-out', 'mktg-offer-act', text);
+
+    const propStr = prop
+      ? `${prop.title || 'נכס'} ב${prop.city || ''}${prop.price ? ` — ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}`
+      : 'ללא נכס ספציפי';
+    const agency = State.tenant?.name || 'הסוכנות שלי';
+    const typeLabels = {
+      exclusive: 'ביקור בלעדי לפני השוק',
+      special_price: 'תנאים מיוחדים שלא לכולם',
+      limited: 'הצעה מוגבלת לשבוע הקרוב',
+      first: 'פנייה ראשונה אישית',
+    };
+
+    this._showLoading('mktg-offer-out');
+    try {
+      const text = await this._callAI(
+        `כתוב הצעה אישית ללקוח "${lead.name}" בנושא: "${typeLabels[type] || type}". נכס: ${propStr}. שם הסוכנות: ${agency}. 3-4 משפטים בלבד, ישירים וחמים.`,
+        'אתה עוזר שיווקי לסוכן נדל"ן ישראלי. כתוב הצעות אישיות ומשכנעות בעברית. ללא כותרות, רק טקסט זורם.'
+      );
+      this._show('mktg-offer-out', 'mktg-offer-act', text);
+    } catch(e) {
+      this._show('mktg-offer-out', 'mktg-offer-act', '❌ ' + e.message);
+    }
   },
 
-  genPost() {
+  async genPost() {
     const propId = document.getElementById('mktg-post-prop')?.value;
     const plat   = document.getElementById('mktg-platform')?.value;
     const prop   = State.properties.find(p => p.id === propId) || {};
-    const text   = this._templates.post[plat](prop);
-    this._show('mktg-post-out', 'mktg-post-act', text);
+    const platLabels = { instagram: 'אינסטגרם', facebook: 'פייסבוק', whatsapp: 'WhatsApp Status' };
+    const propDesc = [prop.title, prop.city, prop.price ? `${Number(prop.price).toLocaleString('he-IL')} ₪` : ''].filter(Boolean).join(', ') || 'נכס חדש';
+
+    this._showLoading('mktg-post-out');
+    try {
+      const text = await this._callAI(
+        `כתוב פוסט ל${platLabels[plat] || plat} על הנכס הבא: ${propDesc}. כלול אמוג'י מתאים ו-3 האשטגים בסוף.`,
+        'אתה מנהל מדיה חברתית לסוכן נדל"ן ישראלי. כתוב פוסטים מושכים בעברית, עם אנרגיה וקריאה לפעולה.'
+      );
+      this._show('mktg-post-out', 'mktg-post-act', text);
+    } catch(e) {
+      this._show('mktg-post-out', 'mktg-post-act', '❌ ' + e.message);
+    }
   },
 
-  genCampaign() {
-    const topic = document.getElementById('mktg-campaign-topic')?.value;
+  async genCampaign() {
+    const topic    = document.getElementById('mktg-campaign-topic')?.value;
     const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
-    const sig   = sigInput || State.tenant?.name || 'הסוכנות שלי';
-    const text  = this._templates.campaign[topic](sig);
-    this._show('mktg-campaign-out', 'mktg-campaign-act', text);
+    const sig      = sigInput || State.tenant?.name || 'הסוכנות שלי';
+    const topicLabels = {
+      new_listing:    'נכס חדש בשוק',
+      price_drop:     'ירידת מחיר — הזדמנות',
+      market_update:  'עדכון שוק הנדל"ן',
+      holiday:        'ברכת חג',
+      exclusive:      'מבצע בלעדי ללקוחות קיימים',
+    };
+
+    this._showLoading('mktg-campaign-out');
+    try {
+      const text = await this._callAI(
+        `כתוב הודעת WhatsApp broadcast בנושא: "${topicLabels[topic] || topic}". חתימה בסוף: "${sig}". ההודעה צריכה להיות קצרה, אישית ועם קריאה לפעולה. כלול אמוג'י רלוונטי.`,
+        'אתה כותב הודעות שיווק WhatsApp לסוכן נדל"ן ישראלי. ההודעות קצרות (עד 5 שורות), אישיות ומזמינות תגובה.'
+      );
+      this._show('mktg-campaign-out', 'mktg-campaign-act', text);
+    } catch(e) {
+      this._show('mktg-campaign-out', 'mktg-campaign-act', '❌ ' + e.message);
+    }
   },
 
   _show(outId, actId, text) {

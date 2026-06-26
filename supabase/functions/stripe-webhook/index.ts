@@ -29,28 +29,38 @@ serve(async (req: Request) => {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const tenantId = session.client_reference_id;
-      const plan     = session.metadata?.plan;
 
       if (!tenantId) {
         console.error('Missing client_reference_id in session', session.id);
         return new Response('Missing tenant ID', { status: 400 });
       }
-      if (!plan || !VALID_PLANS.has(plan)) {
-        console.error('Missing or invalid plan in metadata', session.id, plan);
-        return new Response('Missing plan metadata', { status: 400 });
+
+      // Marketing addon purchase (metadata: { addon: 'marketing' })
+      if (session.metadata?.addon === 'marketing') {
+        const { error } = await supabase
+          .from('tenants')
+          .update({ marketing_addon: true })
+          .eq('id', tenantId);
+        if (error) throw error;
+        console.log(`Tenant ${tenantId} — marketing addon enabled automatically`);
+      } else {
+        // Regular plan upgrade (metadata: { plan: 'basic'|'pro'|'premium' })
+        const plan = session.metadata?.plan;
+        if (!plan || !VALID_PLANS.has(plan)) {
+          console.error('Missing or invalid plan in metadata', session.id, plan);
+          return new Response('Missing plan metadata', { status: 400 });
+        }
+        const { error } = await supabase
+          .from('tenants')
+          .update({
+            plan,
+            plan_expires_at: null, // subscriptions managed by Stripe
+            billing_email: session.customer_details?.email ?? null,
+          })
+          .eq('id', tenantId);
+        if (error) throw error;
+        console.log(`Tenant ${tenantId} upgraded to ${plan}`);
       }
-
-      const { error } = await supabase
-        .from('tenants')
-        .update({
-          plan,
-          plan_expires_at: null, // subscriptions managed by Stripe
-          billing_email: session.customer_details?.email ?? null,
-        })
-        .eq('id', tenantId);
-
-      if (error) throw error;
-      console.log(`Tenant ${tenantId} upgraded to ${plan}`);
     }
 
     if (event.type === 'customer.subscription.deleted') {
