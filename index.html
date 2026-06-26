@@ -2852,6 +2852,18 @@
   </div>
 </div>
 
+<!-- ── Discard add-lead confirmation sheet ── -->
+<div class="call-sheet" id="add-lead-discard-sheet" onclick="if(event.target===this)closeDiscardSheet()">
+  <div class="call-sheet-inner">
+    <div style="text-align:center;margin-bottom:6px;font-size:22px;">⚠️</div>
+    <div style="text-align:center;font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px;">לא שמרת את הפרטים</div>
+    <div style="text-align:center;font-size:13px;color:var(--gray-500);margin-bottom:20px;">הפרטים שהקלדת יימחקו לגמרי אם תצא עכשיו</div>
+    <button class="call-result-btn" style="background:#DCFCE7;color:#166534;font-size:15px;" onclick="addLead()">💾 &nbsp;שמור ליד עכשיו</button>
+    <button class="call-result-btn" style="background:#DBEAFE;color:#1D4ED8;font-size:15px;" onclick="closeDiscardSheet()">← &nbsp;חזור לטופס</button>
+    <button class="call-result-btn" style="background:#FEE2E2;color:#991B1B;font-size:15px;" onclick="discardAndClose()">🗑 &nbsp;מחק ויצא בלי לשמור</button>
+  </div>
+</div>
+
 <!-- ── Smart WhatsApp AI modal ── -->
 <div id="modal-smart-wa" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-smart-wa')">
   <div class="modal-sheet smart-wa-modal">
@@ -2942,12 +2954,12 @@
 <!-- ═══════════════════════════════════════
      MODAL: ADD LEAD
 ═══════════════════════════════════════ -->
-<div id="modal-add-lead" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-add-lead')">
+<div id="modal-add-lead" class="modal-overlay hidden" onclick="if(event.target===this)tryCloseAddLead()">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
       <div class="modal-title">➕ ליד חדש</div>
-      <button class="modal-close" onclick="closeModal('modal-add-lead')">×</button>
+      <button class="modal-close" onclick="tryCloseAddLead()">×</button>
     </div>
     <div style="display:flex; flex-direction:column; gap:14px;">
       <div class="form-group">
@@ -2990,7 +3002,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-add-lead')">ביטול</button>
+      <button class="btn btn-ghost" onclick="tryCloseAddLead()">ביטול</button>
       <button class="btn btn-primary" style="flex:1;" onclick="addLead()">שמור ליד</button>
     </div>
   </div>
@@ -4970,6 +4982,37 @@ function closeModal(id) {
 }
 function closeModalOnBg(e, id) {
   if (e.target === e.currentTarget) closeModal(id);
+}
+
+function hasLeadFormData() {
+  return !!(
+    document.getElementById('new-lead-name')?.value.trim() ||
+    document.getElementById('new-lead-phone')?.value.trim() ||
+    document.getElementById('new-lead-phone2')?.value.trim() ||
+    document.getElementById('new-lead-area')?.value.trim() ||
+    document.getElementById('new-lead-budget')?.value.trim() ||
+    document.getElementById('new-lead-notes')?.value.trim()
+  );
+}
+function tryCloseAddLead() {
+  if (hasLeadFormData()) {
+    document.getElementById('add-lead-discard-sheet').classList.add('active');
+  } else {
+    closeModal('modal-add-lead');
+  }
+}
+function closeDiscardSheet() {
+  document.getElementById('add-lead-discard-sheet').classList.remove('active');
+}
+function discardAndClose() {
+  ['new-lead-name','new-lead-phone','new-lead-phone2','new-lead-area','new-lead-budget','new-lead-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const src = document.getElementById('new-lead-source');
+  if (src) src.value = 'other';
+  closeDiscardSheet();
+  closeModal('modal-add-lead');
 }
 
 function toast(msg, type='') {
@@ -9183,6 +9226,7 @@ async function addLead() {
     State.leads.unshift(lead);
     await DB.addActivity({ lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר' });
     State.activities.unshift({ id: uid(), lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר', created_at: today() });
+    closeDiscardSheet();
     closeModal('modal-add-lead');
     document.getElementById('new-lead-name').value = '';
     document.getElementById('new-lead-phone').value = '';
