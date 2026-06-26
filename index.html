@@ -1414,7 +1414,7 @@
       font-family: 'Heebo',sans-serif; font-size: 14px; font-weight: 800;
       cursor: pointer; transition: all .2s;
     }
-    .mktg-fs-btn:hover { background: var(--gold-100); color: var(--gold-700); }
+    .mktg-fs-btn:hover { background: var(--gold-100); color: var(--gold-600); }
     .mktg-fs-micro { font-size: 11px; opacity: .45; margin-top: 12px; }
     .mktg-fs-form { display: none; margin-top: 16px; text-align: right; }
     .mktg-fs-form.visible { display: flex; flex-direction: column; gap: 8px; }
@@ -10292,7 +10292,9 @@ async function quickDeleteTask(id) {
     await DB.deleteTask(id);
     State.tasks = State.tasks.filter(t => t.id !== id);
     toast('🗑 המשימה נמחקה', 'success');
-    Tasks.render();
+    if (State.screen === 'tasks') Tasks.render();
+    else if (State.screen === 'dashboard') Dashboard.renderTasks();
+    else if (State.screen === 'lead-detail') LeadDetail.render(State.currentLeadId);
   } catch(e) {
     toast('שגיאה במחיקה: ' + e.message, 'error');
   }
