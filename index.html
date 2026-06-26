@@ -1912,6 +1912,92 @@
   /* ── Smart WA modal ─────────────────────── */
   .smart-wa-modal { max-width:420px; border-radius:20px 20px 0 0; padding:0; }
 
+  /* ══ Motion & Micro-animations ══ */
+
+  /* Pipeline / Leads cards slide up with stagger */
+  @keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(22px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  .card-enter { animation: cardSlideIn 0.38s cubic-bezier(0.34,1.45,0.64,1) both; }
+
+  /* KPI cards pop in on render */
+  @keyframes kpiPop {
+    from { opacity: 0; transform: translateY(14px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  .kpi-pop { animation: kpiPop 0.42s cubic-bezier(0.34,1.45,0.64,1) both; }
+  .kpi-pop:nth-child(1) { animation-delay:  0ms; }
+  .kpi-pop:nth-child(2) { animation-delay: 65ms; }
+  .kpi-pop:nth-child(3) { animation-delay:130ms; }
+  .kpi-pop:nth-child(4) { animation-delay:195ms; }
+
+  /* Phone button buzz */
+  @keyframes phoneBuzz {
+    0%,100% { transform: rotate(0); }
+    10%  { transform: translateX(-3px) rotate(-16deg); }
+    20%  { transform: translateX( 3px) rotate( 16deg); }
+    35%  { transform: translateX(-2px) rotate(-10deg); }
+    50%  { transform: translateX( 2px) rotate(  8deg); }
+    65%  { transform: translateX(-1px) rotate( -4deg); }
+  }
+  .phone-buzz { animation: phoneBuzz 0.52s ease; }
+
+  /* Floating +XP chip */
+  @keyframes xpFloatUp {
+    0%   { opacity:1; transform: translateY(0)    scale(1); }
+    55%  { opacity:1; transform: translateY(-52px) scale(1.12); }
+    100% { opacity:0; transform: translateY(-96px) scale(0.85); }
+  }
+  .xp-float {
+    position:fixed; pointer-events:none; z-index:9998;
+    font-size:14px; font-weight:900; color:#16A34A;
+    background:rgba(220,252,231,0.97); border:1.5px solid #86EFAC;
+    border-radius:20px; padding:5px 13px;
+    box-shadow:0 4px 16px rgba(22,163,74,0.25);
+    animation: xpFloatUp 1.4s cubic-bezier(0.22,0.61,0.36,1) forwards;
+    white-space:nowrap;
+  }
+
+  /* Score badge green glow for hot leads */
+  @keyframes scoreGlowPulse {
+    0%,100% { box-shadow: 0 0 0 0   rgba(22,163,74,0.55); }
+    60%     { box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+  }
+  .score-hot.score-glow { animation: scoreGlowPulse 2.3s ease infinite; }
+
+  /* Screen slide-in on navigate */
+  @keyframes screenSlideIn {
+    from { opacity:0; transform: translateY(9px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .screen-enter { animation: screenSlideIn 0.22s ease both; }
+
+  /* Bottom nav tap ripple */
+  @keyframes navRippleAnim {
+    from { transform: scale(0);   opacity:0.35; }
+    to   { transform: scale(2.8); opacity:0; }
+  }
+  .bottom-nav-item { position:relative; overflow:hidden; }
+  .nav-ripple-dot {
+    position:absolute; border-radius:50%;
+    background:rgba(15,31,61,0.14);
+    width:48px; height:48px;
+    top:50%; left:50%; margin-top:-24px; margin-left:-24px;
+    pointer-events:none;
+    animation: navRippleAnim 0.48s ease forwards;
+  }
+
+  /* Streak 🔥 pulse */
+  @keyframes streakFlame {
+    0%,100% { transform: scale(1)    rotate(-6deg); }
+    50%     { transform: scale(1.22) rotate( 6deg); }
+  }
+  .streak-fire { display:inline-block; animation: streakFlame 1.3s ease infinite; }
+
+  /* WA button pop on tap */
+  .card-wa-btn:active { transform: scale(1.25); transition:transform 0.1s; }
+
   /* ── Demo Lock ── */
   .demo-lock-overlay { position:fixed; inset:0; z-index:9999; background:rgba(15,31,61,0.92); display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(6px); }
   .demo-lock-box { background:#fff; border-radius:24px; padding:28px 20px 24px; max-width:340px; width:100%; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.4); }
@@ -2662,23 +2748,23 @@
 
   <!-- BOTTOM NAV (mobile) -->
   <nav id="bottom-nav">
-    <div class="bottom-nav-item active" data-screen="dashboard" onclick="App.go('dashboard')">
+    <div class="bottom-nav-item active" data-screen="dashboard" onclick="navRipple(this);App.go('dashboard')">
       <div class="bni-icon">📊</div>
       <div>בית</div>
     </div>
-    <div class="bottom-nav-item" data-screen="pipeline" onclick="App.go('pipeline')">
+    <div class="bottom-nav-item" data-screen="pipeline" onclick="navRipple(this);App.go('pipeline')">
       <div class="bni-icon">📋</div>
       <div id="bn-label-pipeline">פייפליין</div>
     </div>
-    <div class="bottom-nav-item" data-screen="properties" onclick="App.go('properties')">
+    <div class="bottom-nav-item" data-screen="properties" onclick="navRipple(this);App.go('properties')">
       <div class="bni-icon" id="bn-icon-properties">🏠</div>
       <div id="bn-label-properties">נכסים</div>
     </div>
-    <div class="bottom-nav-item" data-screen="tasks" onclick="App.go('tasks')">
+    <div class="bottom-nav-item" data-screen="tasks" onclick="navRipple(this);App.go('tasks')">
       <div class="bni-icon">✅</div>
       <div>משימות</div>
     </div>
-    <div class="bottom-nav-item" data-screen="settings" onclick="App.go('settings')">
+    <div class="bottom-nav-item" data-screen="settings" onclick="navRipple(this);App.go('settings')">
       <div class="bni-icon">⚙️</div>
       <div>הגדרות</div>
     </div>
@@ -5718,8 +5804,13 @@ const CallLog = {
   _leadId: null,
   show(leadId, phone) {
     this._leadId = leadId;
+    // Buzz the call button for tactile feedback
+    document.querySelectorAll('.lead-action-btn[data-phone]').forEach(btn => {
+      btn.classList.add('phone-buzz');
+      setTimeout(() => btn.classList.remove('phone-buzz'), 600);
+    });
     document.getElementById('call-result-sheet')?.classList.add('active');
-    window.open('tel:' + phone);
+    setTimeout(() => window.open('tel:' + phone), 200);
   },
   hide() {
     document.getElementById('call-result-sheet')?.classList.remove('active');
@@ -5951,7 +6042,7 @@ const Gamify = {
     this.checkMilestones();
     this.renderSidebar();
     this.renderWidget();
-    toast(`+${pts} XP ✨`, 'success');
+    floatXP(pts);
   },
 
   checkDailyLogin() {
@@ -6074,7 +6165,7 @@ const Gamify = {
       const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
       set('gamify-avatar', '🌱');
       set('gamify-level-name', 'רמה: מתחיל');
-      set('gamify-streak', '🔥 0 ימים רצופים');
+      { const el = document.getElementById('gamify-streak'); if (el) el.innerHTML = '<span class="streak-fire">🔥</span> 0 ימים רצופים'; }
       set('gamify-xp-cur', '0 XP');
       set('gamify-xp-next', 'פתח חשבון וצבור XP →');
       document.getElementById('gamify-xp-fill')?.style.setProperty('width', '5%');
@@ -6126,7 +6217,7 @@ const Gamify = {
 
     set('gamify-avatar', lv.icon);
     set('gamify-level-name', `רמה: ${lv.name}`);
-    set('gamify-streak', `🔥 ${d.streak || 0} ימים רצופים`);
+    { const el = document.getElementById('gamify-streak'); if (el) el.innerHTML = `<span class="streak-fire">🔥</span> ${d.streak || 0} ימים רצופים`; }
     set('gamify-xp-cur', `${d.xp} XP`);
     set('gamify-xp-next', prog.needed > 0 ? `עוד ${prog.needed} XP לרמה הבאה` : '🏆 רמה מקסימלית!');
     setStyle('gamify-xp-fill', 'width', prog.pct + '%');
@@ -6693,6 +6784,36 @@ const Voice = {
    APP CONTROLLER
 ═══════════════════════════════════════════ */
 /* ═══════════════════════════════════════════
+   ANIMATION HELPERS
+═══════════════════════════════════════════ */
+function animateCount(el, toVal, duration = 720) {
+  if (!el || typeof toVal !== 'number' || isNaN(toVal)) return;
+  const start = performance.now();
+  const step = (now) => {
+    const p = Math.min(1, (now - start) / duration);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(ease * toVal).toLocaleString('he-IL');
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = toVal.toLocaleString('he-IL');
+  };
+  requestAnimationFrame(step);
+}
+function floatXP(pts) {
+  const el = document.createElement('div');
+  el.className = 'xp-float';
+  el.textContent = '+' + pts + ' XP ✨';
+  el.style.cssText = 'right:16px; bottom:90px;';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+function navRipple(el) {
+  const dot = document.createElement('div');
+  dot.className = 'nav-ripple-dot';
+  el.appendChild(dot);
+  setTimeout(() => dot.remove(), 550);
+}
+
+/* ═══════════════════════════════════════════
    DEMO LOCK
 ═══════════════════════════════════════════ */
 const DemoLock = {
@@ -6955,7 +7076,11 @@ const App = {
     // hide all screens
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById('screen-' + screen);
-    if (target) target.classList.remove('hidden');
+    if (target) {
+      target.classList.remove('hidden', 'screen-enter');
+      void target.offsetWidth; // force reflow to restart animation
+      target.classList.add('screen-enter');
+    }
     // update nav active
     document.querySelectorAll('.nav-item').forEach(n => {
       n.classList.toggle('active', n.dataset.screen === screen);
@@ -7040,19 +7165,23 @@ const Dashboard = {
     const closedTotal= State.leads.filter(l => l.stage === 's5').length;
     const pipelineVal= State.leads.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0);
     const kpis = [
-      { label:'לידים חדשים היום', value: newToday,               sub:'נרשמו היום',     accent:'#2563EB', icon:'🆕', nav:'leads' },
-      { label:'עסקאות פעילות',   value: activeDeals,             sub:'בצינור כעת',    accent:'#7C3AED', icon:'📋', nav:'pipeline' },
-      { label:'עסקאות שנסגרו',   value: closedTotal,             sub:'כולל הכל',      accent:'#16A34A', icon:'🎉', nav:'pipeline' },
-      { label:'שווי צינור',      value: formatMoney(pipelineVal),sub:'ערך פוטנציאלי', accent:'#C49A2A', icon:'💰', nav:'pipeline' },
+      { label:'לידים חדשים היום', value: newToday,               rawVal: newToday,    sub:'נרשמו היום',     accent:'#2563EB', icon:'🆕', nav:'leads' },
+      { label:'עסקאות פעילות',   value: activeDeals,             rawVal: activeDeals, sub:'בצינור כעת',    accent:'#7C3AED', icon:'📋', nav:'pipeline' },
+      { label:'עסקאות שנסגרו',   value: closedTotal,             rawVal: closedTotal, sub:'כולל הכל',      accent:'#16A34A', icon:'🎉', nav:'pipeline' },
+      { label:'שווי צינור',      value: formatMoney(pipelineVal),rawVal: null,        sub:'ערך פוטנציאלי', accent:'#C49A2A', icon:'💰', nav:'pipeline' },
     ];
     document.getElementById('kpi-row').innerHTML = kpis.map(k => `
-      <div class="kpi-card" style="--kpi-accent:${k.accent};cursor:pointer;" onclick="App.go('${k.nav}')">
+      <div class="kpi-card kpi-pop" style="--kpi-accent:${k.accent};cursor:pointer;" onclick="App.go('${k.nav}')">
         <div class="kpi-icon">${k.icon}</div>
         <div class="kpi-label">${k.label}</div>
         <div class="kpi-value">${k.value}</div>
         <div class="kpi-sub">${k.sub}</div>
       </div>
     `).join('');
+    // Count-up animation on numeric KPIs
+    document.querySelectorAll('#kpi-row .kpi-value').forEach((el, i) => {
+      if (typeof kpis[i]?.rawVal === 'number') animateCount(el, kpis[i].rawVal);
+    });
     this.renderChart();
   },
   _chartInst: null,
@@ -7342,7 +7471,7 @@ const Pipeline = {
           ${totalVal ? `<div class="kanban-value">${formatMoney(totalVal)}</div>` : ''}
           <div class="kanban-cards">
             ${leads.length
-              ? leads.map(l => this.renderCard(l, stage.color)).join('')
+              ? leads.map((l, idx) => this.renderCard(l, stage.color, idx)).join('')
               : q
                 ? '<div style="padding:14px 10px;text-align:center;color:var(--gray-400);font-size:13px;">אין תוצאות בשלב זה</div>'
                 : pipelineEmptyTip(stageIdx)
@@ -7390,15 +7519,16 @@ const Pipeline = {
     this.render();
   },
 
-  renderCard(lead, color) {
+  renderCard(lead, color, idx = 0) {
     const task = State.tasks.find(t => t.lead_id === lead.id && !t.done);
     const isOverdue = task && diffDays(task.due) < 0;
     const isToday = task && diffDays(task.due) === 0;
     const initials = escapeHtml(lead.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase());
     const stale = isLeadStale(lead);
     const waPhone = (lead.phone||'').replace(/^0/,'').replace(/-/g,'');
+    const scoreGlow = lead.score >= 80 ? ' score-glow' : '';
     return `
-      <div class="lead-card" style="--stage-color:${color}"
+      <div class="lead-card card-enter" style="--stage-color:${color}; animation-delay:${idx * 55}ms"
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
         <div style="display:flex; align-items:flex-start; gap:8px;">
           <div class="lead-card-avatar">${initials}</div>
@@ -7407,7 +7537,7 @@ const Pipeline = {
             <div class="lead-card-meta truncate">${escapeHtml(lead.desired_area || '—')} · ${lead.rooms || '?'} חד׳</div>
             <div class="lead-card-meta">${formatMoney(lead.budget_min)}–${formatMoney(lead.budget_max)}</div>
           </div>
-          <div class="score-badge ${scoreClass(lead.score)}">${lead.score}</div>
+          <div class="score-badge ${scoreClass(lead.score)}${scoreGlow}">${lead.score}</div>
         </div>
         <div class="lead-card-footer" style="margin-top:8px;">
           <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
@@ -7439,7 +7569,7 @@ const Leads = {
     const el = document.getElementById('leads-list-container');
     el.innerHTML = list.length
       ? `<div style="display:flex;flex-direction:column;gap:10px;padding:0 0 80px;">
-           ${list.map(l => this.renderRow(l)).join('')}
+           ${list.map((l, idx) => this.renderRow(l, idx)).join('')}
          </div>`
       : State.leads.length === 0
       ? `<div class="empty-state">
@@ -7457,13 +7587,14 @@ const Leads = {
     this._query = q;
     this.render();
   },
-  renderRow(lead) {
+  renderRow(lead, idx = 0) {
     const stage = State.stages.find(s => s.id === lead.stage);
     const task = State.tasks.find(t => t.lead_id === lead.id && !t.done);
+    const scoreGlow = lead.score >= 80 ? ' score-glow' : '';
     return `
-      <div class="card" style="padding:14px; cursor:pointer; display:flex; gap:12px; align-items:center;"
+      <div class="card card-enter" style="padding:14px; cursor:pointer; display:flex; gap:12px; align-items:center; animation-delay:${idx * 40}ms"
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
-        <div class="score-badge ${scoreClass(lead.score)}" style="width:40px;height:40px;font-size:13px;">${lead.score}</div>
+        <div class="score-badge ${scoreClass(lead.score)}${scoreGlow}" style="width:40px;height:40px;font-size:13px;">${lead.score}</div>
         <div style="flex:1; min-width:0;">
           <div style="font-weight:700; font-size:15px;">${escapeHtml(lead.name)}</div>
           <div style="font-size:12px; color:var(--gray-500);">${escapeHtml(lead.phone)} · ${escapeHtml(lead.desired_area||'—')}</div>
