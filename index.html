@@ -7162,6 +7162,7 @@ const AppLock = {
       document.getElementById('modal-pin-setup').classList.add('hidden');
       toast('🔒 נעילת PIN הופעלה', 'success');
       if (State.screen === 'settings') Settings.render();
+      setTimeout(() => this.lock(), 800);
     }
   },
 
