@@ -2535,13 +2535,10 @@
             </div>
           </div>
           <div class="gamify-achievements" id="gamify-badges-row"></div>
-          <!-- Marketing unlock XP teaser -->
-          <div id="gamify-mktg-teaser" style="display:none;margin-top:10px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(37,99,235,0.08));border-radius:12px;padding:10px 12px;">
-            <div style="font-size:12px;font-weight:700;color:#7C3AED;margin-bottom:6px;">✨ חבילת שיווק AI — נפתחת חינם</div>
-            <div style="background:rgba(124,58,237,0.15);border-radius:99px;height:7px;margin-bottom:4px;overflow:hidden;">
-              <div id="gamify-mktg-bar" style="background:linear-gradient(90deg,#7C3AED,#2563EB);height:7px;border-radius:99px;width:0%;transition:width 0.6s;"></div>
-            </div>
-            <div id="gamify-mktg-label" style="font-size:11px;color:var(--gray-500);"></div>
+          <!-- Marketing addon upsell teaser -->
+          <div id="gamify-mktg-teaser" style="display:none;margin-top:10px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(37,99,235,0.08));border-radius:12px;padding:10px 12px;cursor:pointer;" onclick="App.go('marketing')">
+            <div style="font-size:12px;font-weight:700;color:#7C3AED;margin-bottom:4px;">✨ תוסף AI — ₪100/חודש</div>
+            <div style="font-size:11px;color:var(--gray-500);">יומן מהיר · שיווק AI · WA חכם · תמיכה אוטומטית</div>
           </div>
           <div class="gamify-daily-challenge" id="gamify-daily" onclick="Gamify.dailyAction()">
             <div class="gamify-daily-icon">⚡</div>
@@ -6074,6 +6071,11 @@ const AiLimits = {
   },
   _save(d) { localStorage.setItem(this._k, JSON.stringify(d)); },
   _lim() { return this.PLANS[State.tenant?.plan||'trial'] || this.PLANS.trial; },
+  hasAiAccess() {
+    if (State.isDemo) return false;
+    if (this._isAdmin()) return true;
+    return State.tenant?.marketing_addon === true || Billing.daysLeft() > 0;
+  },
   canUse(t) { if (this._isAdmin()) return true; const d=this._get(); return (d[t]||0) < this._lim()[t]; },
   consume(t) { const d=this._get(); d[t]=(d[t]||0)+1; this._save(d); },
   remaining(t) { if (this._isAdmin()) return 999; const d=this._get(); return Math.max(0,this._lim()[t]-(d[t]||0)); },
@@ -6097,7 +6099,7 @@ const Marketing = {
     const el = document.getElementById('screen-marketing');
     const isAddon   = State.tenant?.marketing_addon === true;
     const hasAccess = this.hasMktgAccess();
-    const trialLeft = this.trialDaysLeft();
+    const trialLeft = Billing.daysLeft();
 
     if (!hasAccess) {
       if (State.isDemo) {
@@ -6124,69 +6126,30 @@ const Marketing = {
             <p class="mktg-upgrade-micro">ללא כרטיס אשראי · ביטול בכל עת</p>
           </div>`;
       } else {
-        const leadCount = (State.leads || []).length;
-        const xpThreshold = this._mktgXpThreshold();
-        const currentXp  = Gamify.get().xp || 0;
-        const hasLeadForm = !!(State.tenant?.make_webhook_url || localStorage.getItem('make_webhook_url'));
-
-        if (leadCount < 10) {
-          // Gate 1: not enough leads yet
-          const need = 10 - leadCount;
-          const pct  = Math.round((leadCount / 10) * 100);
-          el.innerHTML = `
-            <div class="marketing-header-strip">
-              <div class="marketing-addon-badge">⭐ כלי שיווק AI</div>
-              <h2>📣 שיווק חכם</h2>
-              <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
-            </div>
-            <div class="mktg-locked">
-              <div class="mktg-locked-icon">⚡</div>
-              <h3>עוד ${need} לידים ותגיע לשם</h3>
-              <p>כדי להפעיל את כלי השיווק צריך לפחות <strong>10 לידים</strong> פעילים במערכת.<br>
-                 ככה המערכת תוכל לבנות עבורך הצעות מותאמות אישית.</p>
-              <div style="background:var(--gray-100);border-radius:99px;height:12px;margin:14px 0 6px;overflow:hidden;">
-                <div style="background:linear-gradient(90deg,#7C3AED,#2563EB);height:12px;border-radius:99px;width:${pct}%;transition:width 0.6s;"></div>
-              </div>
-              <div style="font-size:13px;color:var(--gray-400);margin-bottom:20px;">${leadCount}/10 לידים</div>
-              <ul class="mktg-locked-features">
-                <li>✨ מחולל הצעה אישית ללקוח — AI</li>
-                <li>📸 יוצר פוסטים לסושיאל — AI</li>
-                <li>📢 מחולל קמפיין WhatsApp — AI</li>
-                <li>💬 הודעת WA חכמה לכל ליד</li>
-              </ul>
-              <button class="mktg-upgrade-btn" onclick="openModal('modal-add-lead')">➕ הוסף ליד ידנית</button>
-              <button class="mktg-upgrade-btn" style="background:var(--gray-100);color:var(--navy);margin-top:8px;" onclick="LeadImport.open()">📋 ייבוא מאקסל / CSV</button>
-              ${!hasLeadForm ? `<button class="mktg-upgrade-btn" style="background:var(--gray-100);color:var(--navy);margin-top:8px;" onclick="App.go('settings')">🔗 חבר טופס לידים אוטומטי</button>` : ''}
-            </div>`;
-        } else {
-          // Gate 2: enough leads, but XP not there yet — show progress + paid option
-          const xpPct = Math.min(100, Math.round((currentXp / xpThreshold) * 100));
-          const xpLeft = Math.max(0, xpThreshold - currentXp);
-          el.innerHTML = `
-            <div class="marketing-header-strip">
-              <div class="marketing-addon-badge">⭐ כלי שיווק AI</div>
-              <h2>📣 שיווק חכם</h2>
-              <p>כלים מקצועיים ליצירת תוכן שיווקי — ישירות מתוך ה-CRM</p>
-            </div>
-            <div class="mktg-locked">
-              <div class="mktg-locked-icon">🎯</div>
-              <h3>קרוב! עוד ${xpLeft.toLocaleString('he-IL')} XP</h3>
-              <p>השתמש במערכת ותצבור XP — בהגיעך ל-${xpThreshold.toLocaleString('he-IL')} XP חבילת השיווק<br>
-                 <strong>נפתחת אוטומטית בחינם לתמיד</strong>${hasLeadForm ? '' : '. חבר טופס לידים וחסוך 300 XP!'}</p>
-              <div style="background:var(--gray-100);border-radius:99px;height:12px;margin:14px 0 6px;overflow:hidden;">
-                <div style="background:linear-gradient(90deg,#7C3AED,#2563EB);height:12px;border-radius:99px;width:${xpPct}%;transition:width 0.6s;"></div>
-              </div>
-              <div style="font-size:13px;color:var(--gray-400);margin-bottom:8px;">${currentXp.toLocaleString('he-IL')} / ${xpThreshold.toLocaleString('he-IL')} XP</div>
-              ${!hasLeadForm ? `<button class="btn btn-ghost" style="width:100%;margin-bottom:14px;font-size:13px;" onclick="App.go('settings')">🔗 חבר טופס לידים — חסוך 300 XP</button>` : ''}
-              <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:8px;">
-                <div style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">או פתח גישה מיידית:</div>
-                <button class="mktg-upgrade-btn" onclick="toast('לשדרוג פנה אלינו — biz@liders-crm.com','info')">
-                  🚀 שיווק AI עכשיו — ₪100/חודש
-                </button>
-                <p class="mktg-upgrade-micro">ניתן להוסיף בכל עת · ביטול ללא קנסות</p>
-              </div>
-            </div>`;
-        }
+        // Trial ended and no marketing_addon — show upgrade screen
+        el.innerHTML = `
+          <div class="marketing-header-strip">
+            <div class="marketing-addon-badge" style="background:rgba(239,68,68,0.15);color:#DC2626;">⏰ הניסיון הסתיים</div>
+            <h2>📣 שיווק חכם + AI</h2>
+            <p>כלים מקצועיים ליצירת תוכן שיווקי וניתוח שיחות — ישירות מתוך ה-CRM</p>
+          </div>
+          <div class="mktg-locked">
+            <div class="mktg-locked-icon">🔒</div>
+            <h3>תקופת הניסיון הסתיימה</h3>
+            <p>תוסף ה-AI כולל את כל הכלים הבאים ומתחדש כל חודש:</p>
+            <ul class="mktg-locked-features">
+              <li>⚡ יומן מהיר AI — רישום שיחות בצורה חופשית</li>
+              <li>✨ מחולל הצעה אישית ללקוח</li>
+              <li>📸 יוצר פוסטים לסושיאל מדיה</li>
+              <li>📢 מחולל קמפיין WhatsApp</li>
+              <li>💬 הודעת WA חכמה לכל ליד</li>
+              <li>🤖 תמיכה אוטומטית 24/7</li>
+            </ul>
+            <button class="mktg-upgrade-btn" onclick="toast('לרכישת התוסף פנה אלינו — biz@liders-crm.com','info')">
+              🚀 הפעל תוסף AI — ₪100/חודש
+            </button>
+            <p class="mktg-upgrade-micro">ביטול בכל עת · ללא התחייבות</p>
+          </div>`;
       }
       return;
     }
@@ -6446,16 +6409,7 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
   },
 
   hasMktgAccess() {
-    if (State.isDemo) return false;
-    if (State.tenant?.marketing_addon === true) return true;
-    if (this.trialDaysLeft() > 0) return true;
-    // After trial: need 10+ leads
-    const leadCount = (State.leads || []).length;
-    if (leadCount < 10) return false;
-    // XP threshold — lower if lead-form (Make.com webhook) is connected
-    const hasLeadForm = !!(State.tenant?.make_webhook_url || localStorage.getItem('make_webhook_url'));
-    const xpThreshold = hasLeadForm ? 1200 : 1500;
-    return (Gamify.get().xp || 0) >= xpThreshold;
+    return AiLimits.hasAiAccess();
   },
 
   _mktgXpThreshold() {
@@ -7033,24 +6987,10 @@ const Gamify = {
       }).join('');
     }
 
-    // Marketing XP unlock teaser
+    // Marketing teaser — show only when no access and not in demo
     const mktgTeaserEl = document.getElementById('gamify-mktg-teaser');
     if (mktgTeaserEl) {
-      const alreadyHasAccess = Marketing.hasMktgAccess();
-      const xpThreshold = Marketing._mktgXpThreshold();
-      const hasLeadForm = !!(State.tenant?.make_webhook_url || localStorage.getItem('make_webhook_url'));
-      if (!alreadyHasAccess && leadCount >= 10) {
-        mktgTeaserEl.style.display = '';
-        const mktgPct = Math.min(100, Math.round((d.xp / xpThreshold) * 100));
-        const mktgLeft = Math.max(0, xpThreshold - d.xp);
-        const barEl2 = document.getElementById('gamify-mktg-bar');
-        const lblEl2 = document.getElementById('gamify-mktg-label');
-        if (barEl2) barEl2.style.width = mktgPct + '%';
-        if (lblEl2) lblEl2.textContent = `${d.xp.toLocaleString('he-IL')} / ${xpThreshold.toLocaleString('he-IL')} XP`
-          + (hasLeadForm ? '' : ' · חבר טופס לידים וחסוך 300 XP');
-      } else {
-        mktgTeaserEl.style.display = 'none';
-      }
+      mktgTeaserEl.style.display = (!Marketing.hasMktgAccess() && !State.isDemo) ? '' : 'none';
     }
   },
 
@@ -11427,10 +11367,10 @@ const Support = {
         .select().single();
       if (insErr) throw insErr;
 
-      // 2. AI instant response (only if within daily quota)
+      // 2. AI instant response (only if trial/addon active and within daily quota)
       btn.textContent = '🤖 AI מנתח...';
       let aiText = '';
-      if (AiLimits.canUse('general')) {
+      if (AiLimits.hasAiAccess() && AiLimits.canUse('general')) {
         try {
           const { data: fn } = await sbClient.functions.invoke('ai-proxy', {
             body: {
@@ -11508,6 +11448,10 @@ const QuickLog = {
 
   async process() {
     if (State.isDemo) { toast('⚡ יומן מהיר AI זמין לחשבונות פעילים בלבד — פתח חשבון חינמי', 'warning'); this._setState('input'); return; }
+    if (!AiLimits.hasAiAccess()) {
+      toast('⏰ תקופת הניסיון הסתיימה — שדרג לתוסף ה-AI (₪100/חודש) להמשך שימוש', 'warning');
+      this._setState('input'); return;
+    }
     if (!AiLimits.canUse('quicklog')) {
       const lim = AiLimits._lim().quicklog;
       toast(`הגעת למגבלת היומן המהיר — ${lim} שימושים/יום בחבילה שלך`, 'warning');
