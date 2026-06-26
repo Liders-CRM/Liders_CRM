@@ -10338,6 +10338,19 @@ sbClient.auth.onAuthStateChange((event, session) => {
         }
       }, 0);
     }
+  } else if (event === 'SIGNED_OUT') {
+    // Session expired or explicit sign-out while user was inside the app.
+    // Redirect to login so the next DB call doesn't go out as anon.
+    const appShell = document.getElementById('app-shell');
+    if (appShell && !appShell.classList.contains('hidden')) {
+      appShell.classList.add('hidden');
+      document.getElementById('screen-login')?.classList.remove('hidden');
+      sessionStorage.removeItem('liders_auth_active');
+      State.isDemo = false;
+      DB.tenantId  = null;
+      DB.agentId   = null;
+      toast('פג תוקף ההתחברות — אנא התחבר מחדש', 'warning');
+    }
   }
 });
 
