@@ -3319,6 +3319,7 @@
         style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
         onfocus="this.style.borderColor='var(--blue-400)'" onblur="this.style.borderColor='var(--border)'"></textarea>
       <button id="support-submit-btn" onclick="Support.submit()" class="btn btn-primary" style="width:100%;margin-top:10px;">🚀 שלח לתמיכה</button>
+      <div id="support-ai-quota" style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:6px;"></div>
       <div id="support-ai-response" class="hidden"></div>
 
       <div style="margin-top:22px;">
@@ -6053,12 +6054,12 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 ═══════════════════════════════════════════ */
 const AiLimits = {
   PLANS: {
-    trial:    { general: 2, marketing: 3,  quicklog: 3  },
-    basic:    { general: 2, marketing: 3,  quicklog: 5  },
-    pro:      { general: 5, marketing: 7,  quicklog: 15 },
-    premium:  { general: 10, marketing: 15, quicklog: 30 },
-    lifetime: { general: 10, marketing: 15, quicklog: 30 },
-    internal: { general: 999, marketing: 999, quicklog: 999 },
+    trial:    { general: 2, marketing: 3,  quicklog: 3,  support: 2  },
+    basic:    { general: 2, marketing: 3,  quicklog: 5,  support: 5  },
+    pro:      { general: 5, marketing: 7,  quicklog: 15, support: 5  },
+    premium:  { general: 10, marketing: 15, quicklog: 30, support: 10 },
+    lifetime: { general: 10, marketing: 15, quicklog: 30, support: 10 },
+    internal: { general: 999, marketing: 999, quicklog: 999, support: 999 },
   },
   _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
   _k: 'liders_ai_v1',
@@ -6067,8 +6068,8 @@ const AiLimits = {
   _get() {
     try {
       const d = JSON.parse(localStorage.getItem(this._k)||'{}');
-      return d.date === this._today() ? d : { date: this._today(), general: 0, marketing: 0, quicklog: 0 };
-    } catch { return { date: this._today(), general: 0, marketing: 0, quicklog: 0 }; }
+      return d.date === this._today() ? d : { date: this._today(), general: 0, marketing: 0, quicklog: 0, support: 0 };
+    } catch { return { date: this._today(), general: 0, marketing: 0, quicklog: 0, support: 0 }; }
   },
   _save(d) { localStorage.setItem(this._k, JSON.stringify(d)); },
   _lim() { return this.PLANS[State.tenant?.plan||'trial'] || this.PLANS.trial; },
@@ -11313,14 +11314,33 @@ const Support = {
 
   open() {
     if (State.isDemo) { toast('⚡ מצב דמו — התחבר כדי לפנות לתמיכה', 'warning'); return; }
-    const inp = document.getElementById('support-msg-input');
-    const aiEl = document.getElementById('support-ai-response');
-    const btn  = document.getElementById('support-submit-btn');
+    const inp     = document.getElementById('support-msg-input');
+    const aiEl    = document.getElementById('support-ai-response');
+    const btn     = document.getElementById('support-submit-btn');
+    const quotaEl = document.getElementById('support-ai-quota');
     if (inp)  inp.value = '';
     if (aiEl) { aiEl.className = 'hidden'; aiEl.innerHTML = ''; }
     if (btn)  { btn.textContent = '🚀 שלח לתמיכה'; btn.disabled = false; }
+    if (quotaEl) this._updateQuota(quotaEl);
     this.loadHistory();
     openModal('modal-support');
+  },
+
+  _updateQuota(el) {
+    if (!el) return;
+    if (!AiLimits.hasAiAccess()) {
+      el.innerHTML = '🔒 תגובת AI זמינה לאחר שדרוג — <a href="mailto:biz@liders-crm.com" style="color:var(--blue-500);">פצור אלינו</a>';
+      return;
+    }
+    if (AiLimits._isAdmin()) { el.textContent = ''; return; }
+    const rem = AiLimits.remaining('support');
+    const lim = AiLimits._lim().support;
+    const isPaid = State.tenant?.marketing_addon === true;
+    if (rem === 0) {
+      el.textContent = '🤖 מגבלת התגובות האוטומטיות הגיעה לסיום להיום — האדמין יחזור אליך.';
+    } else {
+      el.textContent = `🤖 ${rem}/${lim} תגובות AI נותרו היום${!isPaid && Billing.daysLeft() <= 3 ? ' (תקופת ניסיון)' : ''}`;
+    }
   },
 
   async loadHistory() {
@@ -11371,7 +11391,7 @@ const Support = {
       // 2. AI instant response (only if trial/addon active and within daily quota)
       btn.textContent = '🤖 AI מנתח...';
       let aiText = '';
-      if (AiLimits.hasAiAccess() && AiLimits.canUse('general')) {
+      if (AiLimits.hasAiAccess() && AiLimits.canUse('support')) {
         try {
           const { data: fn } = await sbClient.functions.invoke('ai-proxy', {
             body: {
@@ -11380,7 +11400,7 @@ const Support = {
             }
           });
           aiText = fn?.content || '';
-          if (aiText) AiLimits.consume('general');
+          if (aiText) AiLimits.consume('support');
         } catch(_) {}
       }
 
@@ -11405,6 +11425,7 @@ const Support = {
         : `<strong>✅ הפנייה נשלחה!</strong><br>האדמין יחזור אליך בהקדם.`;
       document.getElementById('support-msg-input').value = '';
       btn.textContent = '✅ נשלח';
+      this._updateQuota(document.getElementById('support-ai-quota'));
       this.loadHistory();
     } catch(e) {
       toast('שגיאה בשליחה: ' + e.message, 'error');
