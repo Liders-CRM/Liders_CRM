@@ -3775,7 +3775,7 @@
         <label class="form-label">הערות</label>
         <textarea id="new-lead-notes" class="form-input form-textarea" placeholder="מה יודעים על הליד?"></textarea>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="fg-new-inspiration">
         <label class="form-label">🎨 לוח השראה <span style="color:var(--gray-400);font-weight:400;">(Pinterest / Houzz / אחר)</span></label>
         <input type="url" id="new-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
       </div>
@@ -4036,7 +4036,7 @@
         <label class="form-label">הערות</label>
         <textarea id="edit-lead-notes" class="form-input form-textarea" placeholder="מה יודעים על הליד?"></textarea>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="fg-edit-inspiration">
         <label class="form-label">🎨 לוח השראה <span style="color:var(--gray-400);font-weight:400;">(Pinterest / Houzz / אחר)</span></label>
         <input type="url" id="edit-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
       </div>
@@ -5770,12 +5770,42 @@ function getLabel(key) {
   return (INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other)[key] || key;
 }
 
+const INDUSTRY_SOURCES = {
+  realestate:        [{v:'yad2',l:'יד2'},{v:'madlan',l:'מדלן'},{v:'facebook',l:'פייסבוק'},{v:'instagram',l:'אינסטגרם'},{v:'referral',l:'הפניה'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  interior:          [{v:'instagram',l:'אינסטגרם'},{v:'pinterest',l:'פינטרסט'},{v:'facebook',l:'פייסבוק'},{v:'referral',l:'הפניה'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  architect:         [{v:'referral',l:'הפניה'},{v:'linkedin',l:'לינקדאין'},{v:'facebook',l:'פייסבוק'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  realestate_lawyer: [{v:'referral',l:'הפניה'},{v:'bank',l:'בנק / עו"ד שותף'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  mortgage:          [{v:'referral',l:'הפניה'},{v:'bank',l:'בנק'},{v:'agent',l:'סוכן נדלן'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  appraiser:         [{v:'referral',l:'הפניה'},{v:'bank',l:'בנק'},{v:'lawyer',l:'עו"ד'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  photography:       [{v:'instagram',l:'אינסטגרם'},{v:'facebook',l:'פייסבוק'},{v:'referral',l:'הפניה'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  construction:      [{v:'referral',l:'הפניה'},{v:'linkedin',l:'לינקדאין'},{v:'contractor',l:'קבלן אחר'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+  other:             [{v:'facebook',l:'פייסבוק'},{v:'referral',l:'הפניה'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
+};
+
+function applyIndustryToLeadForm(prefix) {
+  const ind = localStorage.getItem('liders_industry') || 'other';
+
+  // Inspiration URL field — only relevant for interior designers
+  const fg = document.getElementById(`fg-${prefix}-inspiration`);
+  if (fg) fg.style.display = ind === 'interior' ? '' : 'none';
+
+  // Source dropdown — populate with industry-specific options
+  const sel = document.getElementById(`${prefix}-lead-source`);
+  if (!sel) return;
+  const saved = sel.value;
+  const opts = INDUSTRY_SOURCES[ind] || INDUSTRY_SOURCES.other;
+  sel.innerHTML = opts.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+  if (opts.some(o => o.v === saved)) sel.value = saved;
+}
+
 /* ═══════════════════════════════════════════
    MODAL UTILS
 ═══════════════════════════════════════════ */
 function openModal(id) {
   document.getElementById(id).classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  if (id === 'modal-add-lead') applyIndustryToLeadForm('new');
+  if (id === 'modal-edit-lead') applyIndustryToLeadForm('edit');
 }
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
