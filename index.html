@@ -3775,6 +3775,10 @@
         <label class="form-label">הערות</label>
         <textarea id="new-lead-notes" class="form-input form-textarea" placeholder="מה יודעים על הליד?"></textarea>
       </div>
+      <div class="form-group">
+        <label class="form-label">🎨 לוח השראה <span style="color:var(--gray-400);font-weight:400;">(Pinterest / Houzz / אחר)</span></label>
+        <input type="url" id="new-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="tryCloseAddLead()">ביטול</button>
@@ -4031,6 +4035,10 @@
       <div class="form-group">
         <label class="form-label">הערות</label>
         <textarea id="edit-lead-notes" class="form-input form-textarea" placeholder="מה יודעים על הליד?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">🎨 לוח השראה <span style="color:var(--gray-400);font-weight:400;">(Pinterest / Houzz / אחר)</span></label>
+        <input type="url" id="edit-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
       </div>
     </div>
     <div class="modal-footer">
@@ -4845,183 +4853,188 @@ const DB = {
    DEMO DATA
 ═══════════════════════════════════════════ */
 const DEMO = {
-  tenant: { id:'t1', name:'לידרס נדל"ן — תל אביב', slug:'liders-tlv', plan:'pro', make_webhook_url:null, whatsapp_number:null },
-  agent:  { id:'a1', name:'ישראל כהן', initials:'יכ', email:'israel@liders.co.il', role:'מנהל' },
+  tenant: { id:'t1', name:'סטודיו רונית — עיצוב פנים', slug:'ronit-design', plan:'pro', make_webhook_url:null, whatsapp_number:null },
+  agent:  { id:'a1', name:'רונית כהן', initials:'רכ', email:'ronit@studio-ronit.co.il', role:'מנהלת סטודיו' },
 
   stages: [
-    { id:'s1', name:'ליד חדש',     color:'#94A3B8', order:1 },
-    { id:'s2', name:'בקשר',        color:'#3B82F6', order:2 },
-    { id:'s3', name:'ביקור נקבע',  color:'#8B5CF6', order:3 },
-    { id:'s4', name:'הצעה הוגשה',  color:'#F59E0B', order:4 },
-    { id:'s5', name:'סגירה ✓',     color:'#10B981', order:5, is_terminal:true },
+    { id:'s1', name:'ליד חדש',        color:'#94A3B8', order:1 },
+    { id:'s2', name:'יצרנו קשר',      color:'#3B82F6', order:2 },
+    { id:'s3', name:'ביקור מדידה',    color:'#8B5CF6', order:3 },
+    { id:'s4', name:'הצעת מחיר',      color:'#F59E0B', order:4 },
+    { id:'s5', name:'פרויקט פעיל ✓',  color:'#10B981', order:5, is_terminal:true },
   ],
 
   leads: [
-    /* ── בקשר ── */
-    { id:'l1', name:'דוד לוי',
+    /* ── יצרנו קשר ── */
+    { id:'l1', name:'תמר לוי',
       phone:'055-9962494', phone2:'', email:'demo1@liders-demo.com',
-      source:'yad2', stage:'s2', score:78,
-      budget_min:1800000, budget_max:2300000, desired_area:'תל אביב — מרכז', rooms:'3–4',
+      source:'instagram', stage:'s2', score:78,
+      budget_min:180000, budget_max:250000, desired_area:'תל אביב — לב העיר', rooms:'דירה מלאה 90 מ"ר',
+      inspiration_url:'https://www.pinterest.com',
       last_contact:addDays(-1), next_followup:addDays(0),
-      notes:'זוג + ילד אחד. שניהם עובדים בהיי-טק ברמת-גן. רוצים דירה עם חנייה בטוחה וקרובה לגן ילדים. קומה שלישית ומעלה. מסכים להמתין 3 חודשים לפינוי.', created_at:addDays(-5) },
+      notes:'דירה חדשה ברחוב בן יהודה, קיבלה מפתחות לפני חודש. רוצה סגנון סקנדינבי עם גוונים חמים. שני ילדים קטנים — חשוב שיהיה פרקטי. שלחה לינק Pinterest עם 40 תמונות השראה.', created_at:addDays(-5) },
 
-    { id:'l2', name:'יוסי ורוני גרינברג',
+    { id:'l2', name:'אלון ויפית גרינברג',
       phone:'055-9962494', phone2:'055-9962494', email:'',
-      source:'facebook', stage:'s2', score:65,
-      budget_min:2200000, budget_max:2800000, desired_area:'גבעתיים / בני ברק', rooms:'4',
+      source:'referral', stage:'s2', score:65,
+      budget_min:320000, budget_max:480000, desired_area:'כפר שמריהו', rooms:'קוטג׳ 220 מ"ר — כולל',
       last_contact:addDays(-3), next_followup:addDays(1),
-      notes:'ממשפחה חרדית, מחפשים קרוב לבית-כנסת ולחינוך. יוסי מציין שצריך אישור של הרב. רוני עדיין לא ראתה נכסים — לתאם ביקור זוגי.', created_at:addDays(-9) },
+      notes:'בית פרטי חדש, עכשיו בגמר בנייה. רוצים יוקרה — שיש, ניקל מוברש, תאורה מוסתרת. יפית אחראית על ההחלטות. אלון הביע חשש מ"יותר מדי שחור".', created_at:addDays(-9) },
 
     { id:'l3', name:'גיל שפירא',
       phone:'055-9962494', phone2:'', email:'demo4@liders-demo.com',
       source:'referral', stage:'s2', score:71,
-      budget_min:3500000, budget_max:5000000, desired_area:'הרצליה פיתוח / נווה שאנן', rooms:'5+',
+      budget_min:80000, budget_max:130000, desired_area:'הרצליה פיתוח', rooms:'משרד 120 מ"ר',
+      inspiration_url:'https://www.houzz.com',
       last_contact:addDays(-2), next_followup:addDays(2),
-      notes:'יזם שמכר חברה לאחרונה ומחפש "הדירה הבאה". לא ממהר אבל יש לו מזומן. מעוניין בנכסים יוקרתיים בלבד — לא פחות מ-150 מ"ר. הפנייה מנדב כהן (לקוח ותיק).', created_at:addDays(-11) },
+      notes:'משרד חדש לחברת הייטק שלו — 20 עובדים. רוצה open space עם פינות ישיבה אקוסטיות. לא מעוניין ב"משרד קלאסי". הפניה מלקוח ותיק.', created_at:addDays(-11) },
 
-    /* ── ביקור נקבע ── */
+    /* ── ביקור מדידה ── */
     { id:'l4', name:'שרה אברהם',
       phone:'055-9962494', phone2:'', email:'',
       source:'facebook', stage:'s3', score:91,
-      budget_min:2800000, budget_max:3600000, desired_area:'רמת השרון / כפר שמריהו', rooms:'4–5',
+      budget_min:150000, budget_max:220000, desired_area:'רמת השרון', rooms:'4 חדרים + 2 מרפסות',
       last_contact:addDays(-1), next_followup:addDays(1),
-      notes:'אישה בגרושין (לב-תהליך). מקבלת פיצוי ורוצה לרכוש מהר לפני פסיקת בית-משפט. גן פרטי — חובה. כלב גדול. ביקור נקבע ליום ה׳, 16:00 בבית ברמת השרון.', created_at:addDays(-8) },
+      notes:'שיפוץ מלא לדירה שקנתה לאחר גירושים. רוצה שהבית יהיה "שלה לגמרי" — אישיותי ועוצמתי. ביקור מדידה נקבע ליום ה׳ 14:00. ביקשה שנגיע עם דוגמאות חומרים.', created_at:addDays(-8) },
 
     { id:'l5', name:'רון פרידמן',
       phone:'055-9962494', phone2:'', email:'demo6@liders-demo.com',
       source:'referral', stage:'s3', score:83,
-      budget_min:2800000, budget_max:3800000, desired_area:'כפר שמריהו', rooms:'5+',
+      budget_min:500000, budget_max:800000, desired_area:'נווה צדק', rooms:'בית בוטיק 3 קומות',
+      inspiration_url:'https://www.dezeen.com',
       last_contact:addDays(-1), next_followup:addDays(4),
-      notes:'מנכ"ל יבוא-יצוא, הפניה ממשרד עו"ד שלמה ושות׳. מחפש בית ייצוגי — יש ילדים במשמורת משותפת, צריך חדר לכל ילד. ביקור בנכס כפר שמריהו נקבע לשבוע הבא, ב-10:00.', created_at:addDays(-15) },
+      notes:'רכש בית ישן בנווה צדק ורוצה שיפוץ יסודי תוך שמירה על אופי המבנה. אדריכל בעצמו — מאוד מקצועי ודורש. יצר קשר כי "הוא לא רוצה לעצב לעצמו". ביקור קבוע לשבוע הבא.', created_at:addDays(-15) },
 
-    { id:'l6', name:'תמר ושי כץ',
+    { id:'l6', name:'מיה ואסף כץ',
       phone:'055-9962494', phone2:'', email:'demo7@liders-demo.com',
       source:'madlan', stage:'s3', score:76,
-      budget_min:1500000, budget_max:1900000, desired_area:'פתח תקווה / אלעד', rooms:'3',
+      budget_min:60000, budget_max:90000, desired_area:'גבעתיים', rooms:'מטבח + סלון + פינת אוכל',
       last_contact:addDays(0), next_followup:addDays(2),
-      notes:'זוג צעיר, רוכשים דירה ראשונה. מנצלים מחיר למשתכן אם יש. מאוד אנליטיים — שלחו טבלת Excel עם דרישות. ביקרו ב-p6 אתמול ואהבו מאוד.', created_at:addDays(-6) },
+      notes:'שיפוץ ממוקד — מטבח ישן ממש, רוצים אי מרכזי גדול ותאורה תלויה. אסף מאוד תכלסי — "תגידי לנו כמה זה עולה". מיה יותר חולמת. ביקרו בפרויקט דומה שהצגנו ואהבו.', created_at:addDays(-6) },
 
-    /* ── הצעה הוגשה ── */
+    /* ── הצעת מחיר ── */
     { id:'l7', name:'אמיר בן-דוד',
       phone:'055-9962494', phone2:'', email:'demo8@liders-demo.com',
       source:'referral', stage:'s4', score:95,
-      budget_min:3200000, budget_max:4800000, desired_area:'הרצליה פיתוח', rooms:'5+',
+      budget_min:250000, budget_max:400000, desired_area:'הרצליה פיתוח', rooms:'וילה 350 מ"ר + גינה',
+      inspiration_url:'https://www.pinterest.com',
       last_contact:addDays(0), next_followup:addDays(2),
-      notes:'הפניה ממשרד עו"ד שלמה. אמיר מוכן לסגור תוך 6 שבועות. שלחנו הצעה על p2 ב-4.2M. ממתין לאישור בנק. אשתו מהססת לגבי שכונה — לתאם שיחת ועידה.', created_at:addDays(-12) },
+      notes:'הפניה מקבלן מוביל. בניה חדשה — 5 חדרים + בריכה. הצעת מחיר נשלחה על ₪38,000 שכ"ט. ממתין לאישור עם אשתו. ביקש להוסיף ספסל כניסה מותאם אישית.', created_at:addDays(-12) },
 
-    { id:'l8', name:'נועה ואיתי שמש',
+    { id:'l8', name:'נועה ושי שמש',
       phone:'055-9962494', phone2:'055-9962494', email:'demo9@liders-demo.com',
-      source:'yad2', stage:'s4', score:88,
-      budget_min:4000000, budget_max:5500000, desired_area:'נווה צדק / פלורנטין', rooms:'4–5',
+      source:'instagram', stage:'s4', score:88,
+      budget_min:200000, budget_max:300000, desired_area:'פלורנטין, ת"א', rooms:'לופט 130 מ"ר — תעשייתי-נורדי',
       last_contact:addDays(-1), next_followup:addDays(1),
-      notes:'מחפשים בוטיק בנווה צדק — "משהו עם סיפור". שניהם אדריכלים. לא אכפת להם מקומה אבל חייבת להיות תקרה גבוהה. נועה אוהבת p3 מאוד. איתי מהסס עם מחיר.', created_at:addDays(-7) },
+      notes:'קנו לופט ישן, רוצים לשמור קורות בטון חשוף + להוסיף חום. נועה — ברורה מאוד, שלחה 3 תיקיות inspiration. שי ביקש "שלא יראה כמו IKEA". הצעה נשלחה, מחכים לחתימה.', created_at:addDays(-7) },
 
     /* ── ליד חדש ── */
     { id:'l9', name:'מיכל רוזן',
       phone:'055-9962494', phone2:'', email:'',
       source:'madlan', stage:'s1', score:45,
-      budget_min:1200000, budget_max:1500000, desired_area:'פתח תקווה', rooms:'3',
+      budget_min:40000, budget_max:70000, desired_area:'פתח תקווה', rooms:'3 חדרים + מסדרון',
       last_contact:addDays(-8), next_followup:addDays(-3),
-      notes:'יצרה קשר דרך מדלן ונעלמה. לא ענתה לשלוש שיחות ולוואטסאפ. לנסות שוב בשעות הערב — ייתכן שעובדת משמרות.', created_at:addDays(-8) },
+      notes:'יצרה קשר ונעלמה. לא ענתה לשלוש שיחות ולוואטסאפ. לנסות שוב בשעות הערב — ייתכן שעובדת משמרות.', created_at:addDays(-8) },
 
     { id:'l10', name:'ברוך כהן',
       phone:'055-9962494', phone2:'', email:'demo12@liders-demo.com',
       source:'website', stage:'s1', score:52,
-      budget_min:2000000, budget_max:2500000, desired_area:'ירושלים — רחביה / בקעה', rooms:'4',
+      budget_min:120000, budget_max:180000, desired_area:'ירושלים — רחביה', rooms:'דירה מלאה 110 מ"ר',
       last_contact:null, next_followup:addDays(0),
-      notes:'גמלאי ממשרד הביטחון, מוכר דירה בחיפה ומחפש ירושלים. ליד חדש מהאתר — עדיין לא שוחחנו. רשם: "לא ממהר אבל רציני".', created_at:addDays(-1) },
+      notes:'פנה דרך האתר — שיפוץ דירה שרכש בירושלים. כתב "רוצה משהו ירושלמי אבל עכשווי". ליד חדש — עדיין לא שוחחנו.', created_at:addDays(-1) },
 
     { id:'l11', name:'אלה מזרחי',
       phone:'055-9962494', phone2:'', email:'demo13@liders-demo.com',
       source:'instagram', stage:'s1', score:60,
-      budget_min:1600000, budget_max:2100000, desired_area:'ראשון לציון / חולון', rooms:'3–4',
+      budget_min:30000, budget_max:55000, desired_area:'ראשון לציון', rooms:'מטבח בלבד',
       last_contact:null, next_followup:addDays(1),
-      notes:'ליד אינסטגרם מהפרסום של סוף השבוע. כתבה DM — "אני ומאמא מחפשות ביחד". להבין אם שתיהן מחליטות יחד.', created_at:addDays(0) },
+      notes:'ליד אינסטגרם מהסטורי שפרסמנו על מטבח לבן. כתבה DM — "כמה זה יכול לעלות בערך?" להחזיר בהקדם עם range מחיר כדי לא להפסיד.', created_at:addDays(0) },
 
     { id:'l12', name:'ניר ואנה פרץ',
       phone:'055-9962494', phone2:'', email:'demo14@liders-demo.com',
       source:'referral', stage:'s1', score:69,
-      budget_min:2500000, budget_max:3200000, desired_area:'תל אביב — צפון', rooms:'4',
+      budget_min:200000, budget_max:300000, desired_area:'תל אביב — שכונת הצפון', rooms:'דירת 5 חד׳ — שיפוץ מלא',
       last_contact:null, next_followup:addDays(0),
-      notes:'הפניה מלקוח ישראל כהן (ביקר בנכס לפני שנה). ניר עצמאי + אנה רופאה. מחפשים שכונה שקטה עם גישה מהירה לאיכילוב. טרם יצרנו קשר ראשוני.', created_at:addDays(0) },
+      notes:'הפניה מלקוחה קודמת — תמר לוי. ניר עצמאי + אנה רופאה, אנשים עסוקים. מחפשים מישהו שיקח הכל עליו עם כמה שפחות מעורבות מצידם. טרם יצרנו קשר.', created_at:addDays(0) },
 
-    /* ── סגירה ✓ ── */
-    { id:'l13', name:'לילי ואריק כץ',
+    /* ── פרויקט פעיל ✓ ── */
+    { id:'l13', name:'לילי ומשה כץ',
       phone:'055-9962494', phone2:'', email:'demo15@liders-demo.com',
       source:'facebook', stage:'s5', score:100,
-      budget_min:1600000, budget_max:2000000, desired_area:'תל אביב — יפו', rooms:'3',
+      budget_min:160000, budget_max:200000, desired_area:'תל אביב — יפו', rooms:'בית עירוני 3 קומות',
+      inspiration_url:'https://www.pinterest.com',
       last_contact:addDays(-1), next_followup:null,
-      notes:'🎉 סגרנו! דירת 3 חד׳ ביפו העתיקה ב-₪1,850,000. חוזה נחתם ב-5.6. מסרה המלצה חמה בגוגל. לשמור קשר — מחפשים גם להשקיע.', created_at:addDays(-20) },
+      notes:'🎉 פרויקט פעיל! שכ"ט ₪28,000 חתום. שלב א׳ — תכנון ומפרט מוגש. ריהוט הוזמן דרך הספקים שלנו. לילי שלחה המלצה מדהימה בגוגל. לשמור קשר — רוצים לעצב גם אצל ההורים.', created_at:addDays(-20) },
 
-    { id:'l14', name:'פרופ׳ יצחק זיו',
+    { id:'l14', name:'פרופ׳ ישי זיו',
       phone:'055-9962494', phone2:'', email:'demo16@liders-demo.com',
       source:'referral', stage:'s5', score:100,
-      budget_min:5000000, budget_max:7000000, desired_area:'רמת אביב גימל', rooms:'5+',
+      budget_min:600000, budget_max:900000, desired_area:'רמת אביב גימל', rooms:'וילה 450 מ"ר + גינה וגדר',
       last_contact:addDays(-3), next_followup:null,
-      notes:'🎉 עסקה שנייה! פנטהאוז ברמת אביב ב-₪6.2M, נחתם 12.5. פרופסור לכלכלה, ממליץ לכולם. שלח כבר שני לקוחות חדשים — ניר פרץ ו-גיל שפירא.', created_at:addDays(-35) },
+      notes:'🎉 הפרויקט הגדול של השנה! שכ"ט ₪72,000 + תוספת ייצור מיוחד. פנטהאוז + גג פרטי, בשלבי ביצוע. הפרופסור ממליץ לכל חבריו — הפנה כבר 3 לקוחות חדשים.', created_at:addDays(-35) },
   ],
 
   properties: [
-    { id:'p1', title:'4 חד׳ קו ראשון לים — נוף פתוח',
+    { id:'p1', title:'דירת 4 חד׳ — עיצוב סקנדינבי-חם',
       type:'apartment', status:'available',
-      price:3200000, area:110, rooms:4, floor:8,
-      address:'שד׳ בן-גוריון 45', city:'תל אביב', neighborhood:'הצפון הישן',
-      description:'מרפסת 20 מ"ר עם נוף לים. חנייה כפולה ואחסנה. שיפוץ מלא 2023. שכנים שקטים. מעלית חדשה.' },
-    { id:'p2', title:'בית פרטי + בריכה — 6 חדרים',
-      type:'house', status:'available',
-      price:5800000, area:280, rooms:6, floor:0,
-      address:'רחוב הנשיא 12', city:'רמת השרון', neighborhood:'מרכז',
-      description:'מגרש 600 מ"ר, גן מטופח, בריכה מחוממת, חדר כושר, 3 חניות מקורות. חדר אם עם ג׳קוזי.' },
-    { id:'p3', title:'פנטהאוז בוטיק — נווה צדק',
+      price:280000, area:95, rooms:4, floor:3,
+      address:'בן יהודה 45', city:'תל אביב', neighborhood:'לב העיר',
+      description:'פרויקט בשלב תכנון. סלון, מטבח, 3 חד׳ שינה. חומרים: עץ אלון, שיש ביאנקו, פרופיל שחור. לקוחה: תמר לוי.' },
+    { id:'p2', title:'קוטג׳ יוקרה — שיש + תאורה מוסתרת',
+      type:'house', status:'sold',
+      price:480000, area:220, rooms:6, floor:0,
+      address:'דרך הנשיא 12', city:'כפר שמריהו', neighborhood:'מרכז',
+      description:'הושלם 2024. 6 חדרים + בריכה + חדר עזר. שיש קרארה, אבן ירושלמית, עץ אגוז. צולם לפרסום במגזין עיצוב.' },
+    { id:'p3', title:'לופט תעשייתי-נורדי — פלורנטין',
       type:'penthouse', status:'under_offer',
-      price:4500000, area:175, rooms:5, floor:6,
-      address:'שד׳ רוטשילד 88', city:'תל אביב', neighborhood:'נווה צדק',
-      description:'גג פרטי 200 מ"ר עם ג׳קוזי. תקרות 3.5 מ׳, קורות עץ חשופות. עיצוב בוטיק. 3 חניות. מחסן 20 מ"ר.' },
-    { id:'p4', title:'דירת גן 3 חד׳ — שכונה שקטה',
+      price:250000, area:130, rooms:2, floor:4,
+      address:'ההגנה 22', city:'תל אביב', neighborhood:'פלורנטין',
+      description:'בשלב הצעת מחיר. בטון חשוף + חום עץ. תאורה תלויה, ריצוף מיקרוצמנט. לקוחות: נועה ושי שמש.' },
+    { id:'p4', title:'מטבח + פינת אוכל — לבן ואפרסק',
       type:'apartment', status:'available',
-      price:1750000, area:85, rooms:3, floor:0,
-      address:'רחוב ויצמן 23', city:'גבעתיים', neighborhood:'ורד',
-      description:'חצר פרטית 70 מ"ר, עץ תאנה ענק. שכנים ותיקים שקטים. 5 דקות לרכבת אוניברסיטה. מחסן.' },
-    { id:'p5', title:'מיני-פנטהאוז — הרצליה פיתוח',
+      price:75000, area:30, rooms:1, floor:0,
+      address:'העצמאות 7', city:'גבעתיים', neighborhood:'ורד',
+      description:'שיפוץ ממוקד. אי מרכזי 3.5 מ׳, תאורה תלויה ריידר, פרסלן פוצ׳. לקוחות: מיה ואסף כץ.' },
+    { id:'p5', title:'משרד Startup — Open Space מודרני',
       type:'penthouse', status:'available',
-      price:4200000, area:155, rooms:5, floor:10,
-      address:'שד׳ הנשיא 9', city:'הרצליה', neighborhood:'פיתוח',
-      description:'מרפסת 50 מ"ר, בריכה משותפת בבניין, לובי מפואר, חנייה כפולה. שכנים מהמגזר העסקי.' },
-    { id:'p6', title:'3 חד׳ סטנדרט — קרוב לרכבת',
+      price:110000, area:120, rooms:3, floor:5,
+      address:'סוקולוב 9', city:'הרצליה', neighborhood:'פיתוח',
+      description:'עיצוב 120 מ"ר לחברת הייטק. פינות ישיבה אקוסטיות, phone booths, לאונג׳ מרכזי. לקוח: גיל שפירא.' },
+    { id:'p6', title:'שיפוץ מלא — דירה 4 חד׳',
       type:'apartment', status:'available',
-      price:1650000, area:78, rooms:3, floor:4,
-      address:'דרך מנחם בגין 110', city:'פתח תקווה', neighborhood:'קריית ספיר',
-      description:'שיפוץ מלא 2022, מטבח חדש, 2 שירותים, חנייה. ק׳ 4 עם מעלית. 8 דקות הליכה לתחנת רכבת.' },
+      price:170000, area:85, rooms:4, floor:0,
+      address:'ויצמן 23', city:'ראשון לציון', neighborhood:'מרכז',
+      description:'פרויקט בשלב אפס. 4 חדרים + מרפסת. ביקור מדידה ביום ה׳. לקוחה: שרה אברהם.' },
   ],
 
   tasks: [
-    { id:'t1', title:'להתקשר לדוד לוי — follow-up אחרי שליחת נכסים', type:'call',    lead_id:'l1', due:addDays(0),   done:false, priority:'high' },
-    { id:'t2', title:'לשלוח לשרה אברהם פרטי ביקור יום ה׳',            type:'whatsapp',lead_id:'l4', due:addDays(0),   done:false, priority:'urgent' },
-    { id:'t3', title:'שיחת ועידה — אמיר + אשתו — לגבי הצעה',          type:'call',    lead_id:'l7', due:addDays(1),   done:false, priority:'urgent' },
-    { id:'t4', title:'ניסיון שלישי למיכל רוזן — ערב',                  type:'call',    lead_id:'l9', due:addDays(0),   done:false, priority:'high' },
-    { id:'t5', title:'שליחת חוזה סופי ללילי — לחתימה',                type:'email',   lead_id:'l13',due:addDays(0),   done:true,  priority:'high' },
-    { id:'t6', title:'ביקור p4 גבעתיים עם יוסי גרינברג',              type:'showing', lead_id:'l2', due:addDays(2),   done:false, priority:'medium' },
-    { id:'t7', title:'פגישת הצגת נכסים — רון פרידמן, כפר שמריהו',     type:'meeting', lead_id:'l5', due:addDays(5),   done:false, priority:'medium' },
-    { id:'t8', title:'ליצור קשר ראשוני — ניר ואנה פרץ',               type:'call',    lead_id:'l12',due:addDays(0),   done:false, priority:'high' },
-    { id:'t9', title:'לשלוח ל-גיל שפירא סיור נכסים מותאם',            type:'email',   lead_id:'l3', due:addDays(1),   done:false, priority:'medium' },
-    { id:'t10',title:'ביקור p5 הרצליה עם נועה ואיתי',                  type:'showing', lead_id:'l8', due:addDays(3),   done:false, priority:'medium' },
-    { id:'t11',title:'לברר עם אלה מזרחי — מי מחליטה? מה התקציב הסופי?',type:'call',    lead_id:'l11',due:addDays(1),   done:false, priority:'low' },
-    { id:'t12',title:'שליחת מסמכי הלוואה לאמיר בן-דוד',               type:'email',   lead_id:'l7', due:addDays(-1),  done:false, priority:'urgent' },
+    { id:'t1', title:'להתקשר לתמר לוי — follow-up אחרי שליחת mood board', type:'call',    lead_id:'l1', due:addDays(0),   done:false, priority:'high' },
+    { id:'t2', title:'לשלוח לשרה אברהם דוגמאות חומרים לפני ביקור',      type:'whatsapp',lead_id:'l4', due:addDays(0),   done:false, priority:'urgent' },
+    { id:'t3', title:'שיחת ועידה — אמיר + אשתו — לגבי הצעת מחיר',       type:'call',    lead_id:'l7', due:addDays(1),   done:false, priority:'urgent' },
+    { id:'t4', title:'ניסיון שלישי למיכל רוזן — ערב',                    type:'call',    lead_id:'l9', due:addDays(0),   done:false, priority:'high' },
+    { id:'t5', title:'לשלוח ללילי כץ — הצעת ריהוט גרסה ב׳',            type:'email',   lead_id:'l13',due:addDays(0),   done:true,  priority:'high' },
+    { id:'t6', title:'ביקור מדידה — אלון ויפית גרינברג, כפר שמריהו',    type:'showing', lead_id:'l2', due:addDays(2),   done:false, priority:'medium' },
+    { id:'t7', title:'פגישת הצגת mood board — רון פרידמן, נווה צדק',     type:'meeting', lead_id:'l5', due:addDays(5),   done:false, priority:'medium' },
+    { id:'t8', title:'ליצור קשר ראשוני — ניר ואנה פרץ',                 type:'call',    lead_id:'l12',due:addDays(0),   done:false, priority:'high' },
+    { id:'t9', title:'לשלוח לגיל שפירא 3 mood boards למשרד',             type:'email',   lead_id:'l3', due:addDays(1),   done:false, priority:'medium' },
+    { id:'t10',title:'להכין הצעת מחיר גרסה ב׳ — נועה ושי',              type:'email',   lead_id:'l8', due:addDays(3),   done:false, priority:'medium' },
+    { id:'t11',title:'לברר עם אלה — מה בדיוק רוצה לשנות במטבח?',        type:'call',    lead_id:'l11',due:addDays(1),   done:false, priority:'low' },
+    { id:'t12',title:'לשלוח לאמיר מפרט חומרים לאישור',                   type:'email',   lead_id:'l7', due:addDays(-1),  done:false, priority:'urgent' },
   ],
 
   activities: [
-    { id:'ac1',  lead_id:'l13', type:'stage_change', content:'🎉 עסקה נסגרה! דירת 3 חד׳ ביפו ב-₪1,850,000. חוזה נחתם.', created_at:today() },
-    { id:'ac2',  lead_id:'l7',  type:'call',         content:'שיחה עם אמיר — "אני בפנים, רק מחכה לאישור הבנק. שלח לי גם עו"ד טוב." שלחנו המלצה לעו"ד אורן.', created_at:today() },
-    { id:'ac3',  lead_id:'l4',  type:'showing',      content:'ביקור נקבע לחמישי 16:00 — בית רמת השרון. שרה ביקשה להביא את אחותה גם.', created_at:addDays(-1) },
-    { id:'ac4',  lead_id:'l11', type:'note',         content:'DM אינסטגרם: "שלום, ראיתי את המודעה שלכם — אני ואמא מחפשות ביחד דירה. איך מתחילים?" — לייצר קשר טלפוני.', created_at:today() },
-    { id:'ac5',  lead_id:'l1',  type:'whatsapp',     content:'נשלחה רשימת 4 נכסים מתאימים בתל אביב. דוד ענה "נראה טוב, נדבר ביום שלישי".', created_at:addDays(-1) },
-    { id:'ac6',  lead_id:'l5',  type:'note',         content:'הפניה נכנסה ממשרד עו"ד שלמה ושות׳ — רון מחפש בית ייצוגי. תיאמנו ביקור לשבוע הבא.', created_at:addDays(-2) },
-    { id:'ac7',  lead_id:'l8',  type:'showing',      content:'נועה ואיתי ביקרו ב-p3 נווה צדק — נועה התאהבה, איתי אמר "יקר מדי, תראה לי עוד אחד". מתאמים p5 הרצליה.', created_at:addDays(-1) },
-    { id:'ac8',  lead_id:'l14', type:'stage_change', content:'🎉 פנטהאוז רמת אביב ב-₪6.2M נחתם! פרופ׳ זיו כבר שלח שני לקוחות חדשים.', created_at:addDays(-3) },
-    { id:'ac9',  lead_id:'l6',  type:'showing',      content:'תמר ושי ביקרו ב-p6 פתח תקווה — אהבו מאוד! תמר אמרה "זה הבית שלנו". שי ביקש לדון עם הורים.', created_at:today() },
-    { id:'ac10', lead_id:'l3',  type:'note',         content:'גיל ביקש "אל תשלח לי דברים רגילים — רק יוקרה אמיתית". הוסרנו נכסים מתחת ל-3.5M מהרשימה.', created_at:addDays(-1) },
-    { id:'ac11', lead_id:'l7',  type:'email',        content:'נשלחה הצעה רשמית: p2 הרצליה ב-4.2M + p5 הרצליה ב-4.0M. אמיר ביקש להשוות בין השניים.', created_at:addDays(-2) },
-    { id:'ac12', lead_id:'l12', type:'note',         content:'הפניה מפרופ׳ זיו — "ניר ואנה זוג צעיר רציני, תטפל בהם כמו שטיפלת בי". יצרנו קשר בוואטסאפ.', created_at:today() },
+    { id:'ac1',  lead_id:'l13', type:'stage_change', content:'🎉 פרויקט פעיל! שכ"ט ₪28,000 חתום. שלב א׳ — תכנון ומפרט מוגש. ריהוט הוזמן.', created_at:today() },
+    { id:'ac2',  lead_id:'l7',  type:'call',         content:'שיחה עם אמיר — "אני בפנים, רק מחכה לאישור אשתי. שלחי לי גם המלצה על יועץ תאורה." שלחנו שם.', created_at:today() },
+    { id:'ac3',  lead_id:'l4',  type:'showing',      content:'ביקור מדידה נקבע לחמישי 14:00. שרה ביקשה להביא דוגמאות אריח ובד לכיסוי קיר.', created_at:addDays(-1) },
+    { id:'ac4',  lead_id:'l11', type:'note',         content:'DM אינסטגרם: "כמה זה יכול לעלות בערך?" — לשלוח range מחיר מהיר לשמור את העניין.', created_at:today() },
+    { id:'ac5',  lead_id:'l1',  type:'whatsapp',     content:'נשלח mood board ראשוני — 3 אפשרויות סגנון. תמר ענתה "אפשרות ב׳ הכי קרובה, אבל הרבה יותר חם".', created_at:addDays(-1) },
+    { id:'ac6',  lead_id:'l5',  type:'note',         content:'פגישה ראשונה בנווה צדק — רון מאוד מקצועי, מבין בחומרים. ביקש פרטי הסיפונים שבחרנו בפרויקט הקודם.', created_at:addDays(-2) },
+    { id:'ac7',  lead_id:'l8',  type:'showing',      content:'נועה ושי ביקרו בלופט שהשלמנו — נועה: "זה בדיוק מה שרציתי!" שי: "אפשר לשנות את הריצוף?" — מחכים לחתימה.', created_at:addDays(-1) },
+    { id:'ac8',  lead_id:'l14', type:'stage_change', content:'🎉 שכ"ט ₪72,000 נחתם! פרויקט הגדול של השנה. הפרופסור ממליץ לכל חבריו.', created_at:addDays(-3) },
+    { id:'ac9',  lead_id:'l6',  type:'showing',      content:'מיה ואסף ביקרו בפרויקט מטבח שהשלמנו — מיה: "זה בדיוק מה שרציתי!" תיאמנו ביקור מדידה.', created_at:today() },
+    { id:'ac10', lead_id:'l3',  type:'note',         content:'גיל ביקש "open space אמיתי עם אקוסטיקה טובה — לא מיני-חדרים". הכנו 3 mood boards לשליחה.', created_at:addDays(-1) },
+    { id:'ac11', lead_id:'l7',  type:'email',        content:'נשלחה הצעת מחיר מפורטת: ₪38,000 שכ"ט + 12% ספקים. אמיר ביקש להשוות עם מישהו נוסף.', created_at:addDays(-2) },
+    { id:'ac12', lead_id:'l12', type:'note',         content:'הפניה מלילי כץ — "ניר ואנה זוג מדהים, תטפלי בהם כמו שטיפלת בנו." שלחנו וואטסאפ ראשוני.', created_at:today() },
   ],
 };
 
@@ -5779,7 +5792,8 @@ function hasLeadFormData() {
     document.getElementById('new-lead-phone2')?.value.trim() ||
     document.getElementById('new-lead-area')?.value.trim() ||
     document.getElementById('new-lead-budget')?.value.trim() ||
-    document.getElementById('new-lead-notes')?.value.trim()
+    document.getElementById('new-lead-notes')?.value.trim() ||
+    document.getElementById('new-lead-inspiration')?.value.trim()
   );
 }
 function tryCloseAddLead() {
@@ -5793,7 +5807,7 @@ function closeDiscardSheet() {
   document.getElementById('add-lead-discard-sheet').classList.remove('active');
 }
 function discardAndClose() {
-  ['new-lead-name','new-lead-phone','new-lead-phone2','new-lead-area','new-lead-budget','new-lead-notes'].forEach(id => {
+  ['new-lead-name','new-lead-phone','new-lead-phone2','new-lead-area','new-lead-budget','new-lead-notes','new-lead-inspiration'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -8479,6 +8493,16 @@ const LeadDetail = {
               ${lead.next_followup ? formatRelDate(lead.next_followup) : '—'}</div></div>
           </div>
           ${lead.notes ? `<div style="background:var(--gray-50);border-radius:var(--radius-md);padding:12px;font-size:14px;color:var(--gray-700);">${escapeHtml(lead.notes)}</div>` : ''}
+          ${lead.inspiration_url ? `
+          <a href="${escapeHtml(lead.inspiration_url)}" target="_blank" rel="noopener noreferrer"
+             style="display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 14px;background:linear-gradient(135deg,#fdf4ff,#f0f4ff);border:1px solid #e9d5ff;border-radius:12px;text-decoration:none;color:var(--navy-500);">
+            <span style="font-size:20px;">🎨</span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;font-weight:700;color:var(--gray-600);">לוח השראה</div>
+              <div style="font-size:12px;color:var(--blue-500);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;">${escapeHtml(lead.inspiration_url)}</div>
+            </div>
+            <span style="font-size:16px;color:var(--blue-400);">↗</span>
+          </a>` : ''}
           <div style="margin-top:16px;">
             <div style="font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:8px;">שנה שלב:</div>
             <div class="stage-pills">
@@ -10114,6 +10138,7 @@ async function addLead() {
       desired_area: document.getElementById('new-lead-area').value,
       notes: document.getElementById('new-lead-notes').value,
     });
+    lead.inspiration_url = document.getElementById('new-lead-inspiration').value.trim() || null;
     State.leads.unshift(lead);
     await DB.addActivity({ lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר' });
     State.activities.unshift({ id: uid(), lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר', created_at: today() });
@@ -10126,6 +10151,7 @@ async function addLead() {
     document.getElementById('new-lead-notes').value = '';
     document.getElementById('new-lead-budget').value = '';
     document.getElementById('new-lead-source').value = 'other';
+    document.getElementById('new-lead-inspiration').value = '';
     Gamify.event('add_lead', lead);
     Make.newLead(lead);
     Twilio.notifyNewLead(lead);
@@ -10744,6 +10770,7 @@ function openEditLead(leadId) {
   document.getElementById('edit-lead-area').value = lead.desired_area || '';
   document.getElementById('edit-lead-source').value = lead.source || 'other';
   document.getElementById('edit-lead-notes').value = lead.notes || '';
+  document.getElementById('edit-lead-inspiration').value = lead.inspiration_url || '';
   State.currentLeadId = leadId;
   openModal('modal-edit-lead');
 }
@@ -10776,6 +10803,7 @@ async function saveEditLead() {
 
   try {
     await DB.updateLead(leadId, patch);
+    const inspirationUrl = document.getElementById('edit-lead-inspiration').value.trim() || null;
     Object.assign(lead, {
       name: patch.name,
       phone: patch.phone,
@@ -10786,6 +10814,7 @@ async function saveEditLead() {
       desired_area: patch.desired_area || '',
       source: patch.source,
       notes: patch.notes || '',
+      inspiration_url: inspirationUrl,
     });
     closeModal('modal-edit-lead');
     await new Promise(r => setTimeout(r, Math.max(0, 1100 - (Date.now() - t0))));
