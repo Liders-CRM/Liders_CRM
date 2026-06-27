@@ -1,4 +1,4 @@
-# Security Guardian — מלי יופי ועור
+# Security Guardian — Liders CRM
 
 ## פקודה: `/security-guardian`
 
@@ -10,12 +10,13 @@
 
 | נתון | רמת רגישות | הגנה נדרשת |
 |------|-----------|-----------|
-| שמות לקוחות | רגיש | RLS + לא מוצג בלוגים |
+| שמות לקוחות / ליד | רגיש | RLS + לא מוצג בלוגים |
 | מספרי טלפון | גבוה מאוד | RLS + masking בלוגים |
-| הערות עור/אלרגיות | רפואי/קריטי | RLS + encryption |
-| מחירים | נמוך | ציבורי |
-| PIN admin | קריטי | hash + rate limit |
+| ערך עסקה / תקציב | גבוה | RLS + tenant isolation |
+| הערות פנימיות על ליד | רגיש | RLS — tenant בלבד |
+| PIN admin | קריטי | bcrypt hash + rate limit |
 | API keys | קריטי | .env only, לעולם לא ב-git |
+| shared_leads PIN | קריטי | bcrypt + max 5 attempts |
 
 ---
 
@@ -32,72 +33,70 @@
 ## Security Checklist — Pre-Deploy
 
 ```
-□ RLS enabled על כל הטבלאות
+□ RLS enabled על כל הטבלאות (leads, shared_leads, agent_users, tenants)
 □ service_role_key לא נחשף לצד הלקוח
 □ Input sanitization (XSS prevention)
 □ HTTPS בלבד
-□ Rate limiting על booking API
+□ Rate limiting על RPCs
 □ CORS מוגדר
 □ Secrets ב-Supabase Vault (לא ב-DB)
 □ Webhook secret validation
 □ Error messages לא חושפים stack traces
+□ Shared leads — כל RPC מוגדר SECURITY DEFINER
+□ get_my_tenant_id() נקרא בכל RPC לפני פעולה
 ```
 
 ---
 
-## Threat Model — מלי CRM
+## Threat Model — Liders CRM
 
 ### Attack Vectors
 
-#### 1. Unauthorized Admin Access
+#### 1. Cross-Tenant Data Leak
 ```
-ריסק: גישה לתורים, לקוחות, שינוי מחירים
+ריסק: טנאנט A רואה לידים של טנאנט B
 מניעה:
-- PIN חזק + hash
-- Lockout אחרי 5 ניסיונות
-- IP whitelist (optional)
+- RLS על כל טבלה עם get_my_tenant_id()
+- כל RPC מוגדר SECURITY DEFINER עם בדיקת tenant
+- אין direct table write — הכל דרך RPCs
+```
+
+#### 2. Shared Lead PIN Brute Force
+```
+ריסק: ניחוש PIN של שיתוף ליד
+מניעה:
+- max 5 ניסיונות → share נעול אוטומטית
+- PIN מאוחסן כ-bcrypt hash (לא plaintext)
+- בעל השיתוף חייב ליצור share חדש לאחר נעילה
+```
+
+#### 3. Unauthorized Admin Access
+```
+ריסק: גישה לפאנל אדמין SaaS
+מניעה:
+- אימות אימייל בלבד (liders.crm@gmail.com / elgrablidudu@gmail.com)
+- RPCs מגבילים גישה ל-2 כתובות
 - Session timeout
-```
-
-#### 2. Data Scraping / Enumeration
-```
-ריסק: חשיפת כל מספרי הטלפון
-מניעה:
-- RLS — לקוח רואה רק את עצמו
-- Rate limiting
-- No public API for listing clients
-```
-
-#### 3. Booking Spam
-```
-ריסק: מילוי כל הסלוטים בהזמנות מזויפות
-מניעה:
-- Phone verification (SMS OTP)
-- Captcha
-- Rate limit per IP
-- Manual confirmation flow
 ```
 
 #### 4. XSS via Notes Field
 ```
-ריסק: הזרקת script בהערות לקוח
+ריסק: הזרקת script בהערות ליד
 מניעה:
 - Sanitize הערות לפני הצגה
 - innerHTML → textContent
-- CSP headers
+- CSP headers ב-_headers
 ```
 
 ---
 
 ## Incident Response
 
-### תור נמחק בטעות
+### ליד נמחק בטעות
 ```bash
-# 1. בדוק audit_log
-SELECT * FROM audit_log WHERE table_name='bookings' ORDER BY created_at DESC;
-
-# 2. שחזר מגיבוי Supabase
-# Dashboard → Database → Backups → Point-in-time recovery
+# 1. בדוק Supabase Dashboard → Database → Backups
+# Point-in-time recovery
+# 2. שחזר מ-backup לפי timestamp
 ```
 
 ### חשד לפריצה
@@ -111,8 +110,8 @@ SELECT * FROM audit_log WHERE table_name='bookings' ORDER BY created_at DESC;
 # 3. שנה כל הסיסמאות/keys
 # Supabase → Settings → API → Regenerate keys
 
-# 4. בדוק audit_log
-SELECT * FROM audit_log WHERE created_at > now() - interval '24 hours';
+# 4. בדוק shared_leads עם status='active' חשוד
+SELECT * FROM shared_leads WHERE created_at > now() - interval '24 hours';
 ```
 
 ### API Key נחשף
@@ -126,13 +125,12 @@ SELECT * FROM audit_log WHERE created_at > now() - interval '24 hours';
 
 ---
 
-## Privacy (GDPR-adjacent — ישראל)
+## Privacy (חוק הגנת הפרטיות הישראלי)
 
 ```
-לפי חוק הגנת הפרטיות הישראלי:
-□ יידוע לקוחות על שמירת נתונים
-□ זכות למחיקה — DELETE endpoint
+□ יידוע לקוחות על שמירת נתונים בליד
+□ זכות למחיקה — tenant יכול למחוק לידים
 □ לא שומרים נתונים מעבר לנדרש
 □ מספרי טלפון לא מועברים לצד שלישי ללא הסכמה
-□ Google Calendar — תורים ללא שמות מלאים אם אפשר
+□ shared_leads — רק snapshot ספציפי, לא גישה לכלל הנתונים
 ```

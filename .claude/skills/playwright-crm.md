@@ -1,8 +1,8 @@
-# Playwright E2E Testing — מלי יופי ועור
+# Playwright E2E Testing — Liders CRM
 
 ## פקודה: `/playwright-crm`
 
-בדיקות E2E אוטומטיות לכל flows של מערכת ה-CRM.
+בדיקות E2E אוטומטיות לכל flows של מערכת Liders CRM.
 
 ---
 
