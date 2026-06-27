@@ -2184,6 +2184,35 @@
   }
   .phone-buzz { animation: phoneBuzz 0.52s ease; }
 
+  /* ── Target Hit 🎯 Animation ── */
+  @keyframes targetHitAnim {
+    0%   { transform:translate(-50%,-50%) scale(0.15) rotate(-30deg); opacity:0; }
+    18%  { opacity:1; }
+    42%  { transform:translate(-50%,-50%) scale(1.55) rotate(8deg);  opacity:1; }
+    60%  { transform:translate(-50%,-50%) scale(0.95) rotate(-3deg); opacity:1; }
+    75%  { transform:translate(-50%,-50%) scale(1.12) rotate(2deg);  opacity:1; }
+    88%  { transform:translate(-50%,-50%) scale(1.0)  rotate(0deg);  opacity:1; }
+    100% { transform:translate(-50%,-50%) scale(0.4)  rotate(0deg);  opacity:0; }
+  }
+  @keyframes targetRipple {
+    0%   { transform:translate(-50%,-50%) scale(0); opacity:0.7; }
+    100% { transform:translate(-50%,-50%) scale(2.8); opacity:0; }
+  }
+  .target-hit-emoji {
+    position:fixed; font-size:90px;
+    left:50%; top:46%;
+    pointer-events:none; z-index:9999;
+    animation: targetHitAnim 1.55s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    filter:drop-shadow(0 6px 28px rgba(0,0,0,0.32));
+  }
+  .target-hit-ripple {
+    position:fixed; width:120px; height:120px; border-radius:50%;
+    left:50%; top:46%;
+    border:4px solid rgba(234,88,12,0.55);
+    pointer-events:none; z-index:9998;
+    animation: targetRipple 0.9s ease-out 0.4s forwards;
+  }
+
   /* ── Confetti Score Emoji ── */
   @keyframes emojiScore {
     0%   { transform: translateX(-50%) translateY(0) scale(0.4) rotate(-25deg); opacity:0; }
@@ -6670,12 +6699,16 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
    AI LIMITS MODULE — per-plan daily quotas
 ═══════════════════════════════════════════ */
 const AiLimits = {
+  // Per-plan daily quotas — calibrated to Haiku 4.5 cost (~$0.0015/call avg).
+  // ₪10 basic ≈ $2.74/mo → API budget $0.96 → ~640 calls/mo at 30% utilization = generous.
+  // ₪20 pro   ≈ $5.48/mo → API budget $1.92 → comfortable headroom.
+  // ₪30 premium ≈ $8.22/mo → API budget $2.88 → ~1,920 calls/mo theoretical max.
   PLANS: {
-    trial:    { general: 2, marketing: 3,  quicklog: 3,  support: 2,  motivation: 3 },
-    basic:    { general: 2, marketing: 3,  quicklog: 5,  support: 5,  motivation: 5 },
-    pro:      { general: 5, marketing: 7,  quicklog: 15, support: 5,  motivation: 5 },
-    premium:  { general: 10, marketing: 15, quicklog: 30, support: 10, motivation: 5 },
-    lifetime: { general: 10, marketing: 15, quicklog: 30, support: 10, motivation: 5 },
+    trial:    { general: 2,  marketing: 3,  quicklog: 3,  support: 2,  motivation: 3  },
+    basic:    { general: 5,  marketing: 8,  quicklog: 15, support: 8,  motivation: 5  },
+    pro:      { general: 10, marketing: 15, quicklog: 30, support: 15, motivation: 5  },
+    premium:  { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 5  },
+    lifetime: { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 5  },
     internal: { general: 999, marketing: 999, quicklog: 999, support: 999, motivation: 999 },
   },
   _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
@@ -7642,7 +7675,7 @@ const Gamify = {
     d.xp += pts;
     if (type === 'add_lead')      { d.leadsAdded++;      d.acLeads++;  }
     if (type === 'close_deal')    { d.dealsClosed++;      if (leadId) d.acClosed.push(leadId);   this.confetti(); }
-    if (type === 'advance_stage') { if (leadId) d.acAdvanced.push(leadId); }
+    if (type === 'advance_stage') { if (leadId) d.acAdvanced.push(leadId); this.targetHit(); }
     if (type === 'complete_task') { d.tasksCompleted++;   d.acTasks++;  }
     if (type === 'use_ai')        { d.aiUses++;           d.acAi++;     }
     this.save();
@@ -7737,6 +7770,19 @@ const Gamify = {
     scoreEl.textContent = type === 'milestone' ? '🏆' : '🏀';
     container.appendChild(scoreEl);
     setTimeout(() => { container.innerHTML = ''; }, 4800);
+  },
+
+  targetHit() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    const ripple = document.createElement('div');
+    ripple.className = 'target-hit-ripple';
+    const emoji = document.createElement('div');
+    emoji.className = 'target-hit-emoji';
+    emoji.textContent = '🎯';
+    container.appendChild(ripple);
+    container.appendChild(emoji);
+    setTimeout(() => { ripple.remove(); emoji.remove(); }, 2000);
   },
 
   getDailyChallenge() {
