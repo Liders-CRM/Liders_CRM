@@ -1786,6 +1786,43 @@
     .gamify-prize-reached-tag { font-size: 10px; color: #F0C040; font-weight: 800; }
     .gamify-prize-claimed-tag { font-size: 10px; color: #4ade80; font-weight: 800; }
 
+    /* ── XP Store ── */
+    .xps-header { background: linear-gradient(135deg,#0F1F3D 0%,#1e3a6e 100%); padding: 20px 20px 14px; color: #fff; }
+    .xps-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .xps-title { font-size: 20px; font-weight: 900; }
+    .xps-subtitle { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 3px; line-height: 1.5; }
+    .xps-launch-badge { background: linear-gradient(135deg,#D97706,#F59E0B); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+    .xps-xp-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
+    .xps-xp-block { background: rgba(255,255,255,.1); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 90px; flex-shrink: 0; }
+    .xps-xp-num { font-size: 26px; font-weight: 900; background: linear-gradient(135deg,#F59E0B,#FDE68A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .xps-xp-label { font-size: 10px; color: rgba(255,255,255,.6); font-weight: 600; margin-top: 2px; }
+    .xps-next-block { flex: 1; background: rgba(255,255,255,.07); border-radius: 12px; padding: 10px 14px; }
+    .xps-next-label { font-size: 10px; color: rgba(255,255,255,.5); font-weight: 600; margin-bottom: 3px; }
+    .xps-next-name { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .xps-next-bar-wrap { height: 6px; background: rgba(255,255,255,.12); border-radius: 6px; overflow: hidden; margin-bottom: 4px; }
+    .xps-next-bar-fill { height: 100%; background: linear-gradient(90deg,#F59E0B,#FDE68A); border-radius: 6px; transition: width .5s; }
+    .xps-next-pct { font-size: 11px; color: #F59E0B; font-weight: 700; }
+    .xps-annual-teaser { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 9px 12px; font-size: 12px; color: rgba(255,255,255,.85); display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    .xps-grid { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+    .xps-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; transition: all .2s; }
+    .xps-card.xps-unlocked { border-color: rgba(245,158,11,.6); background: rgba(245,158,11,.04); box-shadow: 0 2px 12px rgba(245,158,11,.12); animation: xps-pulse 2.5s infinite; }
+    .xps-card.xps-claimed { border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.04); opacity: .8; }
+    .xps-card.xps-locked { opacity: .55; }
+    @keyframes xps-pulse { 0%,100%{ box-shadow:0 2px 12px rgba(245,158,11,.12) } 50%{ box-shadow:0 4px 20px rgba(245,158,11,.28) } }
+    .xps-card-icon { font-size: 36px; flex-shrink: 0; width: 48px; text-align: center; }
+    .xps-card-body { flex: 1; }
+    .xps-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .xps-card-name { font-size: 15px; font-weight: 800; color: var(--gray-800); }
+    .xps-value-badge { background: var(--green-100,#dcfce7); color: var(--green-700,#15803d); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+    .xps-card-desc { font-size: 12px; color: var(--gray-500); line-height: 1.55; margin-bottom: 10px; }
+    .xps-card-footer { display: flex; align-items: center; gap: 10px; }
+    .xps-xp-req { font-size: 12px; font-weight: 700; color: var(--gray-400); }
+    .xps-claim-btn { background: linear-gradient(135deg,#D97706,#F59E0B); color: #fff; border: none; border-radius: 8px; padding: 7px 16px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; transition: .15s; }
+    .xps-claim-btn:active { transform: scale(.95); }
+    .xps-claimed-tag { font-size: 12px; font-weight: 700; color: var(--green-600,#16a34a); }
+    .xps-locked-bar-wrap { flex: 1; height: 4px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+    .xps-locked-bar { height: 100%; background: linear-gradient(90deg,#F59E0B,#FDE68A); border-radius: 4px; }
+
     /* Quick features row */
     .dash-features-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 4px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .dash-features-row::-webkit-scrollbar { display: none; }
@@ -2755,6 +2792,9 @@
       <a class="nav-item" data-screen="pro" onclick="App.go('pro')" style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.12));border:1px solid rgba(124,58,237,0.2);border-radius:8px;margin-top:4px;">
         <span class="nav-icon">✨</span> <span style="background:linear-gradient(135deg,#7C3AED,#2563EB);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">פיצ'רים PRO</span>
       </a>
+      <a class="nav-item" data-screen="xp-store" onclick="App.go('xp-store')" style="background:linear-gradient(135deg,rgba(245,158,11,0.14),rgba(251,191,36,0.07));border:1px solid rgba(245,158,11,0.25);border-radius:8px;margin-top:4px;">
+        <span class="nav-icon">🏆</span> <span style="background:linear-gradient(135deg,#D97706,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">חנות XP</span>
+      </a>
     </div>
     <div class="sidebar-footer">
       <div class="agent-info">
@@ -2872,7 +2912,10 @@
             <div class="gamify-milestone-xp"><span id="gamify-ms-cur">0 XP</span><span id="gamify-ms-next">—</span></div>
           </div>
           <!-- Prizes showcase -->
-          <div class="gamify-prizes-title">🎁 פרסים שמחכים לך</div>
+          <div class="gamify-prizes-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>🎁 פרסים שמחכים לך</span>
+            <span onclick="App.go('xp-store')" style="font-size:10px;color:rgba(255,255,255,.55);cursor:pointer;font-weight:600;">ראה הכל ←</span>
+          </div>
           <div class="gamify-prizes-grid" id="gamify-prizes-grid"></div>
           <div class="gamify-stats">
             <div class="gamify-stat">
@@ -3587,6 +3630,39 @@
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
+      </div>
+    </div>
+
+    <!-- ── XP STORE ── -->
+    <div id="screen-xp-store" class="screen hidden">
+      <div class="xps-header">
+        <div class="xps-header-top">
+          <div>
+            <div class="xps-title">🏆 חנות XP</div>
+            <div class="xps-subtitle">צבור XP משימוש אמיתי במערכת — ופדה פרסים שאנחנו מבצעים בפועל</div>
+          </div>
+          <div class="xps-launch-badge">🚀 מחירי השקה</div>
+        </div>
+        <div class="xps-xp-row">
+          <div class="xps-xp-block">
+            <span class="xps-xp-num" id="xps-xp-num">0</span>
+            <span class="xps-xp-label">XP נצבר</span>
+          </div>
+          <div class="xps-next-block" id="xps-next-block">
+            <div class="xps-next-label" id="xps-next-label">פרס הבא:</div>
+            <div class="xps-next-name" id="xps-next-name">—</div>
+            <div class="xps-next-bar-wrap"><div class="xps-next-bar-fill" id="xps-next-bar-fill" style="width:0%"></div></div>
+            <div class="xps-next-pct" id="xps-next-pct">0%</div>
+          </div>
+        </div>
+        <div class="xps-annual-teaser">
+          <span style="font-weight:700;">📅 מינוי שנתי — בקרוב</span>
+          <span style="opacity:.75;font-size:12px;margin-right:6px;">חיסכון של עד 20% לעומת חיוב חודשי</span>
+        </div>
+      </div>
+      <div class="xps-grid" id="xps-grid"></div>
+      <div style="text-align:center;padding:16px 0 8px;font-size:11px;color:var(--gray-400);">
+        המחירים הם מחירי השקה ועשויים לעלות בהמשך • XP נצבר ממימוש אמיתי במערכת בלבד
       </div>
     </div>
 
@@ -7527,34 +7603,34 @@ ${lead.desired_area ? 'אזור/פרויקט: ' + lead.desired_area : ''}
 ═══════════════════════════════════════════ */
 const Gamify = {
   LEVELS: [
-    { min:    0, name: 'ניצן',     icon: '🌱', next: 200  },
-    { min:  200, name: 'עולה',     icon: '📋', next: 600  },
-    { min:  600, name: 'מנוסה',    icon: '⭐', next: 1200 },
-    { min: 1200, name: 'מומחה',    icon: '🏆', next: 2500 },
-    { min: 2500, name: 'אגדה',     icon: '👑', next: 99999 },
+    { min:     0, name: 'ניצן',    icon: '🌱', next: 50    },
+    { min:    50, name: 'עולה',    icon: '📋', next: 150   },
+    { min:   150, name: 'מנוסה',   icon: '⭐', next: 350   },
+    { min:   350, name: 'מומחה',   icon: '🏆', next: 800   },
+    { min:   800, name: 'אגדה',    icon: '👑', next: 99999 },
   ],
   XP: {
-    add_lead:      50,
-    advance_stage: 40,
-    close_deal:    250,
-    complete_task: 35,
-    use_ai:        20,
-    log_activity:  25,
-    daily_login:   30,
-    rescue_cold:   60,
+    add_lead:      10,
+    advance_stage: 20,
+    close_deal:   150,
+    complete_task: 10,
+    use_ai:         5,
+    log_activity:   8,
+    daily_login:    5,
+    rescue_cold:   25,
   },
   ACHIEVEMENTS: [
-    { id:'first_lead',   icon:'🎯', name:'ליד ראשון',        desc:'הליד הראשון נוסף למערכת',            xp:50,  check: d => d.leadsAdded >= 1   },
-    { id:'leads_5',      icon:'📊', name:'5 לידים',           desc:'5 לידים פעילים במערכת',              xp:75,  check: d => d.leadsAdded >= 5   },
-    { id:'leads_20',     icon:'🚀', name:'20 לידים',          desc:'20 לידים חיים במערכת',               xp:150, check: d => d.leadsAdded >= 20  },
-    { id:'first_deal',   icon:'🤝', name:'עסקה ראשונה',       desc:'העסקה הראשונה נסגרה בהצלחה',        xp:200, check: d => d.dealsClosed >= 1  },
-    { id:'deals_5',      icon:'💰', name:'5 עסקאות',          desc:'5 עסקאות שנסגרו',                   xp:300, check: d => d.dealsClosed >= 5  },
-    { id:'tasks_10',     icon:'✅', name:'מסיים משימות',      desc:'10 משימות הושלמו בהצלחה',           xp:100, check: d => d.tasksCompleted >= 10 },
-    { id:'streak_3',     icon:'🔥', name:'3 ימים רצופים',     desc:'3 ימים רצופים במערכת',              xp:75,  check: d => d.streak >= 3      },
-    { id:'streak_7',     icon:'⚡', name:'שבוע רצוף',         desc:'7 ימים רצופים — יוצא מן הכלל',     xp:150, check: d => d.streak >= 7      },
-    { id:'streak_30',    icon:'💎', name:'חודש רצוף',         desc:'30 ימים רצופים — זה מדהים!',       xp:500, check: d => d.streak >= 30     },
-    { id:'ai_master',    icon:'🤖', name:'מאסטר AI',          desc:'שימוש ב-AI ב-10 הזדמנויות שונות', xp:100, check: d => d.aiUses >= 10     },
-    { id:'pipeline_100k',icon:'💼', name:'פייפליין 100K',      desc:'שווי הפייפליין עבר את ה-100K ₪',   xp:200, check: d => (State.leads?.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0)||0) >= 100000 },
+    { id:'first_lead',   icon:'🎯', name:'ליד ראשון',        desc:'הליד הראשון נוסף למערכת',            xp:12,  check: d => d.leadsAdded >= 1   },
+    { id:'leads_5',      icon:'📊', name:'5 לידים',           desc:'5 לידים פעילים במערכת',              xp:18,  check: d => d.leadsAdded >= 5   },
+    { id:'leads_20',     icon:'🚀', name:'20 לידים',          desc:'20 לידים חיים במערכת',               xp:37,  check: d => d.leadsAdded >= 20  },
+    { id:'first_deal',   icon:'🤝', name:'עסקה ראשונה',       desc:'העסקה הראשונה נסגרה בהצלחה',        xp:50,  check: d => d.dealsClosed >= 1  },
+    { id:'deals_5',      icon:'💰', name:'5 עסקאות',          desc:'5 עסקאות שנסגרו',                   xp:75,  check: d => d.dealsClosed >= 5  },
+    { id:'tasks_10',     icon:'✅', name:'מסיים משימות',      desc:'10 משימות הושלמו בהצלחה',           xp:25,  check: d => d.tasksCompleted >= 10 },
+    { id:'streak_3',     icon:'🔥', name:'3 ימים רצופים',     desc:'3 ימים רצופים במערכת',              xp:18,  check: d => d.streak >= 3      },
+    { id:'streak_7',     icon:'⚡', name:'שבוע רצוף',         desc:'7 ימים רצופים — יוצא מן הכלל',     xp:37,  check: d => d.streak >= 7      },
+    { id:'streak_30',    icon:'💎', name:'חודש רצוף',         desc:'30 ימים רצופים — זה מדהים!',       xp:125, check: d => d.streak >= 30     },
+    { id:'ai_master',    icon:'🤖', name:'מאסטר AI',          desc:'שימוש ב-AI ב-10 הזדמנויות שונות', xp:25,  check: d => d.aiUses >= 10     },
+    { id:'pipeline_100k',icon:'💼', name:'פייפליין 100K',      desc:'שווי הפייפליין עבר את ה-100K ₪',   xp:50,  check: d => (State.leads?.filter(l=>l.stage!=='s5').reduce((s,l)=>s+(l.budget_max||0),0)||0) >= 100000 },
   ],
   DAILY_CHALLENGES: [
     'ניצור קשר עם 3 לידים שלא קיבלו מענה השבוע',
@@ -7568,13 +7644,16 @@ const Gamify = {
   ],
 
   MILESTONES: [
-    { xp:  1000, icon: '🎯', name: 'ייעוץ שיווקי',          desc: 'פגישת ייעוץ שיווקי אישית + סקירת האסטרטגיה שלך — שווי ₪300' },
-    { xp:  2500, icon: '🌐', name: 'דף נחיתה מקצועי',      desc: 'בניית דף נחיתה ממירה מותאם לעסק שלך — שווי ₪500' },
-    { xp:  5000, icon: '💼', name: 'תהליך מכירה מותאם',    desc: 'עיצוב תהליך מכירה עסקי מותאם לתחום ולקהל שלך — שווי ₪800' },
-    { xp: 10000, icon: '📣', name: 'חבילת תוכן שיווקי',    desc: '10 פוסטים + 3 מאמרים + קמפיין מייל לעסק שלך — שווי ₪1,500' },
-    { xp: 20000, icon: '🏢', name: 'אתר תדמית מלא',        desc: 'אתר תדמית מקצועי + דומיין + אחסון שנה — שווי ₪2,500' },
-    { xp: 35000, icon: '🤖', name: 'מערכת CRM מותאמת',     desc: 'בניית מערכת CRM מיוחדת לתחום ולצרכים הספציפיים שלך — שווי ₪5,000' },
-    { xp: 50000, icon: '🏆', name: 'פרטנר אסטרטגי',        desc: 'ניהול שיווק דיגיטלי מלא + מנהל תיק לקוח אישי — שווי ₪10,000' },
+    { xp:  2000, icon: '🎯', value: '₪300',    name: 'ייעוץ שיווקי',         desc: 'פגישת ייעוץ שיווקי אישית + סקירת האסטרטגיה של העסק שלך' },
+    { xp:  5000, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',     desc: 'בניית דף נחיתה ממירה, מעוצב ומותאם לעסק ולקהל שלך' },
+    { xp: 10000, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',   desc: 'עיצוב תהליך מכירה עסקי מקצועי — מהפנייה הראשונה ועד הסגירה' },
+    { xp: 18000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית', desc: 'Deck מעוצב ומחודד לפגישות עם לקוחות — עם סיפור מכירה ברור' },
+    { xp: 28000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',  desc: '10 פוסטים + 3 מאמרים + קמפיין מייל מוכן לפרסום' },
+    { xp: 40000, icon: '🏢', value: '₪2,500',  name: 'אתר תדמית מלא',      desc: 'אתר תדמית מקצועי כולל עיצוב, תוכן, דומיין ואחסון לשנה' },
+    { xp: 55000, icon: '🔍', value: '₪3,500',  name: 'חבילת SEO',           desc: 'אופטימיזציה לאתר + מחקר מילות מפתח + 6 מאמרים לקידום אורגני' },
+    { xp: 70000, icon: '⚙️', value: '₪3,500',  name: 'אוטומציה עסקית',     desc: '3 תהליכי Make.com אוטומטיים — לידים, פולואפ ודיווח — מותאמים לעסק' },
+    { xp: 85000, icon: '📢', value: '₪3,500',  name: 'קמפיין פרסום ממומן', desc: 'ניהול קמפיין גוגל ו/או פייסבוק ממומן לאורך חודש שלם' },
+    { xp:100000, icon: '🏆', value: '₪10,000', name: 'פרטנר אסטרטגי',      desc: 'ניהול שיווק דיגיטלי מלא + מנהל תיק לקוח אישי חצי שנה' },
   ],
 
   _d: null,
@@ -7797,7 +7876,7 @@ const Gamify = {
     const today_ = new Date().toISOString().split('T')[0];
     if (d.dailyDone === today_) return;
     d.dailyDone = today_;
-    d.xp += 80;
+    d.xp += 20;
     this.save();
     this.renderWidget();
     toast('🎯 אתגר יומי הושלם! +80 XP', 'success');
@@ -7935,17 +8014,18 @@ const Gamify = {
       }
     }
 
-    // Prizes grid
+    // Prizes grid — show next 4 unclaimed + any available
     const prizesGrid = document.getElementById('gamify-prizes-grid');
     if (prizesGrid) {
-      prizesGrid.innerHTML = this.MILESTONES.map(m => {
-        const isClaimed = claimed.has(m.xp);
-        const isReached = !isClaimed && d.xp >= m.xp;
-        const isLocked  = !isClaimed && !isReached;
-        const cls = isClaimed ? 'prize-claimed' : isReached ? 'prize-reached' : 'prize-locked';
-        const tag = isClaimed
-          ? `<span class="gamify-prize-claimed-tag">✅ מומש</span>`
-          : isReached
+      const shown = this.MILESTONES.filter((m, i) => {
+        if (claimed.has(m.xp)) return false;
+        const prev = this.MILESTONES.slice(0, i).filter(x => !claimed.has(x.xp));
+        return prev.length < 4;
+      }).slice(0, 4);
+      prizesGrid.innerHTML = shown.map(m => {
+        const isReached = d.xp >= m.xp;
+        const cls = isReached ? 'prize-reached' : 'prize-locked';
+        const tag = isReached
           ? `<span class="gamify-prize-reached-tag">🎁 זמין!</span>`
           : `<span class="gamify-prize-xp-tag">${m.xp.toLocaleString('he-IL')} XP</span>`;
         const clickAttr = isReached
@@ -8049,6 +8129,57 @@ const Gamify = {
     this.renderWidget();
     this.closeMilestone();
     toast('🎁 הפרס נרשם! נציג Liders יצור איתך קשר בקרוב 📞', 'success');
+  },
+
+  renderStore() {
+    const d = this.get();
+    const claimed = new Set(d.milestoneClaimed || []);
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+    set('xps-xp-num', d.xp.toLocaleString('he-IL'));
+
+    const nextMs = this.MILESTONES.find(m => !claimed.has(m.xp) && d.xp < m.xp);
+    const nextBlock = document.getElementById('xps-next-block');
+    if (nextMs && nextBlock) {
+      nextBlock.style.display = '';
+      set('xps-next-name', nextMs.icon + ' ' + nextMs.name);
+      const msIdx  = this.MILESTONES.indexOf(nextMs);
+      const fromXp = msIdx > 0 ? this.MILESTONES[msIdx - 1].xp : 0;
+      const pct    = Math.min(100, Math.max(0, ((d.xp - fromXp) / (nextMs.xp - fromXp)) * 100));
+      const fill = document.getElementById('xps-next-bar-fill');
+      if (fill) fill.style.width = pct.toFixed(1) + '%';
+      set('xps-next-pct', pct.toFixed(0) + '%');
+    } else if (nextBlock) {
+      nextBlock.style.display = this.MILESTONES.every(m => claimed.has(m.xp)) ? 'none' : '';
+    }
+
+    const grid = document.getElementById('xps-grid');
+    if (!grid) return;
+    grid.innerHTML = this.MILESTONES.map(m => {
+      const isClaimed  = claimed.has(m.xp);
+      const isUnlocked = !isClaimed && d.xp >= m.xp;
+      const isLocked   = !isClaimed && !isUnlocked;
+      const cls = isClaimed ? 'xps-claimed' : isUnlocked ? 'xps-unlocked' : 'xps-locked';
+      const fromXp = (() => { const idx = this.MILESTONES.indexOf(m); return idx > 0 ? this.MILESTONES[idx-1].xp : 0; })();
+      const pct    = isLocked ? Math.min(100, Math.max(0, ((d.xp - fromXp) / (m.xp - fromXp)) * 100)).toFixed(1) : 0;
+      const footer = isClaimed
+        ? `<span class="xps-claimed-tag">✅ מומש — נציגנו ייצור איתך קשר</span>`
+        : isUnlocked
+        ? `<button class="xps-claim-btn" onclick="Gamify.showMilestone(Gamify.MILESTONES.find(x=>x.xp===${m.xp}))">🎁 מימוש הפרס</button>`
+        : `<span class="xps-xp-req">${m.xp.toLocaleString('he-IL')} XP</span>
+           <div class="xps-locked-bar-wrap"><div class="xps-locked-bar" style="width:${pct}%"></div></div>`;
+      return `<div class="xps-card ${cls}">
+        <div class="xps-card-icon">${m.icon}</div>
+        <div class="xps-card-body">
+          <div class="xps-card-top">
+            <div class="xps-card-name">${m.name}</div>
+            <div class="xps-value-badge">שווי ${m.value}</div>
+          </div>
+          <div class="xps-card-desc">${m.desc}</div>
+          <div class="xps-card-footer">${footer}</div>
+        </div>
+      </div>`;
+    }).join('');
   },
 
   init() {
@@ -8770,8 +8901,9 @@ const App = {
       case 'settings':    Settings.render();  break;
       case 'tools':       Tools.render();     break;
       case 'partners':    Partners.render();  break;
-      case 'marketing':   Marketing.render(); break;
-      case 'pro':         ProHub.render();    break;
+      case 'marketing':   Marketing.render();      break;
+      case 'pro':         ProHub.render();         break;
+      case 'xp-store':    Gamify.renderStore();    break;
     }
     window.scrollTo(0, 0);
   },
@@ -10384,11 +10516,17 @@ const Settings = {
         ` : `
         <div class="billing-cta-box">
           <div style="font-weight:800;font-size:15px;margin-bottom:2px;">⏳ ${Billing.daysLeft()} ימים נותרו בניסיון החינמי</div>
-          <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">בחר תוכנית — ביטול בכל עת, ללא עמלות</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px;">בחר תוכנית — ביטול בכל עת, ללא עמלות</div>
+          <div style="font-size:11px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:7px 10px;margin-bottom:10px;color:var(--gray-700);">
+            🚀 <strong>מחירי השקה</strong> — המחירים צפויים לעלות בהמשך
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('basic')" style="flex:1;min-width:80px;">Basic<br><span style="font-size:10px;opacity:.7;">₪199 · 1 סוכן</span></button>
             <button class="btn btn-ghost btn-sm" onclick="Billing.openCheckout('pro')" style="flex:1;min-width:80px;">Pro<br><span style="font-size:10px;opacity:.7;">₪349 · עד 5</span></button>
             <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('premium')" style="flex:1;min-width:80px;">Premium ⭐<br><span style="font-size:10px;opacity:.8;">₪549 · עד 10</span></button>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:var(--gray-500);text-align:center;">
+            📅 מינוי שנתי — בקרוב | חיסכון עד 20% לעומת חיוב חודשי
           </div>
         </div>
         `}
