@@ -2688,6 +2688,39 @@
   .chat-send-btn:active { transform:scale(0.9); }
   .share-code-box { font-size:32px; font-weight:900; letter-spacing:8px; color:var(--navy-500); font-family:monospace; background:var(--gray-50); padding:14px 20px; border-radius:12px; border:2px dashed #93C5FD; text-align:center; }
 
+  /* ── EMAIL AI SCREEN ── */
+  .email-ai-header { background:linear-gradient(135deg,#1E3A5F,#2563EB); color:#fff; padding:20px 16px 16px; border-radius:0 0 20px 20px; margin-bottom:16px; }
+  .email-ai-header h2 { font-size:20px; font-weight:900; margin:0 0 4px; }
+  .email-ai-header p  { font-size:12px; opacity:.75; margin:0; }
+  .email-paste-card   { background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:16px; margin:0 16px 14px; }
+  .email-paste-label  { font-size:12px; font-weight:700; color:var(--gray-500); margin-bottom:8px; }
+  .email-paste-area   { width:100%; min-height:120px; border:1.5px solid var(--gray-200); border-radius:12px; padding:12px; font-size:13px; font-family:inherit; direction:rtl; resize:vertical; outline:none; color:var(--gray-700); line-height:1.6; box-sizing:border-box; }
+  .email-paste-area:focus { border-color:var(--blue-400); }
+  .email-analyze-btn  { width:100%; margin-top:12px; padding:14px; background:linear-gradient(135deg,#1E40AF,#2563EB); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; transition:var(--transition); }
+  .email-analyze-btn:active { transform:scale(0.98); }
+  .email-analyze-btn:disabled { opacity:.55; cursor:default; }
+  .email-result-card  { background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:16px; margin:0 16px 14px; display:none; }
+  .email-result-card.visible { display:block; }
+  .email-class-row    { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .email-badge        { display:inline-flex; align-items:center; gap:4px; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:700; }
+  .email-badge-high   { background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; }
+  .email-badge-med    { background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; }
+  .email-badge-low    { background:#F0FDF4; color:#16A34A; border:1px solid #BBF7D0; }
+  .email-badge-sales  { background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; }
+  .email-badge-support{ background:#F5F3FF; color:#7C3AED; border:1px solid #DDD6FE; }
+  .email-badge-spam   { background:#FFF7ED; color:#EA580C; border:1px solid #FED7AA; }
+  .email-badge-other  { background:var(--gray-100); color:var(--gray-600); border:1px solid var(--gray-200); }
+  .email-summary-box  { background:var(--gray-50); border-radius:10px; padding:12px; font-size:13px; color:var(--gray-700); line-height:1.6; margin-bottom:14px; border-right:3px solid #2563EB; }
+  .email-reply-label  { font-size:12px; font-weight:700; color:var(--gray-500); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+  .email-reply-box    { background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; font-size:13px; color:var(--gray-800); line-height:1.8; white-space:pre-wrap; direction:rtl; min-height:80px; }
+  .email-copy-btn     { width:100%; margin-top:10px; padding:12px; background:#16A34A; color:#fff; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:var(--transition); }
+  .email-copy-btn:active { transform:scale(0.98); }
+  .email-quota-badge  { font-size:11px; color:var(--gray-400); text-align:center; margin-top:6px; }
+  .email-tips-card    { background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(124,58,237,.04)); border:1px solid rgba(37,99,235,.12); border-radius:14px; padding:14px 16px; margin:0 16px 20px; }
+  .email-tips-title   { font-size:12px; font-weight:800; color:var(--navy-500); margin-bottom:10px; }
+  .email-tip          { font-size:12px; color:var(--gray-600); margin-bottom:6px; line-height:1.5; display:flex; gap:6px; }
+  .email-tip:last-child { margin-bottom:0; }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2/dist/umd/supabase.js"
           integrity="sha384-nD3dwv4+ZqdYnmZKe/249ImlV04om7xTCcsoSeQYI+RO+XlKPoqAWaJR1M5SJH9p"
@@ -2871,6 +2904,9 @@
       </a>
       <a class="nav-item" id="nav-referral" data-screen="referral" onclick="App.go('referral');document.querySelector('.nav-new-badge')?.remove();" style="background:linear-gradient(135deg,rgba(22,163,74,0.12),rgba(16,185,129,0.06));border:1px solid rgba(22,163,74,0.22);border-radius:8px;margin-top:4px;">
         <span class="nav-icon">🎁</span> <span style="background:linear-gradient(135deg,#15803d,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">הזמן חבר</span><span class="nav-new-badge" id="nav-ref-badge">חדש</span>
+      </a>
+      <a class="nav-item" data-screen="email" onclick="App.go('email')" style="background:linear-gradient(135deg,rgba(37,99,235,0.10),rgba(30,58,95,0.06));border:1px solid rgba(37,99,235,0.18);border-radius:8px;margin-top:4px;">
+        <span class="nav-icon">📧</span> <span style="background:linear-gradient(135deg,#1E40AF,#2563EB);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">מייל AI</span>
       </a>
     </div>
     <div class="sidebar-footer">
@@ -3800,6 +3836,46 @@
           <div><div class="ref-stat-val" id="ref-stat-xp" style="color:var(--gold-500,#D97706);">0</div><div class="ref-stat-lbl">XP נצבר מהפניות</div></div>
           <div><div class="ref-stat-val" style="color:var(--green-600,#16a34a);">×100</div><div class="ref-stat-lbl">XP לכל הצטרפות</div></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         EMAIL AI SCREEN
+    ═══════════════════════════════════════ -->
+    <div id="screen-email" class="screen hidden">
+      <div class="email-ai-header">
+        <h2>📧 מייל AI</h2>
+        <p>הדבק מייל שקיבלת — AI יסווג ויכין לך תשובה מקצועית בעברית</p>
+      </div>
+
+      <div class="email-paste-card">
+        <div class="email-paste-label">תוכן המייל שקיבלת</div>
+        <textarea id="email-paste-input" class="email-paste-area"
+          placeholder="הדבק כאן את המייל שקיבלת מלקוח, ליד, או פרטנר..."></textarea>
+        <button class="email-analyze-btn" id="email-analyze-btn" onclick="EmailAI.analyze()">
+          ✨ נתח וצור תשובה
+        </button>
+        <div class="email-quota-badge" id="email-quota-label"></div>
+      </div>
+
+      <!-- Result card — shown after analysis -->
+      <div class="email-result-card" id="email-result-card">
+        <div class="email-class-row" id="email-badges-row"></div>
+        <div class="email-summary-box" id="email-summary-text"></div>
+        <div class="email-reply-label">
+          <span>✉️ טיוטת תשובה מוכנה</span>
+          <span id="email-lang-note" style="font-weight:400;color:var(--gray-400);font-size:11px;"></span>
+        </div>
+        <div class="email-reply-box" id="email-reply-text"></div>
+        <button class="email-copy-btn" onclick="EmailAI.copyReply()">📋 העתק תשובה</button>
+      </div>
+
+      <div class="email-tips-card">
+        <div class="email-tips-title">💡 טיפים לשימוש</div>
+        <div class="email-tip"><span>📌</span><span>הדבק את המייל המלא כולל שם השולח — ה-AI יזהה את ההקשר</span></div>
+        <div class="email-tip"><span>🌐</span><span>תגובה בשפת הלקוח — עברית ללקוחות ישראלים, אנגלית לבינלאומיים</span></div>
+        <div class="email-tip"><span>⚡</span><span>מיילי ספאם מזוהים אוטומטית — לא תבזבז עליהם זמן</span></div>
+        <div class="email-tip"><span>🔗</span><span>אחרי ההעתקה — שלח את התשובה ישירות מ-Gmail שלך</span></div>
       </div>
     </div>
 
@@ -8902,6 +8978,99 @@ const Referral = {
   },
 };
 
+/* ═══════════════════════════════════════════
+   EMAIL AI — paste email → classify + draft reply
+═══════════════════════════════════════════ */
+const EmailAI = {
+  _lastReply: '',
+
+  renderScreen() {
+    document.getElementById('email-quota-label').textContent = AiLimits.limitLabel('general');
+  },
+
+  async analyze() {
+    const input = document.getElementById('email-paste-input');
+    const emailText = (input?.value || '').trim();
+    if (!emailText) { toast('הדבק תוכן מייל לפני הניתוח', 'error'); return; }
+    if (emailText.length < 20) { toast('המייל קצר מדי — הדבק את התוכן המלא', 'error'); return; }
+
+    const btn = document.getElementById('email-analyze-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ מנתח...';
+    document.getElementById('email-result-card').classList.remove('visible');
+
+    const clientLang = Settings.getClientLang?.() === 'en' ? 'English' : 'Hebrew';
+    const senderContext = State.tenant?.company_name
+      ? `You work at "${State.tenant.company_name}", a real-estate / sales company.`
+      : 'You work at a real-estate / sales company in Israel.';
+
+    const prompt = `You are an AI email assistant for an Israeli CRM system. ${senderContext}
+
+Analyze the following email and respond in JSON only (no markdown, no explanation):
+{
+  "importance": "high" | "medium" | "low",
+  "category": "sales" | "support" | "spam" | "other",
+  "summary_he": "2-sentence Hebrew summary of what the sender wants",
+  "is_spam": true | false,
+  "reply_lang": "${clientLang}",
+  "reply": "Full professional reply draft in ${clientLang}. Address the sender's request directly. Warm but concise. Sign off professionally."
+}
+
+EMAIL:
+"""
+${emailText.slice(0, 3000)}
+"""`;
+
+    try {
+      const raw = await AI.call([{ role:'user', content: prompt }], 600, { type: 'general' });
+      const cleaned = raw.replace(/```json|```/g, '').trim();
+      const result = JSON.parse(cleaned);
+
+      // Badges
+      const badges = document.getElementById('email-badges-row');
+      const impMap = { high:'email-badge-high', medium:'email-badge-med', low:'email-badge-low' };
+      const impLabel = { high:'🔴 עדיפות גבוהה', medium:'🟡 עדיפות בינונית', low:'🟢 עדיפות נמוכה' };
+      const catMap = { sales:'email-badge-sales', support:'email-badge-support', spam:'email-badge-spam', other:'email-badge-other' };
+      const catLabel = { sales:'💼 מכירות', support:'🛠️ תמיכה', spam:'🚫 ספאם', other:'📄 אחר' };
+      badges.innerHTML = `
+        <span class="email-badge ${impMap[result.importance] || 'email-badge-other'}">${impLabel[result.importance] || result.importance}</span>
+        <span class="email-badge ${catMap[result.category] || 'email-badge-other'}">${catLabel[result.category] || result.category}</span>
+      `;
+
+      // Summary
+      document.getElementById('email-summary-text').textContent = result.summary_he || '';
+
+      // Reply
+      this._lastReply = result.reply || '';
+      document.getElementById('email-reply-text').textContent = this._lastReply;
+      document.getElementById('email-lang-note').textContent =
+        result.reply_lang === 'English' ? '🌐 תשובה באנגלית (שפת הלקוח)' : '';
+
+      document.getElementById('email-result-card').classList.add('visible');
+      document.getElementById('email-quota-label').textContent = AiLimits.limitLabel('general');
+
+      if (result.is_spam) {
+        toast('🚫 זוהה ככנראה ספאם — תבחן לפני שליחת תשובה', 'error');
+      }
+    } catch (e) {
+      toast(e.message || 'שגיאה בניתוח המייל', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '✨ נתח וצור תשובה';
+    }
+  },
+
+  async copyReply() {
+    if (!this._lastReply) return;
+    try {
+      await navigator.clipboard.writeText(this._lastReply);
+      toast('✅ התשובה הועתקה ללוח — תדביק ב-Gmail ושלח', 'success');
+    } catch {
+      toast('לא ניתן להעתיק — סמן ידנית והעתק', 'error');
+    }
+  },
+};
+
 const AnnualUpsell = {
   _KEY: 'liders_annual_v1',
 
@@ -9313,6 +9482,7 @@ const App = {
       case 'pro':         ProHub.render();         break;
       case 'xp-store':    Gamify.renderStore();    break;
       case 'referral':    Referral.renderScreen(); localStorage.setItem('liders_ref_visited','1'); document.getElementById('nav-ref-badge')?.remove(); break;
+      case 'email':       EmailAI.renderScreen(); break;
     }
     window.scrollTo(0, 0);
   },
