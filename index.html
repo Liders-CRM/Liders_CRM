@@ -7828,6 +7828,7 @@ const Gamify = {
     this.renderWidget();
     if (d.streak > 1) toast(`🔥 ${d.streak} ימים רצופים! +${this.XP.daily_login} XP`, 'success');
     if (d.streak === 10) setTimeout(() => AnnualUpsell.tryShow('streak_10'), 3000);
+    if (d.streak === 18) setTimeout(() => AnnualUpsell.tryShow('streak_18'), 3000);
     if (d.streak === 30) setTimeout(() => AnnualUpsell.tryShow('streak_30'), 3000);
   },
 
@@ -8725,6 +8726,18 @@ const AnnualUpsell = {
           </div>
           <p style="color:var(--gray-500);font-size:13px;margin:12px 0 0;text-align:center;">בקרוב: מנוי שנתי + כלי AI לשיווק — כדי לסגור עוד עסקאות כאלה 🚀</p>`,
         cta:   'מעניין אותי לשמוע יותר 📬',
+      },
+      streak_18: {
+        icon:  '🔥',
+        title: 'שבועיים וחצי — אתה כאן כל יום',
+        body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">18 ימים בשורה זה לא מקרה — זה מקצוענות אמיתית. המערכת כבר חלק מהשגרה היומית שלך, ואנחנו רוצים לתגמל את זה.</p>
+          <div class="aum-saving-card">
+            <div class="aum-saving-row"><span>מה שאתה משלם עכשיו</span><span>₪249/חודש</span></div>
+            <div class="aum-saving-row"><span>מנוי שנתי + שיווק AI כלול</span><span class="aum-annual-row">₪207/חודש</span></div>
+            <div class="aum-saving-highlight">חוסך ₪504 בשנה — ותוספת שיווק AI בחינם 🎁</div>
+          </div>
+          <p style="color:var(--gray-500);font-size:12px;margin:10px 0 0;text-align:center;">המנוי השנתי עוד בבנייה — אנחנו נעדכן אותך כשיוצא</p>`,
+        cta:   'כן, שמרו לי מקום 📬',
       },
       streak_30: {
         icon:  '💎',
