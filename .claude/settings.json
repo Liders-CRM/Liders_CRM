@@ -5,6 +5,7 @@
       "Bash(npm:*)",
       "Bash(npx:*)",
       "Bash(node:*)",
+      "Bash(python3:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
@@ -12,44 +13,58 @@
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(mv:*)",
-      "mcp__f474d5bb__execute_sql",
-      "mcp__f474d5bb__list_tables",
-      "mcp__f474d5bb__list_migrations",
-      "mcp__f474d5bb__get_advisors",
-      "mcp__f474d5bb__get_logs",
-      "mcp__f474d5bb__get_project_url",
-      "mcp__f474d5bb__get_publishable_keys",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__execute_sql",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__apply_migration",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__list_tables",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__list_migrations",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__get_advisors",
-      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__get_logs",
-      "mcp__6368118b__list_events",
-      "mcp__6368118b__list_calendars",
-      "mcp__4e93495e__search_threads",
-      "mcp__4e93495e__list_labels",
-      "mcp__194941ca__scenarios_list",
-      "mcp__194941ca__executions_list",
-      "mcp__97537a26__notion-search",
-      "mcp__97537a26__notion-fetch",
-      "mcp__273af94e__list_bases",
-      "mcp__273af94e__list_tables_for_base",
-      "mcp__273af94e__list_records_for_table",
-      "mcp__88a7dadd__get_design_context",
-      "mcp__88a7dadd__get_libraries",
-      "mcp__88a7dadd__get_metadata",
-      "mcp__3f33a9a8__search-designs",
-      "mcp__3f33a9a8__get-design",
+      "Bash(curl:*)",
+      "Bash(openssl:*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)",
+      "Grep(*)",
+
+      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__*",
+
       "mcp__github__get_file_contents",
       "mcp__github__list_branches",
-      "mcp__github__list_commits"
+      "mcp__github__list_commits",
+      "mcp__github__list_pull_requests",
+      "mcp__github__pull_request_read",
+      "mcp__github__issue_read",
+      "mcp__github__list_issues",
+      "mcp__github__search_code",
+      "mcp__github__get_commit",
+      "mcp__github__create_branch",
+      "mcp__github__push_files",
+      "mcp__github__create_pull_request",
+      "mcp__github__add_issue_comment",
+      "mcp__github__get_me",
+
+      "mcp__6368118b-32bc-4585-8436-356c9a219f28__*",
+
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__search_threads",
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__get_thread",
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__list_labels",
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__list_drafts",
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__create_draft",
+      "mcp__4e93495e-96b0-4627-879d-7f76bd2c7eb0__create_label",
+
+      "mcp__194941ca-2887-4f7e-8604-b6e8f6aa31a1__*",
+
+      "mcp__97537a26-3a35-4ea9-a1db-77b0b3a98508__*",
+
+      "mcp__273af94e-dadb-4faa-ac5b-cd6b160890a2__*",
+
+      "mcp__88a7dadd-db40-4087-8e13-b5175069b576__*",
+
+      "mcp__3f33a9a8-2306-49cb-bad7-e385cc1a3386__*",
+
+      "mcp__4a81aac9-2107-4ab9-8444-2ded95229a48__*"
     ],
     "deny": [
       "Bash(rm -rf:*)",
       "Bash(sudo:*)",
-      "mcp__f474d5bb__delete_branch",
-      "mcp__f474d5bb__pause_project"
+      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__delete_branch",
+      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__pause_project",
+      "mcp__f474d5bb-dc13-43f0-9b18-e6b36914e689__delete_project"
     ]
   },
   "env": {
