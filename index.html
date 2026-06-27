@@ -2365,6 +2365,38 @@
   }
   #screen-analytics { position:relative; }
 
+  /* ── Partners / Collaboration ─────────── */
+  .partners-tab-bar { display:flex; gap:8px; padding:14px 16px 12px; border-bottom:1px solid var(--gray-100); }
+  .partners-tab { flex:1; padding:9px 8px; border-radius:10px; border:1.5px solid var(--gray-200); background:transparent; color:var(--gray-500); font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition); font-family:inherit; }
+  .partners-tab.active { background:var(--navy-500); color:#fff; border-color:var(--navy-500); }
+  .share-card { background:var(--surface); border:1px solid var(--gray-200); border-radius:14px; padding:14px; margin-bottom:10px; cursor:pointer; transition:var(--transition); }
+  .share-card:active { transform:scale(0.98); }
+  .share-card-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .share-card-avatar { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,#2563EB,#0F1F3D); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .share-card-name { font-size:14px; font-weight:700; color:var(--navy-500); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .share-card-sub { font-size:11px; color:var(--gray-500); margin-top:2px; }
+  .share-status-badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .share-status-pending { background:#FEF9C3; color:#854D0E; }
+  .share-status-active  { background:#DCFCE7; color:#166534; }
+  .share-status-revoked { background:#FEE2E2; color:#991B1B; }
+  /* Chat */
+  #partners-chat-panel { position:fixed; inset:0; background:var(--bg); z-index:800; display:flex; flex-direction:column; }
+  .chat-messages { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:6px; }
+  .chat-bubble-wrap { display:flex; flex-direction:column; }
+  .chat-bubble-wrap.mine { align-items:flex-start; }
+  .chat-bubble-wrap.theirs { align-items:flex-end; }
+  .chat-sender-label { font-size:10px; color:var(--gray-400); margin-bottom:2px; padding:0 4px; }
+  .chat-bubble { max-width:76%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.45; word-break:break-word; }
+  .chat-bubble.mine { background:var(--navy-500); color:#fff; border-bottom-right-radius:5px; }
+  .chat-bubble.theirs { background:var(--surface); border:1px solid var(--gray-200); color:var(--gray-800); border-bottom-left-radius:5px; }
+  .chat-time { font-size:10px; opacity:0.55; margin-top:3px; padding:0 4px; }
+  .chat-input-row { display:flex; gap:8px; padding:10px 12px; border-top:1px solid var(--gray-100); background:var(--surface); }
+  .chat-input { flex:1; border:1.5px solid var(--gray-200); border-radius:22px; padding:10px 16px; font-size:14px; outline:none; background:var(--bg); direction:rtl; font-family:inherit; }
+  .chat-input:focus { border-color:var(--blue-400); }
+  .chat-send-btn { width:42px; height:42px; border-radius:50%; background:var(--navy-500); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; transition:var(--transition); }
+  .chat-send-btn:active { transform:scale(0.9); }
+  .share-code-box { font-size:32px; font-weight:900; letter-spacing:8px; color:var(--navy-500); font-family:monospace; background:var(--gray-50); padding:14px 20px; border-radius:12px; border:2px dashed #93C5FD; text-align:center; }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2/dist/umd/supabase.js"
           integrity="sha384-nD3dwv4+ZqdYnmZKe/249ImlV04om7xTCcsoSeQYI+RO+XlKPoqAWaJR1M5SJH9p"
@@ -2525,6 +2557,10 @@
       </a>
       <a class="nav-item" data-screen="calendar" onclick="App.go('calendar')">
         <span class="nav-icon">📅</span> לוח שנה
+      </a>
+      <a class="nav-item" data-screen="partners" onclick="App.go('partners')">
+        <span class="nav-icon">🤝</span> שיתופי פעולה
+        <span class="nav-badge" id="nav-badge-partners" style="display:none;">0</span>
       </a>
       <a class="nav-item" data-screen="tools" onclick="App.go('tools')">
         <span class="nav-icon">🛠️</span> מרכז כלים
@@ -3131,6 +3167,65 @@
     <!-- MARKETING SCREEN -->
     <div id="screen-marketing" class="screen hidden"></div>
 
+    <!-- ── PARTNERS / COLLABORATION SCREEN ── -->
+    <div id="screen-partners" class="screen hidden">
+      <div class="screen-header">
+        <div class="screen-title">🤝 שיתופי פעולה</div>
+      </div>
+
+      <div class="partners-tab-bar">
+        <button class="partners-tab active" id="ptab-mine" onclick="Partners.switchTab('mine')">שיתפתי</button>
+        <button class="partners-tab" id="ptab-join" onclick="Partners.switchTab('join')">הצטרף לשיתוף</button>
+      </div>
+
+      <!-- My outgoing shares -->
+      <div id="ptab-content-mine" style="padding:16px;">
+        <div id="partners-mine-list">
+          <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
+            <div style="font-size:40px;margin-bottom:12px;">📤</div>
+            <div style="font-size:14px;">עדיין לא שיתפת לידים</div>
+            <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחץ "שתף עם שותף"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Join a share -->
+      <div id="ptab-content-join" class="hidden">
+        <div style="padding:28px 16px 8px;text-align:center;">
+          <div style="font-size:48px;margin-bottom:12px;">🔑</div>
+          <div style="font-size:16px;font-weight:700;color:var(--navy-500);margin-bottom:6px;">קיבלת קוד שיתוף?</div>
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;line-height:1.5;">שותף שעובד עם Liders CRM שלח לך קוד ו-PIN — הזן אותם כאן</div>
+          <button class="btn btn-primary" style="width:100%;max-width:280px;" onclick="openModal('modal-accept-share')">🔑 הזן קוד שיתוף</button>
+        </div>
+        <div style="padding:8px 16px 16px;" id="partners-joined-list"></div>
+      </div>
+
+      <!-- Chat / Lead view panel (overlays screen) -->
+      <div id="partners-chat-panel" class="hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--gray-100);position:sticky;top:0;z-index:10;">
+          <button onclick="Partners.closeChat()" style="background:none;border:none;font-size:22px;cursor:pointer;line-height:1;padding:4px;">←</button>
+          <div style="flex:1;min-width:0;">
+            <div id="chat-lead-name" style="font-size:15px;font-weight:700;color:var(--navy-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="chat-partner-label" style="font-size:11px;color:var(--gray-500);"></div>
+          </div>
+          <div id="chat-role-badge" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:#EFF6FF;color:#1D4ED8;"></div>
+        </div>
+        <!-- Lead info strip -->
+        <div id="chat-lead-strip" style="background:linear-gradient(135deg,#F8FAFF,#EFF6FF);border-bottom:1px solid #BFDBFE;padding:12px 16px;font-size:13px;"></div>
+        <!-- Security notice (once) -->
+        <div style="background:#F0FDF4;border-bottom:1px solid #BBF7D0;padding:10px 16px;font-size:12px;color:#166534;">
+          🔒 <strong>שיחה מאובטחת:</strong> רק כרטיס הליד הזה משותף — שאר נתוני החשבון בלתי נגישים
+        </div>
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages-list" style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;flex:1;overflow-y:auto;min-height:200px;"></div>
+        <!-- Input -->
+        <div class="chat-input-row">
+          <button class="chat-send-btn" onclick="Partners.sendMessage()">➤</button>
+          <input class="chat-input" id="chat-msg-input" placeholder="כתוב הודעה לשותף..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();Partners.sendMessage();}">
+        </div>
+      </div>
+    </div>
+
     <!-- ── PRO HUB ── -->
     <div id="screen-pro" class="screen hidden">
       <div class="pro-hub-hero">
@@ -3313,11 +3408,97 @@
       <div class="bni-icon">✅</div>
       <div>משימות</div>
     </div>
+    <div class="bottom-nav-item" data-screen="partners" onclick="navRipple(this);App.go('partners')" style="position:relative;">
+      <div class="bni-icon">🤝</div>
+      <div>שותפים</div>
+      <span id="bn-badge-partners" style="display:none;position:absolute;top:6px;right:10px;background:#EF4444;color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;padding:0 4px;display:none;align-items:center;justify-content:center;"></span>
+    </div>
     <div class="bottom-nav-item" data-screen="settings" onclick="navRipple(this);App.go('settings')">
       <div class="bni-icon">⚙️</div>
       <div>הגדרות</div>
     </div>
   </nav>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: SHARE LEAD WITH PARTNER
+  ═══════════════════════════════════════ -->
+  <div id="modal-share-lead" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-share-lead')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">🤝 שיתוף ליד עם שותף</div>
+        <button class="modal-close" onclick="closeModal('modal-share-lead')">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1: Choose PIN -->
+        <div id="share-step-1">
+          <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:13px;margin-bottom:16px;">
+            <p style="font-size:13px;color:#1E40AF;margin:0;line-height:1.6;">
+              🔒 <strong>המידע שלך מאובטח לחלוטין.</strong><br>
+              רק כרטיס הליד הזה יהיה גלוי לשותף — שאר הלידים, הנכסים וכל המידע ב-CRM שלך <strong>אינם נגישים בכלל.</strong>
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">בחר PIN לשיתוף (4–6 ספרות)</label>
+            <input type="tel" id="share-pin-input" class="form-input" placeholder="1234"
+              style="direction:ltr;font-size:26px;letter-spacing:8px;text-align:center;font-weight:700;"
+              maxlength="6" inputmode="numeric" pattern="[0-9]*">
+          </div>
+          <div style="font-size:12px;color:var(--gray-400);text-align:center;margin-top:-8px;">
+            שלח את ה-PIN לשותף בנפרד דרך WhatsApp, טלפון, או כל ערוץ אחר
+          </div>
+        </div>
+        <!-- Step 2: Show code -->
+        <div id="share-step-2" class="hidden">
+          <div style="text-align:center;padding:8px 0 16px;">
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">קוד שיתוף</div>
+            <div class="share-code-box" id="share-code-display"></div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:8px;">+ ה-PIN שבחרת</div>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;margin-bottom:10px;" onclick="Partners.copyShareInfo()">📋 העתק קוד + PIN</button>
+          <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px;font-size:12px;color:#166534;direction:rtl;line-height:1.5;" id="share-whatsapp-msg"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="share-btn-create" class="btn btn-primary" style="flex:1;" onclick="Partners.createShare()">✅ צור שיתוף</button>
+        <button id="share-btn-done" class="btn btn-primary hidden" style="flex:1;" onclick="closeModal('modal-share-lead');Partners.render()">סיום ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: ACCEPT SHARE (Partner side)
+  ═══════════════════════════════════════ -->
+  <div id="modal-accept-share" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-accept-share')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">🔑 הצטרף לשיתוף</div>
+        <button class="modal-close" onclick="closeModal('modal-accept-share')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:#1E40AF;line-height:1.5;">
+          🔒 תוכל לראות רק את הליד הספציפי שהשותף בחר לשתף — אין גישה לשום נתון אחר שלו.
+        </div>
+        <div class="form-group">
+          <label class="form-label">קוד שיתוף (8 תווים)</label>
+          <input type="text" id="accept-share-code" class="form-input" placeholder="AB3KF7XQ"
+            style="direction:ltr;font-size:20px;letter-spacing:5px;text-align:center;font-weight:800;"
+            maxlength="8" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="form-group">
+          <label class="form-label">PIN (קיבלת מהשותף)</label>
+          <input type="tel" id="accept-share-pin" class="form-input" placeholder="1234"
+            style="direction:ltr;font-size:22px;letter-spacing:6px;text-align:center;font-weight:700;"
+            maxlength="6" inputmode="numeric" pattern="[0-9]*">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modal-accept-share')">ביטול</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="Partners.acceptShare()">הצטרף לשיתוף</button>
+      </div>
+    </div>
+  </div>
 
   <!-- FAB -->
   <button class="fab" id="fab-btn" onclick="openModal('modal-add-lead')" title="ליד חדש">+</button>
@@ -4847,6 +5028,46 @@ const DB = {
     if (error) throw error;
     return data;
   },
+
+  // ── Shared Leads (collaboration) ──────────────────────────────────
+  async createSharedLead(leadId, pin) {
+    const { data, error } = await sbClient.rpc('create_shared_lead',
+      { p_lead_id: leadId, p_pin: pin });
+    if (error) throw error;
+    return data; // share_code (8-char string)
+  },
+  async acceptSharedLead(shareCode, pin) {
+    const { data, error } = await sbClient.rpc('accept_shared_lead',
+      { p_share_code: shareCode.toUpperCase().trim(), p_pin: pin });
+    if (error) throw error;
+    return data; // jsonb snapshot
+  },
+  async getMySharedLeads() {
+    const { data, error } = await sbClient.rpc('get_my_shared_leads');
+    if (error) throw error;
+    return data || [];
+  },
+  async sendSharedMessage(shareId, message) {
+    const { error } = await sbClient.rpc('send_shared_message',
+      { p_share_id: shareId, p_message: message });
+    if (error) throw error;
+  },
+  async getSharedMessages(shareId) {
+    const { data, error } = await sbClient.rpc('get_shared_messages',
+      { p_share_id: shareId });
+    if (error) throw error;
+    return data || [];
+  },
+  async revokeSharedLead(shareId) {
+    const { error } = await sbClient.rpc('revoke_shared_lead',
+      { p_share_id: shareId });
+    if (error) throw error;
+  },
+  async updatePartnerNotes(shareId, notes) {
+    const { error } = await sbClient.rpc('update_partner_notes',
+      { p_share_id: shareId, p_notes: notes });
+    if (error) throw error;
+  },
 };
 
 /* ═══════════════════════════════════════════
@@ -6246,6 +6467,305 @@ const AiLimits = {
     if (this._isAdmin()) return '';
     const rem = this.remaining(t); const lim = this._lim()[t];
     return `${rem}/${lim} שימושים נותרו היום`;
+  },
+};
+
+/* ═══════════════════════════════════════════
+   PARTNERS — inter-tenant collaboration
+═══════════════════════════════════════════ */
+const Partners = {
+  _tab: 'mine',
+  _shares: [],           // loaded from DB
+  _currentShare: null,   // share open in chat
+  _pollTimer: null,      // chat polling interval
+  _pendingLeadId: null,  // lead being shared
+  _pendingPin: null,
+
+  async render() {
+    if (State.isDemo) {
+      document.getElementById('ptab-content-mine').innerHTML = `
+        <div style="text-align:center;padding:40px 16px;">
+          <div style="font-size:48px;margin-bottom:12px;">🤝</div>
+          <div style="font-size:16px;font-weight:700;color:var(--navy-500);margin-bottom:8px;">שיתופי פעולה</div>
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;line-height:1.6;">
+            שתף לידים עם שותפים שעובדים עם Liders CRM — עו"ד נדלן, מעצבי פנים, אדריכלים, קבלנים ועוד.<br>
+            רק הליד הספציפי יהיה גלוי. כל השאר — מאובטח לחלוטין.
+          </div>
+          <div style="font-size:13px;color:var(--gray-400);">(זמין בחשבון אמיתי)</div>
+        </div>`;
+      return;
+    }
+    try {
+      this._shares = await DB.getMySharedLeads();
+    } catch(e) {
+      this._shares = [];
+    }
+    this._renderTab(this._tab);
+    this._updateBadge();
+  },
+
+  _renderTab(tab) {
+    this._tab = tab;
+    document.getElementById('ptab-mine').classList.toggle('active', tab === 'mine');
+    document.getElementById('ptab-join').classList.toggle('active', tab === 'join');
+    document.getElementById('ptab-content-mine').classList.toggle('hidden', tab !== 'mine');
+    document.getElementById('ptab-content-join').classList.toggle('hidden', tab !== 'join');
+
+    if (tab === 'mine') this._renderMine();
+    else this._renderJoined();
+  },
+
+  switchTab(tab) { this._renderTab(tab); },
+
+  _renderMine() {
+    const el = document.getElementById('partners-mine-list');
+    const mine = this._shares.filter(s => s.my_role === 'owner');
+    if (!mine.length) {
+      el.innerHTML = `
+        <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
+          <div style="font-size:40px;margin-bottom:12px;">📤</div>
+          <div style="font-size:14px;">עדיין לא שיתפת לידים</div>
+          <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחץ "🤝 שתף עם שותף"</div>
+        </div>`;
+      return;
+    }
+    el.innerHTML = mine.map(s => this._shareCardHTML(s)).join('');
+  },
+
+  _renderJoined() {
+    const el = document.getElementById('partners-joined-list');
+    const joined = this._shares.filter(s => s.my_role === 'partner');
+    if (!joined.length) {
+      el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">עדיין לא הצטרפת לאף שיתוף</div>`;
+      return;
+    }
+    el.innerHTML = `<div style="font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:10px;">שיתופים שהצטרפת אליהם</div>` +
+      joined.map(s => this._shareCardHTML(s)).join('');
+  },
+
+  _shareCardHTML(s) {
+    const isOwner   = s.my_role === 'owner';
+    const statusMap = { pending:'share-status-pending', active:'share-status-active', revoked:'share-status-revoked' };
+    const statusLbl = { pending:'ממתין', active:'פעיל ✓', revoked:'בוטל' };
+    const indIcon   = { realestate:'🏠', interior:'🎨', architect:'📐', mortgage:'💰', appraiser:'📋', photography:'📸', construction:'🏗️', realestate_lawyer:'⚖️', other:'🎯' };
+    const icon = isOwner ? '📤' : (indIcon[s.owner_industry] || '🤝');
+    const lbl  = isOwner ? `ממתין לשותף לאשר` : `שיתוף מ: ${s.owner_display || 'שותף'}`;
+    const budget = s.lead_budget_max ? `₪${Number(s.lead_budget_max).toLocaleString('he-IL')}` : '';
+    return `
+      <div class="share-card" onclick="Partners.openChat('${s.share_id}')">
+        <div class="share-card-header">
+          <div class="share-card-avatar">${icon}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="share-card-name">${escapeHtml(s.lead_name)}</div>
+            <div class="share-card-sub">${escapeHtml(lbl)}${budget ? ' · ' + budget : ''}</div>
+          </div>
+          <div class="share-status-badge ${statusMap[s.status]}">${statusLbl[s.status]}</div>
+        </div>
+        ${isOwner && s.status === 'pending' ? `
+          <div style="display:flex;align-items:center;gap:10px;background:var(--gray-50);border-radius:8px;padding:10px 12px;">
+            <div>
+              <div style="font-size:11px;color:var(--gray-500);">קוד שיתוף</div>
+              <div style="font-size:18px;font-weight:900;letter-spacing:4px;font-family:monospace;color:var(--navy-500);">${s.share_code}</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="margin-right:auto;" onclick="event.stopPropagation();Partners._copyCode('${s.share_code}')">📋 העתק</button>
+            <button class="btn btn-sm" style="background:#FEE2E2;color:#991B1B;border:none;" onclick="event.stopPropagation();Partners.revoke('${s.share_id}')">ביטול</button>
+          </div>` :
+          s.status === 'active' ? `
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="font-size:12px;color:var(--gray-500);">שלב: ${escapeHtml(s.lead_stage_name || '')} · ${s.msg_count || 0} הודעות</span>
+            ${isOwner ? `<button class="btn btn-sm" style="background:#FEE2E2;color:#991B1B;border:none;margin-right:auto;" onclick="event.stopPropagation();Partners.revoke('${s.share_id}')">ביטול שיתוף</button>` : ''}
+          </div>` : ''
+        }
+      </div>`;
+  },
+
+  openShareModal(leadId) {
+    if (State.isDemo) { toast('שיתוף לידים זמין בחשבון אמיתי', 'info'); return; }
+    this._pendingLeadId = leadId;
+    this._pendingPin    = null;
+    // Reset modal state
+    document.getElementById('share-step-1').classList.remove('hidden');
+    document.getElementById('share-step-2').classList.add('hidden');
+    document.getElementById('share-btn-create').classList.remove('hidden');
+    document.getElementById('share-btn-done').classList.add('hidden');
+    document.getElementById('share-pin-input').value = '';
+    openModal('modal-share-lead');
+  },
+
+  async createShare() {
+    const pin = (document.getElementById('share-pin-input').value || '').trim();
+    if (!/^\d{4,6}$/.test(pin)) {
+      toast('הזן PIN מ-4 עד 6 ספרות', 'error'); return;
+    }
+    const btn = document.getElementById('share-btn-create');
+    btn.disabled = true; btn.textContent = 'יוצר...';
+    try {
+      const code = await DB.createSharedLead(this._pendingLeadId, pin);
+      this._pendingPin = pin;
+      document.getElementById('share-code-display').textContent = code;
+      const lead = State.leads.find(l => l.id === this._pendingLeadId);
+      const leadName = lead ? lead.name : 'הליד';
+      document.getElementById('share-whatsapp-msg').innerHTML =
+        `<strong>הודעה לשליחה לשותף:</strong><br>` +
+        `"שתפתי איתך את הליד "${escapeHtml(leadName)}" ב-Liders CRM.<br>` +
+        `קוד שיתוף: <strong>${code}</strong><br>` +
+        `PIN: <strong>${pin}</strong><br>` +
+        `פתח Liders → שותפים → הצטרף לשיתוף"`;
+      document.getElementById('share-step-1').classList.add('hidden');
+      document.getElementById('share-step-2').classList.remove('hidden');
+      document.getElementById('share-btn-create').classList.add('hidden');
+      document.getElementById('share-btn-done').classList.remove('hidden');
+      toast('שיתוף נוצר! שלח את הקוד לשותף', 'success');
+    } catch(e) {
+      toast('שגיאה: ' + (e.message || e), 'error');
+    }
+    btn.disabled = false; btn.textContent = '✅ צור שיתוף';
+  },
+
+  copyShareInfo() {
+    const code = document.getElementById('share-code-display').textContent;
+    const pin  = this._pendingPin || '';
+    const lead = State.leads.find(l => l.id === this._pendingLeadId);
+    const txt  = `קוד שיתוף Liders CRM: ${code}\nPIN: ${pin}\n(ליד: ${lead ? lead.name : ''})`;
+    navigator.clipboard?.writeText(txt).then(() => toast('הועתק!', 'success'))
+      .catch(() => toast('לא ניתן להעתיק — העתק ידנית', 'info'));
+  },
+
+  _copyCode(code) {
+    navigator.clipboard?.writeText(code).then(() => toast('קוד הועתק!', 'success'))
+      .catch(() => toast(code, 'info'));
+  },
+
+  async acceptShare() {
+    const code = (document.getElementById('accept-share-code').value || '').trim().toUpperCase();
+    const pin  = (document.getElementById('accept-share-pin').value  || '').trim();
+    if (code.length !== 8)     { toast('הקוד חייב להיות 8 תווים', 'error'); return; }
+    if (!/^\d{4,6}$/.test(pin)) { toast('PIN חייב להיות 4–6 ספרות', 'error'); return; }
+    const btn = document.querySelector('#modal-accept-share .btn-primary:last-child');
+    if (btn) { btn.disabled = true; btn.textContent = 'מאמת...'; }
+    try {
+      const snap = await DB.acceptSharedLead(code, pin);
+      closeModal('modal-accept-share');
+      document.getElementById('accept-share-code').value = '';
+      document.getElementById('accept-share-pin').value  = '';
+      toast('✅ הצטרפת לשיתוף! ' + (snap?.lead_name || ''), 'success');
+      await this.render();
+      this._renderTab('join');
+    } catch(e) {
+      toast(e.message || 'שגיאה — בדוק קוד ו-PIN', 'error');
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'הצטרף לשיתוף'; }
+  },
+
+  async revoke(shareId) {
+    if (!confirm('לבטל את השיתוף הזה? השותף יאבד גישה מיידית.')) return;
+    try {
+      await DB.revokeSharedLead(shareId);
+      toast('שיתוף בוטל', 'success');
+      await this.render();
+    } catch(e) { toast(e.message, 'error'); }
+  },
+
+  async openChat(shareId) {
+    const share = this._shares.find(s => s.share_id === shareId);
+    if (!share) return;
+    if (share.status === 'pending') {
+      toast('השיתוף עדיין ממתין לאישור השותף', 'info'); return;
+    }
+    if (share.status === 'revoked') {
+      toast('שיתוף זה בוטל', 'info'); return;
+    }
+    this._currentShare = share;
+
+    // Populate header
+    document.getElementById('chat-lead-name').textContent = share.lead_name;
+    const isOwner = share.my_role === 'owner';
+    document.getElementById('chat-partner-label').textContent =
+      isOwner ? 'שיתוף יצא ממך' : `שיתוף מ: ${share.owner_display || 'שותף'}`;
+    document.getElementById('chat-role-badge').textContent = isOwner ? 'שיתפתי' : 'הוזמנתי';
+
+    // Lead info strip
+    const budget = share.lead_budget_max
+      ? `₪${Number(share.lead_budget_max).toLocaleString('he-IL')}`
+      : (share.lead_budget_min ? `₪${Number(share.lead_budget_min).toLocaleString('he-IL')}+` : '');
+    document.getElementById('chat-lead-strip').innerHTML =
+      `📋 <strong>${escapeHtml(share.lead_stage_name || 'שלב לא ידוע')}</strong>` +
+      (share.lead_phone ? ` &nbsp;·&nbsp; 📞 ${escapeHtml(share.lead_phone)}` : '') +
+      (budget           ? ` &nbsp;·&nbsp; 💰 ${budget}` : '') +
+      (share.lead_notes ? `<br><span style="font-size:11px;color:var(--gray-500);">📝 ${escapeHtml(share.lead_notes.slice(0,120))}${share.lead_notes.length>120?'…':''}</span>` : '');
+
+    // Show panel
+    const panel = document.getElementById('partners-chat-panel');
+    panel.classList.remove('hidden');
+    panel.style.display = 'flex';
+    panel.style.flexDirection = 'column';
+
+    // Load messages
+    await this._loadMessages();
+
+    // Start polling
+    this._stopPolling();
+    this._pollTimer = setInterval(() => this._loadMessages(), 18000);
+  },
+
+  closeChat() {
+    this._stopPolling();
+    this._currentShare = null;
+    const panel = document.getElementById('partners-chat-panel');
+    panel.classList.add('hidden');
+    panel.style.display = 'none';
+  },
+
+  _stopPolling() {
+    if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
+  },
+
+  async _loadMessages() {
+    if (!this._currentShare) return;
+    try {
+      const msgs = await DB.getSharedMessages(this._currentShare.share_id);
+      const el   = document.getElementById('chat-messages-list');
+      if (!msgs.length) {
+        el.innerHTML = `<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:20px;">אין הודעות עדיין — שלח הודעה ראשונה 👋</div>`;
+        return;
+      }
+      const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+      el.innerHTML = msgs.map(m => {
+        const cls   = m.is_mine ? 'mine' : 'theirs';
+        const time  = new Date(m.created_at).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+        const dateStr = new Date(m.created_at).toLocaleDateString('he-IL', { day:'numeric', month:'numeric' });
+        return `
+          <div class="chat-bubble-wrap ${cls}">
+            ${!m.is_mine ? `<div class="chat-sender-label">${escapeHtml(m.sender_name)}</div>` : ''}
+            <div class="chat-bubble ${cls}">${escapeHtml(m.message).replace(/\n/g,'<br>')}</div>
+            <span class="chat-time">${dateStr} ${time}</span>
+          </div>`;
+      }).join('');
+      if (wasAtBottom || msgs.length < 5) el.scrollTop = el.scrollHeight;
+    } catch(_e) { /* silent */ }
+  },
+
+  async sendMessage() {
+    if (!this._currentShare) return;
+    const input = document.getElementById('chat-msg-input');
+    const msg   = (input.value || '').trim();
+    if (!msg) return;
+    input.value = '';
+    try {
+      await DB.sendSharedMessage(this._currentShare.share_id, msg);
+      await this._loadMessages();
+    } catch(e) {
+      toast(e.message || 'שגיאה בשליחת הודעה', 'error');
+      input.value = msg; // restore on error
+    }
+  },
+
+  _updateBadge() {
+    const count = this._shares.filter(s => s.status === 'active').length;
+    const badge1 = document.getElementById('nav-badge-partners');
+    const badge2 = document.getElementById('bn-badge-partners');
+    if (badge1) { badge1.textContent = count || ''; badge1.style.display = count ? '' : 'none'; }
+    if (badge2) { badge2.textContent = count || ''; badge2.style.display = count ? 'flex' : 'none'; }
   },
 };
 
@@ -7953,6 +8473,7 @@ const App = {
       case 'calendar':    Calendar.render(); break;
       case 'settings':    Settings.render();  break;
       case 'tools':       Tools.render();     break;
+      case 'partners':    Partners.render();  break;
       case 'marketing':   Marketing.render(); break;
       case 'pro':         ProHub.render();    break;
     }
@@ -8499,6 +9020,7 @@ const LeadDetail = {
           <button class="lead-action-btn" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
           <button class="lead-action-btn" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
           <button class="lead-action-btn" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
+          ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
         </div>
       </div>
       <div class="lead-detail-body">
