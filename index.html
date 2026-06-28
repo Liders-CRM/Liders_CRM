@@ -5851,53 +5851,53 @@ const Billing = {
     {
       id: 'basic',
       name: 'Solo',
-      price: 249,
-      priceLabel: '₪249',
+      price: 149,
+      priceLabel: '₪149',
       desc: 'לסוכן עצמאי',
       features: ['סוכן 1 בלבד', 'עד 200 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'ניסיון חינם 30 יום'],
       featured: false,
       agentLimit: '1 סוכן · 200 לידים',
-      annualMonthly: 207,
-      annualTotal: 2490,
+      annualMonthly: 124,
+      annualTotal: 1490,
     },
     {
       id: 'pro',
       name: 'צוות',
-      price: 449,
-      priceLabel: '₪449',
+      price: 249,
+      priceLabel: '₪249',
       desc: 'לצוות קטן',
       features: ['עד 5 סוכנים', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: true,
       agentLimit: '5 סוכנים · 1,000 לידים',
-      annualMonthly: 374,
-      annualTotal: 4490,
+      annualMonthly: 207,
+      annualTotal: 2490,
     },
     {
       id: 'premium',
       name: 'סוכנות',
-      price: 649,
-      priceLabel: '₪649',
+      price: 399,
+      priceLabel: '₪399',
       desc: 'לסוכנות נדל"ן',
       features: ['סוכנים ללא הגבלה', 'לידים ללא הגבלה', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: false,
       agentLimit: 'ללא הגבלה',
-      annualMonthly: 541,
-      annualTotal: 6490,
+      annualMonthly: 332,
+      annualTotal: 3990,
     },
   ],
 
-  // ─── STRIPE CONFIG — החלף ב-LIVE URLs לפני פרודקשן ───
-  // 1. stripe.com → Products → Add product לכל תוכנית → Copy "Payment link"
-  // 2. הוסף ?client_reference_id={TENANT_ID} לכל URL (מגיע אוטומטי מהקוד)
-  // ⚠️ SECURITY: כל URL שמכיל 'test_' הוא TEST MODE — לא לשימוש אמיתי!
+  // ─── GROW/PAYME CONFIG — יוגדר ברגע שיפתחו מפתחות API ───
+  // כשמוכן: החלף PAYMENTS_LIVE ל-true ועדכן CHECKOUT_URLS מ-Grow Dashboard
+  PAYMENTS_LIVE: false,
   CHECKOUT_URLS: {
-    basic:   'https://buy.stripe.com/test_fZu6oH6Bo8US097a962go01',
-    pro:     'https://buy.stripe.com/test_6oUaEX8Jwb305tr6WU2go02',
-    premium: 'https://buy.stripe.com/test_4gM5kD2l82wu1db0yw2go03',
+    basic:   'REPLACE_WITH_GROW_LINK_BASIC',
+    pro:     'REPLACE_WITH_GROW_LINK_PRO',
+    premium: 'REPLACE_WITH_GROW_LINK_PREMIUM',
   },
-  // stripe.com → Settings → Billing → Customer portal → Copy link
-  PORTAL_URL: 'https://billing.stripe.com/p/login/test_dRmaEX3pc8USdZX4OM2go00',
-  _isTestMode() { return Object.values(this.CHECKOUT_URLS).some(u => u.includes('/test_')); },
+  PORTAL_URL: 'REPLACE_WITH_GROW_PORTAL_URL',
+  _isTestMode() { return !this.PAYMENTS_LIVE; },
+  // Make.com webhook — שולח התראה לאדמין כשמישהו מביע עניין בשדרוג
+  _UPGRADE_WEBHOOK: 'https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i',
 
   daysLeft() {
     const t = State.tenant?.trial_ends_at;
@@ -5948,13 +5948,17 @@ const Billing = {
           הלידים, הנכסים והמשימות שלך <strong>שמורים בחינם למשך ${rDays} ימים נוספים</strong> — בלי כרטיס אשראי ובלי לבחור תוכנית.<br>
           כדי <strong>להמשיך להשתמש</strong> במערכת — בחר תוכנית עכשיו:
         `;
-        noteEl.innerHTML = `🛡️ הנתונים שמורים בחינם ל-${rDays} ימים נוספים · המערכת נעולה לשימוש עד הצטרפות למסלול בתשלום`;
+        noteEl.innerHTML = this.PAYMENTS_LIVE
+          ? `🛡️ הנתונים שמורים בחינם ל-${rDays} ימים נוספים · המערכת נעולה לשימוש עד הצטרפות למסלול בתשלום`
+          : `🚀 מערכת התשלומים נפתחת בקרוב — בחר חבילה ונחזור אליך תוך 24 שעות לסגירת המנוי`;
       } else {
         subEl.innerHTML = `
           תקופת השימור החינמי של הנתונים הסתיימה.<br>
           בחר תוכנית עכשיו כדי <strong>לשחזר גישה מלאה</strong> ללידים, לנכסים ולמשימות שלך:
         `;
-        noteEl.innerHTML = `⏰ פנה לתמיכה אם אינך רואה את הנתונים שלך לאחר ההצטרפות · ביטול בכל עת`;
+        noteEl.innerHTML = this.PAYMENTS_LIVE
+          ? `⏰ פנה לתמיכה אם אינך רואה את הנתונים שלך לאחר ההצטרפות · ביטול בכל עת`
+          : `🚀 מערכת התשלומים נפתחת בקרוב — בחר חבילה ונחזור אליך תוך 24 שעות לסגירת המנוי`;
       }
     }
   },
@@ -6028,7 +6032,7 @@ const Billing = {
         </p>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <button class="btn btn-primary" onclick="Billing.openCheckout('basic');document.getElementById('modal-billing-reminder').remove();" style="padding:14px;">
-            הוסף פרטי תשלום — מ-₪249/חודש
+            הוסף פרטי תשלום — מ-₪149/חודש
           </button>
           <button class="btn btn-ghost" onclick="document.getElementById('modal-billing-reminder').remove();" style="font-size:13px;">
             תזכיר לי מאוחר יותר
@@ -6040,15 +6044,37 @@ const Billing = {
     localStorage.setItem(key, '1');
   },
   openCheckout(planId = 'pro') {
-    const url = this.CHECKOUT_URLS[planId];
-    if (!url || url.includes('REPLACE')) {
-      toast('🔧 הגדר קישור Stripe ב-Billing.CHECKOUT_URLS', 'error');
+    if (!this.PAYMENTS_LIVE) {
+      // שלב ניסיון — שמירת עניין + התראה לאדמין
+      const plan = this.PLANS.find(p => p.id === planId);
+      localStorage.setItem('liders_upgrade_interest', JSON.stringify({
+        plan: planId, ts: Date.now(), email: State.agent?.email || ''
+      }));
+      fetch(this._UPGRADE_WEBHOOK, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          type: 'upgrade_request',
+          plan: planId,
+          plan_name: plan?.name || planId,
+          plan_price: plan?.priceLabel || '',
+          tenant_name: State.tenant?.name || '',
+          email: State.agent?.email || '',
+          tenant_id: State.tenant?.id || '',
+        }),
+      }).catch(() => {});
+      toast('📬 קיבלנו! ניצור איתך קשר תוך 24 שעות לסגירת המנוי 🙂', 'success');
+      document.getElementById('annual-upsell-modal')?.classList.remove('show');
+      document.getElementById('screen-paywall')?.classList.add('hidden');
+      document.getElementById('app-shell')?.classList.remove('hidden');
+      if (App?._cur) App.go(App._cur);
       return;
     }
-    if (this._isTestMode()) {
-      toast('⚠️ Stripe במצב בדיקה — לא תחויב כסף אמיתי', '');
+    const url = this.CHECKOUT_URLS[planId];
+    if (!url || url.includes('REPLACE')) {
+      toast('🔧 הגדר קישור תשלום ב-Billing.CHECKOUT_URLS', 'error');
+      return;
     }
-    // Pass tenant_id so Stripe webhook can identify the paying tenant
     const tenantId = State.tenant?.id || DB.tenantId || '';
     const email    = State.agent?.email || '';
     const fullUrl  = url
@@ -6058,8 +6084,8 @@ const Billing = {
     window.open(fullUrl, '_blank', 'noopener,noreferrer');
   },
   openPortal() {
-    if (this.PORTAL_URL.includes('REPLACE')) {
-      toast('🔧 הגדר Customer Portal URL ב-Billing.PORTAL_URL', 'error');
+    if (!this.PAYMENTS_LIVE || this.PORTAL_URL.includes('REPLACE')) {
+      toast('ניהול מנוי יהיה זמין בקרוב', '');
       return;
     }
     window.open(this.PORTAL_URL, '_blank', 'noopener,noreferrer');
@@ -6085,7 +6111,7 @@ const Billing = {
         </div>
         <button class="btn ${plan.featured ? 'btn-primary' : 'btn-ghost'} w-full"
                 onclick="Billing.openCheckout('${plan.id}')">
-          התחל עם ${plan.name}
+          ${this.PAYMENTS_LIVE ? 'התחל עם ' + plan.name : '📬 שמרו לי מקום — ' + plan.name}
         </button>
       </div>
     `).join('');
@@ -9108,9 +9134,9 @@ const AnnualUpsell = {
         title: 'רוצה לסגור יותר עסקאות עוד השנה?',
         body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">CRM לבד זה כלי. CRM + שיווק AI זו <strong>מכונת צמיחה</strong>. פייפליין מסודר + תוכן שיווקי שנכתב תוך שניות + פולואפ אוטומטי — זה מה שמבדיל בין איש מכירות ממוצע לאחד שסוגר עסקאות בסדרה.</p>
           <div class="aum-saving-card">
-            <div class="aum-saving-row"><span>CRM + שיווק AI — בנפרד</span><span>₪349/חודש</span></div>
-            <div class="aum-saving-row"><span>חבילה שנתית כוללת — הכל ביחד</span><span class="aum-annual-row">₪207/חודש</span></div>
-            <div class="aum-saving-highlight">חיסכון של ₪1,700 בשנה — הכל כלול 🔥</div>
+            <div class="aum-saving-row"><span>CRM + שיווק AI — בנפרד</span><span>₪249/חודש</span></div>
+            <div class="aum-saving-row"><span>חבילה שנתית כוללת — הכל ביחד</span><span class="aum-annual-row">₪124/חודש</span></div>
+            <div class="aum-saving-highlight">חיסכון של ₪1,500 בשנה — הכל כלול 🔥</div>
           </div>`,
         cta:   'כן! שמרו לי מקום בחבילה השנתית 📬',
       },
@@ -9133,9 +9159,9 @@ const AnnualUpsell = {
         title: 'המתחרים שלך כבר עובדים עם AI — האם גם אתה?',
         body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">כלי שיווק AI כותבים פוסטים, מנסחים הצעות מחיר, ומייצרים תוכן תוך שניות. מי שמשתמש בהם — מגיע ללקוחות מהר יותר ונשמע מקצועי יותר. החבילה השנתית שלנו כוללת <strong>הכל ביחד</strong>: CRM + שיווק AI — מחיר אחד, נעול שנה שלמה.</p>
           <div class="aum-saving-card">
-            <div class="aum-saving-row"><span>CRM + שיווק AI — בנפרד</span><span>₪349/חודש</span></div>
-            <div class="aum-saving-row"><span>חבילה שנתית כוללת</span><span class="aum-annual-row">₪207/חודש</span></div>
-            <div class="aum-saving-highlight">חיסכון ₪1,700 בשנה — הכל כלול, מחיר נעול 🎯</div>
+            <div class="aum-saving-row"><span>CRM + שיווק AI — בנפרד</span><span>₪249/חודש</span></div>
+            <div class="aum-saving-row"><span>חבילה שנתית כוללת</span><span class="aum-annual-row">₪124/חודש</span></div>
+            <div class="aum-saving-highlight">חיסכון ₪1,500 בשנה — הכל כלול, מחיר נעול 🎯</div>
           </div>`,
         cta:   'רוצה את היתרון הזה — עדכנו אותי 📬',
       },
@@ -9144,9 +9170,9 @@ const AnnualUpsell = {
         title: 'מי שמתמיד — מנצח. תמיד.',
         body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">פחות מ-₪7 ביום. פחות מכוס קפה. יותר מכל כלי עסקי אחר שיש לך. החבילה השנתית Pro כוללת CRM מלא + שיווק AI ללא הגבלה — ומחיר שנעול לשנה שלמה, בלי הפתעות.</p>
           <div class="aum-saving-card">
-            <div class="aum-saving-row"><span>Pro + שיווק AI — בנפרד</span><span>₪549/חודש</span></div>
-            <div class="aum-saving-row"><span>Pro שנתי כולל — הכל ביחד</span><span class="aum-annual-row">₪374/חודש</span></div>
-            <div class="aum-saving-highlight">חיסכון ₪2,100 בשנה — מחיר שנעול 12 חודש 🏆</div>
+            <div class="aum-saving-row"><span>Pro + שיווק AI — בנפרד</span><span>₪349/חודש</span></div>
+            <div class="aum-saving-row"><span>Pro שנתי כולל — הכל ביחד</span><span class="aum-annual-row">₪207/חודש</span></div>
+            <div class="aum-saving-highlight">חיסכון ₪1,700 בשנה — מחיר שנעול 12 חודש 🏆</div>
           </div>`,
         cta:   'נעלו לי את המחיר — Pro שנתי 📬',
       },
@@ -9155,10 +9181,10 @@ const AnnualUpsell = {
         title: 'מנוי שנתי — בקרוב',
         body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">אנחנו בונים את מסלול המנוי השנתי עם כלי שיווק AI כלולים. כשיהיה מוכן — תקבל הודעה ראשון.</p>
           <div class="aum-saving-card">
-            <div class="aum-saving-row"><span>Solo שנתי + שיווק AI</span><span class="aum-annual-row">₪207/חודש</span></div>
-            <div class="aum-saving-row"><span>Pro שנתי + שיווק AI</span><span class="aum-annual-row">₪374/חודש</span></div>
-            <div class="aum-saving-row"><span>סוכנות שנתי + שיווק AI</span><span class="aum-annual-row">₪541/חודש</span></div>
-            <div class="aum-saving-highlight">חיסכון של עד 20% + תוספת שיווק AI בחינם 🎁</div>
+            <div class="aum-saving-row"><span>Solo שנתי + שיווק AI</span><span class="aum-annual-row">₪124/חודש</span></div>
+            <div class="aum-saving-row"><span>Pro שנתי + שיווק AI</span><span class="aum-annual-row">₪207/חודש</span></div>
+            <div class="aum-saving-row"><span>סוכנות שנתי + שיווק AI</span><span class="aum-annual-row">₪332/חודש</span></div>
+            <div class="aum-saving-highlight">חיסכון של עד 17% + תוספת שיווק AI בחינם 🎁</div>
           </div>`,
         cta:   'עדכנו אותי כשזה יוצא 📬',
       },
