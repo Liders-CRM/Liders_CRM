@@ -615,34 +615,198 @@
        LOGIN SCREEN
     ═══════════════════════════════════════ */
     #screen-login {
-      min-height: 100dvh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(145deg, var(--navy-800) 0%, var(--navy-600) 60%, var(--navy-400) 100%);
-      padding: 20px;
+      min-height: 100dvh; display: flex; flex-direction: column; align-items: center;
+      background: linear-gradient(160deg, #060e1e 0%, #0a1628 30%, #0f2344 70%, #1a3a5c 100%);
+      padding: 0 0 36px; overflow-y: auto; overflow-x: hidden; position: relative;
     }
     .login-card {
-      width: 100%; max-width: 380px; background: var(--surface);
-      border-radius: var(--radius-xl); padding: 36px 32px;
-      box-shadow: var(--shadow-xl);
+      width: calc(100% - 32px); max-width: 390px;
+      background: rgba(255,255,255,.97);
+      border-radius: 24px; padding: 24px 22px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.08);
+      position: relative; z-index: 1;
+      animation: lh-enter .7s .45s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .login-logo {
-      text-align: center; margin-bottom: 24px;
-    }
-    .login-logo-text {
-      font-size: 48px; font-weight: 900; color: var(--navy-700);
-      letter-spacing: -2px; line-height: 1;
-    }
-    .login-logo-text span { color: var(--gold-500); }
-    .login-tagline {
-      font-size: 18px; font-weight: 800; color: var(--navy-600);
-      margin-top: 8px; letter-spacing: -0.3px;
-    }
-    .login-sub {
-      font-size: 12px; color: var(--gray-400); margin-top: 6px;
-      display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
-    }
-    .login-sub span { display: flex; align-items: center; gap: 3px; }
     .login-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: var(--gray-900); }
     .login-form { display: flex; flex-direction: column; gap: 14px; }
+
+    /* ─── HERO ─── */
+    .login-hero {
+      width: 100%; max-width: 440px; padding: 44px 16px 4px;
+      text-align: center; position: relative; z-index: 1;
+    }
+    .lh-logo {
+      font-size: 66px; font-weight: 900; color: #fff;
+      letter-spacing: -5px; line-height: .9;
+      animation: lh-enter .7s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .lh-logo em { color: #F59E0B; font-style: normal; }
+    @keyframes lh-enter {
+      from { opacity: 0; transform: translateY(24px) scale(.88); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .lh-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.28);
+      color: #F59E0B; font-size: 11px; font-weight: 800;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 99px; margin: 10px 0 4px;
+      animation: lh-enter .7s .12s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .lh-tagline {
+      font-size: 16px; font-weight: 700; color: rgba(255,255,255,.75);
+      margin: 0 0 6px; line-height: 1.4;
+      animation: lh-enter .7s .22s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    /* ─── CAMERA ANIMATION SCENE ─── */
+    .login-scene {
+      position: relative; height: 130px; margin: 4px auto 16px;
+      overflow: hidden; direction: ltr;
+      animation: lh-enter .7s .32s both;
+    }
+    /* camera emoji */
+    .lscene-camera {
+      position: absolute; top: 50%; left: 50%;
+      font-size: 54px; line-height: 1;
+      filter: drop-shadow(0 0 16px rgba(59,130,246,.55));
+      animation: cam-seq 7s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes cam-seq {
+      0%   { opacity:0; transform:translate(-120px,-50%) scale(.6) rotate(-15deg); }
+      10%  { opacity:1; transform:translate(-55px,-50%) scale(1) rotate(0); }
+      42%  { transform:translate(-55px,calc(-50% - 4px)) rotate(-3deg); }
+      46%  { transform:translate(-55px,calc(-50% + 3px)) rotate(2deg); }
+      50%  { transform:translate(-55px,-50%) rotate(0) scale(.86); } /* shutter */
+      54%  { transform:translate(-55px,-50%) rotate(0) scale(1.04); }
+      57%  { transform:translate(-55px,-50%) rotate(0) scale(1); }
+      70%  { opacity:1; }
+      76%  { opacity:0; transform:translate(-55px,-50%) scale(1.1); }
+      100% { opacity:0; transform:translate(-120px,-50%) scale(.6) rotate(-15deg); }
+    }
+    /* flash burst */
+    .lscene-flash {
+      position: absolute; top: 50%; left: calc(50% - 55px);
+      width: 180px; height: 180px; border-radius: 50%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(255,255,255,.7) 0%, rgba(255,255,255,.1) 40%, transparent 70%);
+      pointer-events: none; z-index: 10;
+      animation: flash-seq 7s infinite;
+    }
+    @keyframes flash-seq {
+      0%,48%,56%,100% { opacity:0; }
+      52%             { opacity:1; }
+    }
+    /* polaroid photo */
+    .lscene-photo {
+      position: absolute; top: 50%; left: calc(50% + 10px);
+      width: 86px; transform: translateY(-50%);
+      background: #fff; border-radius: 7px;
+      padding: 6px 6px 18px;
+      box-shadow: 0 6px 28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.1);
+      animation: photo-seq 7s infinite;
+    }
+    @keyframes photo-seq {
+      0%,54%  { opacity:0; transform:translateY(-50%) translateX(50px) rotate(10deg) scale(.5); }
+      64%     { opacity:1; transform:translateY(-50%) translateX(0) rotate(2deg) scale(1.04); }
+      68%     { transform:translateY(-50%) translateX(0) rotate(1.5deg) scale(1); }
+      86%     { opacity:1; }
+      94%     { opacity:0; transform:translateY(-50%) translateX(-18px) rotate(-3deg) scale(.88); }
+      100%    { opacity:0; transform:translateY(-50%) translateX(50px) rotate(10deg) scale(.5); }
+    }
+    .lscene-photo-img {
+      font-size: 34px; text-align:center; display:block; line-height:1;
+      background: linear-gradient(135deg,#bfdbfe,#dbeafe);
+      border-radius: 4px; padding: 5px 0;
+      animation: img-dev 7s infinite;
+    }
+    @keyframes img-dev {
+      0%,55%  { filter:brightness(12) saturate(0); }
+      70%     { filter:brightness(1) saturate(1); }
+      100%    { filter:brightness(12) saturate(0); }
+    }
+    .lscene-photo-price {
+      font-size: 8px; font-weight: 800; color: #0F1F3D;
+      text-align: center; margin-top: 3px; line-height: 1.5;
+    }
+    .lscene-photo-stamp {
+      position: absolute; top: 5px; right: 4px;
+      background: #16a34a; color: #fff; font-size: 8px; font-weight: 900;
+      padding: 2px 5px; border-radius: 4px; border: 1.5px solid #15803d;
+      white-space: nowrap;
+      animation: stamp-seq 7s infinite;
+    }
+    @keyframes stamp-seq {
+      0%,65%  { opacity:0; transform:scale(3) rotate(18deg); }
+      73%     { opacity:1; transform:scale(.95) rotate(-7deg); }
+      77%     { transform:scale(1) rotate(-6deg); }
+      86%     { opacity:1; }
+      94%     { opacity:0; }
+      100%    { opacity:0; transform:scale(3) rotate(18deg); }
+    }
+    /* cursor blink line on photo (camera focus lines) */
+    .lscene-focus {
+      position: absolute; top:50%; left:calc(50% - 55px);
+      transform:translate(-50%,-50%);
+      width: 64px; height: 64px;
+      border: 2px solid rgba(255,255,255,.0);
+      border-radius: 4px; pointer-events: none;
+      animation: focus-seq 7s infinite;
+    }
+    @keyframes focus-seq {
+      0%,10%,58%,100% { opacity:0; border-color:rgba(255,255,255,0); }
+      15%             { opacity:1; border-color:rgba(255,255,255,.7); }
+      42%             { opacity:1; border-color:rgba(255,255,255,.4); }
+      50%             { opacity:0; }
+    }
+
+    /* ─── BACKGROUND ORBS ─── */
+    .lbg-orb {
+      position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
+      animation: orb-drift ease-in-out infinite;
+    }
+    @keyframes orb-drift {
+      0%,100% { transform: scale(1) translate(0,0); }
+      33%     { transform: scale(1.08) translate(8px,-12px); }
+      66%     { transform: scale(.95) translate(-6px,8px); }
+    }
+    /* ─── FLOATING DEAL CARDS ─── */
+    .lbg-deal {
+      position: absolute; pointer-events: none; z-index: 0;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      backdrop-filter: blur(4px);
+      border-radius: 12px; padding: 9px 13px;
+      color: rgba(255,255,255,.55); font-size: 11px; font-weight: 700;
+      line-height: 1.5; white-space: nowrap;
+      animation: deal-bob ease-in-out infinite;
+    }
+    .lbg-deal span { color: #4ade80; font-size: 10px; }
+    @keyframes deal-bob {
+      0%,100% { transform: translateY(0) rotate(var(--r,0deg)); }
+      50%     { transform: translateY(-10px) rotate(var(--r,0deg)); }
+    }
+
+    /* ─── FEATURE PILLS (below card) ─── */
+    .login-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      padding: 14px 16px 0; position: relative; z-index: 1;
+      animation: lh-enter .7s .58s both;
+    }
+    .login-pill {
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.72); font-size: 12px; font-weight: 700;
+      padding: 5px 13px; border-radius: 99px;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    .login-divider {
+      display: flex; align-items: center; gap: 10px; color: var(--gray-400);
+      font-size: 12px; margin: 6px 0;
+    }
+    .login-divider::before, .login-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
     .login-divider {
       display: flex; align-items: center; gap: 10px; color: var(--gray-400);
       font-size: 12px; margin: 6px 0;
@@ -909,17 +1073,9 @@
     ═══════════════════════════════════════ */
     #screen-login::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 30% 20%, rgba(196,154,42,.15) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 80%, rgba(75,122,181,.2) 0%, transparent 55%);
-      pointer-events: none;
-    }
-    .login-card { animation: slideUp 0.5s cubic-bezier(.16,1,.3,1) both; }
-    @keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-    .login-logo-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--gold-100); color: var(--gold-600);
-      font-size: 11px; font-weight: 700; padding: 4px 10px;
-      border-radius: 99px; margin-bottom: 12px; letter-spacing: 0.5px;
+      background: radial-gradient(ellipse 55% 35% at 85% 15%, rgba(37,99,235,.14) 0%, transparent 70%),
+                  radial-gradient(ellipse 40% 30% at 15% 80%, rgba(245,158,11,.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
     }
 
     /* ═══════════════════════════════════════
@@ -2759,39 +2915,52 @@
      LOGIN SCREEN
 ═══════════════════════════════════════ -->
 <div id="screen-login">
+
+  <!-- Background atmosphere orbs -->
+  <div class="lbg-orb" style="width:260px;height:260px;top:-60px;right:-80px;background:radial-gradient(circle,rgba(37,99,235,.1),transparent 70%);animation-duration:11s;"></div>
+  <div class="lbg-orb" style="width:200px;height:200px;top:38%;left:-90px;background:radial-gradient(circle,rgba(245,158,11,.07),transparent 70%);animation-duration:14s;animation-delay:-5s;"></div>
+  <div class="lbg-orb" style="width:180px;height:180px;bottom:15%;right:-60px;background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);animation-duration:9s;animation-delay:-2s;"></div>
+
+  <!-- Floating deal cards -->
+  <div class="lbg-deal" style="top:130px;right:10px;--r:-3deg;animation-duration:6.5s;">
+    🏠 פנטהאוז · ₪5.5M<br><span>עסקה נסגרה ✓</span>
+  </div>
+  <div class="lbg-deal" style="top:195px;left:6px;--r:2deg;animation-duration:8s;animation-delay:-3.5s;">
+    📍 4 חדרים · תל אביב<br><span>הצעה נשלחה →</span>
+  </div>
+  <div class="lbg-deal" style="bottom:220px;left:5px;--r:-1deg;animation-duration:7s;animation-delay:-1.5s;">
+    🏢 משרדים · ₪8.2M<br><span>ליד חדש 🔥</span>
+  </div>
+
+  <!-- ─── HERO ─── -->
+  <div class="login-hero">
+    <div class="lh-logo">LIDERS<em>.</em></div>
+    <div class="lh-badge">📸 נדל"ן · REAL ESTATE</div>
+    <div class="lh-tagline">הפלטפורמה שהופכת לידים לעסקאות</div>
+
+    <!-- Camera animation — photographer captures a property → deal closes -->
+    <div class="login-scene" aria-hidden="true">
+      <div class="lscene-flash"></div>
+      <div class="lscene-focus"></div>
+      <div class="lscene-camera">📸</div>
+      <div class="lscene-photo">
+        <span class="lscene-photo-img">🏠</span>
+        <div class="lscene-photo-price">₪2.8M · 4 חד'<br>תל אביב</div>
+        <div class="lscene-photo-stamp">נסגר ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LOGIN CARD ─── -->
   <div class="login-card">
     <div id="ref-welcome-banner" style="display:none;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:16px;text-align:center;font-size:13px;font-weight:700;line-height:1.6;">
       🎁 הגעת עם קוד המלצה של חבר!<br>
       <span style="font-weight:400;opacity:.9;">+100 XP בונוס ברוכים הבאים + 20% הנחה על החודש הראשון</span>
     </div>
-    <div class="login-logo">
-      <div class="login-logo-text">Liders<span>.</span></div>
-      <div class="login-tagline">הפלטפורמה שהופכת לידים לעסקאות</div>
-    </div>
-    <div class="login-features">
-      <div class="login-feature-tile lft-mortgage">
-        <div class="lft-icon">🧮</div>
-        <div class="lft-title">מחשבון משכנתא</div>
-        <div class="lft-sub">ריבית, החזר וכדאיות — בשניות</div>
+    <div style="text-align:center;margin-bottom:18px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;font-size:12px;font-weight:800;padding:6px 14px;border-radius:99px;">
+        🎁 30 יום ניסיון בחינם — ללא כרטיס אשראי
       </div>
-      <div class="login-feature-tile lft-ai">
-        <div class="lft-icon">🎯</div>
-        <div class="lft-title">הצעות שיווק AI</div>
-        <div class="lft-sub">כותב לך פוסטים ומסרים בלחיצה</div>
-      </div>
-      <div class="login-feature-tile lft-agent">
-        <div class="lft-icon">🤖</div>
-        <div class="lft-title">סוכן AI צמוד</div>
-        <div class="lft-sub">מנתח לידים ומציע את הצעד הבא</div>
-      </div>
-      <div class="login-feature-tile lft-prizes">
-        <div class="lft-icon">🏆</div>
-        <div class="lft-title">פרסים יומיים</div>
-        <div class="lft-sub">XP ומתנות על שימוש יומי במערכת</div>
-      </div>
-    </div>
-    <div class="login-trial-badge" style="margin-bottom:4px;">
-      🎁 30 יום ניסיון בחינם — ללא כרטיס אשראי
     </div>
     <div class="login-form">
       <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation; padding:13px; font-size:15px;">
@@ -2837,6 +3006,14 @@
         בהרשמה אתה מסכים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
       </p>
     </div>
+  </div>
+
+  <!-- Feature pills -->
+  <div class="login-pills">
+    <span class="login-pill">🤖 AI שיווקי</span>
+    <span class="login-pill">📊 פייפליין CRM</span>
+    <span class="login-pill">🧮 מחשבון משכנתא</span>
+    <span class="login-pill">🏆 XP ופרסים</span>
   </div>
 </div>
 
