@@ -6333,6 +6333,9 @@ const Billing = {
   },
   PORTAL_URL: 'REPLACE_WITH_GROW_PORTAL_URL',
   _isTestMode() { return !this.PAYMENTS_LIVE; },
+  isActiveTrial() {
+    return State.tenant?.plan === 'trial' && !this.isExpired();
+  },
   // Make.com webhook — שולח התראה לאדמין כשמישהו מביע עניין בשדרוג
   _UPGRADE_WEBHOOK: 'https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i',
 
@@ -6415,8 +6418,8 @@ const Billing = {
         <div class="trial-bar-fill" style="width:${pct}%"></div>
       </div>
       <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 30</span>
-      <button onclick="Billing.showPaywall()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-        שדרג →
+      <button onclick="Billing.showTrialNoCreditCardModal()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+        פרטים →
       </button>
     `;
     banner.classList.remove('hidden');
@@ -6443,8 +6446,8 @@ const Billing = {
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <span style="color:rgba(255,255,255,0.7);font-size:12px;line-height:1.4;">${urgMsg}</span>
-          <button onclick="Billing.showPaywall()" style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;margin-right:10px;">
-            שדרג
+          <button onclick="Billing.showTrialNoCreditCardModal()" style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;margin-right:10px;">
+            פרטים
           </button>
         </div>
       </div>
@@ -6463,16 +6466,18 @@ const Billing = {
       <div class="modal" style="max-width:380px;text-align:center;border-radius:var(--radius-xl);">
         <div style="font-size:48px;margin-bottom:12px;">⏰</div>
         <h2 style="font-size:1.3rem;margin-bottom:8px;">נותרו ${days} ימים בניסיון החינמי</h2>
+        <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:8px;line-height:1.6;">
+          כל הנתונים שלך — הלידים, הנכסים, המשימות — <strong>בטוחים ושמורים</strong>.
+        </p>
         <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:20px;line-height:1.6;">
-          כל הנתונים שלך — הלידים, הנכסים, המשימות — <strong>בטוחים ושמורים</strong>.<br>
-          הוסף פרטי תשלום עכשיו ותמשיך לעבוד בלי הפרעה.
+          לפני שהניסיון מסתיים נשלח לך <strong>תזכורת עם כל פרטי ההצטרפות</strong> — אין צורך לעשות שום דבר עכשיו 😊
         </p>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <button class="btn btn-primary" onclick="Billing.openCheckout('basic');document.getElementById('modal-billing-reminder').remove();" style="padding:14px;">
-            הוסף פרטי תשלום — מ-₪179/חודש
+          <button class="btn btn-primary" onclick="document.getElementById('modal-billing-reminder').remove();" style="padding:14px;">
+            מגניב, תודה! 👍
           </button>
           <button class="btn btn-ghost" onclick="document.getElementById('modal-billing-reminder').remove();" style="font-size:13px;">
-            תזכיר לי מאוחר יותר
+            סגור
           </button>
         </div>
       </div>
@@ -6480,7 +6485,38 @@ const Billing = {
     document.body.appendChild(modal);
     localStorage.setItem(key, '1');
   },
+  showTrialNoCreditCardModal() {
+    const days = this.daysLeft();
+    const existing = document.getElementById('modal-trial-no-cc');
+    if (existing) existing.remove();
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'modal-trial-no-cc';
+    modal.style.cssText = 'z-index:5000;';
+    modal.innerHTML = `
+      <div class="modal" style="max-width:360px;text-align:center;border-radius:var(--radius-xl);padding:32px 24px;">
+        <div style="font-size:52px;margin-bottom:14px;">🎁</div>
+        <h2 style="font-size:1.25rem;margin-bottom:10px;color:var(--navy);">אין צורך באשראי עכשיו</h2>
+        <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:10px;line-height:1.7;">
+          אתה בשלב הניסיון — <strong>המשך להשתמש בחינם</strong> עוד ${days} ימים בלי שום התחייבות.
+        </p>
+        <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:24px;line-height:1.7;">
+          בשבוע האחרון של הניסיון נשלח לך תזכורת עם פרטי ההצטרפות — <strong>אין צורך לעשות שום דבר עכשיו</strong> 😊
+        </p>
+        <button class="btn btn-primary w-full" onclick="document.getElementById('modal-trial-no-cc').remove();" style="padding:14px;font-size:15px;">
+          הבנתי, תודה! 👍
+        </button>
+      </div>
+    `;
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    document.body.appendChild(modal);
+  },
+
   openCheckout(planId = 'pro') {
+    if (this.isActiveTrial()) {
+      this.showTrialNoCreditCardModal();
+      return;
+    }
     if (!this.PAYMENTS_LIVE) {
       // שלב ניסיון — שמירת עניין + התראה לאדמין
       const plan = this.PLANS.find(p => p.id === planId);
