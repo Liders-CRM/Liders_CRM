@@ -7225,6 +7225,13 @@ function toast(msg, type='') {
    AI MODULE — Phase 3
 ═══════════════════════════════════════════ */
 const AI = {
+  // Returns null if text contains Arabic characters (model hallucination guard)
+  _safeHebrew(text) {
+    if (!text || typeof text !== 'string') return null;
+    if (/[؀-ۿ]/.test(text)) return null; // Arabic detected — reject
+    return text.trim() || null;
+  },
+
   async call(messages, maxTokens = 400, opts = {}) {
     if (State.isDemo) throw Object.assign(new Error('demo_locked'), { isDemo: true });
     if (!AiLimits.hasAiAccess()) throw new Error('⏰ תקופת הניסיון הסתיימה — שדרג לתוסף ה-AI (₪100/חודש)');
@@ -7235,14 +7242,14 @@ const AI = {
         ? `הגעת למגבלת כלי השיווק — ${lim} שימושים/יום בחבילה שלך`
         : `הגעת למגבלת ה-AI היומית — ${lim} שימושים/יום בחבילה שלך`);
     }
-    const { data, error } = await sbClient.functions.invoke('ai-proxy', {
-      body: { messages, max_tokens: maxTokens },
-    });
+    const body = { messages, max_tokens: maxTokens, model: 'claude-sonnet-4-6' };
+    if (opts.system) body.system = opts.system;
+    const { data, error } = await sbClient.functions.invoke('ai-proxy', { body });
     if (error) throw new Error(error.message || 'שגיאת שירות AI');
     if (data?.error) throw new Error(data.error?.message || data.error || 'שגיאת Claude API');
     AiLimits.consume(type);
     if (type === 'general') Gamify.event('use_ai');
-    return data?.content?.[0]?.text || null;
+    return this._safeHebrew(data?.content?.[0]?.text);
   },
 
   _clientLangInstruction() {
@@ -7584,11 +7591,11 @@ const AiLimits = {
   // ₪20 pro   ≈ $5.48/mo → API budget $1.92 → comfortable headroom.
   // ₪30 premium ≈ $8.22/mo → API budget $2.88 → ~1,920 calls/mo theoretical max.
   PLANS: {
-    trial:    { general: 2,  marketing: 3,  quicklog: 3,  support: 2,  motivation: 3  },
-    basic:    { general: 5,  marketing: 8,  quicklog: 15, support: 8,  motivation: 5  },
-    pro:      { general: 10, marketing: 15, quicklog: 30, support: 15, motivation: 5  },
-    premium:  { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 5  },
-    lifetime: { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 5  },
+    trial:    { general: 2,  marketing: 3,  quicklog: 3,  support: 2,  motivation: 2  },
+    basic:    { general: 5,  marketing: 8,  quicklog: 15, support: 8,  motivation: 3  },
+    pro:      { general: 10, marketing: 15, quicklog: 30, support: 15, motivation: 3  },
+    premium:  { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 3  },
+    lifetime: { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 3  },
     internal: { general: 999, marketing: 999, quicklog: 999, support: 999, motivation: 999 },
   },
   _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
@@ -13927,11 +13934,13 @@ const Support = {
         try {
           const { data: fn } = await sbClient.functions.invoke('ai-proxy', {
             body: {
-              system: 'אתה נציג תמיכה טכנית של Liders CRM — מערכת CRM לסוכני נדל"ן ישראלים. ענה בעברית בצורה קצרה, ברורה וידידותית (עד 120 מילים). אם אינך יכול לפתור, כתוב שהאדמין יחזור בהקדם.',
+              model: 'claude-sonnet-4-6',
+              system: 'אתה נציג תמיכה טכנית מקצועי של Liders CRM — מערכת CRM לסוכני נדל"ן ישראלים. חובה: כתוב בעברית בלבד — אסור להשתמש בערבית, אנגלית או כל שפה אחרת. ענה בצורה קצרה, ברורה וידידותית (עד 120 מילים). אם אינך יכול לפתור, כתוב שהאדמין יחזור בהקדם.',
               messages: [{ role: 'user', content: msg }]
             }
           });
-          aiText = fn?.content || '';
+          const rawAi = fn?.content?.[0]?.text || '';
+          aiText = (/[؀-ۿ]/.test(rawAi)) ? '' : rawAi;
           if (aiText) AiLimits.consume('support');
         } catch(_) {}
       }
@@ -14018,7 +14027,8 @@ const QuickLog = {
     try {
       const { data: fn, error: fnErr } = await sbClient.functions.invoke('ai-proxy', {
         body: {
-          system: `אתה עוזר CRM לסוכן נדל"ן ישראלי. נתח את הרשומה והחזר JSON בלבד — ללא markdown, ללא הסבר, רק JSON תקין.
+          model: 'claude-sonnet-4-6',
+          system: `אתה עוזר CRM לסוכן נדל"ן ישראלי. חובה: כתוב ערכי הטקסט בעברית בלבד — אסור להשתמש בערבית, אנגלית או כל שפה אחרת. נתח את הרשומה והחזר JSON בלבד — ללא markdown, ללא הסבר, רק JSON תקין.
 
 תאריך היום: ${new Date().toISOString().slice(0,10)}
 
@@ -14044,7 +14054,9 @@ const QuickLog = {
       });
       if (fnErr) throw fnErr;
 
-      const raw = (fn?.content || '').replace(/```json?\n?/g,'').replace(/```/g,'').trim();
+      const rawJson = (fn?.content?.[0]?.text || fn?.content || '');
+      if (/[؀-ۿ]/.test(rawJson)) throw new Error('תגובת AI לא תקינה — נסה שוב');
+      const raw = rawJson.replace(/```json?\n?/g,'').replace(/```/g,'').trim();
       this._parsed = JSON.parse(raw);
 
       const name = (this._parsed.lead_name || '').toLowerCase().trim();
@@ -14219,8 +14231,10 @@ const TutorialVideo = {
    MOTIVATION AGENT MODULE
 ═══════════════════════════════════════════ */
 const MotivationAgent = {
-  _COOLDOWN_MS: 3 * 60 * 60 * 1000, // 3 hours between clicks
-  _STORAGE_KEY: 'liders_motive_last',
+  // Progressive cooldown: each use today adds more wait time
+  // Use 1→ wait 1.5h | Use 2→ wait 2h | Use 3→ wait 2.5h | Use 4+→ wait 3h
+  _COOLDOWNS_MIN: [90, 120, 150, 180],
+  _STORAGE_KEY: 'liders_motive_v2',
   _countdownInterval: null,
   _quotes: [
     'כל ליד הוא הזדמנות. כל שיחה היא צעד קדימה. המשך כך! 💪',
@@ -14230,9 +14244,24 @@ const MotivationAgent = {
     'הצלחה היא הסכום של מאמצים קטנים שחוזרים יום אחרי יום.',
   ],
 
-  _getLastTime() { return parseInt(localStorage.getItem(this._STORAGE_KEY) || '0'); },
-  _setLastTime() { localStorage.setItem(this._STORAGE_KEY, Date.now().toString()); },
-  _remaining() { return Math.max(0, this._COOLDOWN_MS - (Date.now() - this._getLastTime())); },
+  _getState() {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      const d = JSON.parse(localStorage.getItem(this._STORAGE_KEY) || '{}');
+      if (d.date !== today) return { date: today, uses: 0, lastTs: 0 };
+      return d;
+    } catch { return { date: today, uses: 0, lastTs: 0 }; }
+  },
+  _saveState(s) { localStorage.setItem(this._STORAGE_KEY, JSON.stringify(s)); },
+  _cooldownMs(useCount) {
+    const idx = Math.min(Math.max(useCount - 1, 0), this._COOLDOWNS_MIN.length - 1);
+    return this._COOLDOWNS_MIN[idx] * 60 * 1000;
+  },
+  _remaining() {
+    const { uses, lastTs } = this._getState();
+    if (!lastTs) return 0;
+    return Math.max(0, lastTs + this._cooldownMs(uses) - Date.now());
+  },
   _isCooling() { return this._remaining() > 0; },
 
   _fmtTime(ms) {
@@ -14245,11 +14274,22 @@ const MotivationAgent = {
   _updateUI() {
     const rem    = AiLimits.remaining('motivation');
     const isCool = this._isCooling();
+    const state  = this._getState();
     const usageEl    = document.getElementById('motivation-usage');
     const coolEl     = document.getElementById('motivation-cooldown');
     const btn        = document.getElementById('motivation-btn');
 
-    if (usageEl) usageEl.textContent = isCool ? '' : `${rem} מסרים נותרו היום`;
+    if (usageEl) {
+      if (isCool) {
+        usageEl.textContent = '';
+      } else if (rem === 0) {
+        usageEl.textContent = 'הגעת למגבלת היום — חזור מחר 🌅';
+      } else {
+        const nextWaitMin = this._COOLDOWNS_MIN[Math.min(state.uses, this._COOLDOWNS_MIN.length - 1)];
+        const waitStr = nextWaitMin >= 60 ? `${nextWaitMin/60} שעות` : `${nextWaitMin} דק'`;
+        usageEl.textContent = `${rem} מסרים נותרו · לאחר שימוש — ${waitStr} המתנה`;
+      }
+    }
     if (coolEl)  coolEl.classList.toggle('hidden', !isCool);
     if (btn)     btn.disabled = rem === 0 || isCool;
 
@@ -14302,7 +14342,7 @@ const MotivationAgent = {
       const { data: fn, error: fnErr } = await sbClient.functions.invoke('ai-proxy', {
         body: {
           model: 'claude-sonnet-4-6',
-          system: 'אתה מאמן מכירות ישראלי אנרגטי בשם "מוטי". ענה תמיד בעברית בלבד. אסור לכתוב בשפות אחרות. כתוב תמיד בגוף שני זכר.',
+          system: 'אתה מאמן מכירות ישראלי אנרגטי בשם "מוטי". חובה מוחלטת: כתוב בעברית בלבד — אסור להשתמש בערבית, אנגלית, לועזית או כל שפה אחרת. כתוב תמיד בגוף שני זכר.',
           messages: [{ role: 'user', content:
             `כתוב מסר מוטיבציה קצר, אישי ומדויק (2-3 משפטים בלבד) לסוכן נדל"ן בשם ${name}.
 נתוניו: רמה "${lv.name}" (${d.xp} XP), ${d.leadsAdded} לידים שנוספו, ${d.dealsClosed} עסקאות שנסגרו, ${d.streak || 0} ימים רצופים.
@@ -14311,9 +14351,14 @@ const MotivationAgent = {
         }
       });
       if (fnErr) throw fnErr;
-      const msg = fn?.content?.[0]?.text || fn?.content || null;
-      if (textEl) { textEl.textContent = (typeof msg === 'string' && msg.trim()) ? msg.trim() : this._fallback(); textEl.classList.remove('loading'); }
-      this._setLastTime();
+      const rawMsg = fn?.content?.[0]?.text || null;
+      const msg = (typeof rawMsg === 'string' && rawMsg.trim() && !/[؀-ۿ]/.test(rawMsg))
+        ? rawMsg.trim() : null;
+      if (textEl) { textEl.textContent = msg || this._fallback(); textEl.classList.remove('loading'); }
+      const s = this._getState();
+      s.uses = (s.uses || 0) + 1;
+      s.lastTs = Date.now();
+      this._saveState(s);
       AiLimits.consume('motivation');
       Gamify.event('use_ai');
     } catch(e) {
