@@ -5694,6 +5694,15 @@ function secureInput(text, maxLen = 2000) {
   return `<user_input>\n${t}\n</user_input>`;
 }
 
+// Masks phone number in list views — shows first 3 digits + last 2 only.
+// Full number is still visible in lead-detail view.
+function maskPhone(phone) {
+  if (!phone || typeof phone !== 'string') return '—';
+  const d = phone.replace(/\D/g, '');
+  if (d.length < 4) return phone;
+  return d.slice(0, 3) + '-***-' + d.slice(-2);
+}
+
 // Parses CSV/TSV text into {headers, rows} — handles quoted fields with
 // embedded commas/newlines/escaped quotes, strips a leading BOM, and
 // auto-detects the delimiter (comma vs semicolon — common in Hebrew
@@ -10025,6 +10034,8 @@ const App = {
     AppLock._updateLockBtn();
     AppLock.initListeners();
     AppLock.startTimer();
+    // Init privacy shield (blur-on-focus-loss for sensitive screens)
+    PrivacyShield.init();
   },
   _applyIndustryLabels() {
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -10144,6 +10155,7 @@ const App = {
       case 'email':       EmailAI.renderScreen(); break;
     }
     window.scrollTo(0, 0);
+    PrivacyShield.onScreenChange();
   },
   updateBadges() {
     const overdue = State.tasks.filter(t => !t.done && diffDays(t.due) < 0).length;
@@ -10694,7 +10706,7 @@ const Leads = {
         <div class="score-badge ${scoreClass(lead.score)}${scoreGlow}" style="width:40px;height:40px;font-size:13px;">${lead.score}</div>
         <div style="flex:1; min-width:0;">
           <div style="font-weight:700; font-size:15px;">${escapeHtml(lead.name)}</div>
-          <div style="font-size:12px; color:var(--gray-500);">${escapeHtml(lead.phone)} · ${escapeHtml(lead.desired_area||'—')}</div>
+          <div style="font-size:12px; color:var(--gray-500);">${escapeHtml(maskPhone(lead.phone))} · ${escapeHtml(lead.desired_area||'—')}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
           <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:${stage?.color+'22'};color:${stage?.color};">${escapeHtml(stage?.name||'—')}</span>
@@ -13958,6 +13970,7 @@ const Support = {
     if (this._busy) return;
     const msg = (document.getElementById('support-msg-input')?.value || '').trim();
     if (!msg) { toast('נא לכתוב הודעה', 'warning'); return; }
+    if (!InjectionGuard.check(msg, 'הודעת תמיכה')) return;
     this._busy = true;
     const btn  = document.getElementById('support-submit-btn');
     const aiEl = document.getElementById('support-ai-response');
@@ -14069,6 +14082,7 @@ const QuickLog = {
     }
     const text = (document.getElementById('ql-input')?.value || '').trim();
     if (text.length < 10) { toast('נא לכתוב לפחות משפט אחד על השיחה', 'warning'); return; }
+    if (!InjectionGuard.check(text, 'יומן מהיר')) return;
     this._setState('loading');
 
     try {
@@ -14648,6 +14662,195 @@ const WAConnect = {
   },
 };
 window.WAConnect = WAConnect;
+
+/* ═══════════════════════════════════════════
+   INJECTION GUARD — detects & blocks prompt-injection attempts
+   1st offence: aggressive warning modal
+   2nd offence: immediate account lock + Make.com report + forced logout
+═══════════════════════════════════════════ */
+const InjectionGuard = {
+  _KEY: 'liders_inj_v1',
+  _PATTERNS: [
+    /ignore\s+(?:all\s+)?(?:previous|prior)\s+instructions?/i,
+    /forget\s+(?:everything|all|previous|prior)/i,
+    /disregard\s+(?:all\s+)?(?:previous|prior|instructions?|above)/i,
+    /override\s+(?:your\s+)?(?:instructions?|system\s+prompt)/i,
+    /you\s+are\s+now\s+(?:a|an)\s+/i,
+    /(?:act|pretend|roleplay)\s+as\s+(?:a|an)?/i,
+    /\bDAN\b/,
+    /jailbreak/i,
+    /\bChatGPT\b/i,
+    /\bGPT-?[3-9]/i,
+    /\bGemini\b/i,
+    /\bCopilot\b/i,
+    /\bLLaMA\b/i,
+    /\[SYSTEM\]/i,
+    /\[INST\]/i,
+    /<system>/i,
+    /<\/system>/i,
+    /<\|im_start\|>/i,
+    /\beval\s*\(/i,
+    /import\s+os\b/i,
+    /\bexec\s*\(/i,
+    /subprocess\./i,
+    /__import__/i,
+    /reveal\s+(?:all|your|the)\s+(?:instructions?|prompt|system|secrets?)/i,
+    /<\/user_input>/i,
+    /\bprompt\s+injection\b/i,
+    /new\s+instructions?:/i,
+    /system\s+prompt:/i,
+    /\[new\s+task\]/i,
+  ],
+  _getCount() { try { return parseInt(localStorage.getItem(this._KEY) || '0', 10); } catch { return 0; } },
+  _incCount() { const n = this._getCount() + 1; localStorage.setItem(this._KEY, String(n)); return n; },
+
+  check(text, fieldLabel = 'קלט') {
+    if (!text || typeof text !== 'string') return true;
+    const hit = this._PATTERNS.find(p => p.test(text));
+    if (!hit) return true;
+
+    const count = this._incCount();
+    if (count === 1) { this._showWarning(fieldLabel); return false; }
+    this._lockAndKick(text);
+    return false;
+  },
+
+  _showWarning(fieldLabel) {
+    document.getElementById('inj-warn-modal')?.remove();
+    const m = document.createElement('div');
+    m.id = 'inj-warn-modal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);direction:rtl;';
+    m.innerHTML = `
+      <div style="background:linear-gradient(160deg,#1c0000,#450000);border:2px solid #ef4444;border-radius:20px;padding:36px 28px;max-width:360px;width:92%;text-align:center;box-shadow:0 0 80px rgba(239,68,68,0.5);">
+        <div style="font-size:60px;margin-bottom:10px;">🚨</div>
+        <div style="color:#fca5a5;font-size:21px;font-weight:900;margin-bottom:10px;">אזהרת אבטחה!</div>
+        <div style="color:#fee2e2;font-size:14px;line-height:1.65;margin-bottom:14px;">
+          זוהה ניסיון להזרקת הוראות זרות לתוך הסוכן.<br>
+          <strong style="color:#f87171;font-size:15px;">עוד ניסיון אחד — החשבון שלך ייחסם מיידית</strong><br>
+          ותיק אירוע יועבר לצוות Liders.
+        </div>
+        <div style="color:#fca5a5;font-size:12px;padding:10px 14px;background:rgba(255,0,0,0.12);border-radius:10px;margin-bottom:20px;line-height:1.6;">
+          ⚠️ Liders CRM מוגנת בשכבות אבטחה מרובות.<br>
+          כל ניסיון פריצה נרשם, מתועד ומועבר לטיפול.
+        </div>
+        <button onclick="document.getElementById('inj-warn-modal')?.remove()" style="background:#dc2626;color:white;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">
+          הבנתי — לא אחזור על זה
+        </button>
+      </div>`;
+    document.body.appendChild(m);
+  },
+
+  async _lockAndKick(suspiciousText) {
+    document.getElementById('inj-warn-modal')?.remove();
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:#050000;direction:rtl;';
+    overlay.innerHTML = `
+      <div style="text-align:center;padding:32px;">
+        <div style="font-size:68px;margin-bottom:16px;">🔒</div>
+        <div style="color:#dc2626;font-size:26px;font-weight:900;margin-bottom:14px;">החשבון נחסם</div>
+        <div style="color:#fca5a5;font-size:14px;max-width:300px;line-height:1.7;margin:0 auto;">
+          זוהו ניסיונות חוזרים להזרקת הוראות זרות.<br>
+          החשבון נחסם זמנית ותיק האירוע הועבר לצוות Liders לטיפול.
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    try {
+      await Make.trigger('security.injection_blocked', {
+        user_email:      State.agent?.email  || '—',
+        user_name:       State.agent?.name   || '—',
+        tenant_id:       State.tenant?.id    || '—',
+        suspicious_text: String(suspiciousText).slice(0, 500),
+        timestamp:       new Date().toISOString(),
+      });
+    } catch(_) { /* silent */ }
+
+    setTimeout(async () => {
+      localStorage.clear();
+      try { await sbClient.auth.signOut(); } catch(_) {}
+      location.reload();
+    }, 3500);
+  },
+
+  resetForAdmin() {
+    if (AiLimits._isAdmin()) localStorage.removeItem(this._KEY);
+  },
+};
+window.InjectionGuard = InjectionGuard;
+
+/* ═══════════════════════════════════════════
+   PRIVACY SHIELD — blur overlay for sensitive screens
+   Activates on window.blur / tab-switch for pipeline, leads, lead-detail.
+   Shows a semi-transparent blur + diagonal watermark with user identity.
+═══════════════════════════════════════════ */
+const PrivacyShield = {
+  _SENSITIVE: new Set(['pipeline', 'leads', 'lead-detail']),
+  _overlay: null,
+  _initialized: false,
+
+  _isSensitive() { return this._SENSITIVE.has(State.screen || ''); },
+
+  _build() {
+    const existing = document.getElementById('privacy-shield');
+    if (existing) existing.remove();
+
+    const user     = State.agent || {};
+    const identity = escapeHtml(user.name || user.email || 'Liders CRM');
+    const stamp    = `🔒 ${identity} · Liders CRM`;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'privacy-shield';
+    overlay.style.cssText = [
+      'position:fixed;inset:0;z-index:97000;',
+      'display:none;align-items:center;justify-content:center;flex-direction:column;',
+      'backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);',
+      'background:rgba(10,18,40,0.82);',
+    ].join('');
+
+    // Diagonal repeating watermark
+    let wm = '<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0.07;">';
+    for (let i = 0; i < 50; i++) {
+      wm += `<div style="position:absolute;top:${(i * 6.3) % 110 - 5}%;left:${(i * 11.7) % 110 - 5}%;transform:rotate(-28deg);white-space:nowrap;font-size:12px;color:#fff;font-weight:600;letter-spacing:1px;">${stamp}</div>`;
+    }
+    wm += '</div>';
+
+    overlay.innerHTML = wm + `
+      <div style="position:relative;z-index:1;text-align:center;direction:rtl;">
+        <div style="font-size:60px;margin-bottom:12px;">🔒</div>
+        <div style="color:white;font-size:19px;font-weight:800;margin-bottom:8px;">מסך מוגן</div>
+        <div style="color:rgba(255,255,255,0.65);font-size:13px;">חזור לחלון כדי להמשיך</div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+    this._overlay = overlay;
+  },
+
+  show() {
+    if (!this._isSensitive()) return;
+    if (!this._overlay) this._build();
+    this._overlay.style.display = 'flex';
+  },
+
+  hide() {
+    if (this._overlay) this._overlay.style.display = 'none';
+  },
+
+  init() {
+    if (this._initialized) return;
+    this._initialized = true;
+    window.addEventListener('blur',  () => this.show());
+    window.addEventListener('focus', () => this.hide());
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? this.show() : this.hide();
+    });
+  },
+
+  onScreenChange() {
+    // Rebuild overlay if we have a new user identity or first entry to sensitive screen
+    if (this._isSensitive() && !this._overlay) this._build();
+  },
+};
+window.PrivacyShield = PrivacyShield;
 
 </script>
 <!-- ═══ SAVE PROCESSING OVERLAY ═══════════════════════════════ -->
