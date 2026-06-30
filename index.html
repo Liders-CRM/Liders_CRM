@@ -2686,16 +2686,58 @@
   .motivation-card-footer {
     display:flex; align-items:center; justify-content:space-between; gap:10px;
   }
+  /* Basketball shot wrapper */
+  .motivation-btn-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  /* The basketball itself */
+  .mball {
+    font-size: 18px;
+    line-height: 1;
+    display: block;
+    margin-bottom: 3px;
+    animation: ballFloat 5s cubic-bezier(0.45,0,0.55,1) infinite;
+    will-change: transform;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+  /* Full 5-second cycle:
+     0-40%   → idle bounce (like dribbling above the hoop)
+     40-65%  → arc shot: launches up and arcs
+     65-75%  → swishes through the "hoop" (button)
+     75-100% → floats back to idle */
+  @keyframes ballFloat {
+    0%   { transform: translateY(0)      rotate(0deg)   scale(1);   }
+    8%   { transform: translateY(-7px)   rotate(25deg)  scale(1);   }
+    16%  { transform: translateY(0)      rotate(50deg)  scale(1);   }
+    24%  { transform: translateY(-5px)   rotate(75deg)  scale(1);   }
+    32%  { transform: translateY(0)      rotate(100deg) scale(1);   }
+    40%  { transform: translateY(-3px)   rotate(115deg) scale(1);   }
+    /* launch upward */
+    55%  { transform: translateY(-70px)  rotate(380deg) scale(0.85); }
+    /* top of arc */
+    62%  { transform: translateY(-52px)  rotate(520deg) scale(0.9);  }
+    /* swishes into the hoop — button scores here */
+    70%  { transform: translateY(4px)    rotate(660deg) scale(0.95); }
+    /* bounce off hoop rim */
+    73%  { transform: translateY(-9px)   rotate(680deg) scaleX(1.15) scaleY(0.85); }
+    78%  { transform: translateY(0)      rotate(700deg) scale(1);   }
+    100% { transform: translateY(0)      rotate(700deg) scale(1);   }
+  }
+  /* Button flashes gold when ball scores (aligned at 70% of 5s = 3.5s) */
   .motivation-btn {
     background: linear-gradient(270deg, #1d4ed8, #6d28d9, #2563eb, #1d4ed8);
     background-size: 300% 100%;
     color:#fff; border:none; border-radius:12px;
     padding:10px 20px; font-size:14px; font-weight:800;
     cursor:pointer; font-family:inherit;
-    white-space: nowrap; flex-shrink: 0;
-    transition: transform .15s, box-shadow .15s;
+    white-space: nowrap;
+    transition: transform .15s;
     box-shadow: 0 4px 14px rgba(37,99,235,0.45);
-    animation: motivationPulse 2.8s ease infinite;
+    animation: motivationPulse 5s ease infinite, btnScore 5s ease infinite;
     position: relative; overflow: hidden;
   }
   .motivation-btn::after {
@@ -2704,19 +2746,37 @@
     width: 50%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
     transform: skewX(-20deg);
-    animation: motivationShine 2.8s ease infinite;
+    animation: motivationShine 5s ease infinite;
   }
   @keyframes motivationPulse {
-    0%,100% { background-position: 0% 50%; box-shadow: 0 4px 14px rgba(37,99,235,0.45); }
-    50%      { background-position: 100% 50%; box-shadow: 0 4px 22px rgba(109,40,217,0.55); }
+    0%,64%,80%,100% { background-position: 0% 50%; }
+    50%             { background-position: 100% 50%; }
   }
   @keyframes motivationShine {
-    0%    { left: -75%; }
-    60%,100% { left: 125%; }
+    0%       { left: -75%; }
+    30%,100% { left: 125%; }
   }
-  .motivation-btn:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(37,99,235,0.6); }
+  /* Gold flash when ball swishes through at ~70% of 5s */
+  @keyframes btnScore {
+    0%,62%,80%,100% {
+      box-shadow: 0 4px 14px rgba(37,99,235,0.45);
+    }
+    68%,75% {
+      box-shadow: 0 4px 30px rgba(212,168,67,0.9),
+                  0 0 0 3px rgba(212,168,67,0.4),
+                  inset 0 0 20px rgba(212,168,67,0.15);
+    }
+  }
+  .motivation-btn:hover { transform: scale(1.05); }
   .motivation-btn:active { transform: scale(0.97); }
-  .motivation-btn:disabled { opacity:.5; cursor:default; animation:none; }
+  .motivation-btn:disabled {
+    opacity:.5; cursor:default;
+    animation:none;
+  }
+  .motivation-btn:disabled + .mball,
+  .motivation-btn-wrap:has(.motivation-btn:disabled) .mball {
+    animation-play-state: paused;
+  }
   .motivation-btn:disabled::after { display:none; }
   .motivation-usage-badge {
     font-size:10px; color:rgba(255,255,255,0.4); font-weight:600;
@@ -3440,7 +3500,10 @@
         </div>
         <div class="motivation-text-area" id="motivation-text">לחץ על הכפתור וקבל מסר מוטיבציה אישי לפי הנתונים שלך...</div>
         <div class="motivation-card-footer">
-          <button class="motivation-btn" id="motivation-btn" onclick="MotivationAgent.generate()">✨ קבל מוטיבציה</button>
+          <div class="motivation-btn-wrap">
+            <span class="mball" aria-hidden="true">🏀</span>
+            <button class="motivation-btn" id="motivation-btn" onclick="MotivationAgent.generate()">✨ קבל מוטיבציה</button>
+          </div>
           <div id="motivation-footer-info">
             <span class="motivation-usage-badge" id="motivation-usage"></span>
             <div class="motivation-cooldown hidden" id="motivation-cooldown">
