@@ -269,8 +269,8 @@
       font-size: 11px; font-weight: 600; padding: 3px 8px;
       border-radius: var(--radius-full); white-space: nowrap;
     }
-    .badge-yad2    { background: #EBF4FF; color: #1D4ED8; }
-    .badge-madlan  { background: #ECFDF5; color: #065F46; }
+    .badge-yad2    { background: #FFF1E6; color: #C2410C; }
+    .badge-madlan  { background: #E6FBF9; color: #0F766E; }
     .badge-facebook{ background: #EFF6FF; color: #1E40AF; }
     .badge-referral{ background: #F0FDF4; color: #15803D; }
     .badge-website { background: #F5F3FF; color: #6D28D9; }
@@ -362,6 +362,12 @@
       background: var(--blue-500); color: #fff;
       font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 700;
     }
+    .prop-gallery-thumb .gal-setmain {
+      position: absolute; bottom: 4px; right: 4px;
+      background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 8px;
+      font-size: 12px; padding: 2px 6px; cursor: pointer; line-height: 1.4;
+    }
+    .prop-gallery-thumb .gal-setmain:hover { background: var(--blue-500); }
     .prop-gallery-add {
       aspect-ratio: 1; border: 2px dashed var(--border); border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center;
@@ -947,7 +953,7 @@
        DASHBOARD
     ═══════════════════════════════════════ */
     .dashboard-greeting {
-      padding: 20px 20px 0;
+      padding: 20px 20px 14px;
       font-size: 22px; font-weight: 800; color: var(--gray-900);
     }
     .dashboard-greeting span { color: var(--navy-500); }
@@ -1314,12 +1320,13 @@
        TRIAL BANNER
     ═══════════════════════════════════════ */
     #trial-banner {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; flex-direction: column; gap: 4px;
       padding: 7px 16px; flex-shrink: 0;
       background: var(--navy-700);
       border-bottom: 1px solid rgba(255,255,255,0.08);
       position: sticky; top: 0; z-index: 11;
     }
+    .trial-banner-row { display: flex; align-items: center; gap: 10px; }
     .trial-bar-track {
       flex: 1; background: rgba(255,255,255,0.15); border-radius: 99px; height: 5px; overflow: hidden;
     }
@@ -1327,6 +1334,21 @@
       height: 100%; border-radius: 99px;
       background: linear-gradient(90deg, #10B981, #F59E0B);
       transition: width .4s ease;
+    }
+    .trial-ticker { overflow: hidden; white-space: nowrap; }
+    .trial-ticker:hover .trial-ticker-track { animation-play-state: paused; }
+    .trial-ticker-track {
+      display: inline-flex; animation: tickerScroll 18s linear infinite;
+      font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600;
+    }
+    .trial-ticker-track span { display: inline-block; padding-left: 40px; }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trial-ticker-track { animation: none; }
+      .trial-ticker { overflow-x: auto; }
     }
     /* dashboard trial card - מופיע ב-7 הימים האחרונים */
     .dash-trial-card {
@@ -2703,21 +2725,26 @@
   }
   .re-shortcut-btn:active { transform:scale(0.95); }
   .re-shortcut-icon { font-size:14px; }
-  .re-yad2   { background:linear-gradient(135deg,#2563EB,#1D4ED8); color:#fff; box-shadow:0 3px 10px rgba(37,99,235,0.35); }
-  .re-madlan { background:linear-gradient(135deg,#10B981,#059669); color:#fff; box-shadow:0 3px 10px rgba(16,185,129,0.35); }
+  .re-yad2   { background:linear-gradient(135deg,#FF7A1A,#E85D00); color:#fff; box-shadow:0 3px 10px rgba(232,93,0,0.35); }
+  .re-madlan { background:linear-gradient(135deg,#14B8A6,#0D9488); color:#fff; box-shadow:0 3px 10px rgba(13,148,136,0.35); }
   .re-wa     { background:#DCFCE7; color:#166534; }
   .re-idea   { background:#FEF9C3; color:#854D0E; }
+  .re-logo-mono {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:17px; height:17px; border-radius:50%; background:rgba(255,255,255,0.28);
+    font-size:9px; font-weight:800; letter-spacing:-0.3px; flex-shrink:0;
+  }
 
   /* ── Tutorial Video Button ── */
   .tutorial-btn {
     display:inline-flex; align-items:center; gap:6px;
-    font-size:11px; font-weight:700; color:rgba(255,255,255,0.7);
-    background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    font-size:11px; font-weight:700; color: var(--navy-500);
+    background: var(--navy-50); border:1px solid var(--border);
     border-radius:99px; padding:5px 12px; cursor:pointer;
-    margin-top:6px; transition:.15s; text-decoration:none;
+    margin-top:8px; transition:.15s; text-decoration:none;
     font-family:inherit;
   }
-  .tutorial-btn:active { background:rgba(255,255,255,0.14); transform:scale(0.97); }
+  .tutorial-btn:active { background: var(--navy-100, #DBEAFE); transform:scale(0.97); }
 
   /* ── Guided Tour Overlay ── */
   #tour-overlay {
@@ -2802,6 +2829,21 @@
     box-shadow:0 4px 16px rgba(22,163,74,0.25);
     animation: xpFloatUp 1.4s cubic-bezier(0.22,0.61,0.36,1) forwards;
     white-space:nowrap;
+  }
+
+  /* Falling coin burst alongside +XP chip */
+  @keyframes coinDrop {
+    0%   { opacity:1; transform: translateY(-8px) rotate(0deg) scale(1); }
+    65%  { opacity:1; }
+    100% { opacity:0; transform: translateY(48px) rotate(280deg) scale(0.7); }
+  }
+  .xp-coin {
+    position:fixed; pointer-events:none; z-index:9997;
+    font-size:15px; line-height:1;
+    animation: coinDrop 700ms cubic-bezier(0.34,1.45,0.64,1) forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xp-coin { display:none; }
   }
 
   /* Score badge green glow for hot leads */
@@ -3338,10 +3380,10 @@
         <div class="re-shortcuts-title">🏠 חיפוש נכסים מהיר</div>
         <div class="re-shortcuts-row">
           <a class="re-shortcut-btn re-yad2" href="https://www.yad2.co.il/realestate/forsale" target="_blank" rel="noopener">
-            <span class="re-shortcut-icon">🔵</span> יד2
+            <span class="re-logo-mono">Y2</span> יד2
           </a>
           <a class="re-shortcut-btn re-madlan" href="https://www.madlan.co.il/for-sale" target="_blank" rel="noopener">
-            <span class="re-shortcut-icon">🟢</span> מדלן
+            <span class="re-logo-mono">M</span> מדלן
           </a>
           <button class="re-shortcut-btn re-wa" onclick="WAConnect.open()">
             <span class="re-shortcut-icon">📲</span> WhatsApp
@@ -4748,6 +4790,23 @@
 </div>
 
 <!-- ═══ PRO: LEAD SCORE ═══ -->
+<!-- ═══ XP STORE: AI REWARD GENERATOR ═══ -->
+<div id="modal-reward-gen" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-reward-gen')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="reward-gen-title">🎁 פרס</div>
+      <button class="modal-close" onclick="closeModal('modal-reward-gen')">×</button>
+    </div>
+    <div id="reward-gen-inputs" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+    <button class="tool-btn tool-btn-primary" id="reward-gen-btn" onclick="RewardGen.generate()">✨ צור עבורי</button>
+    <div class="mktg-output" id="reward-gen-out"></div>
+    <div class="mktg-actions" id="reward-gen-act">
+      <button class="mktg-btn-copy" onclick="RewardGen.copy()">📋 העתק</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-pro-lead-score" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-pro-lead-score')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -6560,15 +6619,23 @@ const Billing = {
     const label = days === 0 ? '⚠️ הניסיון פג'
                 : days === 1 ? '⚠️ יום אחרון'
                 : `⏳ ${days} ימים`;
+    const tickerMsg = [
+      `🎉 נשארו לך ${days === 1 ? 'יום אחד' : days + ' ימים'} בניסיון החינמי`,
+      `💎 שדרג עכשיו ותשמור על כל הנתונים שלך`,
+      `🚀 פתח את כל הפיצ׳רים המתקדמים`
+    ].join('&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;');
     banner.innerHTML = `
-      <span style="color:#F59E0B;font-size:12px;font-weight:800;white-space:nowrap;">${label}</span>
-      <div class="trial-bar-track">
-        <div class="trial-bar-fill" style="width:${pct}%"></div>
+      <div class="trial-banner-row">
+        <span style="color:#F59E0B;font-size:12px;font-weight:800;white-space:nowrap;">${label}</span>
+        <div class="trial-bar-track">
+          <div class="trial-bar-fill" style="width:${pct}%"></div>
+        </div>
+        <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 30</span>
+        <button onclick="Billing.showTrialNoCreditCardModal()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+          פרטים →
+        </button>
       </div>
-      <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 30</span>
-      <button onclick="Billing.showTrialNoCreditCardModal()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-        פרטים →
-      </button>
+      <div class="trial-ticker"><div class="trial-ticker-track"><span>${tickerMsg}</span><span>${tickerMsg}</span></div></div>
     `;
     banner.classList.remove('hidden');
   },
@@ -8577,16 +8644,15 @@ const Gamify = {
   ],
 
   MILESTONES: [
-    { xp:  3000, icon: '🎯', value: '₪300',    name: 'ייעוץ שיווקי',         desc: 'פגישת ייעוץ שיווקי אישית + סקירת האסטרטגיה של העסק שלך' },
-    { xp:  7500, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',     desc: 'בניית דף נחיתה ממירה, מעוצב ומותאם לעסק ולקהל שלך' },
-    { xp: 14000, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',   desc: 'עיצוב תהליך מכירה עסקי מקצועי, מהפנייה הראשונה ועד הסגירה' },
-    { xp: 25000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית', desc: 'Deck מעוצב ומחודד לפגישות עם לקוחות, עם סיפור מכירה ברור' },
-    { xp: 40000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',  desc: '10 פוסטים + 3 מאמרים + קמפיין מייל מוכן לפרסום' },
-    { xp: 58000, icon: '🏢', value: '₪2,500',  name: 'אתר תדמית מלא',      desc: 'אתר תדמית מקצועי כולל עיצוב, תוכן, דומיין ואחסון לשנה' },
-    { xp: 78000, icon: '🔍', value: '₪3,500',  name: 'חבילת SEO',           desc: 'אופטימיזציה לאתר + מחקר מילות מפתח + 6 מאמרים לקידום אורגני' },
-    { xp: 100000, icon: '⚙️', value: '₪3,500', name: 'אוטומציה עסקית',     desc: '3 תהליכי Make.com אוטומטיים, לידים, פולואפ ודיווח, מותאמים לעסק' },
-    { xp: 125000, icon: '📢', value: '₪3,500', name: 'קמפיין פרסום ממומן', desc: 'ניהול קמפיין גוגל ו/או פייסבוק ממומן לאורך חודש שלם' },
-    { xp: 150000, icon: '🏆', value: '₪10,000', name: 'פרטנר אסטרטגי',    desc: 'ניהול שיווק דיגיטלי מלא + מנהל תיק לקוח אישי חצי שנה' },
+    { xp:  7500, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',        desc: 'AI כותב עבורך תוכן מלא לדף נחיתה ממיר, כולל כותרות ו-CTA, מוכן להטמעה', action: 'landingPage' },
+    { xp: 14000, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',      desc: 'AI מתכנן עבורך תהליך מכירה שלב-אחר-שלב, מהפנייה הראשונה ועד הסגירה', action: 'salesProcess' },
+    { xp: 25000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית',    desc: 'AI כותב עבורך תסריט מצגת שקופית-אחר-שקופית, מוכן לעיצוב ושימוש', action: 'salesDeck' },
+    { xp: 40000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',     desc: 'AI יוצר עבורך 10 רעיונות לפוסטים + 3 תקצירי מאמרים + טיוטת קמפיין מייל', action: 'contentPack' },
+    { xp: 58000, icon: '🏢', value: '₪2,500',  name: 'תוכן ומבנה לאתר תדמית', desc: 'AI כותב עבורך את כל תוכן האתר, עמוד-אחר-עמוד, מוכן להטמעה בכל בונה אתרים', action: 'siteOutline' },
+    { xp: 78000, icon: '🔍', value: '₪3,500',  name: 'תוכנית SEO',             desc: 'AI מכין עבורך מילות מפתח, המלצות אופטימיזציה ו-6 רעיונות למאמרים לקידום אורגני', action: 'seoPlan' },
+    { xp: 100000, icon: '⚙️', value: '₪3,500', name: 'שרטוט אוטומציה עסקית',  desc: 'AI מתכנן עבורך 3 תהליכי אוטומציה מוכנים להקמה ב-Make.com, שלב אחר שלב', action: 'automationBlueprint' },
+    { xp: 125000, icon: '📢', value: '₪3,500', name: 'תוכנית קמפיין ממומן',   desc: 'AI בונה עבורך תוכנית קמפיין מלאה לחודש שלם, גוגל ופייסבוק, כולל יעדים ותקציב', action: 'campaignPlan' },
+    { xp: 150000, icon: '🏆', value: '₪10,000', name: 'תוכנית אסטרטגית עסקית', desc: 'AI בונה עבורך תוכנית צמיחה אסטרטגית מקיפה לחצי שנה, שיווק ומכירות', action: 'strategicPlan' },
   ],
 
   _d: null,
@@ -9067,13 +9133,18 @@ const Gamify = {
 
   claimMilestone() {
     if (!this._pendingMilestone) return;
+    const m = this._pendingMilestone;
     const d = this.get();
     if (!d.milestoneClaimed) d.milestoneClaimed = [];
-    d.milestoneClaimed.push(this._pendingMilestone.xp);
+    d.milestoneClaimed.push(m.xp);
     this.save();
     this.renderWidget();
     this.closeMilestone();
-    toast('🎁 הפרס נרשם! נציג Liders יצור איתך קשר בקרוב 📞', 'success');
+    if (m.action) {
+      RewardGen.open(m.xp);
+    } else {
+      toast('🎁 הפרס נרשם!', 'success');
+    }
   },
 
   saveForBetter() {
@@ -9122,7 +9193,7 @@ const Gamify = {
       const fromXp = (() => { const idx = this.MILESTONES.indexOf(m); return idx > 0 ? this.MILESTONES[idx-1].xp : 0; })();
       const pct    = isLocked ? Math.min(100, Math.max(0, ((d.xp - fromXp) / (m.xp - fromXp)) * 100)).toFixed(1) : 0;
       const footer = isClaimed
-        ? `<span class="xps-claimed-tag">✅ מומש, נציגנו ייצור איתך קשר</span>`
+        ? `<div style="display:flex;align-items:center;gap:8px;"><span class="xps-claimed-tag">✅ מומש</span>${m.action ? `<button class="xps-claim-btn" style="padding:4px 10px;" onclick="RewardGen.open(${m.xp})">🔄 צור שוב</button>` : ''}</div>`
         : isUnlocked
         ? `<div style="display:flex;gap:8px;">${isDeferred ? '<span style="font-size:10px;color:var(--gold-400);font-weight:700;">🎯 שמור לפרס גדול</span>' : ''}
            <button class="xps-claim-btn" onclick="Gamify.showMilestone(Gamify.MILESTONES.find(x=>x.xp===${m.xp}))">🎁 מימוש הפרס</button></div>`
@@ -9147,6 +9218,184 @@ const Gamify = {
     this.checkDailyLogin();
     this.renderSidebar();
     this.renderWidget();
+  },
+};
+
+/* ═══════════════════════════════════════════
+   REWARD GEN MODULE, AI-generated XP-store deliverables
+═══════════════════════════════════════════ */
+const RewardGen = {
+  FLOWS: {
+    landingPage: {
+      title: 'דף נחיתה מקצועי',
+      icon: '🌐',
+      inputs: [
+        { id: 'biz', label: 'שם העסק / סוכנות', placeholder: 'לדוגמה: נדל"ן כהן' },
+        { id: 'offer', label: 'מה אתה מציע ללקוח?', placeholder: 'לדוגמה: ליווי בקניית דירה ראשונה' },
+        { id: 'audience', label: 'קהל היעד', placeholder: 'לדוגמה: זוגות צעירים באזור המרכז' },
+      ],
+      maxTokens: 900,
+      prompt: (v) => `אתה קופירייטר מומחה לדפי נחיתה בעברית. כתוב תוכן מלא לדף נחיתה ממיר עבור "${v.biz}".
+מה מציעים: ${v.offer}
+קהל יעד: ${v.audience}
+כלול: כותרת ראשית חזקה, תת-כותרת, 4-5 יתרונות מרכזיים (בולטים), קריאה לפעולה (CTA) ברורה, ופסקת אמון/מומחיות קצרה. כתוב בעברית בלבד, מוכן להעתקה ישירה לדף נחיתה. החזר רק את התוכן, ללא הסברים.`,
+    },
+    salesProcess: {
+      title: 'תהליך מכירה מותאם',
+      icon: '💼',
+      inputs: [
+        { id: 'biz', label: 'תחום העסק', placeholder: 'לדוגמה: תיווך נדל"ן' },
+        { id: 'deal', label: 'גודל עסקה ממוצע', placeholder: 'לדוגמה: ₪40,000 עמלה' },
+        { id: 'bottleneck', label: 'איפה הכי קשה לך לסגור עסקאות?', placeholder: 'לדוגמה: לקוחות נעלמים אחרי הצעת מחיר' },
+      ],
+      maxTokens: 900,
+      prompt: (v) => `אתה יועץ מכירות מומחה. בנה תהליך מכירה שלב-אחר-שלב, מהפנייה הראשונה ועד הסגירה, עבור עסק בתחום "${v.biz}".
+גודל עסקה ממוצע: ${v.deal}
+נקודת הכשל העיקרית: ${v.bottleneck}
+פרט כל שלב עם פעולה קונקרטית ומה לומר/לעשות בו. כתוב בעברית בלבד, מובנה וברור. החזר רק את התהליך.`,
+    },
+    salesDeck: {
+      title: 'מצגת מכירה מקצועית',
+      icon: '🎤',
+      inputs: [
+        { id: 'biz', label: 'שם החברה / סוכנות', placeholder: '' },
+        { id: 'value', label: 'מה הערך הייחודי שלך?', placeholder: 'לדוגמה: ליווי אישי 24/7 לאורך כל העסקה' },
+        { id: 'client', label: 'מול איזה סוג לקוח מציגים?', placeholder: 'לדוגמה: משקיעי נדל"ן' },
+      ],
+      maxTokens: 1000,
+      prompt: (v) => `אתה מומחה למצגות מכירה. בנה תסריט מצגת מכירה בת 10-12 שקופיות עבור "${v.biz}", מול קהל יעד: ${v.client}.
+ערך ייחודי: ${v.value}
+לכל שקופית כתוב: כותרת קצרה + 2-3 שורות תוכן/דברים שנאמרים. כתוב בעברית בלבד. החזר רק את תסריט השקופיות, ממוספר.`,
+    },
+    contentPack: {
+      title: 'חבילת תוכן שיווקי',
+      icon: '📣',
+      inputs: [
+        { id: 'niche', label: 'תחום / נישה', placeholder: 'לדוגמה: נדל"ן יוקרה בתל אביב' },
+        { id: 'topics', label: 'נושאים מרכזיים (אופציונלי)', placeholder: 'לדוגמה: השקעות, דירה ראשונה' },
+      ],
+      maxTokens: 1200,
+      prompt: (v) => `אתה אסטרטג תוכן שיווקי. בנה חבילת תוכן עבור עסק בתחום "${v.niche}".
+${v.topics ? `נושאים מועדפים: ${v.topics}` : ''}
+כלול: 10 רעיונות לפוסטים (כותרת + שורה אחת על התוכן), 3 תקצירי מאמרים (כותרת + 3-4 משפטי תקציר), וטיוטת קמפיין מייל אחת קצרה. כתוב בעברית בלבד, מאורגן בכותרות ברורות. החזר רק את התוכן.`,
+    },
+    siteOutline: {
+      title: 'תוכן ומבנה לאתר תדמית',
+      icon: '🏢',
+      inputs: [
+        { id: 'biz', label: 'שם העסק', placeholder: '' },
+        { id: 'services', label: 'שירותים עיקריים', placeholder: 'לדוגמה: מכירה, השכרה, ייעוץ השקעות' },
+        { id: 'about', label: 'משפט-שניים על העסק', placeholder: 'לדוגמה: 10 שנות ניסיון בנדל"ן באזור המרכז' },
+      ],
+      maxTokens: 1300,
+      prompt: (v) => `אתה קופירייטר אתרים. כתוב תוכן מלא לאתר תדמית עבור "${v.biz}".
+שירותים: ${v.services}
+על העסק: ${v.about}
+כתוב תוכן מלא ל-4 עמודים: בית (כותרת ראשית + תת-כותרת + קריאה לפעולה), אודות, שירותים (פירוט לכל שירות), צור קשר (טקסט קצר מזמין). כתוב בעברית בלבד, מסודר לפי עמודים. החזר רק את התוכן.`,
+    },
+    seoPlan: {
+      title: 'תוכנית SEO',
+      icon: '🔍',
+      inputs: [
+        { id: 'biz', label: 'שם העסק ועיר / אזור', placeholder: 'לדוגמה: תיווך כהן, רמת גן' },
+        { id: 'focus', label: 'שירותים שחשוב לקדם', placeholder: 'לדוגמה: דירות יד 2 למכירה' },
+      ],
+      maxTokens: 1100,
+      prompt: (v) => `אתה מומחה SEO. בנה תוכנית קידום אורגני עבור "${v.biz}".
+מיקוד: ${v.focus}
+כלול: רשימה של 12-15 מילות מפתח רלוונטיות (כולל long-tail), 5 המלצות אופטימיזציה לאתר (on-page), ו-6 כותרות מאמרים מומלצות עם תקציר שורה לכל אחת. כתוב בעברית בלבד. החזר רק את התוכנית.`,
+    },
+    automationBlueprint: {
+      title: 'שרטוט אוטומציה עסקית',
+      icon: '⚙️',
+      inputs: [
+        { id: 'pain', label: 'איזה תהליך ידני הכי גוזל לך זמן?', placeholder: 'לדוגמה: מענה ידני ללידים חדשים' },
+        { id: 'tools', label: 'כלים שאתה כבר משתמש בהם', placeholder: 'לדוגמה: WhatsApp, Google Sheets' },
+      ],
+      maxTokens: 1100,
+      prompt: (v) => `אתה מומחה אוטומציה עסקית עם Make.com. בנה 3 שרטוטי אוטומציה מוכנים להקמה, שמטפלים בבעיה: "${v.pain}".
+כלים קיימים: ${v.tools}
+לכל אוטומציה פרט: שם, טריגר (Trigger), רשימת שלבי הפעולה (Actions) ממוספרת, ותוצאה צפויה. כתוב בעברית בלבד. החזר רק את השרטוטים.`,
+    },
+    campaignPlan: {
+      title: 'תוכנית קמפיין ממומן',
+      icon: '📢',
+      inputs: [
+        { id: 'goal', label: 'מטרת הקמפיין', placeholder: 'לדוגמה: לידים חדשים' },
+        { id: 'budget', label: 'תקציב חודשי משוער', placeholder: 'לדוגמה: ₪3,000' },
+        { id: 'audience', label: 'קהל יעד', placeholder: 'לדוגמה: בעלי דירות שמתלבטים למכור' },
+      ],
+      maxTokens: 1200,
+      prompt: (v) => `אתה מומחה פרסום ממומן בגוגל ופייסבוק. בנה תוכנית קמפיין מלאה לחודש, מטרה: "${v.goal}", תקציב חודשי: ${v.budget}, קהל יעד: ${v.audience}.
+כלול: חלוקת תקציב בין הפלטפורמות, טירגוט מומלץ, 3 וריאציות טקסט מודעה, ולוח זמנים שבועי. כתוב בעברית בלבד. החזר רק את התוכנית.`,
+    },
+    strategicPlan: {
+      title: 'תוכנית אסטרטגית עסקית',
+      icon: '🏆',
+      inputs: [
+        { id: 'goal', label: 'מה היעד המרכזי שלך ל-6 החודשים הקרובים?', placeholder: 'לדוגמה: להכפיל את מספר העסקאות הסגורות' },
+        { id: 'challenge', label: 'מה האתגר הכי גדול כרגע?', placeholder: 'לדוגמה: לא מספיק לידים איכותיים' },
+      ],
+      maxTokens: 1400,
+      prompt: (v) => `אתה יועץ אסטרטגי עסקי בכיר. בנה תוכנית צמיחה אסטרטגית מקיפה לחצי שנה, יעד מרכזי: "${v.goal}", אתגר עיקרי: "${v.challenge}".
+כלול: 3 יעדי-משנה רבעוניים, תוכנית שיווק, תוכנית מכירות, ו-5 צעדים ראשונים להתחיל איתם השבוע. כתוב בעברית בלבד, מובנה בכותרות. החזר רק את התוכנית.`,
+    },
+  },
+
+  _current: null,
+
+  open(xp) {
+    const m = Gamify.MILESTONES.find(x => x.xp === xp);
+    if (!m || !m.action) return;
+    const flow = this.FLOWS[m.action];
+    if (!flow) return;
+    this._current = flow;
+    const titleEl = document.getElementById('reward-gen-title');
+    if (titleEl) titleEl.textContent = `${flow.icon} ${flow.title}`;
+    const inputsEl = document.getElementById('reward-gen-inputs');
+    if (inputsEl) {
+      inputsEl.innerHTML = flow.inputs.map(inp => `
+        <div>
+          <label class="tool-label">${escapeHtml(inp.label)}</label>
+          <input class="form-input" id="rg-${inp.id}" placeholder="${escapeHtml(inp.placeholder || '')}">
+        </div>
+      `).join('');
+    }
+    const outEl = document.getElementById('reward-gen-out');
+    if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
+    document.getElementById('reward-gen-act')?.classList.remove('visible');
+    openModal('modal-reward-gen');
+  },
+
+  async generate() {
+    if (!this._current) return;
+    const flow = this._current;
+    const values = {};
+    for (const inp of flow.inputs) {
+      values[inp.id] = (document.getElementById(`rg-${inp.id}`)?.value || '').trim();
+    }
+    if (flow.inputs.some(inp => !values[inp.id])) { toast('מלא את כל השדות', 'warning'); return; }
+    const outEl = document.getElementById('reward-gen-out');
+    const btn = document.getElementById('reward-gen-btn');
+    if (btn) btn.disabled = true;
+    if (outEl) { outEl.textContent = '✨ יוצר עבורך...'; outEl.classList.add('visible'); }
+    try {
+      const text = await AI.call([{ role: 'user', content: flow.prompt(values) }], flow.maxTokens, { type: 'general' });
+      if (text) {
+        outEl.textContent = text;
+        document.getElementById('reward-gen-act')?.classList.add('visible');
+      }
+    } catch(e) {
+      toast(e.message, 'error');
+      if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
+    }
+    if (btn) btn.disabled = false;
+  },
+
+  copy() {
+    const outEl = document.getElementById('reward-gen-out');
+    if (!outEl?.textContent) return;
+    navigator.clipboard.writeText(outEl.textContent).then(() => toast('הועתק ללוח 📋', 'success'));
   },
 };
 
@@ -9557,6 +9806,17 @@ function floatXP(pts) {
   el.style.cssText = 'right:16px; bottom:90px;';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1500);
+
+  const coinCount = Math.min(3, Math.max(1, Math.round(pts / 50)));
+  for (let i = 0; i < coinCount; i++) {
+    const coin = document.createElement('div');
+    coin.className = 'xp-coin';
+    coin.textContent = '🪙';
+    const offsetX = 18 + i * 12 + (Math.random() * 10 - 5);
+    coin.style.cssText = `right:${offsetX}px; bottom:90px; animation-delay:${i * 90}ms;`;
+    document.body.appendChild(coin);
+    setTimeout(() => coin.remove(), 900 + i * 90);
+  }
 }
 function navRipple(el) {
   const dot = document.createElement('div');
@@ -11922,9 +12182,8 @@ const Settings = {
           <div class="settings-row-icon">📅</div>
           <div class="settings-row-body">
             <div class="settings-row-label">Google Calendar</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">בקרוב</div>
+            <div class="settings-row-sub" style="color:var(--green-600);">✅ הוספה מהירה ליומן מכל פגישה ומשימה</div>
           </div>
-          <div class="settings-arrow">›</div>
         </div>
         <div class="settings-row">
           <div class="settings-row-icon">🤖</div>
@@ -12801,6 +13060,16 @@ const PropImages = {
   newFiles:  [],   // File objects for new property
   editUrls:  [],   // Existing URLs in edit mode
   editFiles: [],   // New File objects added in edit mode
+  mainIndex: 0,      // index of main image within newFiles
+  editMainIndex: 0,  // index of main image within editUrls+editFiles (combined order)
+
+  _reordered(arr, mainIdx) {
+    if (!arr.length || mainIdx <= 0 || mainIdx >= arr.length) return arr;
+    const copy = arr.slice();
+    const [main] = copy.splice(mainIdx, 1);
+    copy.unshift(main);
+    return copy;
+  },
 
   _readFile(file, cb) {
     const reader = new FileReader();
@@ -12826,11 +13095,13 @@ const PropImages = {
     grid.innerHTML = files.map((f, i) => `
       <div class="prop-gallery-thumb">
         <img src="${f._preview}">
-        ${i === 0 ? '<span class="gal-main">ראשי</span>' : ''}
+        ${i === this.mainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainNew(${i})" title="הפוך לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeNew(${i})">✕</button>
       </div>`).join('')
       + (files.length < 5 ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="PropImages.addNewFiles(this)"></label>` : '');
   },
+
+  setMainNew(i) { this.mainIndex = i; this.renderNew(); },
 
   addNewFiles(input) {
     const files = Array.from(input.files || []);
@@ -12843,8 +13114,13 @@ const PropImages = {
     input.value = '';
   },
 
-  removeNew(i) { this.newFiles.splice(i, 1); this.renderNew(); },
-  resetNew()   { this.newFiles = []; this.renderNew(); },
+  removeNew(i) {
+    this.newFiles.splice(i, 1);
+    if (this.mainIndex === i) this.mainIndex = 0;
+    else if (this.mainIndex > i) this.mainIndex--;
+    this.renderNew();
+  },
+  resetNew()   { this.newFiles = []; this.mainIndex = 0; this.renderNew(); },
 
   renderEdit() {
     const grid = document.getElementById('edit-prop-gallery');
@@ -12854,18 +13130,23 @@ const PropImages = {
     const existing = this.editUrls.map((url, i) => `
       <div class="prop-gallery-thumb">
         <img src="${escapeHtml(url)}" onerror="this.style.display='none'">
-        ${i === 0 && !this.editFiles.length ? '<span class="gal-main">ראשי</span>' : ''}
+        ${i === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${i})" title="הפוך לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeEditUrl(${i})">✕</button>
       </div>`).join('');
-    const added = this.editFiles.map((f, i) => `
+    const added = this.editFiles.map((f, i) => {
+      const combinedIdx = this.editUrls.length + i;
+      return `
       <div class="prop-gallery-thumb" style="outline:2px solid var(--blue-400);">
         <img src="${f._preview}">
-        ${i === 0 && !this.editUrls.length ? '<span class="gal-main">ראשי</span>' : ''}
+        ${combinedIdx === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${combinedIdx})" title="הפוך לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeEditFile(${i})">✕</button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     const addBtn = total < 5 ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="PropImages.addEditFile(this)"></label>` : '';
     grid.innerHTML = existing + added + addBtn;
   },
+
+  setMainEdit(combinedIdx) { this.editMainIndex = combinedIdx; this.renderEdit(); },
 
   addEditFile(input) {
     const files = Array.from(input.files || []);
@@ -12878,12 +13159,24 @@ const PropImages = {
     input.value = '';
   },
 
-  removeEditUrl(i)  { this.editUrls.splice(i, 1);  this.renderEdit(); },
-  removeEditFile(i) { this.editFiles.splice(i, 1); this.renderEdit(); },
+  removeEditUrl(i) {
+    this.editUrls.splice(i, 1);
+    if (this.editMainIndex === i) this.editMainIndex = 0;
+    else if (this.editMainIndex > i) this.editMainIndex--;
+    this.renderEdit();
+  },
+  removeEditFile(i) {
+    const combinedIdx = this.editUrls.length + i;
+    this.editFiles.splice(i, 1);
+    if (this.editMainIndex === combinedIdx) this.editMainIndex = 0;
+    else if (this.editMainIndex > combinedIdx) this.editMainIndex--;
+    this.renderEdit();
+  },
 
   resetEdit(existingUrls) {
     this.editUrls  = [...(existingUrls || [])];
     this.editFiles = [];
+    this.editMainIndex = 0;
     this.renderEdit();
   },
 
@@ -12896,9 +13189,10 @@ const PropImages = {
   },
 
   async uploadNewAll(propId) {
+    const ordered = this._reordered(this.newFiles, this.mainIndex);
     const urls = [];
-    for (let i = 0; i < this.newFiles.length; i++) {
-      urls.push(await this._uploadOne(this.newFiles[i], propId, i));
+    for (let i = 0; i < ordered.length; i++) {
+      urls.push(await this._uploadOne(ordered[i], propId, i));
     }
     return urls;
   },
@@ -12909,7 +13203,7 @@ const PropImages = {
     for (let i = 0; i < this.editFiles.length; i++) {
       urls.push(await this._uploadOne(this.editFiles[i], propId, `${ts}_${i}`));
     }
-    return urls;
+    return this._reordered(urls, this.editMainIndex);
   },
 };
 
