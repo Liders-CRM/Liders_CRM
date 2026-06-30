@@ -9878,18 +9878,30 @@ const Referral = {
     return code;
   },
 
-  getCode() {
+  _code: null,
+
+  // Server-authoritative code for real tenants (works across devices); local
+  // deterministic hash kept only as a demo/offline fallback.
+  async getCode() {
+    if (this._code) return this._code;
+    if (!State.isDemo && DB.tenantId) {
+      try {
+        const { data, error } = await sbClient.rpc('get_referral_code');
+        if (!error && data) { this._code = data; return this._code; }
+      } catch (_e) {}
+    }
     const d = this._data();
     if (!d.code) {
       d.code = this._genCode(State.agent?.email || '');
       d.referrals = 0; d.xpFromReferrals = 0; d.shares = 0;
       this._save(d);
     }
-    return d.code;
+    this._code = d.code;
+    return this._code;
   },
 
-  renderScreen() {
-    const code = this.getCode();
+  async renderScreen() {
+    const code = await this.getCode();
     const d    = this._data();
     const el   = document.getElementById('ref-code-display');
     if (el) el.textContent = code;
@@ -9900,12 +9912,11 @@ const Referral = {
   },
 
   _link() {
-    const code = this.getCode();
-    return `https://liders-crm.com/?ref=${code}`;
+    return `https://liders-crm.com/?ref=${this._code || this._data().code || ''}`;
   },
 
   _waMessage() {
-    const code = this.getCode();
+    const code = this._code || this._data().code || '';
     return `היי! אני עובד עם Liders CRM, הכלי שניהל לי את כל הפייפליין ועזר לסגור יותר עסקאות 🚀\n\nתנסה חינם 30 יום עם קוד ההמלצה שלי ותקבל 20% הנחה על החודש הראשון:\n\n🔑 קוד: *${code}*\n🔗 כניסה: ${this._link()}`;
   },
 
@@ -9923,7 +9934,8 @@ const Referral = {
   },
 
   copyCode() {
-    navigator.clipboard.writeText(this.getCode()).then(() => {
+    const code = this._code || this._data().code || '';
+    navigator.clipboard.writeText(code).then(() => {
       toast('✅ הקוד הועתק!', 'success');
     }).catch(() => {});
   },
@@ -9959,21 +9971,41 @@ const Referral = {
     }, 2500);
   },
 
-  // Award XP when a referred friend actually joins and activates - called by admin panel or future Tranzila webhook
-  awardReferral() {
-    const XP_AWARD = 100;
-    const d = this._data();
-    d.referrals = (d.referrals || 0) + 1;
-    d.xpFromReferrals = (d.xpFromReferrals || 0) + XP_AWARD;
-    this._save(d);
-    const gd = Gamify.get();
-    gd.xp += XP_AWARD;
-    Gamify.save();
-    Gamify.renderSidebar();
-    Gamify.renderWidget();
-    Gamify.checkMilestones();
-    toast(`🎉 חבר שהזמנת הצטרף! +${XP_AWARD} XP, בדוק מה נפתח בחנות הפרסים 🏆`, 'success', 5000);
-    this.renderScreen();
+  // Called once for a brand-new tenant that arrived via a referral link - registers
+  // the claim server-side (referral_claims) so the referrer can be credited 200 XP
+  // even though referrer and referred are almost always on different devices.
+  async claimReferralSignup() {
+    if (State.isDemo || !DB.tenantId || !State.isNewTenant) return;
+    const inboundRef = localStorage.getItem('liders_inbound_ref');
+    if (!inboundRef) return;
+    if (localStorage.getItem('liders_ref_signup_claimed')) return;
+    localStorage.setItem('liders_ref_signup_claimed', '1');
+    try { await sbClient.rpc('claim_referral_signup', { p_code: inboundRef }); } catch (_e) {}
+  },
+
+  // Called on every login - pulls referrals that joined since the last check and
+  // credits 200 XP each to the referrer. Server-authoritative, works cross-device.
+  async pullPendingXp() {
+    if (State.isDemo || !DB.tenantId) return;
+    try {
+      const { data, error } = await sbClient.rpc('pull_pending_referral_xp');
+      const count = Number(data) || 0;
+      if (error || count <= 0) return;
+      const xpGained = count * 200;
+      const d = this._data();
+      d.referrals = (d.referrals || 0) + count;
+      d.xpFromReferrals = (d.xpFromReferrals || 0) + xpGained;
+      this._save(d);
+      const gd = Gamify.get();
+      gd.xp += xpGained;
+      Gamify.save();
+      Gamify.renderSidebar();
+      Gamify.renderWidget();
+      Gamify.checkMilestones();
+      floatXP(xpGained);
+      toast(`🎉 ${count > 1 ? `${count} חברים שהזמנת הצטרפו` : 'חבר שהזמנת הצטרף'}! +${xpGained} XP, בדוק מה נפתח בחנות הפרסים 🏆`, 'success', 5000);
+      this.renderScreen();
+    } catch (_e) {}
   },
 };
 
@@ -10360,6 +10392,13 @@ const App = {
     if (!State.isDemo) setTimeout(() => Billing.showDailyReminder(), 1500);
     // Init gamification (XP, milestones, daily login bonus)
     Gamify.init();
+    // Referral: register inbound-link claim (new tenants only) + pull any pending
+    // cross-device referral XP for the referrer (works whether the referrer logs
+    // in via email/password or OAuth, since both flows call _showApp()).
+    if (!State.isDemo) {
+      Referral.claimReferralSignup();
+      Referral.pullPendingXp();
+    }
     // Init motivation agent UI
     MotivationAgent.init();
     // Show guided tour for new users after onboarding is done
