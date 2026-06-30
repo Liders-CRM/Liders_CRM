@@ -900,6 +900,45 @@
     .plan-addon strong { color: #B45309; font-size: 14px; }
 
     /* ══════════════════════════════
+       רצועת אמון / אבטחה
+    ══════════════════════════════ */
+    .trust-strip {
+      background: var(--gray-bg);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .trust-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .trust-grid {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .trust-item .ti-icon { font-size: 18px; }
+    .trust-link {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .trust-link:hover { text-decoration: underline; }
+
+    /* ══════════════════════════════
        אנימציות כניסה
     ══════════════════════════════ */
     .fade-up {
@@ -1316,6 +1355,18 @@
       <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">כמובן שהכל נתון לבחירתך החופשית</p>
     </div>
   </div>
+</section>
+
+<!-- רצועת אמון / אבטחה -->
+<section class="trust-strip" id="trust-section">
+  <div class="trust-title">🛡️ הנתונים שלך ושל הלקוחות שלך — מוגנים ברמה הגבוהה ביותר</div>
+  <div class="trust-grid fade-up">
+    <div class="trust-item"><span class="ti-icon">🔐</span> הצפנת HTTPS/TLS מלאה</div>
+    <div class="trust-item"><span class="ti-icon">🧩</span> בידוד נתונים מלא בין חשבונות</div>
+    <div class="trust-item"><span class="ti-icon">🇪🇺</span> שרתים מאובטחים באירופה</div>
+    <div class="trust-item"><span class="ti-icon">🔑</span> סיסמאות מוצפנות, לא נשמרות כטקסט גלוי</div>
+  </div>
+  <a href="https://liders-crm.com/privacy-policy.html#security" class="trust-link">קרא עוד על מדיניות האבטחה שלנו ←</a>
 </section>
 
 <!-- סגירה -->
