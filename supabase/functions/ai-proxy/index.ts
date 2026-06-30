@@ -23,6 +23,7 @@ const ALLOWED_MODELS = [
   'claude-sonnet-4-6',
 ];
 
+const ALLOWED_TYPES = ['general', 'marketing', 'quicklog', 'support', 'motivation'];
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 
 // Hard caps — client cannot exceed these
@@ -65,12 +66,30 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { messages, system, model: requestedModel } = body;
+    const { messages, system, model: requestedModel, type: rawType } = body;
 
+    // ── 3. Server-side quota enforcement ────────────────────────────────
+    const aiType = ALLOWED_TYPES.includes(rawType) ? rawType : 'general';
+    const { data: quota, error: quotaErr } = await sbClient.rpc(
+      'check_and_increment_ai_usage',
+      { p_type: aiType }
+    );
+    if (quotaErr || !quota?.allowed) {
+      return Response.json(
+        {
+          error: 'quota_exceeded',
+          plan:  quota?.plan  ?? 'unknown',
+          used:  quota?.used  ?? 0,
+          limit: quota?.limit ?? 0,
+        },
+        { status: 429, headers: cors }
+      );
+    }
+
+    // ── 4. Validate and sanitize messages ───────────────────────────────
     // Cap max_tokens server-side regardless of client value
     const max_tokens = Math.min(Number(body.max_tokens) || 400, MAX_TOKENS_CAP);
 
-    // Validate messages array
     if (!Array.isArray(messages) || messages.length === 0) {
       return Response.json({ error: 'messages required' }, { status: 400, headers: cors });
     }
@@ -78,18 +97,15 @@ serve(async (req) => {
       return Response.json({ error: 'Too many messages' }, { status: 400, headers: cors });
     }
 
-    // Sanitize and truncate message content
     const safeMessages = messages.map((m: { role: string; content: string }) => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
       content: (typeof m.content === 'string' ? m.content : '').slice(0, MAX_CONTENT_LEN),
     }));
 
-    // Sanitize system prompt (truncate only — system comes from our own code)
     const safeSystem = typeof system === 'string' ? system.slice(0, MAX_SYSTEM_LEN) : undefined;
-
     const model = ALLOWED_MODELS.includes(requestedModel) ? requestedModel : DEFAULT_MODEL;
 
-    // ── 3. Forward to Anthropic ─────────────────────────────────────────
+    // ── 5. Forward to Anthropic ─────────────────────────────────────────
     const reqBody: Record<string, unknown> = {
       model,
       max_tokens,
