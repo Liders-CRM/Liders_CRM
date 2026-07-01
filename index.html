@@ -3713,7 +3713,7 @@
           <div class="motivation-card-icon">🚀</div>
           <div>
             <div class="motivation-card-title">סוכן מוטיבציה</div>
-            <div class="motivation-card-sub">סוכן חכם שדוחף אותך קדימה</div>
+            <div class="motivation-card-sub">הסוכן הגאון שדוחף אותך קדימה</div>
           </div>
         </div>
         <div class="motivation-text-area" id="motivation-text">מסר מוטיבציה אישי לפי הנתונים שלך, בלחיצת כפתור...</div>
@@ -4890,8 +4890,8 @@
         <div style="font-size:16px;font-weight:800;color:var(--navy-500);margin-bottom:6px;" id="wa-progress-title">מחבר...</div>
         <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;" id="wa-progress-sub">אנא המתן</div>
         <div style="background:var(--gray-100);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--gray-600);text-align:right;">
-          <strong>👋 הודעת אישור מהסוכן החכם:</strong><br>
-          <span style="font-style:italic;">"היי, כאן הסוכן החכם שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
+          <strong>👋 הודעת אישור מהסוכן הגאון:</strong><br>
+          <span style="font-style:italic;">"היי, כאן הסוכן הגאון שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
         </div>
       </div>
     </div>
@@ -5051,7 +5051,7 @@
       <li>✅ ניהול לידים ופייפליין מלא</li>
       <li>✅ משימות, לוח שנה ואנליטיקה</li>
       <li>✅ יומן שיחות ו-WhatsApp מהיר</li>
-      <li>✅ סוכן חכם ותיקי נכסים</li>
+      <li>✅ סוכן גאון ותיקי נכסים</li>
       <li>✅ ייצוא נתונים וכלים מקצועיים</li>
     </ul>
     <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתח חשבון ניסיון, חינם</button>
@@ -5919,7 +5919,7 @@
         <div class="tutorial-step-card">
           <div class="tutorial-step-num">5</div>
           <div>
-            <div class="tutorial-step-title">🤖 שיחה עם הסוכן החכם</div>
+            <div class="tutorial-step-title">🤖 שיחה עם הסוכן הגאון</div>
             <div class="tutorial-step-desc">לשונית "שירותי שיווק", הסוכן יכתוב לך הצעות מחיר, פוסטים ומסרים ללקוחות.</div>
           </div>
         </div>
@@ -7281,7 +7281,7 @@ const Onboarding = {
     },
     {
       title: 'הכיר את הסוכן שלך 🤖',
-      subtitle: 'עוזר אישי שמנטר ומניע אותך',
+      subtitle: 'עוזר אישי (וקצת גאון) שמנטר ומניע אותך',
       render() {
         const firstName = (Onboarding._data.agentName || 'יזם').split(' ')[0];
         const ind = localStorage.getItem('liders_industry') || 'other';
@@ -7943,7 +7943,7 @@ const Tools = {
       closing: 'סגירת עסקה'
     };
     if (!res || !btn) return;
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן החכם ליצירת תסריטי שיחה ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן הגאון ליצירת תסריטי שיחה ✨'); return; }
     btn.textContent = '⏳ מייצר תסריט...'; btn.disabled = true;
     res.classList.remove('visible'); if (acts) acts.style.display = 'none';
     try {
@@ -8036,7 +8036,7 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
     const btn      = document.getElementById('prop-btn');
     const acts     = document.getElementById('prop-actions');
     if (!res || !btn) return;
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן החכם ליצירת הצעות מחיר ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן האגדי ליצירת הצעות מחיר ✨'); return; }
     btn.textContent = '⏳ מייצר הצעה...'; btn.disabled = true;
     res.classList.remove('visible'); if (acts) acts.style.display = 'none';
     try {
@@ -14746,7 +14746,7 @@ const Support = {
   _busy: false,
 
   open() {
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מהסוכן החכם שלנו 🤖'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מהסוכן הגאון שלנו 🤖'); return; }
     const inp     = document.getElementById('support-msg-input');
     const aiEl    = document.getElementById('support-ai-response');
     const btn     = document.getElementById('support-submit-btn');
@@ -15281,7 +15281,7 @@ const MotivationAgent = {
   },
 
   async generate() {
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל מוטיבציה יומית מהסוכן החכם 💪'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל מוטיבציה יומית מהסוכן האגדי 💪'); return; }
     if (!AiLimits.hasAiAccess()) { toast('הסוכן זמין בתקופת הניסיון, הירשם בחינם', 'info'); return; }
     if (this._isCooling()) {
       toast(`⏳ הסוכן יחזור בעוד ${this._fmtTime(this._remaining())}, כדאי לקבוע שגרת בוקר ולילה!`, 'info', 3000); return;
@@ -15375,7 +15375,7 @@ const GuidedTour = {
     {
       target: '[data-screen="marketing"]',
       emoji: '🤖',
-      title: 'הסוכן החכם לשיווק',
+      title: 'הסוכן האגדי לשיווק',
       text: 'כותב בשבילך הצעות מחיר, פוסטים לרשתות, ומסרים ללקוחות, תוך שניות.',
     },
     {
