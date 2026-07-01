@@ -12898,6 +12898,7 @@ const LeadImport = {
   },
 
   open() {
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לייבא רשימת לידים מקובץ, הסוכן החכם מזהה את העמודות בעצמו ✨'); return; }
     this._step = 1; this._headers = []; this._rows = []; this._mapping = {}; this._leads = []; this._aiMapping = false;
     const fileInput = document.getElementById('import-file-input');
     if (fileInput) fileInput.value = '';
