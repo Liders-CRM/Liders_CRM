@@ -6279,11 +6279,12 @@ const DB = {
   async ensureAgent(email, name, agencyName) {
     const { data, error } = await sbClient.rpc('ensure_agent_and_tenant',
       { p_agency_name: agencyName || null, p_name: name || email.split('@')[0] });
-    if (!error && data) {
+    if (error) throw error;
+    if (data) {
       this.agentId  = data.agent_id;
       this.tenantId = data.tenant_id;
     }
-    return { isNew: !!data?.is_new, error };
+    return { isNew: !!data?.is_new };
   },
 
   // Persists the agency profile the onboarding wizard collects. Deliberately
@@ -10818,7 +10819,12 @@ const App = {
       overlay.classList.add('fade-out');
       setTimeout(() => overlay.classList.add('hidden'), 520);
     } catch(e) {
-      toast('שגיאה: ' + e.message, 'error');
+      if ((e.message || '').includes('disposable_email_blocked')) {
+        await DB.signOut();
+        toast('נא להירשם עם כתובת אימייל אמיתית וקבועה, לא כתובת זמנית/חד-פעמית', 'error', 6000);
+      } else {
+        toast('שגיאה: ' + e.message, 'error');
+      }
       overlay.classList.add('hidden');
     } finally {
       if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'כניסה / הרשמה בחינם'; }
@@ -14221,7 +14227,12 @@ sbClient.auth.onAuthStateChange((event, session) => {
           setTimeout(() => overlay.classList.add('hidden'), 520);
         } catch(e) {
           overlay.classList.add('hidden');
-          toast('שגיאה בטעינת הנתונים', 'error');
+          if ((e.message || '').includes('disposable_email_blocked')) {
+            await DB.signOut();
+            toast('נא להירשם עם כתובת אימייל אמיתית וקבועה, לא כתובת זמנית/חד-פעמית', 'error', 6000);
+          } else {
+            toast('שגיאה בטעינת הנתונים', 'error');
+          }
         }
       }, 0);
     }
