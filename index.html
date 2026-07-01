@@ -4000,6 +4000,7 @@
       <div class="tools-header-strip">
         <h2>🛠️ מרכז כלים</h2>
         <p>כלים חכמים שיעזרו לך לסגור יותר עסקאות, כלולים בכל החבילות</p>
+        <p style="font-size:0.78rem;color:var(--gray-400);margin-top:2px;">✏️ הסוכן יכול לפעמים לא לדייק, כל מה שהוא כותב ניתן לעריכה חופשית לפני שימוש</p>
       </div>
       <div class="tools-grid">
 
@@ -4567,6 +4568,7 @@
           <span id="email-lang-note" style="font-weight:400;color:var(--gray-400);font-size:11px;"></span>
         </div>
         <div class="email-reply-box" id="email-reply-text"></div>
+        <p style="font-size:11px;color:var(--gray-400);margin:6px 0 0;">✏️ זו טיוטה, הסוכן יכול לפעמים לא לדייק, כדאי לעבור עליה לפני שליחה</p>
         <button class="email-copy-btn" onclick="EmailAI.copyReply()">📋 העתק תשובה</button>
       </div>
 
@@ -4936,7 +4938,8 @@
       <button onclick="closeModal('modal-support')" style="background:rgba(255,255,255,.15);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div class="support-modal-body" style="padding:16px 16px 32px;max-height:70vh;overflow-y:auto;">
-      <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">תיאור הבעיה, ה-AI שלנו יענה מיד, ונקבל התראה לטיפול.</p>
+      <p style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">תיאור הבעיה, סוכן התמיכה שלך יענה מיד, ונקבל התראה לטיפול.</p>
+      <p style="font-size:11px;color:var(--gray-400);margin-bottom:12px;">✏️ התשובה יכולה לפעמים לא לדייק, האדמין תמיד בלופ למקרה הצורך</p>
       <textarea id="support-msg-input"
         placeholder="מה הבעיה? פרטים נוספים יעזרו לטפל מהר יותר..."
         style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
@@ -5084,6 +5087,7 @@
     <div id="reward-gen-inputs" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
     <button class="tool-btn tool-btn-primary" id="reward-gen-btn" onclick="RewardGen.generate()">✨ יצירה עבורי</button>
     <div class="mktg-output" id="reward-gen-out"></div>
+    <p style="font-size:11px;color:var(--gray-400);margin:4px 0 0;">✏️ הסוכן יכול לפעמים לא לדייק, כל תוצר כאן ניתן לעריכה חופשית לפני שימוש</p>
     <div class="mktg-actions" id="reward-gen-act">
       <button class="mktg-btn-copy" onclick="RewardGen.copy()">📋 העתק</button>
     </div>
@@ -5787,7 +5791,7 @@
       </p>
 
       <p><strong>בעלות על תוכן שנוצר ב-AI</strong><br>
-      תוצרי הבינה המלאכותית (הצעות שיווק, הודעות WhatsApp, תוכן שנוצר ע"י הסוכן) שמיוצרים בתוך המערכת הינם רכוש Liders CRM ומוצגים למשתמש לשימוש במסגרת המנוי בלבד.</p>
+      תוצרי הבינה המלאכותית (הצעות שיווק, הודעות WhatsApp, תוכן שנוצר ע"י הסוכן) שמיוצרים בתוך המערכת הינם רכוש Liders CRM ומוצגים למשתמש לשימוש במסגרת המנוי בלבד, גם אם נערכו או שונו על-ידי המשתמש לאחר היצירה.</p>
 
       <p><strong>מה קורה בסיום מנוי</strong><br>
       ביטול מנוי אינו מוחק את הנתונים אוטומטית, הנתונים נשמרים עד 30 יום לאחר הביטול. במהלך תקופה זו ניתן לייצא את הנתונים האישיים (לידים, עסקאות, הערות) על-ידי פנייה ל-<a href="mailto:liders.crm@gmail.com" style="color:var(--blue-500);">liders.crm@gmail.com</a>. לאחר 30 יום הנתונים נמחקים לצמיתות.</p>
@@ -8516,6 +8520,7 @@ const Marketing = {
         <div class="marketing-addon-badge">${isAddon ? '✅ תוסף פעיל' : '🎁 ניסיון חינמי'}</div>
         <h2>📣 שירותי שיווק</h2>
         <p>יצירת תוכן שיווקי מקצועי ישירות מהמערכת, בשניות</p>
+        <p style="font-size:0.78rem;color:var(--gray-400);margin-top:2px;">✏️ סוכן השיווק יכול לפעמים לא לדייק, כל תוכן שנוצר ניתן לעריכה חופשית לפני שליחה</p>
       </div>
       ${trialBanner}
       ${usageLabel ? `<div style="font-size:0.8rem;color:var(--gray-500);text-align:center;margin-bottom:10px;"><span class="mktg-usage-counter">${usageLabel}</span></div>` : ''}
@@ -8909,6 +8914,7 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
       const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(msg);
       container.innerHTML = `
         <div style="background:var(--gray-50);border-radius:12px;padding:14px;font-size:14px;line-height:1.7;color:var(--gray-800);white-space:pre-wrap;direction:rtl;text-align:right;margin-bottom:14px;">${escapeHtml(msg)}</div>
+        <p style="font-size:11px;color:var(--gray-400);margin:0 0 10px;text-align:center;">✏️ סוכן השיווק יכול לפעמים לא לדייק, אפשר לערוך את ההודעה ב-WhatsApp לפני השליחה</p>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(msg)}">📋 העתק</button>
           <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שלח ב-WA</button>
@@ -11600,6 +11606,7 @@ const LeadDetail = {
             </div>
           ` : `
             <div class="ai-panel">
+              <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-bottom:8px;">✏️ הסוכן יכול לפעמים לא לדייק, כל תוצאה כאן ניתנת לעריכה חופשית לפני שימוש</p>
               <button class="btn btn-primary w-full" onclick="LeadDetail.runScore()">
                 🎯 ניתוח ליד וציון AI
               </button>
