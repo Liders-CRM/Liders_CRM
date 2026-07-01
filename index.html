@@ -1029,10 +1029,15 @@
     }
     .back-btn:hover { color: white; }
     .lead-detail-name { font-size: 24px; font-weight: 800; }
-    .lead-detail-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .lead-detail-actions {
+      display: flex; gap: 10px; margin-top: 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      padding-bottom: 2px; margin-right: -20px; margin-left: -20px; padding-right: 20px; padding-left: 20px;
+    }
+    .lead-detail-actions::-webkit-scrollbar { display: none; }
     .lead-action-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 10px; background: rgba(255,255,255,0.12);
+      flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 14px; background: rgba(255,255,255,0.12); white-space: nowrap;
       border-radius: var(--radius-md); color: white; font-size: 13px; font-weight: 600;
       cursor: pointer; border: none; transition: var(--transition);
     }
@@ -1977,16 +1982,17 @@
 
     /* Achievement toast */
     .achievement-toast {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%;
+      transform: translateX(-50%) translateY(-150%);
       background: linear-gradient(135deg, #1a2744, #2a4080);
       border: 2px solid var(--gold-500); border-radius: 16px;
-      padding: 14px 20px; z-index: 9999; min-width: 280px;
+      padding: 14px 20px; z-index: 9999; min-width: 280px; max-width: calc(100vw - 32px);
       display: flex; align-items: center; gap: 14px;
       box-shadow: 0 8px 32px rgba(0,0,0,.4);
       transition: transform .4s cubic-bezier(.34,1.56,.64,1);
-      color: white;
+      color: white; opacity: 0; pointer-events: none;
     }
-    .achievement-toast.show { transform: translateX(-50%) translateY(0); }
+    .achievement-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .achievement-toast-icon { font-size: 2rem; }
     .achievement-toast-title { font-size: 11px; color: var(--gold-400); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
     .achievement-toast-name { font-size: 16px; font-weight: 900; }
@@ -4949,6 +4955,7 @@
     <div class="support-modal-body" style="padding:16px 16px 32px;max-height:70vh;overflow-y:auto;">
       <p style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">תיאור הבעיה, סוכן התמיכה שלך יענה מיד, ונקבל התראה לטיפול.</p>
       <p style="font-size:11px;color:var(--gray-400);margin-bottom:12px;">✏️ התשובה יכולה לפעמים לא לדייק, האדמין תמיד בלופ למקרה הצורך</p>
+      <p style="font-size:11px;color:var(--gray-400);margin-bottom:12px;">📧 למענה מהיר במייל: <a href="mailto:Liders.crm@gmail.com" style="color:var(--blue-500);">Liders.crm@gmail.com</a></p>
       <textarea id="support-msg-input"
         placeholder="מה הבעיה? פרטים נוספים יעזרו לטפל מהר יותר..."
         style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
@@ -8110,10 +8117,10 @@ const AiLimits = {
   // ₪30 premium ≈ $8.22/mo → API budget $2.88 → ~1,920 calls/mo theoretical max.
   PLANS: {
     trial:    { general: 2,  marketing: 3,  quicklog: 3,  support: 2,  motivation: 2  },
-    basic:    { general: 5,  marketing: 8,  quicklog: 15, support: 8,  motivation: 3  },
-    pro:      { general: 10, marketing: 15, quicklog: 30, support: 15, motivation: 3  },
-    premium:  { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 3  },
-    lifetime: { general: 20, marketing: 25, quicklog: 50, support: 25, motivation: 3  },
+    basic:    { general: 5,  marketing: 8,  quicklog: 15, support: 5,  motivation: 3  },
+    pro:      { general: 10, marketing: 15, quicklog: 30, support: 8,  motivation: 3  },
+    premium:  { general: 20, marketing: 25, quicklog: 50, support: 10, motivation: 3  },
+    lifetime: { general: 20, marketing: 25, quicklog: 50, support: 10, motivation: 3  },
     internal: { general: 999, marketing: 999, quicklog: 999, support: 999, motivation: 999 },
   },
   _ADMIN: ['liders.crm@gmail.com','elgrablidudu@gmail.com'],
