@@ -3713,7 +3713,7 @@
           <div class="motivation-card-icon">🚀</div>
           <div>
             <div class="motivation-card-title">סוכן מוטיבציה</div>
-            <div class="motivation-card-sub">AI אישי שדוחף אותך קדימה</div>
+            <div class="motivation-card-sub">הסוכן החכם שדוחף אותך קדימה</div>
           </div>
         </div>
         <div class="motivation-text-area" id="motivation-text">מסר מוטיבציה אישי לפי הנתונים שלך, בלחיצת כפתור...</div>
@@ -4000,6 +4000,7 @@
       <div class="tools-header-strip">
         <h2>🛠️ מרכז כלים</h2>
         <p>כלים חכמים שיעזרו לך לסגור יותר עסקאות, כלולים בכל החבילות</p>
+        <p style="font-size:0.78rem;color:var(--gray-400);margin-top:2px;">✏️ הסוכן יכול לפעמים לא לדייק, כל מה שהוא כותב ניתן לעריכה חופשית לפני שימוש</p>
       </div>
       <div class="tools-grid">
 
@@ -4567,6 +4568,7 @@
           <span id="email-lang-note" style="font-weight:400;color:var(--gray-400);font-size:11px;"></span>
         </div>
         <div class="email-reply-box" id="email-reply-text"></div>
+        <p style="font-size:11px;color:var(--gray-400);margin:6px 0 0;">✏️ זו טיוטה, הסוכן יכול לפעמים לא לדייק, כדאי לעבור עליה לפני שליחה</p>
         <button class="email-copy-btn" onclick="EmailAI.copyReply()">📋 העתק תשובה</button>
       </div>
 
@@ -4890,8 +4892,8 @@
         <div style="font-size:16px;font-weight:800;color:var(--navy-500);margin-bottom:6px;" id="wa-progress-title">מחבר...</div>
         <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;" id="wa-progress-sub">אנא המתן</div>
         <div style="background:var(--gray-100);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--gray-600);text-align:right;">
-          <strong>👋 הודעת אישור מה-AI:</strong><br>
-          <span style="font-style:italic;">"היי, כאן סוכן ה-AI שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
+          <strong>👋 הודעת אישור מהסוכן החכם:</strong><br>
+          <span style="font-style:italic;">"היי, כאן הסוכן החכם שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
         </div>
       </div>
     </div>
@@ -4936,7 +4938,8 @@
       <button onclick="closeModal('modal-support')" style="background:rgba(255,255,255,.15);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div class="support-modal-body" style="padding:16px 16px 32px;max-height:70vh;overflow-y:auto;">
-      <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">תיאור הבעיה, ה-AI שלנו יענה מיד, ונקבל התראה לטיפול.</p>
+      <p style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">תיאור הבעיה, סוכן התמיכה שלך יענה מיד, ונקבל התראה לטיפול.</p>
+      <p style="font-size:11px;color:var(--gray-400);margin-bottom:12px;">✏️ התשובה יכולה לפעמים לא לדייק, האדמין תמיד בלופ למקרה הצורך</p>
       <textarea id="support-msg-input"
         placeholder="מה הבעיה? פרטים נוספים יעזרו לטפל מהר יותר..."
         style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
@@ -5051,7 +5054,7 @@
       <li>✅ ניהול לידים ופייפליין מלא</li>
       <li>✅ משימות, לוח שנה ואנליטיקה</li>
       <li>✅ יומן שיחות ו-WhatsApp מהיר</li>
-      <li>✅ סוכן AI ותיקי נכסים</li>
+      <li>✅ סוכן חכם ותיקי נכסים</li>
       <li>✅ ייצוא נתונים וכלים מקצועיים</li>
     </ul>
     <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתח חשבון ניסיון, חינם</button>
@@ -5084,6 +5087,7 @@
     <div id="reward-gen-inputs" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
     <button class="tool-btn tool-btn-primary" id="reward-gen-btn" onclick="RewardGen.generate()">✨ יצירה עבורי</button>
     <div class="mktg-output" id="reward-gen-out"></div>
+    <p style="font-size:11px;color:var(--gray-400);margin:4px 0 0;">✏️ הסוכן יכול לפעמים לא לדייק, כל תוצר כאן ניתן לעריכה חופשית לפני שימוש</p>
     <div class="mktg-actions" id="reward-gen-act">
       <button class="mktg-btn-copy" onclick="RewardGen.copy()">📋 העתק</button>
     </div>
@@ -5787,7 +5791,7 @@
       </p>
 
       <p><strong>בעלות על תוכן שנוצר ב-AI</strong><br>
-      תוצרי הבינה המלאכותית (הצעות שיווק, הודעות WhatsApp, תוכן שנוצר ע"י הסוכן) שמיוצרים בתוך המערכת הינם רכוש Liders CRM ומוצגים למשתמש לשימוש במסגרת המנוי בלבד.</p>
+      תוצרי הבינה המלאכותית (הצעות שיווק, הודעות WhatsApp, תוכן שנוצר ע"י הסוכן) שמיוצרים בתוך המערכת הינם רכוש Liders CRM ומוצגים למשתמש לשימוש במסגרת המנוי בלבד, גם אם נערכו או שונו על-ידי המשתמש לאחר היצירה.</p>
 
       <p><strong>מה קורה בסיום מנוי</strong><br>
       ביטול מנוי אינו מוחק את הנתונים אוטומטית, הנתונים נשמרים עד 30 יום לאחר הביטול. במהלך תקופה זו ניתן לייצא את הנתונים האישיים (לידים, עסקאות, הערות) על-ידי פנייה ל-<a href="mailto:liders.crm@gmail.com" style="color:var(--blue-500);">liders.crm@gmail.com</a>. לאחר 30 יום הנתונים נמחקים לצמיתות.</p>
@@ -5919,7 +5923,7 @@
         <div class="tutorial-step-card">
           <div class="tutorial-step-num">5</div>
           <div>
-            <div class="tutorial-step-title">🤖 שיחה עם סוכני AI</div>
+            <div class="tutorial-step-title">🤖 שיחה עם סוכן השיווק</div>
             <div class="tutorial-step-desc">לשונית "שירותי שיווק", הסוכן יכתוב לך הצעות מחיר, פוסטים ומסרים ללקוחות.</div>
           </div>
         </div>
@@ -7281,7 +7285,7 @@ const Onboarding = {
     },
     {
       title: 'הכיר את הסוכן שלך 🤖',
-      subtitle: 'עוזר AI אישי שמנטר ומניע אותך',
+      subtitle: 'הסוכן החכם שמנטר ומניע אותך',
       render() {
         const firstName = (Onboarding._data.agentName || 'יזם').split(' ')[0];
         const ind = localStorage.getItem('liders_industry') || 'other';
@@ -7943,7 +7947,7 @@ const Tools = {
       closing: 'סגירת עסקה'
     };
     if (!res || !btn) return;
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן ה-AI ליצירת תסריטי שיחה ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן השיווק ליצירת תסריטי שיחה ✨'); return; }
     btn.textContent = '⏳ מייצר תסריט...'; btn.disabled = true;
     res.classList.remove('visible'); if (acts) acts.style.display = 'none';
     try {
@@ -7993,7 +7997,7 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
     const acts    = document.getElementById('email-actions');
     const toneLabel = { formal:'רשמי ומקצועי', friendly:'ידידותי ומקצועי', urgent:'דחוף אך מנומס', followup:'עדין ולא פולשני' };
     if (!res || !btn) return;
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן ה-AI ליצירת אימיילים מקצועיים ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן החכם ליצירת אימיילים מקצועיים ✨'); return; }
     btn.textContent = '⏳ כותב אימייל...'; btn.disabled = true;
     res.classList.remove('visible'); if (acts) acts.style.display = 'none';
     try {
@@ -8036,7 +8040,7 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
     const btn      = document.getElementById('prop-btn');
     const acts     = document.getElementById('prop-actions');
     if (!res || !btn) return;
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן ה-AI ליצירת הצעות מחיר ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן המקצועי ליצירת הצעות מחיר ✨'); return; }
     btn.textContent = '⏳ מייצר הצעה...'; btn.disabled = true;
     res.classList.remove('visible'); if (acts) acts.style.display = 'none';
     try {
@@ -8516,6 +8520,7 @@ const Marketing = {
         <div class="marketing-addon-badge">${isAddon ? '✅ תוסף פעיל' : '🎁 ניסיון חינמי'}</div>
         <h2>📣 שירותי שיווק</h2>
         <p>יצירת תוכן שיווקי מקצועי ישירות מהמערכת, בשניות</p>
+        <p style="font-size:0.78rem;color:var(--gray-400);margin-top:2px;">✏️ סוכן השיווק יכול לפעמים לא לדייק, כל תוכן שנוצר ניתן לעריכה חופשית לפני שליחה</p>
       </div>
       ${trialBanner}
       ${usageLabel ? `<div style="font-size:0.8rem;color:var(--gray-500);text-align:center;margin-bottom:10px;"><span class="mktg-usage-counter">${usageLabel}</span></div>` : ''}
@@ -8909,6 +8914,7 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
       const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(msg);
       container.innerHTML = `
         <div style="background:var(--gray-50);border-radius:12px;padding:14px;font-size:14px;line-height:1.7;color:var(--gray-800);white-space:pre-wrap;direction:rtl;text-align:right;margin-bottom:14px;">${escapeHtml(msg)}</div>
+        <p style="font-size:11px;color:var(--gray-400);margin:0 0 10px;text-align:center;">✏️ סוכן השיווק יכול לפעמים לא לדייק, אפשר לערוך את ההודעה ב-WhatsApp לפני השליחה</p>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(msg)}">📋 העתק</button>
           <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שלח ב-WA</button>
@@ -10348,7 +10354,7 @@ const EmailAI = {
     const emailText = (input?.value || '').trim();
     if (!emailText) { toast('הדבק תוכן מייל לפני הניתוח', 'error'); return; }
     if (emailText.length < 20) { toast('המייל קצר מדי, הדבק את התוכן המלא', 'error'); return; }
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן ה-AI לניתוח מיילים ויצירת תשובות ✨'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש בסוכן החכם לניתוח מיילים ויצירת תשובות ✨'); return; }
 
     const btn = document.getElementById('email-analyze-btn');
     btn.disabled = true;
@@ -11600,6 +11606,7 @@ const LeadDetail = {
             </div>
           ` : `
             <div class="ai-panel">
+              <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-bottom:8px;">✏️ הסוכן יכול לפעמים לא לדייק, כל תוצאה כאן ניתנת לעריכה חופשית לפני שימוש</p>
               <button class="btn btn-primary w-full" onclick="LeadDetail.runScore()">
                 🎯 ניתוח ליד וציון AI
               </button>
@@ -14746,7 +14753,7 @@ const Support = {
   _busy: false,
 
   open() {
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מסוכן ה-AI שלנו 🤖'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מסוכן התמיכה שלך 🤖'); return; }
     const inp     = document.getElementById('support-msg-input');
     const aiEl    = document.getElementById('support-ai-response');
     const btn     = document.getElementById('support-submit-btn');
@@ -15281,7 +15288,7 @@ const MotivationAgent = {
   },
 
   async generate() {
-    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל מוטיבציה יומית מסוכן ה-AI 💪'); return; }
+    if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל מוטיבציה יומית מסוכן המוטיבציה שלך 💪'); return; }
     if (!AiLimits.hasAiAccess()) { toast('הסוכן זמין בתקופת הניסיון, הירשם בחינם', 'info'); return; }
     if (this._isCooling()) {
       toast(`⏳ הסוכן יחזור בעוד ${this._fmtTime(this._remaining())}, כדאי לקבוע שגרת בוקר ולילה!`, 'info', 3000); return;
@@ -15375,8 +15382,8 @@ const GuidedTour = {
     {
       target: '[data-screen="marketing"]',
       emoji: '🤖',
-      title: 'סוכני AI לשיווק',
-      text: 'כלי AI שכותבים בשבילך הצעות מחיר, פוסטים לרשתות, ומסרים ללקוחות, תוך שניות.',
+      title: 'סוכן השיווק שלך',
+      text: 'כותב בשבילך הצעות מחיר, פוסטים לרשתות, ומסרים ללקוחות, תוך שניות.',
     },
     {
       target: null,
