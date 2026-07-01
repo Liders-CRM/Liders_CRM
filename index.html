@@ -4340,6 +4340,15 @@
         </div>
       </div>
 
+      <div onclick="Roadmap.open()" style="margin:0 16px 20px;background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(124,58,237,.06));border:1.5px dashed rgba(37,99,235,.35);border-radius:14px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:24px;">🚧</div>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:13.5px;color:var(--navy-500);">מה אנחנו בונים עכשיו</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">רשימת פיצ'רים בתהליך פיתוח, כולל רעיונות ממשתמשים</div>
+        </div>
+        <div style="color:var(--navy-300);font-size:18px;">←</div>
+      </div>
+
       <!-- AI ובינה מלאכותית -->
       <div class="pro-cat-label">🤖 בינה מלאכותית</div>
       <div class="pro-grid">
@@ -4860,6 +4869,13 @@
         🎁 <strong>רעיון שיאושר ויושם = +300 XP!</strong><br>
         <span style="font-size:12px;color:var(--gray-500);">נשתדל לעדכן אם הרעיון שלך נבחר לפיתוח.</span>
       </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+          <span>🚧 כבר בתהליך בנייה</span>
+          <span onclick="Roadmap.open()" style="color:var(--blue-500);cursor:pointer;font-weight:600;">לרשימה המלאה ←</span>
+        </div>
+        <div id="idea-roadmap-list" style="max-height:120px;overflow-y:auto;"></div>
+      </div>
       <label class="form-label">תיאור הרעיון</label>
       <textarea id="idea-text" class="form-input" rows="4" placeholder="לדוגמה: הוספת מסנן לפי ערך עסקה בפייפליין, שליחה ישירה לוואטסאפ ממסך הליד..." style="resize:vertical;min-height:100px;"></textarea>
       <label class="form-label" style="margin-top:12px;">קטגוריה</label>
@@ -4875,6 +4891,23 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-idea-box')">ביטול</button>
       <button class="btn btn-primary" style="flex:1;" onclick="IdeaBox.submit()">💡 שלח רעיון ← </button>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP MODAL -->
+<div id="modal-roadmap" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-roadmap')">
+  <div class="modal-sheet" style="max-width:460px;">
+    <div class="modal-header">
+      <div class="modal-title">🚧 בתהליך בנייה</div>
+      <button class="modal-close" onclick="closeModal('modal-roadmap')">×</button>
+    </div>
+    <div style="padding:0 20px 8px;font-size:12.5px;color:var(--gray-500);line-height:1.5;">
+      פיצ'רים ורעיונות שאנחנו עובדים עליהם כרגע, כולל רעיונות ששלחו משתמשים כמוך.
+    </div>
+    <div id="modal-roadmap-list" style="padding:8px 20px 4px;max-height:50vh;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" style="flex:1;" onclick="closeModal('modal-roadmap'); IdeaBox.open();">💡 הצע רעיון משלך</button>
     </div>
   </div>
 </div>
@@ -15551,6 +15584,69 @@ const GuidedTour = {
 };
 
 /* ═══════════════════════════════════════════
+   ROADMAP, public "in progress" feature list
+═══════════════════════════════════════════ */
+const Roadmap = {
+  _items: null,
+  _catLabel(c) { return { feature:'פיצ׳ר חדש', improvement:'שיפור', integration:'אינטגרציה', other:'אחר' }[c] || 'אחר'; },
+
+  async fetch(force) {
+    if (this._items && !force) return this._items;
+    try {
+      const { data, error } = await sbClient
+        .from('roadmap_items').select('title,description,category')
+        .eq('is_published', true).order('order_idx');
+      if (error) throw error;
+      this._items = data || [];
+    } catch(e) {
+      this._items = this._items || [];
+    }
+    return this._items;
+  },
+
+  renderInto(containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const items = this._items || [];
+    if (!items.length) {
+      el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:12.5px;">עדיין אין פריטים ברשימה</div>';
+      return;
+    }
+    el.innerHTML = items.map(it => `
+      <div style="padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <div style="font-weight:700;font-size:13px;color:var(--gray-800);">${escapeHtml(it.title)}</div>
+          <span style="font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--blue-100);color:var(--blue-500);white-space:nowrap;flex-shrink:0;">🚧 ${escapeHtml(this._catLabel(it.category))}</span>
+        </div>
+        ${it.description ? `<div style="font-size:11.5px;color:var(--gray-500);margin-top:4px;line-height:1.5;">${escapeHtml(it.description)}</div>` : ''}
+      </div>
+    `).join('');
+  },
+
+  async open() {
+    await this.fetch();
+    this.renderInto('modal-roadmap-list');
+    openModal('modal-roadmap');
+  },
+
+  async checkDuplicate(ideaText) {
+    const items = await this.fetch();
+    if (!items.length) return false;
+    const list = items.map((it, i) => `${i + 1}. ${it.title}${it.description ? ' — ' + it.description : ''}`).join('\n');
+    try {
+      const resp = await AI.call([{
+        role: 'user',
+        content: `רשימת פיצ'רים שכבר קיימים אצלנו בתהליך בנייה:\n${list}\n\nרעיון חדש שמשתמש הציע:\n"${ideaText}"\n\nהאם הרעיון החדש זהה או דומה מאוד במהותו לאחד הפריטים ברשימה? ענה במילה אחת בלבד: כן או לא.`,
+      }], 20, { type: 'general', system: 'אתה עוזר שמשווה רעיונות במהירות. ענה אך ורק במילה "כן" או "לא", בלי שום טקסט נוסף.' });
+      return (resp || '').trim().startsWith('כן');
+    } catch(e) {
+      return false;
+    }
+  },
+};
+window.Roadmap = Roadmap;
+
+/* ═══════════════════════════════════════════
    IDEA BOX, submit user ideas for 300 XP
 ═══════════════════════════════════════════ */
 const IdeaBox = {
@@ -15562,6 +15658,7 @@ const IdeaBox = {
     const ta = document.getElementById('idea-text');
     if (ta) ta.value = '';
     openModal('modal-idea-box');
+    Roadmap.fetch().then(() => Roadmap.renderInto('idea-roadmap-list'));
   },
 
   async submit() {
@@ -15573,9 +15670,15 @@ const IdeaBox = {
     const tenantName = State.tenant?.name || '';
 
     const btn = document.querySelector('#modal-idea-box .modal-footer .btn-primary');
-    if (btn) { btn.disabled = true; btn.textContent = 'שולח...'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'בודק...'; }
 
     try {
+      if (await Roadmap.checkDuplicate(text)) {
+        closeModal('modal-idea-box');
+        toast('רעיון נחמד, אבל הוא כבר קיים בתיבת הפיצ׳רים שבתהליך הבנייה, נשמח לשמוע ממך רעיון מקורי ונשמח לאמץ אותו 💡', 'info', 6000);
+        return;
+      }
+
       // Store locally
       const ideas = JSON.parse(localStorage.getItem(this._STORAGE_KEY) || '[]');
       const idea  = { text, category, ts: Date.now() };

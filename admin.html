@@ -586,6 +586,7 @@
     <button class="nav-tab" onclick="switchTab('invoices')">חשבוניות ותשלומים</button>
     <button class="nav-tab" onclick="switchTab('saas')">לקוחות SaaS 🔴</button>
     <button class="nav-tab" onclick="switchTab('support')" id="nav-support">🎫 תמיכה <span id="support-open-count" style="display:none;background:var(--red);color:#fff;border-radius:99px;font-size:10px;padding:1px 6px;margin-right:4px;"></span></button>
+    <button class="nav-tab" onclick="switchTab('roadmap')">🚧 בתהליך בנייה</button>
   </div>
 
   <!-- Main Content -->
@@ -767,6 +768,37 @@
       </div>
     </div>
 
+    <!-- ── ROADMAP ── -->
+    <div id="section-roadmap" class="section">
+      <div class="section-header">
+        <h2>🚧 בתהליך בנייה</h2>
+        <div class="header-actions">
+          <button class="btn-outline btn-sm" onclick="loadRoadmapItems()">🔄 רענן</button>
+          <button class="btn-primary btn-sm" onclick="openAddRoadmapItem()">+ הוסף פריט</button>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:var(--text-dim);margin-bottom:16px;">
+        הרשימה הזאת מוצגת לכל המשתמשים בכל המערכות (מסך Pro Hub + תיבת הצעת רעיון). כשמשתמש מציע רעיון שכבר מופיע כאן, הוא לא מקבל את ה-300 XP.
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>כותרת</th>
+              <th>תיאור</th>
+              <th>קטגוריה</th>
+              <th>מקור</th>
+              <th>מוצג</th>
+              <th>פעולות</th>
+            </tr>
+          </thead>
+          <tbody id="roadmap-tbody">
+            <tr><td colspan="6"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app-shell -->
 
@@ -854,6 +886,57 @@
   </div>
 </div>
 
+<!-- Add / Edit Roadmap Item Modal -->
+<div class="modal-overlay hidden" id="modal-roadmap-item">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-roadmap-item-title">הוסף פריט</h3>
+      <button class="modal-close" onclick="closeModal('modal-roadmap-item')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="rm-id">
+      <div class="modal-form-group">
+        <label>כותרת</label>
+        <input type="text" id="rm-title" placeholder="לדוגמה: חתימה דיגיטלית לחוזים">
+      </div>
+      <div class="modal-form-group">
+        <label>תיאור</label>
+        <textarea id="rm-description" placeholder="תיאור קצר שהמשתמשים יראו..."></textarea>
+      </div>
+      <div class="modal-form-group">
+        <label>קטגוריה</label>
+        <select id="rm-category">
+          <option value="feature">פיצ'ר חדש</option>
+          <option value="improvement">שיפור</option>
+          <option value="integration">אינטגרציה</option>
+          <option value="other">אחר</option>
+        </select>
+      </div>
+      <div class="modal-form-group">
+        <label>מקור</label>
+        <select id="rm-source">
+          <option value="internal">פנימי</option>
+          <option value="user_idea">רעיון ממשתמש</option>
+        </select>
+      </div>
+      <div class="modal-form-group">
+        <label>סדר הצגה</label>
+        <input type="number" id="rm-order" placeholder="0" style="direction:ltr;">
+      </div>
+      <div class="modal-form-group">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <input type="checkbox" id="rm-published" style="width:18px;height:18px;cursor:pointer;accent-color:var(--green);" checked>
+          <label for="rm-published" style="cursor:pointer;font-size:14px;">מוצג למשתמשים</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline btn-sm" onclick="closeModal('modal-roadmap-item')">ביטול</button>
+      <button class="btn-primary btn-sm" onclick="saveRoadmapItem()">שמור</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tenant Management Modal -->
 <div class="modal-overlay hidden" id="modal-tenant-mgmt">
   <div class="modal">
@@ -936,7 +1019,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const ADMIN_EMAILS = ['liders.crm@gmail.com', 'elgrablidudu@gmail.com'];
-const TABS = ['dashboard', 'accounts', 'invoices', 'saas', 'support'];
+const TABS = ['dashboard', 'accounts', 'invoices', 'saas', 'support', 'roadmap'];
 
 /* ── UTILS ── */
 function esc(s) {
@@ -1028,12 +1111,14 @@ function switchTab(tab) {
   if (tab === 'invoices') loadInvoices();
   if (tab === 'saas')     loadSaasTenants();
   if (tab === 'support')  loadSupportTickets();
+  if (tab === 'roadmap')  loadRoadmapItems();
 }
 
 /* ── DATA STATE ── */
 let allAccounts = [];
 let allInvoices = [];
 let allSaasTenants = [];
+let allRoadmapItems = [];
 
 /* ── LOAD ALL ── */
 async function loadAll() {
@@ -1042,6 +1127,7 @@ async function loadAll() {
     loadInvoices(),
     loadSaasTenants(),
     loadSupportTickets(),
+    loadRoadmapItems(),
   ]);
   renderDashboard();
 }
@@ -1548,6 +1634,101 @@ async function resolveSupportTicket(ticketId) {
   if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
   toast('✔ סומן כטופל', 'success');
   loadSupportTickets();
+}
+
+/* ═══════════════════════════════════════════
+   ROADMAP ITEMS, public "in progress" list
+═══════════════════════════════════════════ */
+async function loadRoadmapItems() {
+  const tbody = document.getElementById('roadmap-tbody');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="spinner"></div></div></td></tr>';
+  const { data, error } = await sb.rpc('admin_list_roadmap_items');
+  if (error) {
+    allRoadmapItems = [];
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
+    return;
+  }
+  allRoadmapItems = data || [];
+  renderRoadmapTable(allRoadmapItems);
+}
+
+function renderRoadmapTable(items) {
+  const tbody = document.getElementById('roadmap-tbody');
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">🚧</div><p>אין פריטים ברשימה</p></div></td></tr>';
+    return;
+  }
+  const catLabel = { feature:'פיצ׳ר חדש', improvement:'שיפור', integration:'אינטגרציה', other:'אחר' };
+  const srcLabel = { internal:'פנימי', user_idea:'רעיון ממשתמש' };
+  tbody.innerHTML = items.map(it => `
+    <tr>
+      <td><strong>${esc(it.title)}</strong></td>
+      <td style="max-width:220px;font-size:.82rem;color:var(--text-muted)">${esc((it.description||'').slice(0,90))}${(it.description||'').length>90?'…':''}</td>
+      <td><span class="badge badge-dim">${esc(catLabel[it.category]||it.category)}</span></td>
+      <td style="font-size:.8rem;color:var(--text-dim)">${esc(srcLabel[it.source]||it.source)}</td>
+      <td>${it.is_published ? '<span class="badge badge-green">מוצג</span>' : '<span class="badge badge-dim">מוסתר</span>'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-icon" title="עריכה" onclick="openEditRoadmapItem('${esc(it.id)}')">✏️</button>
+          <button class="btn-icon" title="מחיקה" onclick="deleteRoadmapItem('${esc(it.id)}')" style="color:var(--red);">🗑️</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddRoadmapItem() {
+  document.getElementById('rm-id').value = '';
+  document.getElementById('rm-title').value = '';
+  document.getElementById('rm-description').value = '';
+  document.getElementById('rm-category').value = 'feature';
+  document.getElementById('rm-source').value = 'internal';
+  document.getElementById('rm-order').value = '0';
+  document.getElementById('rm-published').checked = true;
+  document.getElementById('modal-roadmap-item-title').textContent = 'הוסף פריט';
+  openModal('modal-roadmap-item');
+}
+
+function openEditRoadmapItem(id) {
+  const it = allRoadmapItems.find(x => x.id === id);
+  if (!it) return;
+  document.getElementById('rm-id').value = it.id;
+  document.getElementById('rm-title').value = it.title || '';
+  document.getElementById('rm-description').value = it.description || '';
+  document.getElementById('rm-category').value = it.category || 'feature';
+  document.getElementById('rm-source').value = it.source || 'internal';
+  document.getElementById('rm-order').value = it.order_idx ?? 0;
+  document.getElementById('rm-published').checked = !!it.is_published;
+  document.getElementById('modal-roadmap-item-title').textContent = 'עריכת פריט';
+  openModal('modal-roadmap-item');
+}
+
+async function saveRoadmapItem() {
+  const id = document.getElementById('rm-id').value;
+  const title = document.getElementById('rm-title').value.trim();
+  if (!title) { toast('נא מלא כותרת', 'error'); return; }
+
+  const { error } = await sb.rpc('admin_save_roadmap_item', {
+    p_id:           id || null,
+    p_title:        title,
+    p_description:  document.getElementById('rm-description').value.trim() || null,
+    p_category:     document.getElementById('rm-category').value,
+    p_source:       document.getElementById('rm-source').value,
+    p_is_published: document.getElementById('rm-published').checked,
+    p_order_idx:    parseInt(document.getElementById('rm-order').value, 10) || 0,
+  });
+  if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+  toast(id ? '✅ פריט עודכן' : '✅ פריט נוסף', 'success');
+  closeModal('modal-roadmap-item');
+  await loadRoadmapItems();
+}
+
+async function deleteRoadmapItem(id) {
+  if (!confirm('למחוק פריט זה מהרשימה?')) return;
+  const { error } = await sb.rpc('admin_delete_roadmap_item', { p_id: id });
+  if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+  toast('🗑️ פריט נמחק', 'success');
+  await loadRoadmapItems();
 }
 </script>
 </body>
