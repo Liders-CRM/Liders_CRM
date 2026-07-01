@@ -286,6 +286,37 @@
     .badge-call    { background: var(--gray-100); color: var(--gray-600); }
     .badge-other   { background: var(--gray-100); color: var(--gray-600); }
 
+    /* Lead role: buyer/seller/both */
+    .role-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 800; padding: 3px 9px;
+      border-radius: var(--radius-full); white-space: nowrap;
+    }
+    .role-badge-buyer  { background: #16A34A; color: #fff; }
+    .role-badge-seller { background: #EAB308; color: #3F2D00; }
+    .role-badge-both   { background: linear-gradient(90deg, #16A34A 50%, #EAB308 50%); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+
+    .role-picker { display: flex; gap: 6px; }
+    .role-pick-btn {
+      flex: 1; padding: 9px 6px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--surface); font-size: 12.5px; font-weight: 700; cursor: pointer;
+      color: var(--gray-500); transition: all .15s; font-family: inherit;
+    }
+    .role-pick-btn.active.role-pick-buyer  { background: #16A34A; border-color: #16A34A; color: #fff; }
+    .role-pick-btn.active.role-pick-seller { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
+    .role-pick-btn.active.role-pick-both   { background: linear-gradient(90deg,#16A34A 50%,#EAB308 50%); border-color: transparent; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+
+    .role-filter-pills { display: flex; gap: 6px; padding: 0 16px 10px; flex-wrap: wrap; }
+    .role-filter-pill {
+      padding: 6px 12px; border-radius: var(--radius-full); border: 1.5px solid var(--border);
+      background: var(--surface); font-size: 12px; font-weight: 700; cursor: pointer;
+      color: var(--gray-500); transition: all .15s; font-family: inherit;
+    }
+    .role-filter-pill.active.role-filter-buyer  { background: #16A34A; border-color: #16A34A; color: #fff; }
+    .role-filter-pill.active.role-filter-seller { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
+    .role-filter-pill.active.role-filter-both   { background: linear-gradient(90deg,#16A34A 50%,#EAB308 50%); border-color: transparent; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+    .role-filter-pill.active.role-filter-all    { background: var(--navy-500); border-color: var(--navy-500); color: #fff; }
+
     .badge-status-new      { background: var(--gray-100); color: var(--gray-600); }
     .badge-status-available{ background: var(--green-100); color: var(--green-600); }
     .badge-status-offer    { background: var(--orange-100); color: var(--orange-500); }
@@ -3951,6 +3982,7 @@
           title="נקה חיפוש">×</button>
       </div>
       <div class="pipeline-stage-tabs" id="pipeline-stage-tabs"></div>
+      <div class="role-filter-pills" id="pipeline-role-filter"></div>
       <div class="pipeline-wrapper" id="pipeline-board"></div>
     </div>
 
@@ -3968,6 +4000,7 @@
                placeholder="🔍 חפש לפי שם, טלפון, אזור..."
                oninput="Leads.search(this.value)">
       </div>
+      <div class="role-filter-pills" id="leads-role-filter"></div>
       <div class="screen-body" id="leads-list-container"></div>
     </div>
 
@@ -5415,6 +5448,14 @@
         <input type="text" id="new-lead-area" class="form-input" placeholder="תל אביב, גבעתיים...">
       </div>
       <div class="form-group">
+        <label class="form-label">סוג ליד</label>
+        <div class="role-picker" id="new-lead-role-picker" data-value="buyer">
+          <button type="button" class="role-pick-btn role-pick-buyer active" onclick="selectLeadRole('new','buyer')">💰 קונה</button>
+          <button type="button" class="role-pick-btn role-pick-seller" onclick="selectLeadRole('new','seller')">🏠 מוכר</button>
+          <button type="button" class="role-pick-btn role-pick-both" onclick="selectLeadRole('new','both')">💰🏠 שניהם</button>
+        </div>
+      </div>
+      <div class="form-group">
         <label class="form-label">הערות</label>
         <textarea id="new-lead-notes" class="form-input form-textarea" placeholder="מה יודעים על הליד?"></textarea>
       </div>
@@ -5674,6 +5715,14 @@
           <option value="call">שיחה</option>
           <option value="other">אחר</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">סוג ליד</label>
+        <div class="role-picker" id="edit-lead-role-picker" data-value="buyer">
+          <button type="button" class="role-pick-btn role-pick-buyer active" onclick="selectLeadRole('edit','buyer')">💰 קונה</button>
+          <button type="button" class="role-pick-btn role-pick-seller" onclick="selectLeadRole('edit','seller')">🏠 מוכר</button>
+          <button type="button" class="role-pick-btn role-pick-both" onclick="selectLeadRole('edit','both')">💰🏠 שניהם</button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">הערות</label>
@@ -6110,6 +6159,20 @@ function scoreClass(s) {
   if (s >= 40) return 'score-cool';
   return 'score-cold';
 }
+function roleLabel(r) {
+  return { buyer: 'קונה', seller: 'מוכר', both: 'קונה+מוכר' }[r] || 'קונה';
+}
+function roleBadgeHtml(r) {
+  const role = ['buyer','seller','both'].includes(r) ? r : 'buyer';
+  const icon = { buyer: '💰', seller: '🏠', both: '💰🏠' }[role];
+  return `<span class="role-badge role-badge-${role}">${icon} ${roleLabel(role)}</span>`;
+}
+function roleMatchesFilter(leadRole, filter) {
+  if (!filter || filter === 'all') return true;
+  const role = ['buyer','seller','both'].includes(leadRole) ? leadRole : 'buyer';
+  if (filter === 'both') return role === 'both';
+  return role === filter || role === 'both';
+}
 function sourceLabel(s) {
   const m = { yad2:'יד2', madlan:'מדלן', facebook:'פייסבוק', referral:'הפניה', website:'אתר', call:'שיחה', other:'אחר' };
   return m[s] || s;
@@ -6439,6 +6502,7 @@ const DB = {
         source: l.source, budget_min: Number(l.budget_min) || 0,
         budget_max: Number(l.budget_max) || 0,
         desired_area: l.desired_area || '', score: l.score,
+        lead_role: l.lead_role || 'buyer',
         notes: l.notes || '', tags: l.tags || [],
         last_contact: l.last_contact?.split('T')[0] || null,
         next_followup: l.next_followup?.split('T')[0] || null,
@@ -6475,6 +6539,7 @@ const DB = {
       budget_max: lead.budget_max || null,
       desired_area: lead.desired_area || null,
       notes: lead.notes || '',
+      lead_role: lead.lead_role || 'buyer',
       pipeline_stage_id: firstStageId,
       score: 50, next_followup: addDays(1),
     }).select().single();
@@ -6485,6 +6550,7 @@ const DB = {
       stage: 's1', source: data.source, budget_min: 0,
       budget_max: Number(data.budget_max) || 0,
       desired_area: data.desired_area || '', score: 50,
+      lead_role: data.lead_role || 'buyer',
       notes: data.notes || '', tags: [],
       last_contact: null, next_followup: addDays(1), created_at: today(),
     };
@@ -6509,6 +6575,7 @@ const DB = {
       stage: 's1', source: d.source, budget_min: 0,
       budget_max: Number(d.budget_max) || 0,
       desired_area: d.desired_area || '', score: d.score,
+      lead_role: d.lead_role || 'buyer',
       notes: d.notes || '', tags: [],
       last_contact: null, next_followup: d.next_followup ? d.next_followup.split('T')[0] : null,
       created_at: d.created_at ? d.created_at.split('T')[0] : today(),
@@ -7815,6 +7882,7 @@ function discardAndClose() {
   });
   const src = document.getElementById('new-lead-source');
   if (src) src.value = 'other';
+  selectLeadRole('new', 'buyer');
   closeDiscardSheet();
   closeModal('modal-add-lead');
 }
@@ -11416,17 +11484,19 @@ function pipelineEmptyTip(stageIdx) {
 const Pipeline = {
   _query: '',
   _activeStage: null,
+  _roleFilter: 'all',
 
   render() {
     if (!this._activeStage && State.stages.length) {
       this._activeStage = State.stages[0].id;
     }
     this._renderTabs();
+    this._renderRoleFilter();
     const q = this._query.toLowerCase().trim();
     const board = document.getElementById('pipeline-board');
     board.classList.toggle('is-searching', !!q);
     board.innerHTML = State.stages.map((stage, stageIdx) => {
-      let leads = State.leads.filter(l => l.stage === stage.id);
+      let leads = State.leads.filter(l => l.stage === stage.id && roleMatchesFilter(l.lead_role, this._roleFilter));
       const allCount = leads.length;
       if (q) leads = leads.filter(l =>
         (l.name||'').toLowerCase().includes(q) ||
@@ -11482,6 +11552,26 @@ const Pipeline = {
     }).join('');
   },
 
+  _renderRoleFilter() {
+    const el = document.getElementById('pipeline-role-filter');
+    if (!el) return;
+    const pills = [
+      { id: 'all',    label: 'הכל' },
+      { id: 'buyer',  label: '💰 קונים' },
+      { id: 'seller', label: '🏠 מוכרים' },
+      { id: 'both',   label: '💰🏠 שניהם' },
+    ];
+    el.innerHTML = pills.map(p => `
+      <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
+        onclick="Pipeline.setRoleFilter('${p.id}')">${p.label}</button>
+    `).join('');
+  },
+
+  setRoleFilter(role) {
+    this._roleFilter = role;
+    this.render();
+  },
+
   setTab(stageId) {
     this._activeStage = stageId;
     this._query = '';
@@ -11520,6 +11610,7 @@ const Pipeline = {
         </div>
         <div class="lead-card-footer" style="margin-top:8px;">
           <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+            ${roleBadgeHtml(lead.lead_role)}
             <span class="badge badge-${safeSource(lead.source)}">${escapeHtml(sourceLabel(lead.source))}</span>
             ${stale ? '<span class="stale-badge">⏰ ממתין</span>' : ''}
             ${task ? `<span style="font-size:11px; color:${isOverdue?'var(--red-600)':isToday?'var(--orange-500)':'var(--gray-400)'}; font-weight:600;">${typeEmoji(task.type)} ${formatRelDate(task.due)}</span>` : ''}
@@ -11536,15 +11627,16 @@ const Pipeline = {
 ═══════════════════════════════════════════ */
 const Leads = {
   _query: '',
+  _roleFilter: 'all',
   render() {
+    this._renderRoleFilter();
     const q = this._query.toLowerCase();
-    const list = q
-      ? State.leads.filter(l =>
-          (l.name||'').toLowerCase().includes(q) ||
-          (l.phone||'').includes(q) ||
-          (l.desired_area||'').toLowerCase().includes(q)
-        )
-      : State.leads;
+    let list = State.leads.filter(l => roleMatchesFilter(l.lead_role, this._roleFilter));
+    if (q) list = list.filter(l =>
+      (l.name||'').toLowerCase().includes(q) ||
+      (l.phone||'').includes(q) ||
+      (l.desired_area||'').toLowerCase().includes(q)
+    );
     const el = document.getElementById('leads-list-container');
     el.innerHTML = list.length
       ? `<div style="display:flex;flex-direction:column;gap:10px;padding:0 0 80px;">
@@ -11566,6 +11658,24 @@ const Leads = {
     this._query = q;
     this.render();
   },
+  _renderRoleFilter() {
+    const el = document.getElementById('leads-role-filter');
+    if (!el) return;
+    const pills = [
+      { id: 'all',    label: 'הכל' },
+      { id: 'buyer',  label: '💰 קונים' },
+      { id: 'seller', label: '🏠 מוכרים' },
+      { id: 'both',   label: '💰🏠 שניהם' },
+    ];
+    el.innerHTML = pills.map(p => `
+      <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
+        onclick="Leads.setRoleFilter('${p.id}')">${p.label}</button>
+    `).join('');
+  },
+  setRoleFilter(role) {
+    this._roleFilter = role;
+    this.render();
+  },
   renderRow(lead, idx = 0) {
     const stage = State.stages.find(s => s.id === lead.stage);
     const task = State.tasks.find(t => t.lead_id === lead.id && !t.done);
@@ -11575,7 +11685,10 @@ const Leads = {
            onclick="App.go('lead-detail', {currentLeadId:'${lead.id}'})">
         <div class="score-badge ${scoreClass(lead.score)}${scoreGlow}" style="width:40px;height:40px;font-size:13px;">${lead.score}</div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; font-size:15px;">${escapeHtml(lead.name)}</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="font-weight:700; font-size:15px;">${escapeHtml(lead.name)}</div>
+            ${roleBadgeHtml(lead.lead_role)}
+          </div>
           <div style="font-size:12px; color:var(--gray-500);">${escapeHtml(maskPhone(lead.phone))} · ${escapeHtml(lead.desired_area||'—')}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -11610,6 +11723,7 @@ const LeadDetail = {
         </div>
         <div style="font-size:13px; color:var(--navy-200); margin-top:4px;">${escapeHtml(lead.phone)}${lead.phone2 ? ' · ' + escapeHtml(lead.phone2) : ''}${lead.email ? ' · ' + escapeHtml(lead.email) : ''}</div>
         <div style="margin-top:12px; display:flex; gap:6px; flex-wrap:wrap;">
+          ${roleBadgeHtml(lead.lead_role)}
           <span class="badge badge-${safeSource(lead.source)}">${escapeHtml(sourceLabel(lead.source))}</span>
           <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${stage?.color+'33'};color:white;">${escapeHtml(stage?.name||'—')}</span>
         </div>
@@ -13404,6 +13518,15 @@ const SaveAnim = {
   }
 };
 
+function selectLeadRole(prefix, role) {
+  const picker = document.getElementById(`${prefix}-lead-role-picker`);
+  if (!picker) return;
+  picker.dataset.value = role;
+  picker.querySelectorAll('.role-pick-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.classList.contains(`role-pick-${role}`));
+  });
+}
+
 async function addLead() {
   if (demoGuard()) return;
   const name = document.getElementById('new-lead-name').value.trim();
@@ -13423,6 +13546,7 @@ async function addLead() {
       budget_max: rawBudget,
       desired_area: document.getElementById('new-lead-area').value,
       notes: document.getElementById('new-lead-notes').value,
+      lead_role: document.getElementById('new-lead-role-picker')?.dataset.value || 'buyer',
     });
     lead.inspiration_url = document.getElementById('new-lead-inspiration').value.trim() || null;
     State.leads.unshift(lead);
@@ -13438,6 +13562,7 @@ async function addLead() {
     document.getElementById('new-lead-budget').value = '';
     document.getElementById('new-lead-source').value = 'other';
     document.getElementById('new-lead-inspiration').value = '';
+    selectLeadRole('new', 'buyer');
     Gamify.event('add_lead', lead);
     Make.newLead(lead);
     Twilio.notifyNewLead(lead);
@@ -14092,6 +14217,7 @@ function openEditLead(leadId) {
   document.getElementById('edit-lead-source').value = lead.source || 'other';
   document.getElementById('edit-lead-notes').value = lead.notes || '';
   document.getElementById('edit-lead-inspiration').value = lead.inspiration_url || '';
+  selectLeadRole('edit', lead.lead_role || 'buyer');
   State.currentLeadId = leadId;
   openModal('modal-edit-lead');
 }
@@ -14118,6 +14244,7 @@ async function saveEditLead() {
     desired_area: document.getElementById('edit-lead-area').value.trim() || null,
     source: document.getElementById('edit-lead-source').value,
     notes: document.getElementById('edit-lead-notes').value.trim(),
+    lead_role: document.getElementById('edit-lead-role-picker')?.dataset.value || 'buyer',
   };
   SaveAnim.show();
   const t0 = Date.now();
@@ -14135,6 +14262,7 @@ async function saveEditLead() {
       desired_area: patch.desired_area || '',
       source: patch.source,
       notes: patch.notes || '',
+      lead_role: patch.lead_role,
       inspiration_url: inspirationUrl,
     });
     closeModal('modal-edit-lead');
