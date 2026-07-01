@@ -6904,9 +6904,9 @@ const Billing = {
       price: 349,
       priceLabel: '₪349',
       desc: 'לצוות קטן',
-      features: ['3 סוכנים כלולים, עד 7 בתוספת תשלום', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
+      features: ['3 סוכנים כלולים, עד 8 בתוספת תשלום', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: true,
-      agentLimit: '3 סוכנים כלולים · עד 7 · ₪30/סוכן נוסף',
+      agentLimit: '3 סוכנים כלולים · עד 8 · ₪30/סוכן נוסף',
       annualMonthly: 249,
       annualTotal: 2990,
     },
@@ -6916,9 +6916,9 @@ const Billing = {
       price: 549,
       priceLabel: '₪549',
       desc: 'לסוכנות נדל"ן',
-      features: ['10 סוכנים כלולים, ללא הגבלת מספר בתוספת תשלום', 'לידים ללא הגבלה', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
+      features: ['10 סוכנים כלולים, עד 25 בתוספת תשלום', 'לידים ללא הגבלה', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: false,
-      agentLimit: '10 סוכנים כלולים · ₪30/סוכן נוסף',
+      agentLimit: '10 סוכנים כלולים · עד 25 · ₪40/סוכן נוסף',
       annualMonthly: 399,
       annualTotal: 4790,
     },
@@ -15839,7 +15839,17 @@ const Team = {
     } catch(e) {
       const msg = e.message || '';
       if (msg.includes('seat_limit_reached')) {
-        toast('הגעת למקסימום המושבים האפשרי בחבילה הזו, כדאי לשדרג לחבילה גדולה יותר', 'warning', 6000);
+        if (State.tenant?.plan === 'pro') {
+          toast('הגעת למקסימום המושבים בחבילת צוות, שדרג לחבילת סוכנות להוספת סוכנים נוספים', 'warning', 6000);
+        } else {
+          closeModal('modal-team');
+          Support.open();
+          setTimeout(() => {
+            const inp = document.getElementById('support-msg-input');
+            if (inp) inp.value = `מעוניין/ת בהצעת Liders Enterprise, הגעתי למקסימום המושבים הזמינים (25) בחבילת הסוכנות ואני צריך/ה עוד.`;
+          }, 50);
+          toast('הגעת למקסימום המושבים הזמינים, יצרנו לך פנייה לצוות התמיכה להצעה מותאמת אישית 🚀', 'info', 6000);
+        }
       } else if (msg.includes('only the owner or an admin')) {
         toast('רק המנהל או אדמין יכולים להזמין סוכנים', 'warning');
       } else {
