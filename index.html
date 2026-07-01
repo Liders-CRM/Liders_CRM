@@ -2033,6 +2033,43 @@
       100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
 
+    /* Champagne bottle pop (deal closed) */
+    .champagne-pop {
+      position: fixed; left: 50%; top: 30%; transform: translateX(-50%);
+      width: 100px; height: 220px; pointer-events: none;
+    }
+    .champagne-bottle-svg {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      transform-origin: bottom center;
+      animation: bottleShake 0.45s ease-in-out 2;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25));
+    }
+    @keyframes bottleShake {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25%  { transform: translateX(-50%) rotate(-4deg); }
+      75%  { transform: translateX(-50%) rotate(4deg); }
+    }
+    .champagne-cork {
+      position: absolute; top: 56px; left: 50%;
+      width: 16px; height: 20px; transform: translateX(-50%);
+      animation: corkPop 1s cubic-bezier(0.28,1.5,0.6,1) 0.9s forwards;
+    }
+    .champagne-cork-body { width: 100%; height: 100%; border-radius: 3px 3px 6px 6px; background: linear-gradient(#e7c98a, #c9a35f); border: 1px solid #a9803f; }
+    @keyframes corkPop {
+      0%   { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateX(-50%) translateY(-170px) rotate(380deg); opacity: 0; }
+    }
+    .champagne-spray-drop {
+      position: absolute; top: 50px; left: 50%; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: sprayBurst 0.85s ease-out 0.9s forwards;
+    }
+    @keyframes sprayBurst {
+      0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1); opacity: 0; }
+    }
+
     /* ═══════════════════════════════════════
        CALENDAR SCREEN
     ═══════════════════════════════════════ */
@@ -9185,11 +9222,44 @@ const Gamify = {
       `;
       container.appendChild(el);
     }
-    const scoreEl = document.createElement('div');
-    scoreEl.className = 'confetti-score-emoji';
-    scoreEl.textContent = type === 'milestone' ? '🏆' : '🏀';
-    container.appendChild(scoreEl);
+    if (type === 'milestone') {
+      const scoreEl = document.createElement('div');
+      scoreEl.className = 'confetti-score-emoji';
+      scoreEl.textContent = '🏆';
+      container.appendChild(scoreEl);
+    } else {
+      container.appendChild(this._champagneBurst());
+    }
     setTimeout(() => { container.innerHTML = ''; }, 4800);
+  },
+
+  _champagneBurst() {
+    const wrap = document.createElement('div');
+    wrap.className = 'champagne-pop';
+    wrap.innerHTML = `
+      <svg class="champagne-bottle-svg" width="70" height="180" viewBox="0 0 70 180">
+        <path d="M22,60 Q19,168 22,174 Q35,180 48,174 Q51,168 48,60 Q53,38 39,32 L39,10 Q39,5 34,5 Q31,5 31,10 L31,32 Q17,38 22,60 Z" fill="#0B3D2E"/>
+        <rect x="26" y="4" width="18" height="12" rx="2" fill="#C49A2A"/>
+        <rect x="17" y="92" width="36" height="42" rx="4" fill="#F5EFE0" opacity="0.92"/>
+        <text x="35" y="117" font-size="9" text-anchor="middle" fill="#0B3D2E" font-weight="700" font-family="inherit">LIDERS</text>
+      </svg>
+      <div class="champagne-cork"><div class="champagne-cork-body"></div></div>
+    `;
+    const dropColors = ['#F5EFE0', '#E8D9A8', '#C49A2A'];
+    for (let i = 0; i < 24; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'champagne-spray-drop';
+      const angle = (-90 + (Math.random() * 110 - 55)) * Math.PI / 180;
+      const dist = 55 + Math.random() * 100;
+      drop.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+      drop.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+      const size = 4 + Math.random() * 5;
+      drop.style.width = drop.style.height = `${size}px`;
+      drop.style.background = dropColors[Math.floor(Math.random() * dropColors.length)];
+      drop.style.animationDelay = `${0.9 + Math.random() * 0.15}s`;
+      wrap.appendChild(drop);
+    }
+    return wrap;
   },
 
   targetHit() {
