@@ -10953,6 +10953,31 @@ const AnnualUpsell = {
   },
 };
 
+// Wraps #loading-overlay so the skyline-building animation is guaranteed to
+// stay on screen for a minimum stretch of time - data often loads fast
+// enough that the overlay used to flash for a fraction of a second, which
+// read as a glitch rather than the intended "building rises" moment.
+const LoadingOverlay = {
+  MIN_MS: 2000,
+  _shownAt: 0,
+  show(text) {
+    const overlay = document.getElementById('loading-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('hidden', 'fade-out');
+    const t = overlay.querySelector('.loader-text');
+    if (t && text) t.textContent = text;
+    this._shownAt = Date.now();
+  },
+  async hide() {
+    const overlay = document.getElementById('loading-overlay');
+    if (!overlay) return;
+    const remaining = this.MIN_MS - (Date.now() - this._shownAt);
+    if (remaining > 0) await new Promise(r => setTimeout(r, remaining));
+    overlay.classList.add('fade-out');
+    setTimeout(() => overlay.classList.add('hidden'), 520);
+  },
+};
+
 const App = {
   async loginWithEmail() {
     const email    = document.getElementById('login-email').value.trim();
@@ -11007,7 +11032,6 @@ const App = {
   },
   async _authAndEnter(email, password) {
     const loginBtn = document.getElementById('btn-login-email');
-    const overlay  = document.getElementById('loading-overlay');
     if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'מתחבר...'; }
     try {
       // Try login first; if credentials unknown → auto-signup for new users
@@ -11035,8 +11059,7 @@ const App = {
         return;
       }
       // show loading overlay while fetching data
-      overlay.classList.remove('hidden', 'fade-out');
-      overlay.querySelector('.loader-text').textContent = 'טוען נתונים...';
+      LoadingOverlay.show('טוען נתונים...');
       const user = data.user;
       const { isNew } = await DB.ensureAgent(user.email, user.email.split('@')[0]);
       AuditLog.log('auth.login');
@@ -11061,9 +11084,7 @@ const App = {
       if (t?.whatsapp_number)  localStorage.setItem('whatsapp_number',  t.whatsapp_number);
       State.isNewTenant = isNew;
       this._showApp();
-      // fade out overlay
-      overlay.classList.add('fade-out');
-      setTimeout(() => overlay.classList.add('hidden'), 520);
+      await LoadingOverlay.hide();
     } catch(e) {
       if ((e.message || '').includes('disposable_email_blocked')) {
         await DB.signOut();
@@ -11071,7 +11092,7 @@ const App = {
       } else {
         toast('שגיאה: ' + e.message, 'error');
       }
-      overlay.classList.add('hidden');
+      document.getElementById('loading-overlay')?.classList.add('hidden');
     } finally {
       if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'כניסה / הרשמה בחינם'; }
     }
@@ -14565,9 +14586,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
       // actual work to a macrotask so it runs after the callback returns and
       // the lock is released. See supabase/supabase-js auth deadlock issues.
       setTimeout(async () => {
-        const overlay = document.getElementById('loading-overlay');
-        overlay.classList.remove('hidden', 'fade-out');
-        overlay.querySelector('.loader-text').textContent = 'מתחבר...';
+        LoadingOverlay.show('מתחבר...');
         try {
           const { isNew } = await DB.ensureAgent(session.user.email, session.user.user_metadata?.full_name || session.user.email.split('@')[0]);
           AuditLog.log('auth.login');
@@ -14593,10 +14612,9 @@ sbClient.auth.onAuthStateChange((event, session) => {
           setTimeout(() => { Gamify.init(); Referral.claimWelcomeBonus(); }, 800);
           Referral.checkInboundRef();
           Support.checkInboundOpen();
-          overlay.classList.add('fade-out');
-          setTimeout(() => overlay.classList.add('hidden'), 520);
+          await LoadingOverlay.hide();
         } catch(e) {
-          overlay.classList.add('hidden');
+          document.getElementById('loading-overlay')?.classList.add('hidden');
           if ((e.message || '').includes('disposable_email_blocked')) {
             await DB.signOut();
             toast('נא להירשם עם כתובת אימייל אמיתית וקבועה, לא כתובת זמנית/חד-פעמית', 'error', 6000);
