@@ -1204,6 +1204,37 @@
     @keyframes ldot { 0%,80%,100%{transform:scale(0);opacity:.3} 40%{transform:scale(1);opacity:1} }
     .loader-text { font-size: 14px; color: var(--navy-100); font-weight: 500; letter-spacing: 0.5px; }
 
+    /* Real-estate skyline loader - buildings "rise" into place, crane swings */
+    .loader-skyline { position: relative; display: flex; align-items: flex-end; gap: 7px; height: 96px; margin-bottom: 6px; }
+    .loader-building {
+      width: 22px; border-radius: 3px 3px 0 0; transform-origin: bottom; transform: scaleY(0);
+      animation: loader-rise .6s cubic-bezier(.34,1.56,.64,1) forwards;
+      background:
+        radial-gradient(circle, rgba(245,197,66,.85) 1.4px, transparent 1.6px) 4px 6px / 9px 11px,
+        linear-gradient(180deg, var(--blue-400), var(--navy-700));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+    .loader-b1 { height: 46px; animation-delay: .05s; }
+    .loader-b2 { height: 70px; animation-delay: .2s;  }
+    .loader-b3 { height: 96px; animation-delay: .35s; }
+    .loader-b4 { height: 60px; animation-delay: .5s;  }
+    .loader-b5 { height: 80px; animation-delay: .65s; }
+    .loader-crane {
+      position: absolute; top: -32px; right: 24px; width: 2px; height: 32px;
+      background: var(--gold-400); transform-origin: bottom;
+      opacity: 0; animation: loader-crane-in .3s ease forwards, loader-crane-swing 2.6s ease-in-out infinite;
+      animation-delay: .95s, 1.25s;
+    }
+    .loader-crane::before { content: ''; position: absolute; top: 0; right: -1px; width: 28px; height: 2px; background: var(--gold-400); }
+    .loader-crane::after  { content: ''; position: absolute; top: 0; right: -26px; width: 2px; height: 12px; background: var(--gold-400); }
+    @keyframes loader-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes loader-crane-in { to { opacity: 1; } }
+    @keyframes loader-crane-swing { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-building { animation: none; transform: scaleY(1); }
+      .loader-crane { animation: none; opacity: 1; }
+    }
+
     /* ═══════════════════════════════════════
        PRIVACY SHIELD, blurs content when the
        window/tab loses focus (protects client
@@ -3484,11 +3515,17 @@
      LOADING OVERLAY
 ═══════════════════════════════════════ -->
 <div id="loading-overlay" class="hidden">
-  <div class="loader-logo">Liders<span>.</span></div>
-  <div class="loader-dots">
-    <span></span><span></span><span></span>
+  <div class="loader-skyline" aria-hidden="true">
+    <div class="loader-building loader-b1"></div>
+    <div class="loader-building loader-b2"></div>
+    <div class="loader-building loader-b3">
+      <div class="loader-crane"></div>
+    </div>
+    <div class="loader-building loader-b4"></div>
+    <div class="loader-building loader-b5"></div>
   </div>
-  <div class="loader-text">טוען נתונים...</div>
+  <div class="loader-logo">Liders<span>.</span></div>
+  <div class="loader-text">בונים לך את הדשבורד...</div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -10969,8 +11006,23 @@ const App = {
       State.customLabels = raw ? JSON.parse(raw) : {};
     } catch(_e) { State.customLabels = {}; }
     this._applyIndustryLabels();
-    history.pushState({ screen: 'dashboard' }, '', location.pathname + '?s=dashboard');
-    this.go('dashboard');
+    // Restore the screen the user was on before the refresh, instead of always
+    // dropping them back onto the dashboard (?s=<screen>&lead=<id> written by go()).
+    const NOT_RESTORABLE = new Set(['login', 'lock', 'paywall', 'setup']);
+    const urlParams   = new URLSearchParams(location.search);
+    const savedScreen = urlParams.get('s');
+    const savedLeadId = urlParams.get('lead');
+    let restoreScreen = 'dashboard';
+    let restoreParams = {};
+    if (savedScreen && !NOT_RESTORABLE.has(savedScreen) && document.getElementById('screen-' + savedScreen)?.classList.contains('screen')) {
+      restoreScreen = savedScreen;
+      if (savedScreen === 'lead-detail' && savedLeadId && State.leads.some(l => l.id === savedLeadId)) {
+        restoreParams = { currentLeadId: savedLeadId };
+      } else if (savedScreen === 'lead-detail') {
+        restoreScreen = 'pipeline'; // stale/missing lead id - fall back instead of a blank screen
+      }
+    }
+    this.go(restoreScreen, restoreParams);
     this.updateBadges();
     // Start 14-day marketing trial for new users (localStorage-based)
     if (!State.isDemo) Marketing.initTrial();
@@ -11050,7 +11102,7 @@ const App = {
     await this._performLogout();
   },
   async _performLogout() {
-    sessionStorage.removeItem('liders_auth_active');
+    AuthSession.clear();
     MotivationAgent._stopCountdown();
     await DB.signOut();
     // Wipe per-tenant state so a different account signing in on this same
@@ -11087,10 +11139,12 @@ const App = {
     }
     Object.assign(State, params);
     State.screen = screen;
-    // push browser history state for back-button support
-    const url = location.pathname + '?s=' + screen;
-    if (!history.state || history.state.screen !== screen) {
-      history.pushState({ screen }, '', url);
+    // push browser history state for back-button support - includes the lead id
+    // for lead-detail so a refresh can land back on that exact lead (see _showApp)
+    const leadParam = screen === 'lead-detail' && State.currentLeadId ? '&lead=' + encodeURIComponent(State.currentLeadId) : '';
+    const url = location.pathname + '?s=' + screen + leadParam;
+    if (!history.state || history.state.screen !== screen || history.state.currentLeadId !== State.currentLeadId) {
+      history.pushState({ screen, currentLeadId: screen === 'lead-detail' ? State.currentLeadId : undefined }, '', url);
     }
     // hide all screens
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
@@ -14339,7 +14393,7 @@ window.addEventListener('popstate', function(e) {
   const appShell = document.getElementById('app-shell');
   if (!appShell || appShell.classList.contains('hidden')) return;
   if (e.state && e.state.screen) {
-    App.go(e.state.screen);
+    App.go(e.state.screen, e.state.currentLeadId ? { currentLeadId: e.state.currentLeadId } : {});
   } else {
     App.go('dashboard');
   }
@@ -14359,24 +14413,39 @@ document.getElementById('new-task-due').value = addDays(1);
 // misses that one-time event and strands the user on the login screen after a
 // successful OAuth redirect. #screen-login / #loading-overlay already exist in the
 // DOM at this point - this <script> runs after them in source order.
+// AuthSession: replaces the old sessionStorage-based "still open tab" gate.
+// sessionStorage does NOT reliably survive across refreshes/relaunches of an
+// installed PWA on mobile (each relaunch can get a fresh browsing context even
+// though it's the same app + same persisted Supabase session in localStorage),
+// which was forcing a full re-login on ordinary page refresh. A rolling
+// localStorage timestamp is robust across refresh/PWA-relaunch while still
+// auto-expiring stale sessions after a real gap of inactivity.
+const AuthSession = {
+  _KEY: 'liders_auth_active_ts',
+  _MAX_AGE_MS: 30 * 24 * 60 * 60 * 1000, // 30 days of inactivity
+  isTrusted() {
+    const ts = Number(localStorage.getItem(this._KEY) || 0);
+    return ts > 0 && (Date.now() - ts) < this._MAX_AGE_MS;
+  },
+  touch() { localStorage.setItem(this._KEY, String(Date.now())); },
+  clear() { localStorage.removeItem(this._KEY); },
+};
+
 sbClient.auth.onAuthStateChange((event, session) => {
   if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
     const loginScreen = document.getElementById('screen-login');
     if (!loginScreen.classList.contains('hidden')) {
       // INITIAL_SESSION = Supabase auto-restored a session from localStorage.
-      // We only allow this when the same browser tab is still open (sessionStorage
-      // persists across refreshes but is wiped when the tab/window is closed).
-      // If sessionStorage has no flag the user reopened the browser → force re-auth.
+      // Only trust it if this browser was active within the last 30 days -
+      // otherwise force re-auth (protects a device that was simply forgotten).
       if (event === 'INITIAL_SESSION') {
-        if (!sessionStorage.getItem('liders_auth_active')) {
+        if (!AuthSession.isTrusted()) {
           setTimeout(() => sbClient.auth.signOut(), 0);
           return;
         }
       }
-      // Mark this browser session as authenticated (cleared on tab close)
-      if (event === 'SIGNED_IN') {
-        sessionStorage.setItem('liders_auth_active', '1');
-      }
+      // Refresh the activity timestamp on every successful auth event.
+      AuthSession.touch();
       // User just signed in via OAuth redirect.
       // IMPORTANT: supabase-js holds an internal auth lock for the duration of
       // this callback - awaiting sbClient.rpc()/from() calls in here deadlocks
@@ -14433,7 +14502,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
       appShell.classList.add('hidden');
       document.getElementById('screen-login')?.classList.remove('hidden');
       document.getElementById('support-fab-btn')?.classList.add('hidden');
-      sessionStorage.removeItem('liders_auth_active');
+      AuthSession.clear();
       State.isDemo = false;
       DB.tenantId  = null;
       DB.agentId   = null;
