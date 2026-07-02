@@ -8769,33 +8769,10 @@ const Marketing = {
             </button>
             <p class="mktg-upgrade-micro">ללא כרטיס אשראי · ביטול בכל עת</p>
           </div>`;
-      } else {
-        // Trial ended and no marketing_addon - show upgrade screen
-        el.innerHTML = `
-          <div class="marketing-header-strip">
-            <div class="marketing-addon-badge" style="background:rgba(239,68,68,0.15);color:#DC2626;">⏰ הניסיון הסתיים</div>
-            <h2>📣 שיווק חכם + AI</h2>
-            <p>כלים מקצועיים ליצירת תוכן שיווקי וניתוח שיחות, ישירות מתוך ה-CRM</p>
-          </div>
-          <div class="mktg-locked">
-            <div class="mktg-locked-icon">🔒</div>
-            <h3>תקופת הניסיון הסתיימה</h3>
-            <p>תוסף ה-AI כולל את כל הכלים הבאים ומתחדש כל חודש:</p>
-            <ul class="mktg-locked-features">
-              <li>⚡ יומן מהיר AI, רישום שיחות בצורה חופשית</li>
-              <li>✨ מחולל הצעה אישית ללקוח</li>
-              <li>📸 יוצר פוסטים לסושיאל מדיה</li>
-              <li>📢 מחולל קמפיין WhatsApp</li>
-              <li>💬 הודעת WA חכמה לכל ליד</li>
-              <li>🤖 תמיכה אוטומטית 24/7</li>
-            </ul>
-            <button class="mktg-upgrade-btn" onclick="toast('לרכישת התוסף פנה אלינו, liders.crm@gmail.com','info')">
-              🚀 הפעל תוסף AI, ₪100/חודש
-            </button>
-            <p class="mktg-upgrade-micro">ביטול בכל עת · ללא התחייבות</p>
-          </div>`;
+        return;
       }
-      return;
+      // Trial ended and no marketing_addon - browse the real tools below, gated at the
+      // generate-button level, so the tenant can see exactly what they'd get before buying.
     }
 
     const leads = State.leads || [];
@@ -8804,8 +8781,14 @@ const Marketing = {
     const propOptions = `<option value="">ללא נכס ספציפי</option>` +
       properties.map(p => `<option value="${p.id}">${p.title || p.city}</option>`).join('');
     const usageLabel = AiLimits.limitLabel('marketing');
+    const ind        = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const isLawyer    = ind === 'realestate_lawyer';
 
-    const trialBanner = (!isAddon && trialLeft > 0) ? `
+    const trialBanner = !hasAccess ? `
+      <div style="background:linear-gradient(90deg,#7C3AED,#2563EB);color:#fff;padding:10px 18px;border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:600;font-size:0.9rem;">🔒 זה מה שכלול בתוסף השיווק, ₪100/חודש</span>
+        <span onclick="toast('לרכישת התוסף פנה אלינו, liders.crm@gmail.com','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">הפעל עכשיו →</span>
+      </div>` : (!isAddon && trialLeft > 0) ? `
       <div style="background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;padding:10px 18px;border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
         <span style="font-weight:600;font-size:0.9rem;">⏰ ניסיון חינמי, ${trialLeft} ימים נותרו</span>
         <span onclick="toast('לשדרוג פנה אלינו, liders.crm@gmail.com','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">שדרג ל-₪100/חודש →</span>
@@ -8813,7 +8796,7 @@ const Marketing = {
 
     el.innerHTML = `
       <div class="marketing-header-strip">
-        <div class="marketing-addon-badge">${isAddon ? '✅ תוסף פעיל' : '🎁 ניסיון חינמי'}</div>
+        <div class="marketing-addon-badge">${isAddon ? '✅ תוסף פעיל' : (hasAccess ? '🎁 ניסיון חינמי' : '🔒 רכוש גישה')}</div>
         <h2>📣 שירותי שיווק</h2>
         <p>יצירת תוכן שיווקי מקצועי ישירות מהמערכת, בשניות</p>
         <p style="font-size:0.78rem;color:var(--gray-400);margin-top:2px;">✏️ סוכן השיווק יכול לפעמים לא לדייק, כל תוכן שנוצר ניתן לעריכה חופשית לפני שליחה</p>
@@ -8837,16 +8820,23 @@ const Marketing = {
               <select class="form-input" id="mktg-lead-sel">${leadOptions || '<option>אין לידים עדיין</option>'}</select>
             </div>
             <div>
-              <label class="tool-label">בחירת נכס (אופציונלי)</label>
+              <label class="tool-label">בחירת ${getLabel('property')} (אופציונלי)</label>
               <select class="form-input" id="mktg-prop-sel">${propOptions}</select>
             </div>
             <div>
-              <label class="tool-label">סוג ההצעה</label>
+              <label class="tool-label">סוג ההודעה</label>
               <select class="form-input" id="mktg-offer-type">
+                ${isLawyer ? `
+                <option value="status_update">עדכון סטטוס אישי בתיק</option>
+                <option value="consult_reminder">תזכורת לפגישת ייעוץ</option>
+                <option value="doc_review">בדיקת מסמכים לפני חתימה</option>
+                <option value="full_service">הצעת ליווי מלא בעסקה</option>
+                ` : `
                 <option value="exclusive">ביקור בלעדי לפני השוק</option>
                 <option value="special_price">תנאים מיוחדים שלא לכולם</option>
                 <option value="limited">הצעה מוגבלת לשבוע הקרוב</option>
                 <option value="first">פנייה בלעדית, לפני כולם</option>
+                `}
               </select>
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genOffer()">✨ יצירת הצעה</button>
@@ -8861,17 +8851,28 @@ const Marketing = {
         <!-- כלי 2: פוסט לסושיאל -->
         <div class="mktg-card">
           <div class="mktg-card-head">
-            <div class="mktg-card-icon mktg-icon-blue">📸</div>
+            <div class="mktg-card-icon mktg-icon-blue">${isLawyer ? '📚' : '📸'}</div>
             <div>
-              <div class="mktg-card-title">פוסט לסושיאל</div>
-              <div class="mktg-card-sub">פוסט מוכן לאינסטגרם / פייסבוק, מבוסס AI ✨</div>
+              <div class="mktg-card-title">${isLawyer ? 'פוסט תוכן מקצועי' : 'פוסט לסושיאל'}</div>
+              <div class="mktg-card-sub">${isLawyer ? 'תוכן מקצועי כללי, לא צמוד ללקוח מסוים, מבוסס AI ✨' : 'פוסט מוכן לאינסטגרם / פייסבוק, מבוסס AI ✨'}</div>
             </div>
           </div>
           <div class="mktg-card-body">
+            ${isLawyer ? `
             <div>
-              <label class="tool-label">בחירת נכס</label>
-              <select class="form-input" id="mktg-post-prop">${properties.length ? properties.map(p=>`<option value="${p.id}">${p.title||p.city}</option>`).join('') : '<option>אין נכסים עדיין</option>'}</select>
-            </div>
+              <label class="tool-label">נושא הפוסט</label>
+              <select class="form-input" id="mktg-post-topic">
+                <option value="due_diligence">בדיקת נאותות לפני רכישה</option>
+                <option value="contract_mistakes">טעויות נפוצות בחוזה מכר</option>
+                <option value="caveat">מה זו הערת אזהרה ולמה היא חשובה</option>
+                <option value="tax">היבטי מיסוי בעסקת נדל"ן</option>
+                <option value="before_signing">למה חשוב עו"ד לפני חתימה על זיכרון דברים</option>
+              </select>
+            </div>` : `
+            <div>
+              <label class="tool-label">בחירת ${getLabel('property')}</label>
+              <select class="form-input" id="mktg-post-prop">${properties.length ? properties.map(p=>`<option value="${p.id}">${p.title||p.city}</option>`).join('') : `<option>אין ${getLabel('properties')} עדיין</option>`}</select>
+            </div>`}
             <div>
               <label class="tool-label">פלטפורמה</label>
               <select class="form-input" id="mktg-platform">
@@ -8902,16 +8903,24 @@ const Marketing = {
             <div>
               <label class="tool-label">נושא הקמפיין</label>
               <select class="form-input" id="mktg-campaign-topic">
-                <option value="new_listing">נכס חדש בשוק</option>
+                ${isLawyer ? `
+                <option value="legal_tip">טיפ משפטי חודשי</option>
+                <option value="contract_reminder">תזכורת, בדקו את החוזה לפני חתימה</option>
+                <option value="tax_update">עדכון מיסוי מקרקעין</option>
+                <option value="holiday">ברכת חג ועדכון שוטף</option>
+                <option value="service_reminder">תזכורת לשירותי המשרד</option>
+                ` : `
+                <option value="new_listing">${getLabel('property')} חדש${ind==='interior'?' בפורטפוליו':' בשוק'}</option>
                 <option value="price_drop">ירידת מחיר, הזדמנות</option>
-                <option value="market_update">עדכון שוק הנדל"ן</option>
+                <option value="market_update">עדכון שוק${ind==='interior'?' העיצוב':' הנדל"ן'}</option>
                 <option value="holiday">ברכת חג ועדכון שוטף</option>
                 <option value="exclusive">מבצע בלעדי ללקוחות קיימים</option>
+                `}
               </select>
             </div>
             <div>
-              <label class="tool-label">שם הסוכנות / חתימה</label>
-              <input class="form-input" id="mktg-campaign-sig" type="text" placeholder="${State.tenant?.name || 'הסוכנות שלי'}" />
+              <label class="tool-label">שם ${isLawyer ? 'המשרד' : 'הסוכנות'} / חתימה</label>
+              <input class="form-input" id="mktg-campaign-sig" type="text" placeholder="${State.tenant?.name || (isLawyer ? 'המשרד שלי' : 'הסוכנות שלי')}" />
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genCampaign()">✨ יצירת הודעה</button>
             <div class="mktg-output" id="mktg-campaign-out"></div>
@@ -8965,7 +8974,9 @@ const Marketing = {
 
   async genOffer() {
     if (!this._checkConsent(() => this.genOffer())) return;
+    if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const leadId = document.getElementById('mktg-lead-sel')?.value;
     const propId  = document.getElementById('mktg-prop-sel')?.value;
     const type    = document.getElementById('mktg-offer-type')?.value;
@@ -8975,18 +8986,27 @@ const Marketing = {
     const outEl = document.getElementById('mktg-offer-out');
     if (outEl) { outEl.textContent = '✨ יוצר הצעה מותאמת אישית...'; outEl.classList.add('visible'); }
     try {
-      const propStr = prop ? `${prop.title||'נכס'} ב${prop.city||''}${prop.price ? `, ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
-      const agency  = State.tenant?.name || 'הסוכנות שלי';
-      const typeMap = { exclusive: 'ביקור בלעדי לפני פרסום בשוק', special_price: 'תנאים מיוחדים שלא לכולם', limited: 'הצעה מוגבלת לשבוע הקרוב', first: 'הלקוח הראשון שפונים אליו' };
+      const propStr = prop ? `${prop.title||getLabel('property')} ב${prop.city||''}${prop.price ? `, ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}` : '';
+      const agency  = State.tenant?.name || (ind === 'realestate_lawyer' ? 'המשרד שלי' : 'הסוכנות שלי');
+      const typeMap = ind === 'realestate_lawyer' ? {
+        status_update:    'עדכון סטטוס אישי בתיק',
+        consult_reminder: 'תזכורת לתיאום פגישת ייעוץ',
+        doc_review:       'הצעה לבדיקת מסמכים לפני חתימה',
+        full_service:     'הצעת ליווי משפטי מלא בעסקה',
+      } : {
+        exclusive: 'ביקור בלעדי לפני פרסום בשוק', special_price: 'תנאים מיוחדים שלא לכולם', limited: 'הצעה מוגבלת לשבוע הקרוב', first: 'הלקוח הראשון שפונים אליו',
+      };
       const safeName  = String(lead.name.split(' ')[0]).slice(0, 50);
       const safeAgency = String(agency).slice(0, 80);
+      const complianceNote = ind === 'realestate_lawyer'
+        ? '\nחשוב: זו הודעה אישית ללקוח קיים שלך בלבד, בטון מקצועי ומכבד, ללא הבטחות לתוצאה משפטית.' : '';
       const text = await AI.call([{ role: 'user', content:
         `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp אישית ומשכנעת בעברית עבור הליד הבא.
 שם: ${safeName} | שלב: ${State.stages.find(s=>s.id===lead.stage)?.name||'ראשוני'}
-${propStr ? `נכס: ${propStr}` : ''}
-סוג הצעה: ${typeMap[type]||type}
-סוכנות: ${safeAgency}
-כתוב הודעה קצרה (3-5 שורות), אנושית, בגוף ראשון. אל תכלול כותרות. סיים בחתימת הסוכנות. החזר רק את ההודעה עצמה.`
+${propStr ? `${getLabel('property')}: ${propStr}` : ''}
+סוג הודעה: ${typeMap[type]||type}${complianceNote}
+${ind === 'realestate_lawyer' ? 'משרד' : 'סוכנות'}: ${safeAgency}
+כתוב הודעה קצרה (3-5 שורות), אנושית, בגוף ראשון. אל תכלול כותרות. סיים בחתימה. החזר רק את ההודעה עצמה.`
       }], 400, { type: 'marketing' });
       if (text) { this._show('mktg-offer-out', 'mktg-offer-act', text, 'mktg-offer-wm'); this._updateUsageLabels(); }
     } catch(e) {
@@ -8997,22 +9017,38 @@ ${propStr ? `נכס: ${propStr}` : ''}
 
   async genPost() {
     if (!this._checkConsent(() => this.genPost())) return;
+    if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
-    const propId = document.getElementById('mktg-post-prop')?.value;
+    const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const plat   = document.getElementById('mktg-platform')?.value;
-    const prop   = State.properties.find(p => p.id === propId) || {};
     const outEl  = document.getElementById('mktg-post-out');
     if (outEl) { outEl.textContent = '✨ יוצר פוסט...'; outEl.classList.add('visible'); }
     try {
       const platMap = { instagram: 'Instagram (כלול האשטאגים רלוונטיים בסוף)', facebook: 'Facebook', whatsapp: 'WhatsApp Status' };
-      const text = await AI.call([{ role: 'user', content:
-        `אתה ${AI._industryRole()} ישראלי. כתוב פוסט שיווקי לנכס עבור ${platMap[plat]||plat}.
-נכס: ${prop.title||'נכס חדש'} | עיר: ${prop.city||'לא צוין'}
+      let prompt;
+      if (ind === 'realestate_lawyer') {
+        const topic = document.getElementById('mktg-post-topic')?.value;
+        const topicMap = {
+          due_diligence:     'בדיקת נאותות שכל קונה חייב לעשות לפני רכישת נכס',
+          contract_mistakes: 'טעויות נפוצות שאנשים עושים בחוזה מכר דירה',
+          caveat:            'מה זו הערת אזהרה בטאבו ולמה היא קריטית להגנה על הקונה',
+          tax:               'היבטי מיסוי מקרקעין שחשוב להכיר לפני עסקה, מבלי לתת ייעוץ מס פרטני',
+          before_signing:    'למה חשוב להיוועץ בעו"ד מקרקעין לפני חתימה על זיכרון דברים',
+        };
+        prompt = `אתה ${AI._industryRole()} ישראלי, כותב תוכן מקצועי-חינוכי לרשת חברתית (${platMap[plat]||plat}).
+כתוב פוסט קצר ומקצועי בנושא: ${topicMap[topic]||topic}.
+חשוב: זהו תוכן כללי ומקצועי בלבד, ללא כל התייחסות ללקוח או תיק ספציפי, ללא הבטחות לתוצאה, וללא השוואה לעורכי דין אחרים, בהתאם לכללי הפרסומת של לשכת עורכי הדין. סיים בקריאה עדינה ליצירת קשר לייעוץ. החזר רק את הפוסט.`;
+      } else {
+        const propId = document.getElementById('mktg-post-prop')?.value;
+        const prop    = State.properties.find(p => p.id === propId) || {};
+        prompt = `אתה ${AI._industryRole()} ישראלי. כתוב פוסט שיווקי ל${getLabel('property')} עבור ${platMap[plat]||plat}.
+${getLabel('property')}: ${prop.title||'לא צוין'} | עיר: ${prop.city||'לא צוין'}
 ${prop.rooms ? `חדרים: ${prop.rooms}` : ''}${prop.area ? ` | שטח: ${prop.area} מ״ר` : ''}
 ${prop.price ? `מחיר: ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}
 ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
-כתוב פוסט בעברית, קצר ומושך, כולל קריאה לפעולה. החזר רק את הפוסט.`
-      }], 450, { type: 'marketing' });
+כתוב פוסט בעברית, קצר ומושך, כולל קריאה לפעולה. החזר רק את הפוסט.`;
+      }
+      const text = await AI.call([{ role: 'user', content: prompt }], 450, { type: 'marketing' });
       if (text) { this._show('mktg-post-out', 'mktg-post-act', text, 'mktg-post-wm'); this._updateUsageLabels(); }
     } catch(e) {
       toast(e.message, 'error');
@@ -9022,16 +9058,33 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
 
   async genCampaign() {
     if (!this._checkConsent(() => this.genCampaign())) return;
+    if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    const ind      = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const topic    = document.getElementById('mktg-campaign-topic')?.value;
     const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
-    const sig      = sigInput || State.tenant?.name || 'הסוכנות שלי';
+    const sig      = sigInput || State.tenant?.name || (ind === 'realestate_lawyer' ? 'המשרד שלי' : 'הסוכנות שלי');
     const outEl    = document.getElementById('mktg-campaign-out');
     if (outEl) { outEl.textContent = '✨ יוצר קמפיין...'; outEl.classList.add('visible'); }
     try {
-      const topicMap = { new_listing: 'נכס חדש שנכנס לפורטפוליו', price_drop: 'ירידת מחיר בנכס, הזדמנות לפעול', market_update: 'עדכון שוק הנדל"ן החודשי', holiday: 'ברכת חג + עדכון שוטף', exclusive: 'מבצע בלעדי ללקוחות קיימים' };
+      const isLawyer = ind === 'realestate_lawyer';
+      const topicMap = isLawyer ? {
+        legal_tip:         'טיפ משפטי כללי ומועיל בתחום המקרקעין, ללא ייעוץ פרטני',
+        contract_reminder: 'תזכורת לחשיבות בדיקת חוזה ע"י עו"ד לפני חתימה',
+        tax_update:        'עדכון כללי בנושא מיסוי מקרקעין',
+        holiday:           'ברכת חג + עדכון שוטף',
+        service_reminder:  'תזכורת לשירותי המשרד ללקוחות קיימים וחדשים',
+      } : {
+        new_listing:   `${getLabel('property')} חדש${ind==='interior'?' שנוסף לפורטפוליו':' שנכנס לפורטפוליו'}`,
+        price_drop:    'ירידת מחיר, הזדמנות לפעול',
+        market_update: `עדכון שוק${ind==='interior'?' העיצוב':' הנדל"ן'} החודשי`,
+        holiday:       'ברכת חג + עדכון שוטף',
+        exclusive:     'מבצע בלעדי ללקוחות קיימים',
+      };
+      const complianceNote = isLawyer
+        ? '\nחשוב: תוכן כללי ומקצועי בלבד, ללא הבטחות לתוצאה משפטית וללא התייחסות ללקוח ספציפי, בהתאם לכללי הפרסומת של לשכת עורכי הדין.' : '';
       const text = await AI.call([{ role: 'user', content:
-        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.
+        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.${complianceNote}
 חתימה: ${sig}
 כתוב הודעה קצרה (4-6 שורות), מקצועית ואנושית, בגוף ראשון. סיים בחתימה. החזר רק את ההודעה.`
       }], 400, { type: 'marketing' });
@@ -9057,6 +9110,12 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
 
   hasMktgAccess() {
     return AiLimits.hasAiAccess();
+  },
+
+  _requireAccess() {
+    if (this.hasMktgAccess()) return true;
+    toast('✨ כלי זה כלול בתוסף השיווק, ₪100/חודש — לרכישה: liders.crm@gmail.com', 'warning');
+    return false;
   },
 
   _mktgXpThreshold() {
