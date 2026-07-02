@@ -564,10 +564,15 @@
     /* ═══════════════════════════════════════
        STAGE PILLS (pipeline stage selector)
     ═══════════════════════════════════════ */
-    .stage-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .stage-pills {
+      display: flex; gap: 6px; flex-wrap: nowrap;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .stage-pills::-webkit-scrollbar { display: none; }
     .stage-pill {
       padding: 5px 12px; border-radius: var(--radius-full); font-size: 12px;
-      font-weight: 600; cursor: pointer; border: 2px solid transparent;
+      font-weight: 600; cursor: pointer; border: 2px solid transparent; white-space: nowrap;
       transition: var(--transition); background: var(--gray-100); color: var(--gray-600);
     }
     .stage-pill.active { color: white; }
@@ -11785,7 +11790,7 @@ const LeadDetail = {
             </div>
             <span style="font-size:16px;color:var(--blue-400);">↗</span>
           </a>` : ''}
-          <div style="margin-top:16px;">
+          <div style="margin:16px 0 90px;">
             <div style="font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:8px;">שנה שלב:</div>
             <div class="stage-pills">
               ${State.stages.map(s => `
