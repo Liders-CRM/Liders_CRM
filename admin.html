@@ -1631,6 +1631,17 @@ function openSupportReply(ticketId) {
   openModal('modal-support-reply');
 }
 
+function notifyAgentOfReply(ticketId, responseText) {
+  const t = allSupportTickets.find(x => x.id === ticketId);
+  if (!t || !t.agent_email) return;
+  fetch('https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'support.admin_replied', ticket_id: ticketId,
+      tenant_name: t.tenant_name, agent_name: t.agent_name, agent_email: t.agent_email,
+      response: responseText })
+  }).catch(() => {});
+}
+
 async function submitSupportReply() {
   const ticketId = document.getElementById('reply-ticket-id').value;
   const text     = (document.getElementById('reply-text').value || '').trim();
@@ -1641,7 +1652,8 @@ async function submitSupportReply() {
     p_ticket_id: ticketId, p_response: text, p_status: newStatus
   });
   if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
-  toast('✅ התגובה נשלחה', 'success');
+  notifyAgentOfReply(ticketId, text);
+  toast('✅ התגובה נשלחה, הסוכן קיבל התראה לחזור לשיחה', 'success');
   closeModal('modal-support-reply');
   loadSupportTickets();
 }
