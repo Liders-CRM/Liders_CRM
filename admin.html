@@ -536,6 +536,12 @@
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.success { border-color: rgba(34,197,94,0.4); color: var(--green); }
     #toast.error   { border-color: rgba(239,68,68,0.4);  color: var(--red); }
+    .thread-msg { max-width: 88%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+    .thread-msg.role-user      { align-self: flex-start; background: var(--surface); border: 1px solid var(--border2); }
+    .thread-msg.role-assistant { align-self: flex-end; background: rgba(59,125,216,0.12); color: var(--blue); }
+    .thread-msg.role-admin     { align-self: flex-end; background: rgba(34,197,94,0.12); color: var(--green); font-weight: 600; }
+    .thread-msg .tm-label { display: block; font-size: 10px; opacity: .7; margin-bottom: 2px; font-weight: 700; }
+    .badge-needs-human { background: rgba(239,68,68,0.15); color: var(--red); font-weight: 700; }
   </style>
 </head>
 <body>
@@ -984,15 +990,11 @@
     <div class="modal-body">
       <input type="hidden" id="reply-ticket-id">
       <div class="modal-form-group" style="margin-bottom:10px;">
-        <label style="font-size:12px;color:var(--text-muted);">הודעת הלקוח</label>
-        <div id="reply-original-msg" style="background:var(--surface2);border-radius:var(--radius);padding:10px;font-size:13px;color:var(--text-muted);margin-top:4px;max-height:80px;overflow-y:auto;"></div>
-      </div>
-      <div class="modal-form-group" style="margin-bottom:10px;">
-        <label style="font-size:12px;color:var(--text-muted);">תגובת AI</label>
-        <div id="reply-ai-msg" style="background:var(--surface2);border-radius:var(--radius);padding:10px;font-size:13px;color:var(--blue);margin-top:4px;max-height:80px;overflow-y:auto;font-style:italic;"></div>
+        <label style="font-size:12px;color:var(--text-muted);">היסטוריית השיחה (לפיקוח)</label>
+        <div id="reply-thread" style="background:var(--surface2);border-radius:var(--radius);padding:10px;margin-top:4px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
       </div>
       <div class="modal-form-group">
-        <label>תגובתך (תישלח ללקוח)</label>
+        <label>תגובתך (תוצג ללקוח בתוך האפליקציה בכניסה הבאה שלו לחלונית התמיכה)</label>
         <textarea id="reply-text" placeholder="כתוב תגובה ללקוח..." style="height:90px;width:100%;resize:none;"></textarea>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
@@ -1564,22 +1566,21 @@ async function loadSupportTickets() {
 
 function renderSupportStats(tickets) {
   const el = document.getElementById('support-stats-row');
-  const open    = tickets.filter(t => t.status === 'open').length;
+  const needsHuman = tickets.filter(t => t.needs_human).length;
   const aiDone  = tickets.filter(t => t.status === 'ai_handled').length;
   const replied = tickets.filter(t => t.status === 'admin_replied').length;
   const resolved= tickets.filter(t => t.status === 'resolved').length;
   el.innerHTML = `
-    <div class="stat-card red"  ><div class="stat-label">ממתינים</div><div class="stat-value">${open}</div></div>
-    <div class="stat-card blue" ><div class="stat-label">AI ענה</div><div class="stat-value">${aiDone}</div></div>
+    <div class="stat-card red"  ><div class="stat-label">🆘 דורש התערבות</div><div class="stat-value">${needsHuman}</div></div>
+    <div class="stat-card blue" ><div class="stat-label">AI מטפל</div><div class="stat-value">${aiDone}</div></div>
     <div class="stat-card gold" ><div class="stat-label">מוענו</div><div class="stat-value">${replied}</div></div>
     <div class="stat-card green"><div class="stat-label">טופלו</div><div class="stat-value">${resolved}</div></div>
   `;
-  // Badge on tab
+  // Badge on tab - only tickets that actually need your attention
   const badge = document.getElementById('support-open-count');
   if (badge) {
-    const pending = open + aiDone;
-    badge.textContent = pending;
-    badge.style.display = pending ? 'inline' : 'none';
+    badge.textContent = needsHuman;
+    badge.style.display = needsHuman ? 'inline' : 'none';
   }
 }
 
@@ -1591,18 +1592,18 @@ function renderSupportTable(tickets) {
   }
   const statusBadge = {
     open:          '<span class="badge badge-dim" style="background:#7f1d1d22;color:#ef4444;">🟡 ממתין</span>',
-    ai_handled:    '<span class="badge badge-blue">🤖 AI ענה</span>',
+    ai_handled:    '<span class="badge badge-blue">🤖 AI מטפל</span>',
     admin_replied: '<span class="badge badge-gold">✅ מוענה</span>',
     resolved:      '<span class="badge badge-green">✔ טופל</span>',
   };
   tbody.innerHTML = tickets.map(t => `
-    <tr>
+    <tr${t.needs_human ? ' style="background:rgba(239,68,68,0.06);"' : ''}>
       <td><strong>${esc(t.tenant_name||'—')}</strong></td>
       <td style="font-size:.82rem;color:var(--text-muted)">${esc(t.agent_name||'—')}<br><span style="font-size:.75rem;color:var(--text-dim)">${esc(t.agent_email||'')}</span></td>
       <td style="max-width:180px;font-size:.82rem;">${esc((t.message||'').slice(0,100))}${(t.message||'').length>100?'…':''}</td>
       <td style="max-width:160px;font-size:.8rem;color:var(--blue);font-style:italic;">${t.ai_response ? esc(t.ai_response.slice(0,80))+'…' : '<span style="color:var(--text-dim)">—</span>'}</td>
       <td style="max-width:160px;font-size:.82rem;color:var(--green);">${t.admin_response ? esc(t.admin_response.slice(0,80))+'…' : '<span style="color:var(--text-dim)">—</span>'}</td>
-      <td>${statusBadge[t.status]||esc(t.status)}</td>
+      <td>${t.needs_human ? '<span class="badge badge-needs-human">🆘 דורש התערבות</span>' : (statusBadge[t.status]||esc(t.status))}</td>
       <td style="font-size:.78rem;color:var(--text-dim);white-space:nowrap;">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') + '<br>' + new Date(t.created_at).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '—'}</td>
       <td>
         <div class="action-btns">
@@ -1613,15 +1614,32 @@ function renderSupportTable(tickets) {
     </tr>`).join('');
 }
 
+const SUPPORT_ROLE_LABEL = { assistant: '🤖 AI', admin: '👤 אתה' };
+
 function openSupportReply(ticketId) {
   const t = allSupportTickets.find(x => x.id === ticketId);
   if (!t) return;
   document.getElementById('reply-ticket-id').value = ticketId;
-  document.getElementById('reply-original-msg').textContent = t.message || '';
-  document.getElementById('reply-ai-msg').textContent = t.ai_response || '(אין תגובת AI)';
+  const msgs = Array.isArray(t.messages) && t.messages.length ? t.messages : [{ role: 'user', content: t.message || '' }];
+  document.getElementById('reply-thread').innerHTML = msgs.map(m => `
+    <div class="thread-msg role-${esc(m.role)}">
+      ${m.role !== 'user' ? `<span class="tm-label">${SUPPORT_ROLE_LABEL[m.role] || m.role}</span>` : ''}
+      ${esc(m.content || '')}
+    </div>`).join('');
   document.getElementById('reply-text').value = '';
   document.getElementById('reply-resolve').checked = false;
   openModal('modal-support-reply');
+}
+
+function notifyAgentOfReply(ticketId, responseText) {
+  const t = allSupportTickets.find(x => x.id === ticketId);
+  if (!t || !t.agent_email) return;
+  fetch('https://hook.eu1.make.com/f0nzngm6gdokri5naqu7enbay538ay8i', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'support.admin_replied', ticket_id: ticketId,
+      tenant_name: t.tenant_name, agent_name: t.agent_name, agent_email: t.agent_email,
+      response: responseText })
+  }).catch(() => {});
 }
 
 async function submitSupportReply() {
@@ -1634,7 +1652,8 @@ async function submitSupportReply() {
     p_ticket_id: ticketId, p_response: text, p_status: newStatus
   });
   if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
-  toast('✅ התגובה נשלחה', 'success');
+  notifyAgentOfReply(ticketId, text);
+  toast('✅ התגובה נשלחה, הסוכן קיבל התראה לחזור לשיחה', 'success');
   closeModal('modal-support-reply');
   loadSupportTickets();
 }
