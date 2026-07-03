@@ -83,11 +83,16 @@ $fn$;
 REVOKE EXECUTE ON FUNCTION public._vertical_label_he(text) FROM PUBLIC, anon, authenticated;
 
 -- Human-readable commission phrase
+-- p_value is rounded to scale 2 first: an unconstrained numeric parameter (as
+-- arrives from a plain RPC call, e.g. create_lead_referral) has no forced
+-- decimal places, so a bare trailing-zero trim on '10'/'100' would wrongly
+-- strip significant digits (10 → 1, 100 → 1). round(_, 2) forces dscale=2
+-- ('10.00'/'100.00') so only the fractional zeros get trimmed.
 CREATE OR REPLACE FUNCTION public._commission_label_he(p_type text, p_value numeric)
 RETURNS text LANGUAGE sql IMMUTABLE AS $fn$
   SELECT CASE p_type
-    WHEN 'percent' THEN trim(trailing '.' from trim(trailing '0' from p_value::text)) || '% מהתמורה בעסקה'
-    WHEN 'fixed'   THEN '₪' || trim(trailing '.' from trim(trailing '0' from p_value::text)) || ' (סכום קבוע)'
+    WHEN 'percent' THEN trim(trailing '.' from trim(trailing '0' from round(p_value,2)::text)) || '% מהתמורה בעסקה'
+    WHEN 'fixed'   THEN '₪' || trim(trailing '.' from trim(trailing '0' from round(p_value,2)::text)) || ' (סכום קבוע)'
     ELSE 'ללא עמלה'
   END;
 $fn$;
