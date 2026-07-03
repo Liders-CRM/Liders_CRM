@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=Heebo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       /* ── מיובא מ-index.html כדי שדף הנחיתה ישתמש באותה מערכת עיצוב מדויקת ── */
@@ -89,7 +89,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       background: var(--white);
       color: var(--text);
       direction: rtl;
@@ -123,7 +123,7 @@
       border: none;
       padding: 10px 20px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
@@ -197,7 +197,7 @@
     }
 
     .hero h1 {
-      font-size: clamp(32px, 6vw, 58px);
+      font-size: clamp(38px, 6.5vw, 66px);
       font-weight: 900;
       color: var(--white);
       line-height: 1.15;
@@ -212,7 +212,7 @@
     }
 
     .hero-sub {
-      font-size: clamp(16px, 2.5vw, 20px);
+      font-size: clamp(18px, 2.8vw, 23px);
       color: rgba(255,255,255,0.70);
       max-width: 560px;
       line-height: 1.7;
@@ -237,7 +237,7 @@
       border: none;
       padding: 16px 36px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 17px;
       font-weight: 800;
       cursor: pointer;
@@ -253,7 +253,7 @@
       border: 1.5px solid rgba(255,255,255,0.25);
       padding: 16px 28px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -362,7 +362,7 @@
       display: block;
     }
     .section-title {
-      font-size: clamp(26px, 4vw, 40px);
+      font-size: clamp(30px, 4.5vw, 46px);
       font-weight: 900;
       color: var(--text);
       text-align: center;
@@ -370,10 +370,10 @@
       margin-bottom: 12px;
     }
     .section-sub {
-      font-size: 16px;
+      font-size: 18px;
       color: var(--text-muted);
       text-align: center;
-      max-width: 520px;
+      max-width: 560px;
       margin: 0 auto 32px;
       line-height: 1.7;
     }
@@ -399,14 +399,14 @@
       display: block;
     }
     .pain-quote {
-      font-size: 15px;
+      font-size: 16.5px;
       font-weight: 600;
       color: var(--text);
       line-height: 1.6;
       margin-bottom: 12px;
     }
     .pain-after {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--green);
       font-weight: 700;
     }
@@ -419,89 +419,56 @@
       background: var(--gray-bg);
       padding: 56px 24px;
     }
-    /* גלילה בתוך מסגרת: תמונת מסך ארוכה זזה בפנים לפי גלילת העמוד */
-    .reveal-scene {
-      height: 220vh;
-      position: relative;
-      margin: 48px auto 0;
-      max-width: 900px;
-      padding: 0 24px;
-    }
-    .reveal-sticky {
-      position: sticky;
-      top: 90px;
-      display: flex;
-      justify-content: center;
-    }
-    .device-frame {
-      width: 100%;
-      max-width: 760px;
-      background: var(--navy-900);
-      border-radius: 20px;
-      padding: 14px;
-      box-shadow: var(--shadow-xl);
-    }
-    .device-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
-      padding: 0 4px;
-    }
-    .device-viewport {
-      height: min(58vh, 480px);
-      overflow: hidden;
-      border-radius: 12px;
-      position: relative;
-      background: #0a1628;
-    }
-    .reveal-strip {
-      width: 100%;
-      display: block;
-      will-change: transform;
-    }
-    .reveal-caption {
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 14px;
-      font-weight: 600;
-    }
-
-    /* גלריית תמונות ממוזערות שנפתחות בלייטבוקס */
+    /* גלריית "טעימה": הצצה חלקית ומסקרנת, לא תצוגה מלאה — את השאר רואים במערכת */
     .shot-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
-      margin-top: 56px;
+      margin-top: 40px;
     }
     .shot-card {
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      cursor: pointer;
       background: var(--gray-card);
       border: 1.5px solid var(--border);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.25s, box-shadow 0.25s;
     }
-    .shot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .shot-card:hover { transform: translateY(-5px) rotate(-0.5deg); box-shadow: var(--shadow-lg); }
+    .shot-thumb {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+    }
     .shot-card img {
       width: 100%;
-      height: 170px;
+      height: 100%;
       object-fit: cover;
       object-position: top;
       display: block;
+      transition: object-position 2.2s ease;
+    }
+    .shot-card:hover img { object-position: bottom; }
+    .shot-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 55% 0 0 0;
+      background: linear-gradient(180deg, transparent, rgba(248,250,252,0.96));
+      pointer-events: none;
     }
     .shot-card figcaption {
       padding: 12px 14px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
     }
-    .shot-card figcaption::after { content: '🔍'; font-size: 13px; opacity: 0.5; flex-shrink: 0; }
+    .shots-cta { text-align: center; margin-top: 32px; }
+    .shots-cta-note {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
 
     /* ══════════════════════════════
        רחוב, עגורן ושלטי חוצות (מעבר בין סקשנים)
@@ -637,8 +604,8 @@
     }
     .agent-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.08); }
     .agent-icon { font-size: 28px; display: block; margin-bottom: 10px; }
-    .agent-title { font-size: 15px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
-    .agent-desc { font-size: 12.5px; color: rgba(255,255,255,0.60); line-height: 1.6; }
+    .agent-title { font-size: 17px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .agent-desc { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; }
     .agents-closing {
       text-align: center; font-size: 16px; font-weight: 800; color: var(--gold-400);
       margin-top: 28px; position: relative; z-index: 1;
@@ -676,8 +643,8 @@
       margin: 0 auto 16px;
       box-shadow: 0 4px 16px rgba(37,99,235,0.30);
     }
-    .step-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-    .step-desc  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .step-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .step-desc  { font-size: 15.5px; color: var(--text-muted); line-height: 1.65; }
     .step-micro { font-size: 12px; color: var(--blue); font-weight: 700; margin-top: 10px; }
 
     /* ══════════════════════════════
@@ -747,7 +714,7 @@
       margin: 16px 0 24px;
     }
     .plan-features li {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--text-muted);
       padding: 6px 0;
       border-bottom: 1px solid var(--border);
@@ -761,7 +728,7 @@
       width: 100%;
       padding: 14px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 15px;
       font-weight: 800;
       cursor: pointer;
@@ -777,10 +744,87 @@
 
     .pricing-note {
       text-align: center;
-      font-size: 13px;
+      font-size: 14.5px;
       color: var(--text-muted);
       margin-top: 24px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-inline: auto;
     }
+    .pricing-note strong { color: var(--navy); }
+
+    /* חיווי מושבים: הרחבת סוכנים בחבילות צוות/סוכנות */
+    .plan-seats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--navy-50);
+      border: 1.5px dashed var(--navy-300);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy-600);
+      margin: 4px 0 8px;
+      line-height: 1.5;
+    }
+    .plan-trial-badge {
+      display: inline-block;
+      background: var(--green-100);
+      color: var(--green-600);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    /* חבילה מותאמת אישית: רצועת Enterprise */
+    .custom-plan-strip {
+      max-width: 900px;
+      margin: 28px auto 0;
+      background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
+      border-radius: var(--radius);
+      padding: 28px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .custom-plan-strip::before {
+      content: '🏗️';
+      position: absolute;
+      font-size: 90px;
+      opacity: 0.10;
+      left: 18px;
+      bottom: -18px;
+      transform: rotate(-8deg);
+    }
+    .cps-title { font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px; }
+    .cps-desc  { font-size: 14.5px; color: rgba(255,255,255,0.70); line-height: 1.6; max-width: 520px; }
+    .cps-btn {
+      background: var(--gold-500);
+      color: var(--navy-900);
+      border: none;
+      padding: 13px 28px;
+      border-radius: 99px;
+      font-family: 'Rubik', 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      white-space: nowrap;
+      position: relative;
+      z-index: 1;
+    }
+    .cps-btn:hover { background: var(--gold-400); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,154,42,0.40); }
 
     /* ══════════════════════════════
        סגירה חזקה
@@ -855,8 +899,6 @@
     @media (max-width: 600px) {
       .stats-inner { grid-template-columns: repeat(3, 1fr); }
       .stat-num { font-size: 26px; }
-      .device-viewport { height: min(52vh, 380px); }
-      .reveal-scene { height: 200vh; }
       .section, .demo-section, .agents-section, .pricing-section { padding: 44px 20px; }
       .closing { padding: 60px 20px; }
       .section-sub { margin-bottom: 28px; }
@@ -946,7 +988,7 @@
       border: none;
       padding: 16px 36px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
@@ -1014,9 +1056,9 @@
     ══════════════════════════════ */
     .about-section { background: var(--white); }
     .about-text {
-      max-width: 640px;
+      max-width: 660px;
       margin: 0 auto 36px;
-      font-size: 16px;
+      font-size: 17.5px;
       color: var(--text-muted);
       text-align: center;
       line-height: 1.8;
@@ -1038,8 +1080,8 @@
     }
     .about-pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
     .ap-icon { font-size: 28px; display: block; margin-bottom: 10px; }
-    .ap-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
-    .ap-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+    .ap-title { font-size: 15.5px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .ap-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
 
     /* ══════════════════════════════
        שאלות ותשובות
@@ -1061,7 +1103,7 @@
     .faq-item summary {
       cursor: pointer;
       padding: 16px 20px;
-      font-size: 15px;
+      font-size: 16.5px;
       font-weight: 700;
       color: var(--text);
       display: flex;
@@ -1083,7 +1125,7 @@
     .faq-item[open] summary { border-bottom: 1px solid var(--border); }
     .faq-answer {
       padding: 4px 20px 18px;
-      font-size: 14px;
+      font-size: 15px;
       color: var(--text-muted);
       line-height: 1.7;
     }
@@ -1132,8 +1174,8 @@
       border-color: var(--blue);
     }
     .fc-icon { font-size: 26px; display: inline-block; position: relative; margin-bottom: 10px; }
-    .fc-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-    .fc-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+    .fc-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .fc-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
 
     .feature-card-game .fc-icon::after {
       content: '🎉';
@@ -1192,6 +1234,143 @@
       100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
     }
 
+    /* ══════════════════════════════
+       עגורן מעל ה-CTA הראשי: מוריד "משקולת" על הכפתור להדגשה
+    ══════════════════════════════ */
+    .cta-stage { position: relative; display: inline-block; }
+    .cta-crane {
+      position: absolute;
+      bottom: calc(100% - 4px);
+      right: 6px;
+      width: 100px; height: 112px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .cta-crane::before { /* תורן */
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 4px; height: 100%;
+      background: var(--gold-500);
+      border-radius: 2px;
+    }
+    .cta-crane::after { /* זרוע */
+      content: '';
+      position: absolute; top: 0; right: -2px;
+      width: 80px; height: 4px;
+      background: var(--gold-500);
+      border-radius: 2px;
+    }
+    .crane-cable {
+      position: absolute; top: 4px; right: 66px;
+      width: 2px; height: 18px;
+      background: rgba(255,255,255,0.55);
+      animation: craneCable 7s ease-in-out infinite;
+    }
+    .crane-load {
+      position: absolute; top: 22px; right: 48px;
+      min-width: 40px; padding: 3px 8px;
+      background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+      color: var(--navy-900);
+      font-size: 11px; font-weight: 900;
+      border-radius: 7px; text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+      animation: craneLoad 7s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    @keyframes craneCable {
+      0%, 50% { height: 18px; }
+      62%     { height: 62px; }
+      66%     { height: 57px; }
+      74%     { height: 62px; }
+      82%     { height: 62px; }
+      83%     { height: 18px; }
+      100%    { height: 18px; }
+    }
+    @keyframes craneLoad {
+      0%, 50% { transform: translateY(0); opacity: 1; }
+      62%     { transform: translateY(44px); }
+      66%     { transform: translateY(39px); }
+      74%     { transform: translateY(44px); opacity: 1; }
+      82%     { transform: translateY(44px); opacity: 0; }
+      83%     { transform: translateY(0); opacity: 0; }
+      90%, 100% { transform: translateY(0); opacity: 1; }
+    }
+    .cta-drop-target { animation: ctaImpact 7s ease-in-out infinite; }
+    @keyframes ctaImpact {
+      0%, 61% { transform: none; }
+      64%     { transform: scale(1.06, 0.88) translateY(3px); }
+      70%     { transform: scale(0.98, 1.03); }
+      76%, 100% { transform: none; }
+    }
+    .cta-stage::after { /* ענן אבק ברגע הפגיעה */
+      content: '💨';
+      position: absolute; bottom: 6px; right: 30px;
+      font-size: 16px; opacity: 0;
+      pointer-events: none;
+      animation: ctaDust 7s ease-out infinite;
+    }
+    @keyframes ctaDust {
+      0%, 62% { opacity: 0; transform: translate(0,0) scale(0.6); }
+      66%     { opacity: 0.9; transform: translate(12px,-8px) scale(1.1); }
+      78%     { opacity: 0; transform: translate(24px,-16px) scale(1.3); }
+      100%    { opacity: 0; }
+    }
+    @media (max-width: 480px) { .cta-crane { display: none; } .cta-drop-target { animation: none; } .cta-stage::after { display: none; } }
+
+    /* ══════════════════════════════
+       רצועת אתר בנייה: טרקטור, משאית ופועל (מעבר לתמחור)
+    ══════════════════════════════ */
+    .construction-divider {
+      position: relative;
+      height: 130px;
+      background: linear-gradient(180deg, var(--white) 0%, var(--gray-bg) 100%);
+      overflow: hidden;
+      content-visibility: auto;
+    }
+    .cd-sign {
+      position: absolute; top: 18px; left: 0; right: 0;
+      text-align: center;
+      font-size: 14.5px; font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .cd-road {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 26px;
+      background: #CBD5E1;
+    }
+    .cd-road::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px;
+      transform: translateY(-50%); opacity: 0.7;
+      background: repeating-linear-gradient(90deg, var(--white) 0 18px, transparent 18px 34px);
+    }
+    .cd-vehicle {
+      position: absolute; bottom: 16px; right: -70px;
+      font-size: 34px;
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+    }
+    .cd-truck { font-size: 38px; }
+    .construction-divider.in-view .cd-tractor { animation: cdDrive 13s linear infinite; }
+    .construction-divider.in-view .cd-truck   { animation: cdDrive 13s linear 6s infinite; }
+    @keyframes cdDrive {
+      from { transform: translateX(0); }
+      to   { transform: translateX(calc(-100vw - 160px)); }
+    }
+    .cd-worker {
+      position: absolute; bottom: 20px; right: 38%;
+      font-size: 30px;
+      transform-origin: bottom center;
+    }
+    .construction-divider.in-view .cd-worker { animation: cdDig 1.6s ease-in-out infinite; }
+    @keyframes cdDig {
+      0%, 100% { transform: rotate(0); }
+      50%      { transform: rotate(-14deg) translateY(2px); }
+    }
+    .cd-cone { position: absolute; bottom: 19px; font-size: 19px; }
+
+    /* מעברי צבע רכים בין סקשנים כהים לבהירים */
+    .sect-blend-light { height: 64px; background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-50) 55%, var(--white) 100%); }
+    .sect-blend-dark  { height: 64px; background: linear-gradient(180deg, var(--gray-bg) 0%, var(--navy-100) 45%, var(--navy-900) 100%); }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.001ms !important;
@@ -1200,53 +1379,6 @@
       }
     }
 
-    /* ══════════════════════════════
-       לייטבוקס
-    ══════════════════════════════ */
-    .lightbox {
-      position: fixed; inset: 0; z-index: 500;
-      background: rgba(10,26,46,0.85);
-      backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 40px 24px;
-    }
-    .lightbox.hidden { display: none; }
-    .lb-img {
-      max-width: min(1000px, 90vw);
-      max-height: 82vh;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      animation: lb-in 0.2s ease both;
-      object-fit: contain;
-      background: #fff;
-    }
-    @keyframes lb-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-    .lb-close {
-      position: absolute; top: 20px; left: 20px;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); color: #fff; border: none;
-      font-size: 22px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .lb-close:hover { background: rgba(255,255,255,0.22); }
-    .lb-nav {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); color: #fff; border: none;
-      font-size: 24px; cursor: pointer;
-    }
-    .lb-nav:hover { background: rgba(255,255,255,0.22); }
-    .lb-prev { right: 24px; }
-    .lb-next { left: 24px; }
-    .lb-caption {
-      position: absolute; bottom: 24px; left: 0; right: 0;
-      text-align: center; color: rgba(255,255,255,0.75);
-      font-size: 13px; font-weight: 600;
-    }
-    @media (max-width: 640px) {
-      .lb-nav { width: 36px; height: 36px; font-size: 20px; }
-      .lb-close { width: 34px; height: 34px; font-size: 18px; top: 14px; left: 14px; }
-    }
   </style>
 </head>
 <body>
@@ -1271,7 +1403,13 @@
   </p>
 
   <div class="hero-actions">
-    <a href="https://liders-crm.com" class="btn-primary pulse-cta">מתחילים 30 יום בחינם</a>
+    <span class="cta-stage">
+      <span class="cta-crane" aria-hidden="true">
+        <span class="crane-cable"></span>
+        <span class="crane-load">30 יום 🎁</span>
+      </span>
+      <a href="https://liders-crm.com" class="btn-primary pulse-cta cta-drop-target">מתחילים 30 יום בחינם</a>
+    </span>
     <a href="#demo" class="btn-ghost">לראות איך זה עובד</a>
   </div>
   <p class="hero-micro">בלי כרטיס אשראי, בלי התחייבות, בלי תירוצים.</p>
@@ -1405,6 +1543,8 @@
   </div>
 </section>
 
+<div class="sect-blend-light" aria-hidden="true"></div>
+
 <!-- קצת עלינו -->
 <section class="section about-section" id="about">
   <div class="section-inner">
@@ -1436,45 +1576,32 @@
 <!-- תצוגת המערכת -->
 <section class="demo-section" id="demo">
   <div class="section-inner">
-    <p class="section-label fade-up">תפסיק לדמיין. תראה.</p>
-    <h2 class="section-title fade-up">ככה זה נראה מהצד שלך</h2>
-    <p class="section-sub fade-up">לא הדגמה מפוברקת. ממש ככה נראה הדשבורד שלך, הפייפליין והלוח שנה כשאתה נכנס בבוקר.</p>
-  </div>
+    <p class="section-label fade-up">הצצה קטנה. בכוונה.</p>
+    <h2 class="section-title fade-up">טעימה ממה שמחכה לך בפנים</h2>
+    <p class="section-sub fade-up">דשבורד, פייפליין, לוח שנה ועוד. זו רק ההתחלה — את החוויה המלאה מגלים רק מבפנים.</p>
 
-  <div class="reveal-scene">
-    <div class="reveal-sticky">
-      <div class="device-frame">
-        <div class="device-bar">
-          <div class="mockup-dot"></div>
-          <div class="mockup-dot"></div>
-          <div class="mockup-dot"></div>
-        </div>
-        <div class="device-viewport">
-          <img class="reveal-strip" id="revealStrip" src="assets/screenshots/lead-detail-tall-desktop.png" alt="כרטיס ליד מלא, גולל פנימה">
-        </div>
-      </div>
-    </div>
-  </div>
-  <p class="reveal-caption">תמשיך לגלול, הכרטיס הזה זז לבד. ככה נראה כרטיס ליד אמיתי.</p>
-
-  <div class="section-inner">
     <div class="shot-gallery">
-      <figure class="shot-card" data-lb-src="assets/screenshots/dashboard-desktop.png" data-lb-caption="הדשבורד. כל מה שחשוב, במבט אחד.">
-        <img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס" loading="lazy">
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס" loading="lazy"></div>
         <figcaption>הדשבורד. כל מה שחשוב, במבט אחד.</figcaption>
       </figure>
-      <figure class="shot-card" data-lb-src="assets/screenshots/pipeline-desktop.png" data-lb-caption="הפייפליין. גוררים, לא מתעדכנים ידנית.">
-        <img src="assets/screenshots/pipeline-desktop.png" alt="לוח פייפליין לידרס" loading="lazy">
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/pipeline-desktop.png" alt="לוח פייפליין לידרס" loading="lazy"></div>
         <figcaption>הפייפליין. גוררים, לא מתעדכנים ידנית.</figcaption>
       </figure>
-      <figure class="shot-card" data-lb-src="assets/screenshots/calendar-desktop.png" data-lb-caption="לוח השנה. שום פגישה לא נשכחת.">
-        <img src="assets/screenshots/calendar-desktop.png" alt="לוח שנה לידרס" loading="lazy">
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/calendar-desktop.png" alt="לוח שנה לידרס" loading="lazy"></div>
         <figcaption>לוח השנה. שום פגישה לא נשכחת.</figcaption>
       </figure>
-      <figure class="shot-card" data-lb-src="assets/screenshots/prohub-desktop.png" data-lb-caption="Pro Hub. החדר הפרטי של הפיצ'רים.">
-        <img src="assets/screenshots/prohub-desktop.png" alt="מרכז הפיצ'רים Pro Hub" loading="lazy">
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/prohub-desktop.png" alt="מרכז הפיצ'רים Pro Hub" loading="lazy"></div>
         <figcaption>Pro Hub. החדר הפרטי של הפיצ'רים.</figcaption>
       </figure>
+    </div>
+
+    <div class="shots-cta fade-up">
+      <p class="shots-cta-note">🔒 את השאר משאירים למי שנכנס. ההרשמה לוקחת דקה.</p>
+      <a href="https://liders-crm.com" class="btn-primary" style="font-size:16px;">רוצה לראות הכל? היכנס וגלה בעצמך</a>
     </div>
   </div>
 </section>
@@ -1558,6 +1685,11 @@
             <div class="fc-title">שיתוף ליד מאובטח עם PIN</div>
             <div class="fc-desc">משתפים ליד ספציפי עם קולגה, מוגן בקוד אישי בלבד וללא גישה לשאר המערכת</div>
           </div>
+          <div class="feature-card">
+            <span class="fc-icon">🤝</span>
+            <div class="fc-title">לולאת הפניות בין קולגות</div>
+            <div class="fc-desc">סגרת עסקה? מפנים את הלקוח לעו"ד או למעצב בוואטסאפ, והליד נכנס ישר לפייפליין שלהם</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1594,6 +1726,17 @@
   </div>
 </section>
 
+<!-- רצועת אתר בנייה: מעבר לתמחור -->
+<div class="construction-divider" id="constructionDivider" aria-hidden="true">
+  <div class="cd-sign">🚧 כאן בונים את העסקה הבאה שלך 🚧</div>
+  <div class="cd-road"></div>
+  <div class="cd-vehicle cd-tractor">🚜</div>
+  <div class="cd-vehicle cd-truck">🚚</div>
+  <div class="cd-worker">👷</div>
+  <div class="cd-cone" style="right:20%;">🚧</div>
+  <div class="cd-cone" style="right:70%;">🚧</div>
+</div>
+
 <!-- תמחור -->
 <section class="pricing-section" id="pricing">
   <div class="section-inner">
@@ -1605,16 +1748,17 @@
       <div class="plan-card fade-up">
         <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">Solo</div>
-        <div class="plan-desc">לסוכן עצמאי</div>
+        <div class="plan-desc">לעצמאי: סוכן, עו"ד או מעצב</div>
         <div class="plan-price">₪179<small>/חודש</small></div>
         <div class="plan-annual-teaser">📅 שנתי · ₪124/חודש · חיסכון ₪658</div>
         <div class="plan-limit">1 סוכן · עד 200 לידים</div>
+        <div><span class="plan-trial-badge">🎁 כולל 30 יום ניסיון חינם מלא</span></div>
         <ul class="plan-features">
           <li>לוח Kanban מלא</li>
           <li>תזכורות WhatsApp</li>
           <li>ציון AI לכל ליד</li>
           <li>אפליקציה למובייל</li>
-          <li>30 יום ניסיון חינם</li>
+          <li>5 סוכני AI צמודים</li>
         </ul>
         <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
         <a href="https://liders-crm.com" class="plan-btn outline">מתחילים בחינם</a>
@@ -1624,13 +1768,14 @@
         <div class="plan-popular">⭐ הכי פופולרי</div>
         <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">צוות</div>
-        <div class="plan-desc">לצוות קטן</div>
+        <div class="plan-desc">לצוות שסוגר ביחד</div>
         <div class="plan-price">₪349<small>/חודש</small></div>
         <div class="plan-annual-teaser">📅 שנתי · ₪249/חודש · חיסכון ₪1,198</div>
         <div class="plan-limit">3 סוכנים כלולים · עד 1,000 לידים</div>
+        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 8 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
         <ul class="plan-features">
-          <li>כל מה שב Solo</li>
-          <li>3 סוכנים כלולים, עד 8 בתוספת תשלום</li>
+          <li>כל מה שב-Solo</li>
+          <li>3 סוכנים כלולים, ניתן להרחיב עד 8</li>
           <li>אנליטיקס צוות</li>
           <li>דוחות ביצועים</li>
         </ul>
@@ -1641,22 +1786,31 @@
       <div class="plan-card fade-up">
         <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">סוכנות</div>
-        <div class="plan-desc">לסוכנות נדל"ן</div>
+        <div class="plan-desc">לסוכנות או משרד גדול</div>
         <div class="plan-price">₪549<small>/חודש</small></div>
         <div class="plan-annual-teaser">📅 שנתי · ₪399/חודש · חיסכון ₪1,798</div>
         <div class="plan-limit">10 סוכנים כלולים · לידים ללא הגבלה</div>
+        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 25 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
         <ul class="plan-features">
-          <li>כל מה שב צוות</li>
-          <li>10 סוכנים כלולים, עד 25 בתוספת תשלום</li>
+          <li>כל מה שב-צוות</li>
+          <li>10 סוכנים כלולים, ניתן להרחיב עד 25</li>
           <li>לידים ללא הגבלה</li>
-          <li>תמיכה עדיפות</li>
+          <li>תמיכה בעדיפות גבוהה</li>
         </ul>
         <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
         <a href="https://liders-crm.com" class="plan-btn outline">בוחרים בסוכנות</a>
       </div>
     </div>
 
-    <p class="pricing-note">כל החבילות כוללות 30 יום ניסיון חינם מלא. ביטול בכל עת. ללא קנסות וללא שאלות.</p>
+    <div class="custom-plan-strip fade-up">
+      <div>
+        <div class="cps-title">צריך חבילה גדולה יותר?</div>
+        <p class="cps-desc">מעל 25 סוכנים, צרכים מיוחדים או סוכנות בצמיחה מהירה? דברו איתנו ונתאים לכם את החבילה המושלמת, בדיוק לפי הצרכים שלכם.</p>
+      </div>
+      <a href="https://liders-crm.com" class="cps-btn">דברו איתנו 💬</a>
+    </div>
+
+    <p class="pricing-note">🎁 <strong>תקופת הניסיון החינם (30 יום) תקפה לחבילת הבסיס בלבד.</strong> בסיום הניסיון אפשר להצטרף לכל חבילה שתרצו ולצרף סוכנים נוספים. ביטול בכל עת, ללא קנסות וללא שאלות.</p>
   </div>
 </section>
 
@@ -1685,8 +1839,8 @@
         <div class="mb-feature">
           <span class="mbf-icon">📸</span>
           <div>
-            <strong>פוסט לסושיאל לכל נכס</strong>
-            <span>בוחר נכס ופלטפורמה (Instagram / Facebook / WhatsApp) ומקבל פוסט מוכן</span>
+            <strong>פוסט לסושיאל מותאם לתחום שלך</strong>
+            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית למעצב — בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
           </div>
         </div>
         <div class="mb-feature">
@@ -1731,15 +1885,15 @@
     <div class="faq-list fade-up">
       <details class="faq-item">
         <summary>יש התחייבות לתקופה מסוימת?</summary>
-        <div class="faq-answer">לא. אפשר לבטל בכל עת, ללא קנסות וללא שאלות. כל החבילות כוללות 30 יום ניסיון חינם מלא לפני שמתחייבים לכלום.</div>
+        <div class="faq-answer">לא. אפשר לבטל בכל עת, ללא קנסות וללא שאלות. מתחילים עם 30 יום ניסיון חינם מלא בחבילת הבסיס, ובסיומו אפשר להצטרף לכל חבילה שמתאימה לכם ולצרף סוכנים נוספים.</div>
       </details>
       <details class="faq-item">
         <summary>מה קורה לנתונים שלי אחרי שהניסיון החינמי נגמר?</summary>
         <div class="faq-answer">הנתונים נשארים שמורים אצלך במערכת. כדי להמשיך להשתמש בהם צריך לשדרג לחבילה בתשלום, אבל שום דבר לא נמחק או הולך לאיבוד.</div>
       </details>
       <details class="faq-item">
-        <summary>המערכת מתאימה לסוכן עצמאי או רק לצוותים גדולים?</summary>
-        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל סוכן עצמאי, וחבילות צוות וסוכנות מתאימות לכל גודל ארגון.</div>
+        <summary>המערכת מתאימה לעצמאי או רק לצוותים גדולים?</summary>
+        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי — סוכן נדל"ן, עו"ד נדל"ן או מעצב פנים — וחבילות צוות וסוכנות גדלות איתך: מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
       </details>
       <details class="faq-item">
         <summary>כמה זמן לוקח להתחיל לעבוד בפועל?</summary>
@@ -1777,6 +1931,8 @@
   <a href="https://liders-crm.com/privacy-policy.html#security" class="trust-link">לקריאה על מדיניות האבטחה שלנו ←</a>
 </section>
 
+<div class="sect-blend-dark" aria-hidden="true"></div>
+
 <!-- סגירה -->
 <section class="closing">
   <h2>העסקה הבאה שלך<br>כבר <span class="gold">מחכה.</span></h2>
@@ -1797,15 +1953,6 @@
   <div class="footer-copy">© 2026 Liders CRM · כל הזכויות שמורות</div>
 </footer>
 
-<!-- לייטבוקס -->
-<div class="lightbox hidden" id="lightbox">
-  <button class="lb-close" id="lbClose" aria-label="סגור">×</button>
-  <button class="lb-nav lb-prev" id="lbPrev" aria-label="הקודם">›</button>
-  <img class="lb-img" id="lbImg" alt="">
-  <button class="lb-nav lb-next" id="lbNext" aria-label="הבא">‹</button>
-  <div class="lb-caption" id="lbCaption"></div>
-</div>
-
 <script>
   // אנימציית fade-up בגלילה
   const observer = new IntersectionObserver((entries) => {
@@ -1821,89 +1968,29 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // רחוב + עגורן: הבניינים "עולים" רק כשנכנסים לתצוגה
+  // סצנות נדל"ן (רחוב + אתר בנייה): מתעוררות רק כשנכנסות לתצוגה
   (function () {
-    const scene = document.getElementById('streetScene');
-    if (!scene) return;
+    const scenes = document.querySelectorAll('.street-scene, .construction-divider');
+    if (!scenes.length) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { scene.classList.add('in-view'); io.unobserve(e.target); }
+        if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
       });
     }, { threshold: 0.2 });
-    io.observe(scene);
+    scenes.forEach(s => io.observe(s));
   })();
 
-  // אנימציית גלילה בתוך תמונה: כרטיס הליד הארוך "זז" בתוך המסגרת לפי גלילת העמוד
+  // מובייל: "הצצה" אוטומטית בגלריית הטעימות (אין hover בטאץ')
   (function () {
     if (prefersReducedMotion) return;
-    const scene = document.querySelector('.reveal-scene');
-    const frame = document.querySelector('.device-viewport');
-    const strip = document.getElementById('revealStrip');
-    if (!scene || !frame || !strip) return;
-
-    let ticking = false;
-    function update() {
-      ticking = false;
-      const rect = scene.getBoundingClientRect();
-      const frameH = frame.clientHeight;
-      const maxShift = Math.max(0, strip.clientHeight - frameH);
-      const scrollable = Math.max(1, rect.height - frameH);
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
-      strip.style.transform = 'translateY(' + (-progress * maxShift) + 'px)';
-    }
-    function onScroll() {
-      if (!ticking) { requestAnimationFrame(update); ticking = true; }
-    }
+    const thumbs = document.querySelectorAll('.shot-thumb img');
+    if (!thumbs.length || matchMedia('(hover: hover)').matches) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { window.addEventListener('scroll', onScroll, { passive: true }); update(); }
-        else { window.removeEventListener('scroll', onScroll); }
+        e.target.style.objectPosition = e.isIntersecting ? 'bottom' : 'top';
       });
-    }, { threshold: 0 });
-    io.observe(scene);
-    if (strip.complete) update(); else strip.addEventListener('load', update);
-    window.addEventListener('resize', update);
-  })();
-
-  // לייטבוקס לגלריית צילומי המסך
-  (function () {
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCaption = document.getElementById('lbCaption');
-    const lbClose = document.getElementById('lbClose');
-    const lbPrev = document.getElementById('lbPrev');
-    const lbNext = document.getElementById('lbNext');
-    const cards = Array.from(document.querySelectorAll('.shot-card'));
-    if (!lb || !cards.length) return;
-
-    const group = cards.map(c => ({ src: c.dataset.lbSrc, caption: c.dataset.lbCaption }));
-    let idx = 0;
-
-    function openAt(i) {
-      idx = (i + group.length) % group.length;
-      const item = group[idx];
-      lbImg.src = item.src;
-      lbImg.alt = item.caption || '';
-      lbCaption.textContent = item.caption || '';
-      lb.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-    function close() {
-      lb.classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    cards.forEach((card, i) => card.addEventListener('click', () => openAt(i)));
-    lbClose.addEventListener('click', close);
-    lbPrev.addEventListener('click', () => openAt(idx - 1));
-    lbNext.addEventListener('click', () => openAt(idx + 1));
-    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
-    document.addEventListener('keydown', (e) => {
-      if (lb.classList.contains('hidden')) return;
-      if (e.key === 'Escape') close();
-      if (e.key === 'ArrowRight') openAt(idx - 1); // RTL: ימינה = הקודם
-      if (e.key === 'ArrowLeft')  openAt(idx + 1); // RTL: שמאלה = הבא
-    });
+    }, { threshold: 0.6 });
+    thumbs.forEach(t => io.observe(t));
   })();
 </script>
 
