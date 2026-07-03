@@ -617,6 +617,28 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 3/7/2026 (לילה מאוחר) — קיצורי דרך לפי תחום + תיקון העלאת CSV
+
+> ענף: `claude/hand2-buttons-homepage-pl4d29`
+
+### ✅ הושלם
+1. **קיצורי דרך לפי תחום** — שורת הכפתורים בדשבורד עכשיו מותאמת לכל אחד מ-3 התחומים:
+   - **סוכן נדל"ן** (`realestate`): יד2 · מדלן · WhatsApp · רעיון (ללא שינוי)
+   - **עו"ד נדל"ן** (`realestate_lawyer`): 🏛 טאבו (aris.justice.gov.il) · 📚 נבו (nevo.co.il) · 💰 מיסוי מקרקעין (taxes.gov.il) · WhatsApp · רעיון
+   - **מעצב פנים** (`interior`): 📌 Pinterest · 🛋 Houzz · WhatsApp · רעיון
+   - מימוש: 3 divs נפרדים (`realestate-shortcuts`, `lawyer-shortcuts`, `interior-shortcuts`),
+     JS מציג רק את הרלוונטי לפי `ind` ב-`Dashboard._applyIndustryLabels()`
+2. **CSS חדש** — classes לכפתורים חדשים: `re-nevo` (כחול), `re-tabo` (navy), `re-misim` (סגול),
+   `re-pinterest` (אדום), `re-houzz` (ירוק)
+3. **תיקון העלאת קבצים מגוגל דרייב** — שינוי ה-`accept` ב-file input מ-`.csv,.txt,text/csv`
+   ל-רשימה שכוללת גם `.xlsx,.xls` + MIME types של Excel → קבצים אינם עוד חסומים בבחירה
+4. **זיהוי Excel ב-`LeadImport.handleFile()`** — אם נבחר קובץ `.xlsx`/`.xls`, מוצג toast
+   כחול עם הנחיה: "פתח ב-Google Sheets ← קובץ ← הורד ← CSV, ואז העלה את ה-CSV"
+5. **`toast()` עודכן** — תומך כעת ב-`duration` כפרמטר שלישי (ברירת מחדל 3200ms)
+6. **`toast-info` CSS** — נוסף class כחול (`--blue-600`) לצד `toast-success` ו-`toast-error`
+
+---
+
 ## כללי עבודה
 
 1. **עברית RTL** — כל טקסט UI בעברית
