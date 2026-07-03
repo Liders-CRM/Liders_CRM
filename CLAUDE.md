@@ -81,8 +81,29 @@
 >    ב-index וב-admin — כי `X-Frame-Options`/`frame-ancestors` לא נאכפים מ-meta.
 > 3. `_headers` נשאר בריפו למקרה של מעבר פלטפורמה, אבל **אין לסמוך עליו**.
 >
-> 📋 **ממתין לפעולת משתמש**: חיבור הדומיין ל-Cloudflare (חינם) כדי לקבל headers
-> אמיתיים (HSTS, X-Frame-Options, CSP כ-header). עד אז ה-meta CSP הוא ההגנה היחידה.
+### ☁️ סטטוס Cloudflare (עדכון 3/7/2026 ערב)
+- ✅ **הדומיין מחובר ל-Cloudflare** — Nameservers הוחלפו ב-Namecheap, ה-proxy פעיל
+  (אומת מבחוץ: `server: cloudflare` + `cf-ray` בתגובה של liders-crm.com).
+- ❌ **ה-Transform Rule עוד לא עובד** — בבדיקה האחרונה אף כותרת אבטחה לא הופיעה
+  בתגובה. המשתמש הוסיף rule אבל כנראה: לא עבר Deploy (נשאר Draft) / נוצר כ-Modify
+  **Request** Header במקום **Response** / תנאי hostname שגוי. ממתין לתיקון משתמש
+  ואז לבדוק שוב.
+- 🔬 **איך בודקים מבחוץ** (ה-sandbox חסום לרשת! curl/WebFetch מחזירים 403): דרך
+  pg_net ב-DB — ‏`select net.http_get('https://liders-crm.com/')` ואז
+  `select status_code, headers from net._http_response where id = <req_id>` עם
+  execute_sql. לבדוק גם את www אחרי שהכל עולה.
+- 📋 **ה-headers שסוכמו** (Rules → Transform Rules → Modify Response Header,
+  rule אחד "Security Headers" על All incoming requests, הכל Set static):
+  `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`,
+  `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy: strict-origin-when-cross-origin`,
+  `Permissions-Policy: camera=(), microphone=(), geolocation=()`,
+  `Content-Security-Policy: frame-ancestors 'none'` (רק frame-ancestors! ה-CSP
+  המלא נשאר ב-meta פר-דף — header מלא היה נאכף כחיתוך ועלול לשבור דפים).
+  **לא** להוסיף COOP: same-origin (שובר Google OAuth בפופאפ). בנוסף: SSL/TLS
+  ב-Full (Strict) + Always Use HTTPS.
+- עד שה-rule יעבוד — **ה-meta CSP הוא עדיין ההגנה היחידה בפועל.** כשיאומת שהכל
+  חי: לעדכן סעיף זה + לשקול הסרת ה-frame-busting JS (לא לפני!).
 
 ---
 
