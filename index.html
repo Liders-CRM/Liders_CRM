@@ -2181,6 +2181,55 @@
       100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
 
+    /* ── Coffee Popup ── */
+    #coffee-overlay {
+      position: fixed; inset: 0; background: rgba(15,31,61,.45);
+      backdrop-filter: blur(3px); z-index: 9998;
+    }
+    #coffee-popup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg, #fff);
+      border-radius: 24px; padding: 28px 28px 22px;
+      z-index: 9999; text-align: center;
+      box-shadow: 0 24px 72px rgba(15,31,61,.22);
+      max-width: 290px; width: 88%;
+      animation: coffeePopIn .4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes coffeePopIn {
+      from { transform: translate(-50%,-52%) scale(.82); opacity: 0; }
+      to   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+    }
+    @keyframes coffeePopOut {
+      from { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+      to   { transform: translate(-50%,-52%) scale(.82); opacity: 0; }
+    }
+    .coffee-cup {
+      font-size: 52px; line-height: 1;
+      animation: coffeeSway 2.4s ease-in-out infinite;
+      display: inline-block;
+    }
+    .coffee-cookie {
+      font-size: 30px; margin-right: 6px;
+      animation: coffeeSway 2.4s ease-in-out infinite reverse;
+      display: inline-block;
+    }
+    @keyframes coffeeSway {
+      0%,100% { transform: rotate(-6deg) translateY(0); }
+      50%     { transform: rotate(6deg)  translateY(-5px); }
+    }
+    #coffee-bar-wrap {
+      margin-top: 16px; height: 4px;
+      background: var(--gray-100, #f1f5f9);
+      border-radius: 4px; overflow: hidden;
+    }
+    #coffee-bar {
+      height: 100%; background: var(--blue-600, #2563eb);
+      border-radius: 4px;
+      animation: coffeeCountdown 5.6s linear forwards;
+    }
+    @keyframes coffeeCountdown { from { width: 100%; } to { width: 0%; } }
+
     /* Champagne bottle pop (deal closed) */
     .champagne-pop {
       position: fixed; left: 50%; top: 30%; transform: translateX(-50%);
@@ -5388,6 +5437,21 @@
 <!-- CONFETTI -->
 <div id="confetti-container"></div>
 
+<!-- COFFEE POPUP -->
+<div id="coffee-overlay" class="hidden"></div>
+<div id="coffee-popup" class="hidden">
+  <div style="margin-bottom:6px;">
+    <span class="coffee-cup">☕</span><span class="coffee-cookie">🍪</span>
+  </div>
+  <div style="font-weight:800;font-size:15px;color:var(--navy);margin:10px 0 5px;line-height:1.45;">
+    הפסקה קצרה של קפה ועוגייה
+  </div>
+  <div style="font-size:13px;color:var(--gray-500);line-height:1.55;">
+    ולידרס כבר עובדים על פתרון הסוגייה
+  </div>
+  <div id="coffee-bar-wrap"><div id="coffee-bar"></div></div>
+</div>
+
 <!-- ACHIEVEMENT TOAST -->
 <div class="achievement-toast" id="achievement-toast">
   <div class="achievement-toast-icon" id="ach-toast-icon">🏆</div>
@@ -8271,6 +8335,35 @@ function getLabel(key) {
   return (INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other)[key] || key;
 }
 
+function _getInd() { return localStorage.getItem('liders_industry') || State.tenant?.industry || 'other'; }
+
+const MICRO_COPY = {
+  emptyPipeline: {
+    realestate:        { icon:'🏠', title:'הפייפליין ריק לגמרי',   sub:'כל עסקה גדולה התחילה בליד אחד. מתי מוסיפים אותו?' },
+    realestate_lawyer: { icon:'⚖️', title:'אין תיקים פעילים',      sub:'הרגע הנכון לרשום לקוח חדש ולהתחיל לנהל.' },
+    interior:          { icon:'🎨', title:'הפרויקטים ממתינים',     sub:'כל עיצוב מדהים מתחיל בשיחה הראשונה עם לקוח.' },
+    other:             { icon:'👥', title:'עדיין אין לידים',         sub:'הוסף את הליד הראשון, או ייבא רשימה קיימת מקובץ.' },
+  },
+  aiLimitSuffix: {
+    realestate:        'הסוכן ינוח עד מחר בבוקר.',
+    realestate_lawyer: 'הניתוח ממשיך מחר.',
+    interior:          'ה-AI חוזר בבוקר עם ראש רענן.',
+    other:             'נחדש מחר.',
+  },
+  morningGreeting: {
+    realestate:        '☀️ בוקר טוב. הלידים לא ממתינים, אבל הקפה כן.',
+    realestate_lawyer: '☀️ בוקר טוב. התיקים ממתינים.',
+    interior:          '☀️ בוקר טוב. היצירתיות מתחילה עכשיו.',
+    other:             '☀️ בוקר טוב. יום פרודוקטיבי לפניך.',
+  },
+  dealClosed: {
+    realestate:        'עסקה נסגרת. יודעים לעבוד פה. 🏠',
+    realestate_lawyer: 'תיק הסתיים בהצלחה. עבודה מקצועית. ⚖️',
+    interior:          'פרויקט הושלם. לקוח מרוצה, עיצוב שנשאר. 🎨',
+    other:             'עסקה סגורה. כל הכבוד. 🎯',
+  },
+};
+
 const INDUSTRY_SOURCES = {
   realestate:        [{v:'yad2',l:'יד2'},{v:'madlan',l:'מדלן'},{v:'facebook',l:'פייסבוק'},{v:'instagram',l:'אינסטגרם'},{v:'referral',l:'הפניה'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
   interior:          [{v:'instagram',l:'אינסטגרם'},{v:'pinterest',l:'פינטרסט'},{v:'facebook',l:'פייסבוק'},{v:'referral',l:'הפניה'},{v:'agent',l:'הפניית סוכן נדל"ן'},{v:'website',l:'אתר'},{v:'call',l:'שיחה'},{v:'other',l:'אחר'}],
@@ -8377,10 +8470,11 @@ const AI = {
     if (!AiLimits.hasAiAccess()) throw new Error('⏰ תקופת הניסיון הסתיימה, שדרג לתוסף ה-AI (₪100/חודש)');
     const type = opts.type || 'general';
     if (!AiLimits.canUse(type)) {
-      const lim = AiLimits._lim()[type];
+      const lim    = AiLimits._lim()[type];
+      const suffix = MICRO_COPY.aiLimitSuffix[_getInd()] || MICRO_COPY.aiLimitSuffix.other;
       throw new Error(type === 'marketing'
-        ? `הגעת למגבלת כלי השיווק, ${lim} שימושים/יום בחבילה שלך`
-        : `הגעת למגבלת ה-AI היומית, ${lim} שימושים/יום בחבילה שלך`);
+        ? `הגעת למגבלת כלי השיווק, ${lim} שימושים/יום בחבילה שלך. ${suffix}`
+        : `הגעת למגבלת ה-AI היומית, ${lim} שימושים/יום בחבילה שלך. ${suffix}`);
     }
     const body = { messages, max_tokens: maxTokens, model: 'claude-sonnet-4-6', type, system: opts.system || this._DEFAULT_SYSTEM };
     const { data, error } = await sbClient.functions.invoke('ai-proxy', { body });
@@ -9671,7 +9765,7 @@ const Marketing = {
   async genOffer() {
     if (!this._checkConsent(() => this.genOffer())) return;
     if (!this._requireAccess()) return;
-    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
     const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const leadId = document.getElementById('mktg-lead-sel')?.value;
     const propId  = document.getElementById('mktg-prop-sel')?.value;
@@ -9714,7 +9808,7 @@ ${ind === 'realestate_lawyer' ? 'משרד' : 'סוכנות'}: ${safeAgency}
   async genPost() {
     if (!this._checkConsent(() => this.genPost())) return;
     if (!this._requireAccess()) return;
-    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
     const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const plat   = document.getElementById('mktg-platform')?.value;
     const outEl  = document.getElementById('mktg-post-out');
@@ -9755,7 +9849,7 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
   async genCampaign() {
     if (!this._checkConsent(() => this.genCampaign())) return;
     if (!this._requireAccess()) return;
-    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך`, 'warning'); return; }
+    if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
     const ind      = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const topic    = document.getElementById('mktg-campaign-topic')?.value;
     const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
@@ -10133,7 +10227,7 @@ const Gamify = {
     const prevLevel = this.getLevel(d.xp);
     d.xp += pts;
     if (type === 'add_lead')      { d.leadsAdded++;      d.acLeads++;  }
-    if (type === 'close_deal')    { d.dealsClosed++;      if (leadId) d.acClosed.push(leadId);   this.confetti(); if (d.dealsClosed === 1) setTimeout(() => AnnualUpsell.tryShow('first_deal'), 4000); }
+    if (type === 'close_deal')    { d.dealsClosed++;      if (leadId) d.acClosed.push(leadId);   this.confetti(); setTimeout(() => toast(MICRO_COPY.dealClosed[_getInd()] || MICRO_COPY.dealClosed.other, 'success', 5000), 600); if (d.dealsClosed === 1) setTimeout(() => AnnualUpsell.tryShow('first_deal'), 4000); }
     if (type === 'advance_stage') { if (leadId) d.acAdvanced.push(leadId); this.targetHit(); }
     if (type === 'complete_task') { d.tasksCompleted++;   d.acTasks++;  }
     if (type === 'use_ai')        { d.aiUses++;           d.acAi++;     }
@@ -10164,6 +10258,8 @@ const Gamify = {
     this.checkMilestones();
     this.renderSidebar();
     this.renderWidget();
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) setTimeout(() => toast(MICRO_COPY.morningGreeting[_getInd()] || MICRO_COPY.morningGreeting.other, 'info', 4500), 800);
     if (d.streak > 1) toast(`🔥 ${d.streak} ימים רצופים! +${this.XP.daily_login} XP`, 'success');
     if (d.streak === 10) setTimeout(() => AnnualUpsell.tryShow('streak_10'), 3000);
     if (d.streak === 18) setTimeout(() => AnnualUpsell.tryShow('streak_18'), 3000);
@@ -12931,15 +13027,15 @@ const Leads = {
            ${list.map((l, idx) => this.renderRow(l, idx)).join('')}
          </div>`
       : State.leads.length === 0
-      ? `<div class="empty-state">
-           <div class="empty-icon">👥</div>
-           <div class="empty-title">עדיין אין לך לידים</div>
-           <div class="empty-sub">הוסף את הליד הראשון שלך, או ייבא רשימה קיימת מקובץ</div>
+      ? (() => { const e = MICRO_COPY.emptyPipeline[_getInd()] || MICRO_COPY.emptyPipeline.other; return `<div class="empty-state">
+           <div class="empty-icon">${e.icon}</div>
+           <div class="empty-title">${e.title}</div>
+           <div class="empty-sub">${e.sub}</div>
            <div style="display:flex; gap:10px; justify-content:center; margin-top:16px;">
-             <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')">➕ הוספת ליד</button>
+             <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')">➕ ${getLabel('addLead')}</button>
              <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 ייבוא מקובץ</button>
            </div>
-         </div>`
+         </div>`; })()
       : `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו תוצאות</div></div>`;
   },
   search(q) {
@@ -16387,6 +16483,29 @@ window.DemoSaveHook = DemoSaveHook;
 /* ═══════════════════════════════════════════
    SUPPORT SYSTEM
 ═══════════════════════════════════════════ */
+const CoffeePopup = {
+  _t: null,
+  show(onDone) {
+    const overlay = document.getElementById('coffee-overlay');
+    const popup   = document.getElementById('coffee-popup');
+    if (!overlay || !popup) { onDone?.(); return; }
+    overlay.classList.remove('hidden');
+    popup.classList.remove('hidden');
+    popup.style.animation = 'coffeePopIn .4s cubic-bezier(.34,1.56,.64,1) forwards';
+    const bar = document.getElementById('coffee-bar');
+    if (bar) { bar.style.animation = 'none'; bar.offsetHeight; bar.style.animation = 'coffeeCountdown 5.6s linear forwards'; }
+    clearTimeout(this._t);
+    this._t = setTimeout(() => {
+      popup.style.animation = 'coffeePopOut .3s ease forwards';
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        popup.classList.add('hidden');
+        onDone?.();
+      }, 300);
+    }, 5600);
+  },
+};
+
 const Support = {
   _busy: false,
   _activeTicket: null, // the open (non-resolved) ticket currently being continued, or null
@@ -16412,6 +16531,14 @@ const Support = {
 
   open() {
     if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מסוכן התמיכה שלך 🤖'); return; }
+    const today_ = new Date().toISOString().split('T')[0];
+    const key = 'liders_coffee_popup_date';
+    const showCoffee = localStorage.getItem(key) !== today_ && !State.isDemo;
+    if (showCoffee) { localStorage.setItem(key, today_); CoffeePopup.show(() => this._doOpen()); return; }
+    this._doOpen();
+  },
+
+  _doOpen() {
     const inp  = document.getElementById('support-msg-input');
     const aiEl = document.getElementById('support-ai-response');
     const btn  = document.getElementById('support-submit-btn');
