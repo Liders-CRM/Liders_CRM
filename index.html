@@ -4938,6 +4938,94 @@
   </div>
 
   <!-- ═══════════════════════════════════════
+       MODAL: LEAD REFERRAL (לולאת הפניות — הפנה לקולגה)
+  ═══════════════════════════════════════ -->
+  <div id="modal-lead-referral" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-lead-referral')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">🔗 הפנה לקולגה</div>
+        <button class="modal-close" onclick="closeModal('modal-lead-referral')">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- שלב 1: פרטי ההפניה -->
+        <div id="lref-step-1">
+          <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:12px;margin-bottom:14px;">
+            <p style="font-size:12.5px;color:#166534;margin:0;line-height:1.6;">
+              🤝 הקולגה יקבל קישור חד-פעמי בוואטסאפ עם <strong>שם, טלפון והקשר בלבד</strong> —
+              בלי הערות פנימיות, בלי ערך עסקה ובלי גישה למערכת שלך. הקישור פג תוך 14 יום.
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">למי מפנים?</label>
+            <select id="lref-vertical" class="form-input">
+              <option value="">בחר תחום...</option>
+              <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
+              <option value="interior">🎨 מעצב פנים</option>
+              <option value="realestate">🏠 סוכן נדל"ן</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">שם הקולגה</label>
+            <input type="text" id="lref-name" class="form-input" placeholder="עו&quot;ד דנה כהן">
+          </div>
+          <div class="form-group">
+            <label class="form-label">טלפון הקולגה (לא חובה)</label>
+            <input type="tel" id="lref-phone" class="form-input" placeholder="050-0000000" style="direction:ltr;text-align:right;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">משפט הקשר (לא חובה)</label>
+            <input type="text" id="lref-context" class="form-input" maxlength="300" placeholder="סגרנו על דירה ברעננה, צריכים ליווי משפטי">
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;">
+            <input type="checkbox" id="lref-consent" style="margin-top:2px;">
+            קיבלתי את הסכמת הלקוח להעברת פרטיו לקולגה
+          </label>
+        </div>
+        <!-- שלב 2: שליחה בוואטסאפ -->
+        <div id="lref-step-2" class="hidden">
+          <div style="text-align:center;padding:6px 0 12px;">
+            <div style="font-size:40px;margin-bottom:8px;">📲</div>
+            <div style="font-size:15px;font-weight:800;color:var(--navy-500);">ההפניה מוכנה!</div>
+            <div style="font-size:12.5px;color:var(--gray-500);margin-top:4px;">שלח אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו ואתה תקבל 250 XP 🎁</div>
+          </div>
+          <div id="lref-msg-preview" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;direction:rtl;margin-bottom:12px;"></div>
+          <button class="btn btn-primary" style="width:100%;background:#25D366;border:none;margin-bottom:8px;" onclick="LeadReferral.shareWhatsApp()">💬 שליחה בוואטסאפ</button>
+          <button class="btn btn-ghost" style="width:100%;" onclick="LeadReferral.copyLink()">🔗 העתק קישור</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="lref-btn-create" class="btn btn-primary" style="flex:1;" onclick="LeadReferral.create()">✅ יצירת הפניה</button>
+        <button id="lref-btn-done" class="btn btn-primary hidden" style="flex:1;" onclick="closeModal('modal-lead-referral')">סיום ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: LEAD REFERRAL ACCEPT (הצד המקבל)
+  ═══════════════════════════════════════ -->
+  <div id="modal-lead-referral-accept" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-lead-referral-accept')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">🎁 קיבלת הפניית לקוח!</div>
+        <button class="modal-close" onclick="closeModal('modal-lead-referral-accept')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center;padding:4px 0 10px;font-size:44px;">🤝</div>
+        <p id="lref-accept-text" style="font-size:14px;color:var(--gray-600);line-height:1.7;text-align:center;margin-bottom:14px;"></p>
+        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:11px;font-size:12px;color:#1E40AF;line-height:1.6;">
+          בלחיצה על "קבל את הליד" — הליד ייכנס לפייפליין שלך עם כל הפרטים, מוכן לעבודה.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" style="flex:1;" onclick="LeadReferral.dismissInbound()">לא עכשיו</button>
+        <button id="lref-btn-accept" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.accept()">✅ קבל את הליד</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
        MODAL: ACCEPT SHARE (Partner side)
   ═══════════════════════════════════════ -->
   <div id="modal-accept-share" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-accept-share')">
@@ -7164,7 +7252,7 @@ const Billing = {
       desc: 'לצוות קטן',
       features: ['3 סוכנים כלולים, עד 8 בתוספת תשלום', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: true,
-      agentLimit: '3 סוכנים כלולים · עד 8 · ₪30/סוכן נוסף',
+      agentLimit: '3 סוכנים כלולים · עד 8 · ₪40/סוכן נוסף',
       annualMonthly: 249,
       annualTotal: 2990,
     },
@@ -10741,6 +10829,158 @@ const Referral = {
 };
 
 /* ═══════════════════════════════════════════
+   LEAD REFERRAL — לולאת הפניות: הפניית ליד לקולגה
+   (וואטסאפ + קישור חד-פעמי, ראה FEATURE_PLANS.md)
+═══════════════════════════════════════════ */
+const LeadReferral = {
+  _leadId: null,
+  _token: null,
+  _lastMsg: '',
+  _INBOUND_KEY: 'liders_inbound_lref',
+  VERTICALS: { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'מעצב פנים' },
+
+  openModal(leadId) {
+    if (State.isDemo) { toast('הפניית לידים זמינה בחשבון אמיתי', 'info'); return; }
+    this._leadId = leadId;
+    this._token = null;
+    document.getElementById('lref-step-1').classList.remove('hidden');
+    document.getElementById('lref-step-2').classList.add('hidden');
+    document.getElementById('lref-btn-create').classList.remove('hidden');
+    document.getElementById('lref-btn-done').classList.add('hidden');
+    ['lref-vertical','lref-name','lref-phone','lref-context'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.getElementById('lref-consent').checked = false;
+    openModal('modal-lead-referral');
+  },
+
+  async create() {
+    const vertical = document.getElementById('lref-vertical').value;
+    const name     = document.getElementById('lref-name').value.trim();
+    const phone    = document.getElementById('lref-phone').value.trim();
+    const ctx      = document.getElementById('lref-context').value.trim();
+    if (!vertical) { toast('בחר את תחום הקולגה', 'error'); return; }
+    if (!name)     { toast('הכנס את שם הקולגה', 'error'); return; }
+    if (!document.getElementById('lref-consent').checked) { toast('יש לאשר שקיבלת את הסכמת הלקוח', 'error'); return; }
+    const btn = document.getElementById('lref-btn-create');
+    btn.disabled = true; btn.textContent = 'יוצר...';
+    try {
+      const { data, error } = await sbClient.rpc('create_lead_referral', {
+        p_lead_id: this._leadId, p_to_vertical: vertical,
+        p_to_name: name, p_to_phone: phone || null, p_context: ctx || null
+      });
+      if (error) throw error;
+      this._token = data;
+      const lead = State.leads.find(l => l.id === this._leadId);
+      const link = `https://liders-crm.com/?lref=${data}`;
+      this._lastMsg = `היי ${name} 👋\nיש לי לקוח בשבילך: אני מפנה אליך את ${lead ? lead.name : 'הלקוח'}${ctx ? ' — ' + ctx : ''}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
+      document.getElementById('lref-msg-preview').textContent = this._lastMsg;
+      document.getElementById('lref-step-1').classList.add('hidden');
+      document.getElementById('lref-step-2').classList.remove('hidden');
+      btn.classList.add('hidden');
+      document.getElementById('lref-btn-done').classList.remove('hidden');
+      toast('🔗 ההפניה נוצרה! שלח אותה לקולגה', 'success');
+    } catch (e) {
+      const msg = (e.message || '').includes('referral_rate_limit')
+        ? 'הגעת למקסימום 10 הפניות ביום, נסה שוב מחר'
+        : 'שגיאה: ' + (e.message || e);
+      toast(msg, 'error');
+    }
+    btn.disabled = false; btn.textContent = '✅ יצירת הפניה';
+  },
+
+  shareWhatsApp() {
+    if (!this._lastMsg) return;
+    const digits = (document.getElementById('lref-phone').value || '').replace(/\D/g, '');
+    const base = digits ? `https://wa.me/972${digits.replace(/^0/, '')}` : 'https://wa.me/';
+    window.open(`${base}?text=${encodeURIComponent(this._lastMsg)}`, '_blank');
+  },
+
+  copyLink() {
+    if (!this._token) return;
+    const link = `https://liders-crm.com/?lref=${this._token}`;
+    navigator.clipboard?.writeText(link).then(() => toast('🔗 הקישור הועתק', 'success'))
+      .catch(() => toast(link, 'info', 6000));
+  },
+
+  // נקרא בטעינת הדף: שומר טוקן נכנס (?lref=) כדי לשרוד התחברות/אונבורדינג
+  checkInbound() {
+    const t = new URLSearchParams(location.search).get('lref');
+    if (t && /^[a-f0-9]{32}$/.test(t)) localStorage.setItem(this._INBOUND_KEY, t);
+  },
+
+  // נקרא אחרי התחברות: אם יש טוקן שמור — מציג את מודל הקבלה
+  async processInbound() {
+    if (State.isDemo || !DB.tenantId) return;
+    const t = localStorage.getItem(this._INBOUND_KEY);
+    if (!t) return;
+    try {
+      const { data, error } = await sbClient.rpc('get_lead_referral_preview', { p_token: t });
+      if (error || !data || !data.found) { localStorage.removeItem(this._INBOUND_KEY); return; }
+      const who  = escapeHtml(data.referrer_name || 'קולגה');
+      const lead = escapeHtml(data.lead_first_name || 'לקוח');
+      document.getElementById('lref-accept-text').innerHTML =
+        `<strong>${who}</strong> הפנה אליך לקוח: <strong>${lead}</strong>.<br>קבל את הליד והוא ייכנס ישר לפייפליין שלך.`;
+      setTimeout(() => openModal('modal-lead-referral-accept'), 1200);
+    } catch (_e) {}
+  },
+
+  dismissInbound() {
+    closeModal('modal-lead-referral-accept');
+    // הטוקן נשאר שמור — המודל יופיע שוב בכניסה הבאה, עד שיפוג (14 יום)
+  },
+
+  async accept() {
+    const t = localStorage.getItem(this._INBOUND_KEY);
+    if (!t) { closeModal('modal-lead-referral-accept'); return; }
+    const btn = document.getElementById('lref-btn-accept');
+    btn.disabled = true; btn.textContent = 'מקבל...';
+    try {
+      const { data, error } = await sbClient.rpc('accept_lead_referral', { p_token: t });
+      if (error) throw error;
+      localStorage.removeItem(this._INBOUND_KEY);
+      closeModal('modal-lead-referral-accept');
+      const loaded = await DB.loadAll();
+      State.leads      = loaded.leads;
+      State.activities = loaded.activities;
+      toast(`🎉 הליד ${data?.lead_name || ''} נוסף לפייפליין שלך! מקור: הפניה מ־${data?.referrer_name || 'קולגה'}`, 'success', 6000);
+      App.go('pipeline');
+    } catch (e) {
+      const m = e.message || '';
+      if (m.includes('referral_used') || m.includes('referral_expired') || m.includes('referral_not_found')) {
+        localStorage.removeItem(this._INBOUND_KEY);
+        closeModal('modal-lead-referral-accept');
+        toast('ההפניה כבר נוצלה או שפג תוקפה', 'info');
+      } else if (m.includes('referral_own')) {
+        localStorage.removeItem(this._INBOUND_KEY);
+        closeModal('modal-lead-referral-accept');
+        toast('אי אפשר לקבל הפניה ששלחת בעצמך 🙂', 'info');
+      } else {
+        toast('שגיאה: ' + m, 'error');
+      }
+    }
+    btn.disabled = false; btn.textContent = '✅ קבל את הליד';
+  },
+
+  // נקרא בכל התחברות: מזכה את המפנה ב-250 XP על כל הפניה שהתקבלה
+  async pullPendingXp() {
+    if (State.isDemo || !DB.tenantId) return;
+    try {
+      const { data, error } = await sbClient.rpc('pull_lead_referral_xp');
+      const count = Number(data) || 0;
+      if (error || count <= 0) return;
+      const xpGained = count * 250;
+      const gd = Gamify.get();
+      gd.xp += xpGained;
+      Gamify.save();
+      Gamify.renderSidebar();
+      Gamify.renderWidget();
+      Gamify.checkMilestones();
+      floatXP(xpGained);
+      toast(`🤝 ${count > 1 ? count + ' הפניות שלך התקבלו' : 'הפניה שלך התקבלה'} אצל קולגה! +${xpGained} XP`, 'success', 5000);
+    } catch (_e) {}
+  },
+};
+
+/* ═══════════════════════════════════════════
    EMAIL AI, paste email → classify + draft reply
 ═══════════════════════════════════════════ */
 const EmailAI = {
@@ -11170,6 +11410,9 @@ const App = {
     if (!State.isDemo) {
       Referral.claimReferralSignup();
       Referral.pullPendingXp();
+      // לולאת הפניות לידים: קבלת הפניה נכנסת (?lref=) + זיכוי XP למפנה
+      LeadReferral.processInbound();
+      LeadReferral.pullPendingXp();
     }
     // Init motivation agent UI
     MotivationAgent.init();
@@ -11961,6 +12204,7 @@ const LeadDetail = {
           <button class="lead-action-btn" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
           <button class="lead-action-btn" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
           ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
+          ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#15803D,#16A34A);color:white;" onclick="LeadReferral.openModal('${lead.id}')">🔗 הפנה לקולגה</button>` : ''}
         </div>
       </div>
       <div class="lead-detail-body">
@@ -14719,6 +14963,8 @@ window.DemoLock   = DemoLock;
 
 // Check for inbound referral code immediately on page load
 Referral.checkInboundRef();
+// Check for inbound lead-referral token (?lref=) — לולאת הפניות
+LeadReferral.checkInbound();
 // Hide referral "new" badge if user already visited
 if (localStorage.getItem('liders_ref_visited')) {
   document.addEventListener('DOMContentLoaded', () => document.getElementById('nav-ref-badge')?.remove(), { once: true });
