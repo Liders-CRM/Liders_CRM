@@ -5089,7 +5089,7 @@
             <select id="lref-vertical" class="form-input">
               <option value="">בחר תחום...</option>
               <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
-              <option value="interior">🎨 מעצב/ת פנים</option>
+              <option value="interior">🎨 עיצוב פנים</option>
               <option value="realestate">🏠 סוכן נדל"ן</option>
             </select>
           </div>
@@ -5137,7 +5137,7 @@
           <div style="text-align:center;padding:6px 0 12px;">
             <div style="font-size:40px;margin-bottom:8px;" id="lref-step2-emoji">📲</div>
             <div style="font-size:15px;font-weight:800;color:var(--navy-500);" id="lref-step2-title">ההפניה מוכנה!</div>
-            <div style="font-size:12.5px;color:var(--gray-500);margin-top:4px;" id="lref-step2-sub">שלח/י אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו וחשבונך יקבל 250 XP 🎁</div>
+            <div style="font-size:12.5px;color:var(--gray-500);margin-top:4px;" id="lref-step2-sub">שליחת הקישור לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו וחשבונך יקבל 250 XP 🎁</div>
           </div>
           <div id="lref-msg-preview" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;direction:rtl;margin-bottom:12px;"></div>
           <button class="btn btn-primary" style="width:100%;background:#25D366;border:none;margin-bottom:8px;" onclick="LeadReferral.shareWhatsApp()">💬 שליחה בוואטסאפ</button>
@@ -5238,7 +5238,7 @@
           <select id="opp-vertical" class="form-input">
             <option value="realestate">🏠 סוכן נדל"ן</option>
             <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
-            <option value="interior">🎨 מעצב/ת פנים</option>
+            <option value="interior">🎨 עיצוב פנים</option>
           </select>
         </div>
         <div class="form-group">
@@ -6102,7 +6102,7 @@
     </ul>
     <div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:16px;">בלחיצה על הכפתור מאשרים את תנאי שימוש Liders CRM לשירותי שיווק.</div>
     <div style="display:flex;gap:10px;">
-      <button class="btn btn-primary" onclick="Marketing.acceptConsent()" style="flex:1;">✅ הבנתי ומסכים/ה, בואו נתחיל!</button>
+      <button class="btn btn-primary" onclick="Marketing.acceptConsent()" style="flex:1;">✅ הבנתי, בואו נתחיל!</button>
       <button class="btn btn-secondary" onclick="closeModal('modal-mktg-consent')">ביטול</button>
     </div>
   </div>
@@ -7801,7 +7801,7 @@ const Onboarding = {
         const INDUSTRIES = [
           { id: 'realestate',        icon: '🏠', label: 'סוכן נדל"ן' },
           { id: 'realestate_lawyer', icon: '⚖️', label: 'עו"ד נדל"ן' },
-          { id: 'interior',          icon: '🎨', label: 'מעצב/ת פנים' },
+          { id: 'interior',          icon: '🎨', label: 'עיצוב פנים' },
           { id: 'other',             icon: '🎯', label: 'אחר' },
         ];
         const current = localStorage.getItem('liders_industry') || '';
@@ -8548,7 +8548,7 @@ const Tools = {
 
   // ── WhatsApp Templates ──
   _waTemplates: {
-    intro:    n => `היי ${n||'שם'}! 😊\nשמי [שם שלך] ואני [תפקיד].\nראיתי שאת/ה מחפש/ת [נושא] ורציתי להציג בפניך כמה אפשרויות שיכולות להתאים לך בול.\nמתי נוח לך ל-10 דקות שיחה?`,
+    intro:    n => `היי ${n||'שם'}! 😊\nשמי [שם שלך] ואני [תפקיד].\nראיתי שיש עניין ב[נושא] ורציתי להציג בפניך כמה אפשרויות שיכולות להתאים לך בול.\nמתי נוח לך ל-10 דקות שיחה?`,
     followup: n => `היי ${n||'שם'} 😊\nרק רציתי לוודא שקיבלת את מה ששלחתי.\nיש לי כמה עדכונים קטנים שחשבתי שיעניינו אותך, מתי יהיה נוח לך לדקה?`,
     proposal: n => `היי ${n||'שם'},\nשלחתי לך קצת קודם את ההצעה, הכל מגיע בסדר?\nאם יש לך שאלות או רוצה לשנות משהו, אני כאן 🙌`,
     closing:  n => `היי ${n||'שם'}, תודה על הפגישה, ממש נהניתי!\nכמו שדיברנו, אני שולח לך עכשיו את הפרטים הסופיים.\nאשמח לדעת, מה עוד צריך ממני כדי להתקדם? 🤝`,
@@ -9640,7 +9640,7 @@ const Marketing = {
         <div class="mktg-fs-form" id="mktg-fs-form">
           <input type="text" id="mktg-fs-name" placeholder="שמך המלא" />
           <input type="tel" id="mktg-fs-phone" placeholder="מספר טלפון לחזרה" />
-          <textarea id="mktg-fs-need" placeholder="תאר/י בקצרה מה צריך לבנות..."></textarea>
+          <textarea id="mktg-fs-need" placeholder="תיאור קצר של מה שצריך לבנות..."></textarea>
           <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שלח בקשה</button>
         </div>
         <p class="mktg-fs-micro">כמובל שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
@@ -9650,9 +9650,9 @@ const Marketing = {
   _templates: {
     offer: {
       exclusive: (name, prop, agency) => `שלום ${name}! 👋\n\nרציתי לשתף אותך בהזדמנות שמחכה לך לפני שהיא יוצאת לשוק הרחב.\n${prop ? `\n🏠 ${prop}\n` : ''}\nלפני שאני מפרסם את הנכס לכולם, אני פונה אליך ראשון. יש לי כמה ימים לפני שיוצא לאוויר.\n\nאם מעניין אותך, נתאם ביקור בלעדי השבוע, ללא לחץ ולפי הזמן שלך.\n\nמחכה לשמוע 🙏\n${agency}`,
-      special_price: (name, prop, agency) => `שלום ${name} 👋\n\nיש לי עבורך הצעה שאינה זמינה לכולם, ואת/ה בין הראשונים שאני פונה אליהם.\n${prop ? `\n🏠 ${prop}\n` : ''}\nבשל סיום מהיר שחשוב למוכר, יש אפשרות לתנאים מיוחדים שלא יוצגו ברשת. הפרטים, ישירות בשיחה.\n\nכדאי שנדבר השבוע ⚡\n${agency}`,
+      special_price: (name, prop, agency) => `שלום ${name} 👋\n\nיש לי עבורך הצעה שאינה זמינה לכולם, ואני פונה אליך לפני כולם.\n${prop ? `\n🏠 ${prop}\n` : ''}\nבשל סיום מהיר שחשוב למוכר, יש אפשרות לתנאים מיוחדים שלא יוצגו ברשת. הפרטים, ישירות בשיחה.\n\nכדאי שנדבר השבוע ⚡\n${agency}`,
       limited: (name, prop, agency) => `שלום ${name}!\n\nהצעה שתקפה לשבוע הקרוב בלבד, וחשבתי עליך 🎯\n${prop ? `\n🏠 ${prop}\n` : ''}\nמסיבות שאסביר לך בשיחה, יש הזדמנות מעניינת שנפתחה לאחרונה. לא מדובר במשהו שיחכה הרבה.\n\nאם רלוונטי, שלח לי הודעה והדאג\n${agency}`,
-      first: (name, prop, agency) => `שלום ${name} 😊\n\nאת/ה הראשון/ה שאני פונה אליך בקשר לנכס הזה.\n${prop ? `\n🏠 ${prop}\n` : ''}\nעדיין לא פרסמתי, רציתי שיהיה לך ראש ראשון לראות את זה לפני כולם.\n\nמתי נוח לך לדבר? 📞\n${agency}`,
+      first: (name, prop, agency) => `שלום ${name} 😊\n\nאני פונה אליך לפני כולם בקשר לנכס הזה.\n${prop ? `\n🏠 ${prop}\n` : ''}\nעדיין לא פרסמתי, רציתי שיהיה לך ראש ראשון לראות את זה לפני כולם.\n\nמתי נוח לך לדבר? 📞\n${agency}`,
     },
     post: {
       instagram: (p) => `🏡 ${p.title || 'נכס חדש'}, ${p.city || ''}\n\n✨ הנכס שחיכית לו\n\n${p.rooms ? `🛏 ${p.rooms} חדרים` : ''} ${p.area ? `| 📐 ${p.area} מ״ר` : ''} ${p.floor ? `| 🏢 קומה ${p.floor}` : ''}\n📍 ${p.city || ''}${p.address ? ', ' + p.address : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר למתעניינים'}\n\n${p.description ? p.description.slice(0,120) + '...' : 'נכס מרהיב שמחכה לדיירים הבאים שלו.'}\n\n📞 לתיאום ביקור והפרטים המלאים, כתבו לי ישירות\n\n#נדלן #${(p.city||'').replace(/\s/g,'')} #נכסחדש #קניתדירה #RealEstate`,
@@ -11533,7 +11533,7 @@ const LeadReferral = {
   _token: null,
   _lastMsg: '',
   _INBOUND_KEY: 'liders_inbound_lref',
-  VERTICALS: { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'מעצב/ת פנים' },
+  VERTICALS: { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'עיצוב פנים' },
 
   _consentMode: 'self',
   _waTargetPhone: '',
@@ -11612,7 +11612,7 @@ const LeadReferral = {
         this._lastMsg = `היי ${name} 👋\nיש לי לקוח בשבילך: אני מפנה אליך את ${lead ? lead.name : 'הלקוח'}${ctx ? ' — ' + ctx : ''}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
         document.getElementById('lref-step2-emoji').textContent = '📲';
         document.getElementById('lref-step2-title').textContent = 'ההפניה מוכנה!';
-        document.getElementById('lref-step2-sub').textContent = 'שלח/י אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו וחשבונך יקבל 250 XP 🎁';
+        document.getElementById('lref-step2-sub').textContent = 'שליחת הקישור לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו וחשבונך יקבל 250 XP 🎁';
       }
       document.getElementById('lref-msg-preview').textContent = this._lastMsg;
       document.getElementById('lref-step-1').classList.add('hidden');
@@ -14034,7 +14034,7 @@ const Settings = {
           const IND_META = {
             realestate:         { icon:'🏠', label:'סוכן נדל"ן' },
             realestate_lawyer:  { icon:'⚖️', label:'עו"ד נדל"ן' },
-            interior:           { icon:'🎨', label:'מעצב/ת פנים' },
+            interior:           { icon:'🎨', label:'עיצוב פנים' },
             other:              { icon:'🎯', label:'אחר' },
           };
           const cur = localStorage.getItem('liders_industry') || 'other';
