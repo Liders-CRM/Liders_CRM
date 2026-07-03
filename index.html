@@ -5064,7 +5064,7 @@
           </div>
           <div id="lref-msg-preview" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;direction:rtl;margin-bottom:12px;"></div>
           <button class="btn btn-primary" style="width:100%;background:#25D366;border:none;margin-bottom:8px;" onclick="LeadReferral.shareWhatsApp()">💬 שליחה בוואטסאפ</button>
-          <button class="btn btn-ghost" style="width:100%;" onclick="LeadReferral.copyLink()">🔗 העתק קישור</button>
+          <button id="lref-copy-btn" class="btn btn-ghost" style="width:100%;" onclick="LeadReferral.copyLink()">🔗 העתק קישור</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -9081,6 +9081,7 @@ const ReferralsList = {
       ? `<div style="font-size:11.5px;color:#9A3412;margin-top:3px;">💰 ${r.commission_type === 'percent' ? r.commission_value + '%' : '₪' + r.commission_value}</div>`
       : '';
     const canResume = r.direction === 'received' && r.token && ['sent', 'opened', 'awaiting_signature'].includes(r.status);
+    const canSend   = r.direction === 'sent'     && r.token && ['sent', 'opened'].includes(r.status);
     return `
       <div style="background:var(--surface);border:1px solid var(--gray-100);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
@@ -9092,7 +9093,22 @@ const ReferralsList = {
           <span class="share-status-badge" style="background:${s.bg};color:${s.c};flex-shrink:0;">${s.t}</span>
         </div>
         ${canResume ? `<button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:12.5px;padding:8px;" onclick="ReferralsList.resume('${r.token}')">${r.status === 'awaiting_signature' ? '✍️ להשלמת החתימה' : '📥 לצפייה ולקבלה'}</button>` : ''}
+        ${canSend ? `<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary" style="flex:1;font-size:12.5px;padding:8px;" onclick="ReferralsList.sendToColleague('${r.token}')">💬 שלח לקולגה</button><button class="btn btn-ghost" style="font-size:12.5px;padding:8px;" onclick="ReferralsList.copyColleagueLink('${r.token}')">🔗 העתק</button></div>` : ''}
       </div>`;
+  },
+
+  sendToColleague(token) {
+    const r = this._items.find(i => i.token === token);
+    if (!r) return;
+    const link = `https://liders-crm.com/?lref=${token}`;
+    const msg = `היי ${r.other_party || 'קולגה'} 👋\nיש לי לקוח בשבילך: ${r.lead_name || 'לקוח'}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+  },
+
+  copyColleagueLink(token) {
+    const link = `https://liders-crm.com/?lref=${token}`;
+    navigator.clipboard?.writeText(link).then(() => toast('🔗 הקישור הועתק', 'success'))
+      .catch(() => toast(link, 'info', 6000));
   },
 
   async resume(token) {
@@ -9148,7 +9164,7 @@ const OppBoard = {
     if (State.isDemo) { el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);font-size:13px;">זמין בחשבון אמיתי</div>`; return; }
     el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">טוען...</div>`;
     try {
-      const { data, error } = await sbClient.rpc('list_open_opportunities', { p_vertical: null, p_region: null });
+      const { data, error } = await sbClient.rpc('list_open_opportunities', { p_vertical: State.tenant?.industry || null, p_region: null });
       if (error) throw error;
       this._openList = data || [];
     } catch (_e) {
@@ -9165,7 +9181,11 @@ const OppBoard = {
         ? `<span style="color:#9A3412;">💰 ${o.commission_type === 'percent' ? o.commission_value + '%' : '₪' + o.commission_value}</span> · ` : '';
       const applied = o.my_application_status;
       const actionHtml = applied
-        ? `<div style="font-size:12px;color:var(--gray-500);margin-top:8px;">${applied === 'pending' ? '⏳ הוגשה מועמדות, ממתין לתשובה' : applied === 'selected' ? '✅ נבחרת!' : 'לא נבחר הפעם'}</div>`
+        ? `<div style="font-size:12px;color:var(--gray-500);margin-top:8px;">${
+            applied === 'pending'
+              ? `⏳ הוגשה מועמדות, ממתין לתשובה<br><button class="btn btn-ghost" style="font-size:11.5px;padding:4px 10px;margin-top:6px;color:#991B1B;width:100%;" onclick="OppBoard.withdraw('${o.id}')">🚫 בטל מועמדות</button>`
+              : applied === 'selected' ? '✅ נבחרת!' : 'לא נבחר הפעם'
+          }</div>`
         : `<textarea id="opp-apply-msg-${o.id}" class="form-input" rows="2" placeholder="הודעה קצרה למפרסם (לא חובה)" style="margin-top:8px;font-size:12.5px;"></textarea>
            <button class="btn btn-primary" style="width:100%;margin-top:6px;font-size:12.5px;padding:8px;" onclick="OppBoard.apply('${o.id}')">✋ הגש מועמדות</button>`;
       return `
@@ -9240,6 +9260,16 @@ const OppBoard = {
     } catch (e) { toast('שגיאה: ' + (e.message || e), 'error'); }
   },
 
+  async withdraw(oppId) {
+    if (!confirm('לבטל את המועמדות?')) return;
+    try {
+      const { error } = await sbClient.rpc('withdraw_my_application', { p_opportunity_id: oppId });
+      if (error) throw error;
+      toast('🚫 המועמדות בוטלה', 'success');
+      this._renderOpen();
+    } catch (e) { toast('שגיאה: ' + (e.message || e), 'error'); }
+  },
+
   async viewApplications(oppId) {
     this._selectOpportunityId = oppId;
     const el = document.getElementById('opp-applications-list');
@@ -9257,7 +9287,7 @@ const OppBoard = {
       el.innerHTML = data.map(a => `
         <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
           <div style="font-size:13.5px;font-weight:700;color:var(--navy-500);">${indIcon[a.applicant_industry] || '🎯'} ${escapeHtml(a.applicant_name || 'שותף')}</div>
-          <div style="font-size:11.5px;color:var(--gray-500);margin-top:2px;">${escapeHtml(a.applicant_city || '')} ${a.applicant_region ? '· ' + (this.REGIONS[a.applicant_region] || a.applicant_region) : ''}</div>
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:2px;">${escapeHtml(a.applicant_city || '')} ${a.applicant_region ? '· ' + (this.REGIONS[a.applicant_region] || escapeHtml(a.applicant_region)) : ''}</div>
           ${a.message ? `<div style="font-size:12.5px;color:var(--gray-600);margin-top:6px;background:#fff;border-radius:8px;padding:8px;">"${escapeHtml(a.message)}"</div>` : ''}
           ${a.status === 'pending' ? `
             <div style="margin-top:10px;">
@@ -9321,6 +9351,7 @@ const OppBoard = {
       commValue = parseFloat(commValRaw);
       if (!commValue || commValue <= 0) { toast('הכנס ערך עמלה תקין', 'error'); return; }
       if (commType === 'percent' && commValue > 50) { toast('עמלה מקסימלית: 50%', 'error'); return; }
+      if (commType === 'fixed' && commValue > 1000000) { toast('סכום העמלה המקסימלי הוא ₪1,000,000', 'error'); return; }
     }
     const btn = document.getElementById('opp-btn-publish');
     btn.disabled = true; btn.textContent = 'מפרסם...';
@@ -11498,6 +11529,7 @@ const LeadReferral = {
       commValue = parseFloat(commValRaw);
       if (!commValue || commValue <= 0) { toast('הכנס ערך עמלה תקין', 'error'); return; }
       if (commType === 'percent' && commValue > 50) { toast('עמלה מקסימלית: 50%', 'error'); return; }
+      if (commType === 'fixed' && commValue > 1000000) { toast('סכום העמלה המקסימלי הוא ₪1,000,000', 'error'); return; }
     }
     const requireConsent = this._consentMode === 'formal';
     const lead = State.leads.find(l => l.id === this._leadId);
@@ -11532,6 +11564,7 @@ const LeadReferral = {
       document.getElementById('lref-msg-preview').textContent = this._lastMsg;
       document.getElementById('lref-step-1').classList.add('hidden');
       document.getElementById('lref-step-2').classList.remove('hidden');
+      document.getElementById('lref-copy-btn')?.classList.toggle('hidden', requireConsent);
       btn.classList.add('hidden');
       document.getElementById('lref-btn-done').classList.remove('hidden');
       toast('🔗 ההפניה נוצרה!', 'success');
@@ -11625,6 +11658,8 @@ const LeadReferral = {
         localStorage.removeItem(this._INBOUND_KEY);
         closeModal('modal-lead-referral-accept');
         toast('אי אפשר לקבל הפניה ששלחת בעצמך 🙂', 'info');
+      } else if (m.includes('agreement_required')) {
+        await this.openAgreementModal();
       } else {
         toast('שגיאה: ' + m, 'error');
       }
