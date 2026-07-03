@@ -27,6 +27,14 @@
    ב-SendMessage כדי לבקש סיכום נקי.
 5. לפני פעולה שצפויה להיות יקרה (כמה agents במקביל, סבב screenshots מלא) — לעצור
    ולשאול את המשתמש אם רוצה את הגרסה המלאה או ממוקדת, במקום לבחור אוטומטית ביקרה.
+6. **חוזק 3/7/2026 אחרי שסשן הפעיל 5 code-review agents במקביל בלי לשאול קודם וזה
+   שרף למשתמש מכסת שימוש שלמה**: כלל #5 הוא לא המלצה — **אסור להפעיל Agent tool
+   (כולל `/code-review`, `liders-ui-reviewer`, כל תהליך multi-agent) בלי לשאול את
+   המשתמש קודם ולקבל אישור מפורש**, גם אם התהליך המתועד באותו סשן (למשל תהליך
+   העבודה ב"סוכני משנה ותהליך עבודה מקצועי" למטה) ממליץ להריץ אותו. במקום זאת: לתאר
+   בקצרה מה מתוכנן (כמה agents, על מה) ולחכות לאישור. בנוסף הוגדר אכיפה טכנית:
+   `.claude/settings.local.json` (לא ב-git) עם `permissions.ask: ["Agent"]` —
+   כל קריאה ל-Agent tool תבקש אישור מהמשתמש ברמת ה-harness, לא רק ברמת ההנחיה כאן.
 
 ---
 
@@ -569,6 +577,43 @@ PK=`user_id,usage_date`). כל סוכן שמתחבר לחשבון מקבל את 
 
 ### מסקנה
 Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים $14-33/user/month ואין להם עברית/נייד/AI ספציפי לישראל. **הייחוד שלנו הוא ברור ומשמעותי.** מחירים: Solo ₪179 / Pro ₪349 / סוכנות ₪549 — שליש עד עשירית ממחיר המתחרות, עם יתרונות ייחודיים לשוק הישראלי.
+
+---
+
+## מה בוצע — סשן 3/7/2026 (לילה) — תיקוני UI לולאת הפניות ולוח ההזדמנויות
+
+> ענף: `claude/migrations-ui-build-fixes-3t08np` (בנוי על `claude/migrations-ui-build-991h15`)
+
+### ✅ תיקוני באגים בעדיפות גבוהה
+1. **ReferralsList._cardHTML** — הוספת כפתורי "💬 שלח לקולגה" / "🔗 העתק" לכרטיסי
+   הפניות עם `direction==='sent'` ו-status `sent`/`opened`. הכפתורים קוראים לשתי
+   מתודות חדשות: `sendToColleague(token)` ו-`copyColleagueLink(token)` שמחפשות
+   את הפריט ב-`_items` לפי token ובונות הודעת וואטסאפ מתאימה.
+2. **LeadReferral.copyLink()** — הוסף `id="lref-copy-btn"` לכפתור ה-HTML, ו-`create()`
+   מסתיר אותו (`classList.toggle('hidden', requireConsent)`) כשנבחר אישור פורמלי,
+   מונע שליחת קישור `?lref=` לפני שהלקוח אישר.
+
+### ✅ תיקוני באגים בעדיפות בינונית
+3. **ולידציית תקרת עמלה** — הוסף בדיקת `commValue > 1000000` עם הודעה בעברית
+   `"סכום העמלה המקסימלי הוא ₪1,000,000"` גם ב-`LeadReferral.create()` וגם
+   ב-`OppBoard.publish()`.
+4. **OppBoard._renderOpen()** — מעביר `State.tenant?.industry` כ-`p_vertical` ל-
+   `list_open_opportunities`, כך שרק הזדמנויות בתחום הרלוונטי מוצגות.
+5. **ביטול מועמדות** — הוסף כפתור "🚫 בטל מועמדות" ב-`_renderOpen()` כשסטטוס
+   `pending` + מתודת `withdraw(oppId)` חדשה שקוראת ל-`withdraw_my_application`.
+
+### ✅ תיקוני עדיפות נמוכה
+6. **escapeHtml לאזור** — `viewApplications()`: הפולבק `a.applicant_region` עטוף
+   ב-`escapeHtml()` לעקביות הגנת XSS.
+7. **agreement_required** — הוסף case ב-`accept()` catch שקורא ל-`openAgreementModal()`
+   כרשת ביטחון, אם מנגנון `_inboundLocked` לא יסונכרן נכון.
+
+### 📋 נשאר לביצוע עתידי
+- `/security-review` על הזרימות החדשות (RPCs אנונימיים: `get_client_consent_preview`,
+  `respond_client_consent`, `get_lead_referral_preview`) — דורש אישור מפורש מהמשתמש
+  לפני הפעלה.
+- מסך סטטיסטיקות הפניות, converted+500 XP, התראת Make למפנה.
+- דף נחיתה ייעודי לקולגה לא-רשום.
 
 ---
 

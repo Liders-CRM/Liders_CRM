@@ -3641,6 +3641,21 @@
 </div>
 
 <!-- ═══════════════════════════════════════
+     PUBLIC PAGE: CLIENT CONSENT (?consent=) — ללא התחברות, ללא גישה למערכת
+═══════════════════════════════════════ -->
+<div id="consent-public-page" class="hidden" dir="rtl" style="position:fixed;inset:0;z-index:99999;background:var(--surface,#fff);display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="max-width:420px;width:100%;">
+    <div style="text-align:center;margin-bottom:18px;">
+      <div style="font-size:26px;font-weight:800;color:var(--navy-500,#0F1F3D);">Liders<span style="color:var(--blue-500,#2563EB);">.</span></div>
+    </div>
+    <div id="consent-page-body" style="background:#fff;border:1px solid var(--gray-200,#E2E8F0);border-radius:16px;padding:22px 20px;box-shadow:0 8px 30px rgba(15,31,61,0.08);text-align:center;">
+      <div style="font-size:13px;color:var(--gray-400,#94A3B8);">טוען...</div>
+    </div>
+    <div style="text-align:center;margin-top:16px;font-size:11.5px;color:var(--gray-400,#94A3B8);">Liders CRM — פלטפורמה לניהול פייפליין מכירות</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
      LOGIN SCREEN
 ═══════════════════════════════════════ -->
 <div id="screen-login">
@@ -4488,6 +4503,8 @@
       <div class="partners-tab-bar">
         <button class="partners-tab active" id="ptab-mine" onclick="Partners.switchTab('mine')">שיתפתי</button>
         <button class="partners-tab" id="ptab-join" onclick="Partners.switchTab('join')">הצטרף לשיתוף</button>
+        <button class="partners-tab" id="ptab-referrals" onclick="Partners.switchTab('referrals')">🔗 הפניות</button>
+        <button class="partners-tab" id="ptab-board" onclick="Partners.switchTab('board')">📋 לוח הזדמנויות</button>
       </div>
 
       <!-- My outgoing shares -->
@@ -4510,6 +4527,40 @@
           <button class="btn btn-primary" style="width:100%;max-width:280px;" onclick="openModal('modal-accept-share')">🔑 הזנת קוד שיתוף</button>
         </div>
         <div style="padding:8px 16px 16px;" id="partners-joined-list"></div>
+      </div>
+
+      <!-- Lead referrals (commission loop) -->
+      <div id="ptab-content-referrals" class="hidden" style="padding:16px;">
+        <div id="referrals-list"></div>
+      </div>
+
+      <!-- Opportunity board -->
+      <div id="ptab-content-board" class="hidden" style="padding:16px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12.5px;color:var(--gray-500);">
+          <span>📍 האזור שלך (להתראות על הזדמנויות מתאימות):</span>
+          <select id="opp-my-region" class="form-input" style="width:auto;font-size:12.5px;padding:6px 8px;" onchange="OppBoard.saveRegion(this.value)">
+            <option value="">לא הוגדר</option>
+            <option value="north">צפון</option>
+            <option value="haifa">חיפה והקריות</option>
+            <option value="sharon">השרון</option>
+            <option value="center">מרכז</option>
+            <option value="telaviv">תל אביב והגוש</option>
+            <option value="jerusalem">ירושלים והסביבה</option>
+            <option value="shfela">שפלה</option>
+            <option value="south">דרום</option>
+          </select>
+        </div>
+        <div class="board-tab-bar" style="display:flex;gap:8px;margin-bottom:14px;">
+          <button class="partners-tab active" id="btab-open" onclick="OppBoard.switchSubTab('open')" style="flex:1;">הלוח</button>
+          <button class="partners-tab" id="btab-mine" onclick="OppBoard.switchSubTab('mine')" style="flex:1;">הפרסומים שלי</button>
+        </div>
+        <div id="btab-content-open">
+          <button class="btn btn-primary" style="width:100%;margin-bottom:14px;" onclick="OppBoard.openPublishModal()">➕ פרסם הזדמנות</button>
+          <div id="board-open-list"></div>
+        </div>
+        <div id="btab-content-mine" class="hidden">
+          <div id="board-mine-list"></div>
+        </div>
       </div>
 
       <!-- Chat / Lead view panel (overlays screen) -->
@@ -4977,21 +5028,43 @@
             <label class="form-label">משפט הקשר (לא חובה)</label>
             <input type="text" id="lref-context" class="form-input" maxlength="300" placeholder="סגרנו על דירה ברעננה, צריכים ליווי משפטי">
           </div>
-          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;">
-            <input type="checkbox" id="lref-consent" style="margin-top:2px;">
-            קיבלתי את הסכמת הלקוח להעברת פרטיו לקולגה
-          </label>
+          <div class="form-group">
+            <label class="form-label">עמלת הפניה (לא חובה)</label>
+            <select id="lref-commission-type" class="form-input" onchange="LeadReferral.toggleCommissionValue()">
+              <option value="none">ללא עמלה</option>
+              <option value="percent">אחוז מהעסקה</option>
+              <option value="fixed">סכום קבוע (₪)</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="lref-commission-value-wrap">
+            <label class="form-label" id="lref-commission-value-label">אחוז</label>
+            <input type="number" id="lref-commission-value" class="form-input" min="0" step="0.1" placeholder="לדוגמה: 10">
+            <div style="font-size:11.5px;color:var(--gray-500);margin-top:4px;">
+              🔒 כשיש עמלה, הקולגה חייב לחתום דיגיטלית על הסכם עמלה קצר לפני שהליד נחשף אליו.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">הסכמת הלקוח להעברת פרטיו</label>
+            <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;margin-bottom:8px;">
+              <input type="radio" name="lref-consent-mode" id="lref-consent-self" value="self" onchange="LeadReferral.toggleConsentMode()">
+              קיבלתי את הסכמת הלקוח בעל-פה
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;">
+              <input type="radio" name="lref-consent-mode" id="lref-consent-formal" value="formal" onchange="LeadReferral.toggleConsentMode()">
+              📨 שלח ללקוח קישור לאישור מפורש (מומלץ כשיש עמלה)
+            </label>
+          </div>
         </div>
         <!-- שלב 2: שליחה בוואטסאפ -->
         <div id="lref-step-2" class="hidden">
           <div style="text-align:center;padding:6px 0 12px;">
-            <div style="font-size:40px;margin-bottom:8px;">📲</div>
-            <div style="font-size:15px;font-weight:800;color:var(--navy-500);">ההפניה מוכנה!</div>
-            <div style="font-size:12.5px;color:var(--gray-500);margin-top:4px;">שלח אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו ואתה תקבל 250 XP 🎁</div>
+            <div style="font-size:40px;margin-bottom:8px;" id="lref-step2-emoji">📲</div>
+            <div style="font-size:15px;font-weight:800;color:var(--navy-500);" id="lref-step2-title">ההפניה מוכנה!</div>
+            <div style="font-size:12.5px;color:var(--gray-500);margin-top:4px;" id="lref-step2-sub">שלח אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו ואתה תקבל 250 XP 🎁</div>
           </div>
           <div id="lref-msg-preview" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;direction:rtl;margin-bottom:12px;"></div>
           <button class="btn btn-primary" style="width:100%;background:#25D366;border:none;margin-bottom:8px;" onclick="LeadReferral.shareWhatsApp()">💬 שליחה בוואטסאפ</button>
-          <button class="btn btn-ghost" style="width:100%;" onclick="LeadReferral.copyLink()">🔗 העתק קישור</button>
+          <button id="lref-copy-btn" class="btn btn-ghost" style="width:100%;" onclick="LeadReferral.copyLink()">🔗 העתק קישור</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -5020,7 +5093,125 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" style="flex:1;" onclick="LeadReferral.dismissInbound()">לא עכשיו</button>
-        <button id="lref-btn-accept" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.accept()">✅ קבל את הליד</button>
+        <button id="lref-btn-accept" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.acceptOrOpenAgreement()">✅ קבל את הליד</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: REFERRAL COMMISSION AGREEMENT — signature = acceptance
+  ═══════════════════════════════════════ -->
+  <div id="modal-referral-agreement" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-referral-agreement')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">✍️ הסכם עמלת הפניה</div>
+        <button class="modal-close" onclick="closeModal('modal-referral-agreement')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="ragr-text" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:12.5px;color:var(--gray-700);line-height:1.7;white-space:pre-wrap;direction:rtl;max-height:220px;overflow-y:auto;margin-bottom:14px;"></div>
+        <div class="form-group">
+          <label class="form-label">שם מלא לחתימה</label>
+          <input type="text" id="ragr-signer-name" class="form-input" placeholder="שם מלא">
+        </div>
+        <div class="form-group">
+          <label class="form-label">חתימה</label>
+          <div style="border:1px solid var(--gray-300);border-radius:10px;overflow:hidden;background:#fff;touch-action:none;">
+            <canvas id="ragr-signature-canvas" width="400" height="140" style="width:100%;height:140px;display:block;cursor:crosshair;"></canvas>
+          </div>
+          <button type="button" class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:12.5px;" onclick="SignaturePad.clear()">🗑️ נקה חתימה</button>
+        </div>
+        <div style="font-size:11px;color:var(--gray-400);line-height:1.5;">
+          החתימה מהווה אישור מחייב להסכם שלעיל. מועד החתימה, שמך וכתובת ה-IP נשמרים כראיה.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" style="flex:1;" onclick="LeadReferral.declineAgreement()">דחה הפניה</button>
+        <button id="ragr-btn-sign" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.signAgreement()">✅ חתום וקבל את הליד</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: PUBLISH OPPORTUNITY (לוח הזדמנויות)
+  ═══════════════════════════════════════ -->
+  <div id="modal-publish-opportunity" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-publish-opportunity')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">📋 פרסום הזדמנות</div>
+        <button class="modal-close" onclick="closeModal('modal-publish-opportunity')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:12px;margin-bottom:14px;">
+          <p style="font-size:12.5px;color:#166534;margin:0;line-height:1.6;">
+            🕵️ הפרסום אנונימי — רק תחום ואזור יוצגים. הזהות שלך תיחשף למועמד שתבחר, רק אחרי הבחירה.
+          </p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">כותרת</label>
+          <input type="text" id="opp-title" class="form-input" maxlength="120" placeholder="מחפש מעצבת פנים באזור חיפה">
+        </div>
+        <div class="form-group">
+          <label class="form-label">תיאור (לא חובה)</label>
+          <textarea id="opp-description" class="form-input" maxlength="1000" rows="3" placeholder="פרטים נוספים על הפרויקט..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">תחום מבוקש</label>
+          <select id="opp-vertical" class="form-input">
+            <option value="realestate">🏠 סוכן נדל"ן</option>
+            <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
+            <option value="interior">🎨 מעצב פנים</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">אזור</label>
+          <select id="opp-region" class="form-input">
+            <option value="north">צפון</option>
+            <option value="haifa">חיפה והקריות</option>
+            <option value="sharon">השרון</option>
+            <option value="center">מרכז</option>
+            <option value="telaviv">תל אביב והגוש</option>
+            <option value="jerusalem">ירושלים והסביבה</option>
+            <option value="shfela">שפלה</option>
+            <option value="south">דרום</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">עיר (לא חובה)</label>
+          <input type="text" id="opp-city" class="form-input" placeholder="לדוגמה: חיפה">
+        </div>
+        <div class="form-group">
+          <label class="form-label">עמלה מוצעת (לא חובה)</label>
+          <select id="opp-commission-type" class="form-input" onchange="OppBoard.toggleCommissionValue()">
+            <option value="none">ללא עמלה</option>
+            <option value="percent">אחוז מהעסקה</option>
+            <option value="fixed">סכום קבוע (₪)</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="opp-commission-value-wrap">
+          <label class="form-label" id="opp-commission-value-label">אחוז</label>
+          <input type="number" id="opp-commission-value" class="form-input" min="0" step="0.1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="opp-btn-publish" class="btn btn-primary" style="flex:1;" onclick="OppBoard.publish()">📤 פרסם</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: OPPORTUNITY APPLICATIONS (publisher-only)
+  ═══════════════════════════════════════ -->
+  <div id="modal-opp-applications" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-opp-applications')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">👥 מועמדים להזדמנות</div>
+        <button class="modal-close" onclick="closeModal('modal-opp-applications')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="opp-applications-list"></div>
       </div>
     </div>
   </div>
@@ -6628,11 +6819,11 @@ const DB = {
   // Persists the agency profile the onboarding wizard collects. Deliberately
   // routed through a narrow RPC (never a direct `.from('tenants').update()`)
   // - see migration 014: it touches only name/phone/city, never billing columns.
-  async updateTenantProfile(name, phone, city) {
+  async updateTenantProfile(name, phone, city, region) {
     const { error } = await sbClient.rpc('update_tenant_profile',
-      { p_name: name, p_phone: phone || null, p_city: city || null });
+      { p_name: name, p_phone: phone || null, p_city: city || null, p_region: region || null });
     if (error) throw error;
-    AuditLog.log('settings.updated', 'tenant', this.tenantId, { fields: ['name', 'phone', 'city'] });
+    AuditLog.log('settings.updated', 'tenant', this.tenantId, { fields: ['name', 'phone', 'city', 'region'] });
   },
 
   async updateAgentName(name) {
@@ -6749,7 +6940,7 @@ const DB = {
       sbClient.from('tasks').select('*').eq('tenant_id', this.tenantId).order('due_date'),
       sbClient.from('properties').select('*').eq('tenant_id', this.tenantId).order('created_at'),
       sbClient.from('activities').select('*').eq('tenant_id', this.tenantId).order('created_at', { ascending: false }).limit(50),
-      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number,industry,created_at').eq('id', this.tenantId).single(),
+      sbClient.from('tenants').select('id,name,slug,plan,trial_ends_at,make_webhook_url,whatsapp_number,industry,phone,city,region,created_at').eq('id', this.tenantId).single(),
       this.agentId ? sbClient.from('agent_users').select('id,name,email,role').eq('id', this.agentId).maybeSingle() : Promise.resolve({ data: null }),
     ]);
     this.stageMap = {};
@@ -8570,11 +8761,17 @@ const Partners = {
     this._tab = tab;
     document.getElementById('ptab-mine').classList.toggle('active', tab === 'mine');
     document.getElementById('ptab-join').classList.toggle('active', tab === 'join');
+    document.getElementById('ptab-referrals').classList.toggle('active', tab === 'referrals');
+    document.getElementById('ptab-board').classList.toggle('active', tab === 'board');
     document.getElementById('ptab-content-mine').classList.toggle('hidden', tab !== 'mine');
     document.getElementById('ptab-content-join').classList.toggle('hidden', tab !== 'join');
+    document.getElementById('ptab-content-referrals').classList.toggle('hidden', tab !== 'referrals');
+    document.getElementById('ptab-content-board').classList.toggle('hidden', tab !== 'board');
 
     if (tab === 'mine') this._renderMine();
-    else this._renderJoined();
+    else if (tab === 'join') this._renderJoined();
+    else if (tab === 'referrals') ReferralsList.render();
+    else if (tab === 'board') OppBoard.render();
   },
 
   switchTab(tab) { this._renderTab(tab); },
@@ -8829,6 +9026,351 @@ const Partners = {
     if (badge1) { badge1.textContent = count || ''; badge1.style.display = count ? '' : 'none'; }
     if (badge2) { badge2.textContent = count || ''; badge2.style.display = count ? 'flex' : 'none'; }
   },
+};
+
+/* ═══════════════════════════════════════════
+   REFERRALS LIST — הפניות שנשלחו/התקבלו, עם עמלה/הסכמה/חתימה
+═══════════════════════════════════════════ */
+const ReferralsList = {
+  _items: [],
+
+  async render() {
+    const el = document.getElementById('referrals-list');
+    if (State.isDemo) {
+      el.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:13px;">זמין בחשבון אמיתי</div>`;
+      return;
+    }
+    el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);font-size:13px;">טוען...</div>`;
+    try {
+      const { data, error } = await sbClient.rpc('list_my_lead_referrals');
+      if (error) throw error;
+      this._items = data || [];
+    } catch (_e) {
+      el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);font-size:13px;">שגיאה בטעינה</div>`;
+      return;
+    }
+    if (!this._items.length) {
+      el.innerHTML = `
+        <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
+          <div style="font-size:40px;margin-bottom:12px;">🔗</div>
+          <div style="font-size:14px;">עדיין אין הפניות</div>
+          <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחץ "🔗 הפנה לקולגה"</div>
+        </div>`;
+      return;
+    }
+    el.innerHTML = this._items.map(r => this._cardHTML(r)).join('');
+  },
+
+  _STATUS: {
+    awaiting_consent:   { t: 'ממתין לאישור לקוח',      c: '#854D0E', bg: '#FEF9C3' },
+    consent_declined:   { t: 'הלקוח סירב',              c: '#991B1B', bg: '#FEE2E2' },
+    sent:               { t: 'נשלח, ממתין לפתיחה',      c: '#1D4ED8', bg: '#EFF6FF' },
+    opened:             { t: 'נפתח, ממתין לתגובה',      c: '#1D4ED8', bg: '#EFF6FF' },
+    awaiting_signature: { t: 'ממתין לחתימה על הסכם',    c: '#9A3412', bg: '#FFEDD5' },
+    declined:           { t: 'נדחה',                    c: '#991B1B', bg: '#FEE2E2' },
+    accepted:           { t: 'התקבל ✓',                  c: '#166534', bg: '#DCFCE7' },
+    converted:          { t: 'הפכה לעסקה 🎉',            c: '#166534', bg: '#DCFCE7' },
+    expired:            { t: 'פג תוקף',                  c: '#64748B', bg: '#F1F5F9' },
+    cancelled:          { t: 'בוטל',                    c: '#64748B', bg: '#F1F5F9' },
+  },
+
+  _cardHTML(r) {
+    const s = this._STATUS[r.status] || { t: r.status, c: '#64748B', bg: '#F1F5F9' };
+    const dirLabel = r.direction === 'sent' ? 'שלחת ל' : 'קיבלת מ';
+    const comm = r.commission_type && r.commission_type !== 'none'
+      ? `<div style="font-size:11.5px;color:#9A3412;margin-top:3px;">💰 ${r.commission_type === 'percent' ? r.commission_value + '%' : '₪' + r.commission_value}</div>`
+      : '';
+    const canResume = r.direction === 'received' && r.token && ['sent', 'opened', 'awaiting_signature'].includes(r.status);
+    const canSend   = r.direction === 'sent'     && r.token && ['sent', 'opened'].includes(r.status);
+    return `
+      <div style="background:var(--surface);border:1px solid var(--gray-100);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div style="min-width:0;">
+            <div style="font-size:13.5px;font-weight:700;color:var(--navy-500);">${escapeHtml(r.lead_name || 'ליד')}</div>
+            <div style="font-size:11.5px;color:var(--gray-500);margin-top:2px;">${dirLabel} ${escapeHtml(r.other_party || '—')} · ${escapeHtml(LeadReferral.VERTICALS[r.to_vertical] || r.to_vertical || '')}</div>
+            ${comm}
+          </div>
+          <span class="share-status-badge" style="background:${s.bg};color:${s.c};flex-shrink:0;">${s.t}</span>
+        </div>
+        ${canResume ? `<button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:12.5px;padding:8px;" onclick="ReferralsList.resume('${r.token}')">${r.status === 'awaiting_signature' ? '✍️ להשלמת החתימה' : '📥 לצפייה ולקבלה'}</button>` : ''}
+        ${canSend ? `<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary" style="flex:1;font-size:12.5px;padding:8px;" onclick="ReferralsList.sendToColleague('${r.token}')">💬 שלח לקולגה</button><button class="btn btn-ghost" style="font-size:12.5px;padding:8px;" onclick="ReferralsList.copyColleagueLink('${r.token}')">🔗 העתק</button></div>` : ''}
+      </div>`;
+  },
+
+  sendToColleague(token) {
+    const r = this._items.find(i => i.token === token);
+    if (!r) return;
+    const link = `https://liders-crm.com/?lref=${token}`;
+    const msg = `היי ${r.other_party || 'קולגה'} 👋\nיש לי לקוח בשבילך: ${r.lead_name || 'לקוח'}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+  },
+
+  copyColleagueLink(token) {
+    const link = `https://liders-crm.com/?lref=${token}`;
+    navigator.clipboard?.writeText(link).then(() => toast('🔗 הקישור הועתק', 'success'))
+      .catch(() => toast(link, 'info', 6000));
+  },
+
+  async resume(token) {
+    localStorage.setItem(LeadReferral._INBOUND_KEY, token);
+    await LeadReferral.processInbound();
+  }
+};
+
+/* ═══════════════════════════════════════════
+   OPPORTUNITY BOARD — לוח הזדמנויות ארצי, אנונימי עד לבחירת מועמד
+═══════════════════════════════════════════ */
+const OppBoard = {
+  _subTab: 'open',
+  _openList: [],
+  _mineList: [],
+  _selectApplicationId: null,
+  _selectOpportunityId: null,
+  REGIONS: { north:'צפון', haifa:'חיפה והקריות', sharon:'השרון', center:'מרכז', telaviv:'תל אביב והגוש', jerusalem:'ירושלים והסביבה', shfela:'שפלה', south:'דרום' },
+
+  render() {
+    const regionSel = document.getElementById('opp-my-region');
+    if (regionSel) regionSel.value = State.tenant?.region || '';
+    this._renderSubTab(this._subTab);
+  },
+
+  async saveRegion(region) {
+    if (State.isDemo || !State.tenant) return;
+    try {
+      await DB.updateTenantProfile(State.tenant.name, State.tenant.phone, State.tenant.city, region || null);
+      State.tenant.region = region || null;
+      toast('📍 האזור עודכן', 'success');
+    } catch (e) {
+      const m = e.message || '';
+      const msgOut = m.includes('insufficient permissions') ? 'רק מנהל החשבון יכול לעדכן את האזור' : 'שגיאה: ' + m;
+      toast(msgOut, 'error');
+      document.getElementById('opp-my-region').value = State.tenant.region || '';
+    }
+  },
+
+  switchSubTab(tab) { this._renderSubTab(tab); },
+
+  _renderSubTab(tab) {
+    this._subTab = tab;
+    document.getElementById('btab-open').classList.toggle('active', tab === 'open');
+    document.getElementById('btab-mine').classList.toggle('active', tab === 'mine');
+    document.getElementById('btab-content-open').classList.toggle('hidden', tab !== 'open');
+    document.getElementById('btab-content-mine').classList.toggle('hidden', tab !== 'mine');
+    if (tab === 'open') this._renderOpen(); else this._renderMine();
+  },
+
+  async _renderOpen() {
+    const el = document.getElementById('board-open-list');
+    if (State.isDemo) { el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);font-size:13px;">זמין בחשבון אמיתי</div>`; return; }
+    el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">טוען...</div>`;
+    try {
+      const { data, error } = await sbClient.rpc('list_open_opportunities', { p_vertical: State.tenant?.industry || null, p_region: null });
+      if (error) throw error;
+      this._openList = data || [];
+    } catch (_e) {
+      el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">שגיאה בטעינה</div>`;
+      return;
+    }
+    if (!this._openList.length) {
+      el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);"><div style="font-size:36px;margin-bottom:8px;">📋</div><div style="font-size:13px;">אין כרגע הזדמנויות פתוחות בתחום שלך</div></div>`;
+      return;
+    }
+    const indIcon = { realestate: '🏠', interior: '🎨', realestate_lawyer: '⚖️', other: '🎯' };
+    el.innerHTML = this._openList.map(o => {
+      const comm = o.commission_type !== 'none'
+        ? `<span style="color:#9A3412;">💰 ${o.commission_type === 'percent' ? o.commission_value + '%' : '₪' + o.commission_value}</span> · ` : '';
+      const applied = o.my_application_status;
+      const actionHtml = applied
+        ? `<div style="font-size:12px;color:var(--gray-500);margin-top:8px;">${
+            applied === 'pending'
+              ? `⏳ הוגשה מועמדות, ממתין לתשובה<br><button class="btn btn-ghost" style="font-size:11.5px;padding:4px 10px;margin-top:6px;color:#991B1B;width:100%;" onclick="OppBoard.withdraw('${o.id}')">🚫 בטל מועמדות</button>`
+              : applied === 'selected' ? '✅ נבחרת!' : 'לא נבחר הפעם'
+          }</div>`
+        : `<textarea id="opp-apply-msg-${o.id}" class="form-input" rows="2" placeholder="הודעה קצרה למפרסם (לא חובה)" style="margin-top:8px;font-size:12.5px;"></textarea>
+           <button class="btn btn-primary" style="width:100%;margin-top:6px;font-size:12.5px;padding:8px;" onclick="OppBoard.apply('${o.id}')">✋ הגש מועמדות</button>`;
+      return `
+        <div style="background:var(--surface);border:1px solid var(--gray-100);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy-500);">${escapeHtml(o.title)}</div>
+          ${o.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:4px;">${escapeHtml(o.description)}</div>` : ''}
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:6px;">${indIcon[o.publisher_vertical] || '🎯'} מפרסם אנונימי · ${comm}📍 ${this.REGIONS[o.region] || o.region}${o.city ? ', ' + escapeHtml(o.city) : ''} · 👥 ${o.applications_count} מועמדים</div>
+          ${actionHtml}
+        </div>`;
+    }).join('');
+  },
+
+  async apply(oppId) {
+    const msgEl = document.getElementById(`opp-apply-msg-${oppId}`);
+    const msg = msgEl ? msgEl.value.trim() : '';
+    try {
+      const { error } = await sbClient.rpc('apply_to_opportunity', { p_opportunity_id: oppId, p_message: msg || null });
+      if (error) throw error;
+      toast('✋ המועמדות הוגשה', 'success');
+      this._renderOpen();
+    } catch (e) {
+      const m = e.message || '';
+      const msgOut = m.includes('already_applied') ? 'כבר הגשת מועמדות להזדמנות הזו'
+        : m.includes('opportunity_vertical_mismatch') ? 'ההזדמנות הזו לא בתחום שלך'
+        : m.includes('application_rate_limit') ? 'הגעת למקסימום מועמדויות ביום, נסה שוב מחר'
+        : 'שגיאה: ' + m;
+      toast(msgOut, 'error');
+    }
+  },
+
+  async _renderMine() {
+    const el = document.getElementById('board-mine-list');
+    if (State.isDemo) { el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);font-size:13px;">זמין בחשבון אמיתי</div>`; return; }
+    el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">טוען...</div>`;
+    try {
+      const { data, error } = await sbClient.rpc('list_my_opportunities');
+      if (error) throw error;
+      this._mineList = data || [];
+    } catch (_e) {
+      el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">שגיאה בטעינה</div>`;
+      return;
+    }
+    if (!this._mineList.length) {
+      el.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--gray-400);"><div style="font-size:36px;margin-bottom:8px;">📭</div><div style="font-size:13px;">עדיין לא פרסמת הזדמנות</div></div>`;
+      return;
+    }
+    const statusMap = { open: ['פתוח', '#166534', '#DCFCE7'], matched: ['נמצא שותף ✓', '#1D4ED8', '#EFF6FF'], closed: ['נסגר', '#64748B', '#F1F5F9'], expired: ['פג תוקף', '#64748B', '#F1F5F9'], removed: ['הוסר', '#64748B', '#F1F5F9'] };
+    el.innerHTML = this._mineList.map(o => {
+      const st = statusMap[o.status] || ['—', '#64748B', '#F1F5F9'];
+      return `
+        <div style="background:var(--surface);border:1px solid var(--gray-100);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <div style="font-size:13.5px;font-weight:700;color:var(--navy-500);">${escapeHtml(o.title)}</div>
+            <span class="share-status-badge" style="background:${st[2]};color:${st[1]};flex-shrink:0;">${st[0]}</span>
+          </div>
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:6px;">📍 ${this.REGIONS[o.region] || o.region} · 👥 ${o.applications_count} מועמדים</div>
+          ${o.status === 'open' ? `
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:7px;" onclick="OppBoard.viewApplications('${o.id}')">👥 צפייה במועמדים</button>
+              <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:7px;color:#991B1B;" onclick="OppBoard.close('${o.id}')">סגור</button>
+            </div>` : ''}
+        </div>`;
+    }).join('');
+  },
+
+  async close(oppId) {
+    if (!confirm('לסגור את ההזדמנות הזו?')) return;
+    try {
+      const { error } = await sbClient.rpc('close_opportunity', { p_opportunity_id: oppId });
+      if (error) throw error;
+      this._renderMine();
+    } catch (e) { toast('שגיאה: ' + (e.message || e), 'error'); }
+  },
+
+  async withdraw(oppId) {
+    if (!confirm('לבטל את המועמדות?')) return;
+    try {
+      const { error } = await sbClient.rpc('withdraw_my_application', { p_opportunity_id: oppId });
+      if (error) throw error;
+      toast('🚫 המועמדות בוטלה', 'success');
+      this._renderOpen();
+    } catch (e) { toast('שגיאה: ' + (e.message || e), 'error'); }
+  },
+
+  async viewApplications(oppId) {
+    this._selectOpportunityId = oppId;
+    const el = document.getElementById('opp-applications-list');
+    el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">טוען...</div>`;
+    openModal('modal-opp-applications');
+    try {
+      const { data, error } = await sbClient.rpc('list_opportunity_applications', { p_opportunity_id: oppId });
+      if (error) throw error;
+      if (!data || !data.length) {
+        el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">עדיין אין מועמדים</div>`;
+        return;
+      }
+      const leadsOptions = State.leads.map(l => `<option value="${l.id}">${escapeHtml(l.name)} — ${escapeHtml(l.desired_area || '')}</option>`).join('');
+      const indIcon = { realestate: '🏠', interior: '🎨', realestate_lawyer: '⚖️', other: '🎯' };
+      el.innerHTML = data.map(a => `
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy-500);">${indIcon[a.applicant_industry] || '🎯'} ${escapeHtml(a.applicant_name || 'שותף')}</div>
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:2px;">${escapeHtml(a.applicant_city || '')} ${a.applicant_region ? '· ' + (this.REGIONS[a.applicant_region] || escapeHtml(a.applicant_region)) : ''}</div>
+          ${a.message ? `<div style="font-size:12.5px;color:var(--gray-600);margin-top:6px;background:#fff;border-radius:8px;padding:8px;">"${escapeHtml(a.message)}"</div>` : ''}
+          ${a.status === 'pending' ? `
+            <div style="margin-top:10px;">
+              <select id="opp-select-lead-${a.id}" class="form-input" style="font-size:12.5px;margin-bottom:6px;"><option value="">בחר ליד להעברה...</option>${leadsOptions}</select>
+              <label style="display:flex;align-items:flex-start;gap:6px;font-size:11.5px;color:var(--gray-500);cursor:pointer;margin-bottom:6px;">
+                <input type="checkbox" id="opp-select-consent-${a.id}" style="margin-top:2px;">
+                בקש אישור מהלקוח בקישור לפני שהפרטים ייחשפו
+              </label>
+              <button class="btn btn-primary" style="width:100%;font-size:12.5px;padding:8px;" onclick="OppBoard.selectApplicant('${a.id}')">✅ בחר שותף זה</button>
+            </div>` : `<div style="font-size:11.5px;color:var(--gray-400);margin-top:8px;">${a.status === 'selected' ? '✅ נבחר' : a.status === 'rejected' ? 'לא נבחר' : 'בוטל'}</div>`}
+        </div>`).join('');
+    } catch (_e) {
+      el.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--gray-400);font-size:13px;">שגיאה בטעינה</div>`;
+    }
+  },
+
+  async selectApplicant(applicationId) {
+    const leadId = document.getElementById(`opp-select-lead-${applicationId}`)?.value;
+    const requireConsent = !!document.getElementById(`opp-select-consent-${applicationId}`)?.checked;
+    if (!leadId) { toast('בחר ליד להעברה', 'error'); return; }
+    try {
+      const { data, error } = await sbClient.rpc('select_opportunity_applicant', {
+        p_application_id: applicationId, p_lead_id: leadId, p_require_consent: requireConsent
+      });
+      if (error) throw error;
+      closeModal('modal-opp-applications');
+      toast(`🤝 נבחר ${data?.applicant_name || 'השותף'}! ${requireConsent ? 'ההפניה תושלם לאחר אישור הלקוח.' : 'ההפניה נשלחה אליו.'}`, 'success', 6000);
+      this._renderMine();
+    } catch (e) { toast('שגיאה: ' + (e.message || e), 'error'); }
+  },
+
+  openPublishModal() {
+    if (State.isDemo) { toast('לוח ההזדמנויות זמין בחשבון אמיתי', 'info'); return; }
+    ['opp-title','opp-description','opp-city','opp-commission-value'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.getElementById('opp-vertical').value = 'realestate';
+    document.getElementById('opp-region').value = 'center';
+    document.getElementById('opp-commission-type').value = 'none';
+    this.toggleCommissionValue();
+    openModal('modal-publish-opportunity');
+  },
+
+  toggleCommissionValue() {
+    const type = document.getElementById('opp-commission-type').value;
+    const wrap = document.getElementById('opp-commission-value-wrap');
+    if (type === 'none') { wrap.classList.add('hidden'); return; }
+    wrap.classList.remove('hidden');
+    document.getElementById('opp-commission-value-label').textContent = type === 'percent' ? 'אחוז' : 'סכום קבוע (₪)';
+  },
+
+  async publish() {
+    const title = document.getElementById('opp-title').value.trim();
+    const description = document.getElementById('opp-description').value.trim();
+    const vertical = document.getElementById('opp-vertical').value;
+    const region = document.getElementById('opp-region').value;
+    const city = document.getElementById('opp-city').value.trim();
+    const commType = document.getElementById('opp-commission-type').value;
+    const commValRaw = document.getElementById('opp-commission-value').value;
+    if (title.length < 5) { toast('הכותרת קצרה מדי (לפחות 5 תווים)', 'error'); return; }
+    let commValue = null;
+    if (commType !== 'none') {
+      commValue = parseFloat(commValRaw);
+      if (!commValue || commValue <= 0) { toast('הכנס ערך עמלה תקין', 'error'); return; }
+      if (commType === 'percent' && commValue > 50) { toast('עמלה מקסימלית: 50%', 'error'); return; }
+      if (commType === 'fixed' && commValue > 1000000) { toast('סכום העמלה המקסימלי הוא ₪1,000,000', 'error'); return; }
+    }
+    const btn = document.getElementById('opp-btn-publish');
+    btn.disabled = true; btn.textContent = 'מפרסם...';
+    try {
+      const { error } = await sbClient.rpc('publish_opportunity', {
+        p_title: title, p_description: description || null, p_target_vertical: vertical,
+        p_region: region, p_city: city || null, p_commission_type: commType, p_commission_value: commValue
+      });
+      if (error) throw error;
+      closeModal('modal-publish-opportunity');
+      toast('📤 ההזדמנות פורסמה!', 'success');
+      OppBoard.switchSubTab('mine');
+    } catch (e) {
+      const m = e.message || '';
+      const msgOut = m.includes('opportunity_rate_limit') ? 'הגעת למקסימום 5 פרסומים ביום, נסה שוב מחר' : 'שגיאה: ' + m;
+      toast(msgOut, 'error');
+    }
+    btn.disabled = false; btn.textContent = '📤 פרסם';
+  }
 };
 
 /* ═══════════════════════════════════════════
@@ -10832,12 +11374,116 @@ const Referral = {
    LEAD REFERRAL — לולאת הפניות: הפניית ליד לקולגה
    (וואטסאפ + קישור חד-פעמי, ראה FEATURE_PLANS.md)
 ═══════════════════════════════════════════ */
+// חתימה דיגיטלית פשוטה על canvas — עכבר/מגע, ללא ספריות חיצוניות
+const SignaturePad = {
+  _canvas: null, _ctx: null, _drawing: false, _hasInk: false,
+
+  init(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    this._canvas = canvas;
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#0F1F3D';
+    this._ctx = ctx;
+    this._hasInk = false;
+
+    const pos = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const p = e.touches ? e.touches[0] : e;
+      return { x: p.clientX - r.left, y: p.clientY - r.top };
+    };
+    const start = (e) => { e.preventDefault(); this._drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+    const move  = (e) => {
+      if (!this._drawing) return;
+      e.preventDefault();
+      const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); this._hasInk = true;
+    };
+    const end   = (e) => { this._drawing = false; };
+
+    canvas.onpointerdown = start;
+    canvas.onpointermove = move;
+    canvas.onpointerup   = end;
+    canvas.onpointerleave = end;
+  },
+
+  clear() {
+    if (!this._canvas || !this._ctx) return;
+    this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    this._hasInk = false;
+  },
+
+  isEmpty() { return !this._hasInk; },
+
+  toDataURL() {
+    return this._canvas ? this._canvas.toDataURL('image/png') : '';
+  }
+};
+
+// עמוד ציבורי לאישור לקוח (?consent=) — ללא התחברות, ללא גישה למערכת.
+// הלקוח אינו משתמש Liders; זו נקודת המגע היחידה שלו עם המערכת.
+const ClientConsent = {
+  _token: null,
+
+  check() {
+    const t = new URLSearchParams(location.search).get('consent');
+    if (!t || !/^[a-f0-9]{32}$/.test(t)) return;
+    this._token = t;
+    this.show();
+  },
+
+  async show() {
+    document.getElementById('consent-public-page').classList.remove('hidden');
+    const body = document.getElementById('consent-page-body');
+    try {
+      const { data, error } = await sbClient.rpc('get_client_consent_preview', { p_token: this._token });
+      if (error || !data || !data.found) {
+        body.innerHTML = `<div style="font-size:40px;margin-bottom:10px;">⌛</div><div style="font-size:15px;font-weight:700;color:var(--navy-500,#0F1F3D);margin-bottom:6px;">הקישור לא נמצא או שכבר נעשה בו שימוש</div><div style="font-size:12.5px;color:var(--gray-500,#64748B);">אפשר לפנות לבעל העסק ששלח לך את הקישור</div>`;
+        return;
+      }
+      body.innerHTML = `
+        <div style="font-size:40px;margin-bottom:10px;">📨</div>
+        <div style="font-size:15px;font-weight:800;color:var(--navy-500,#0F1F3D);margin-bottom:4px;">בקשה להעברת פרטים</div>
+        <div style="font-size:12.5px;color:var(--gray-500,#64748B);margin-bottom:14px;">מ${escapeHtml(data.business_name||'עסק')} אל ${escapeHtml(data.to_vertical_label||'בעל מקצוע')}</div>
+        <div style="background:var(--gray-50,#F8FAFC);border:1px solid var(--gray-200,#E2E8F0);border-radius:10px;padding:12px;font-size:13px;color:var(--gray-700,#334155);line-height:1.6;text-align:right;margin-bottom:16px;">${escapeHtml(data.consent_text||'')}</div>
+        <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="ClientConsent.respond(true)">✅ מאשר/ת</button>
+        <button class="btn btn-ghost" style="width:100%;" onclick="ClientConsent.respond(false)">דוחה</button>
+      `;
+    } catch (_e) {
+      body.innerHTML = `<div style="font-size:13px;color:var(--gray-500,#64748B);">שגיאה בטעינה, נסה שוב מאוחר יותר</div>`;
+    }
+  },
+
+  async respond(approved) {
+    const body = document.getElementById('consent-page-body');
+    body.innerHTML = `<div style="font-size:13px;color:var(--gray-400,#94A3B8);">שולח...</div>`;
+    try {
+      const { error } = await sbClient.rpc('respond_client_consent', { p_token: this._token, p_approved: approved });
+      if (error) throw error;
+      body.innerHTML = approved
+        ? `<div style="font-size:40px;margin-bottom:10px;">✅</div><div style="font-size:15px;font-weight:700;color:var(--navy-500,#0F1F3D);">תודה! האישור נשלח</div><div style="font-size:12.5px;color:var(--gray-500,#64748B);margin-top:6px;">פרטיך יועברו לבעל המקצוע להמשך טיפול</div>`
+        : `<div style="font-size:40px;margin-bottom:10px;">🙅</div><div style="font-size:15px;font-weight:700;color:var(--navy-500,#0F1F3D);">התשובה נשלחה</div><div style="font-size:12.5px;color:var(--gray-500,#64748B);margin-top:6px;">פרטיך לא יועברו</div>`;
+    } catch (_e) {
+      body.innerHTML = `<div style="font-size:13px;color:#DC2626;">שגיאה: הקישור כבר נוצל או שפג תוקפו</div>`;
+    }
+  }
+};
+
 const LeadReferral = {
   _leadId: null,
   _token: null,
   _lastMsg: '',
   _INBOUND_KEY: 'liders_inbound_lref',
   VERTICALS: { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'מעצב פנים' },
+
+  _consentMode: 'self',
+  _waTargetPhone: '',
 
   openModal(leadId) {
     if (State.isDemo) { toast('הפניית לידים זמינה בחשבון אמיתי', 'info'); return; }
@@ -10847,37 +11493,81 @@ const LeadReferral = {
     document.getElementById('lref-step-2').classList.add('hidden');
     document.getElementById('lref-btn-create').classList.remove('hidden');
     document.getElementById('lref-btn-done').classList.add('hidden');
-    ['lref-vertical','lref-name','lref-phone','lref-context'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    document.getElementById('lref-consent').checked = false;
+    ['lref-vertical','lref-name','lref-phone','lref-context','lref-commission-value'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.getElementById('lref-commission-type').value = 'none';
+    document.getElementById('lref-consent-self').checked = false;
+    document.getElementById('lref-consent-formal').checked = false;
+    this._consentMode = null;
+    this.toggleCommissionValue();
     openModal('modal-lead-referral');
   },
 
+  toggleCommissionValue() {
+    const type = document.getElementById('lref-commission-type').value;
+    const wrap = document.getElementById('lref-commission-value-wrap');
+    if (type === 'none') { wrap.classList.add('hidden'); return; }
+    wrap.classList.remove('hidden');
+    document.getElementById('lref-commission-value-label').textContent = type === 'percent' ? 'אחוז' : 'סכום קבוע (₪)';
+  },
+
+  toggleConsentMode() {
+    this._consentMode = document.getElementById('lref-consent-formal').checked ? 'formal' : 'self';
+  },
+
   async create() {
-    const vertical = document.getElementById('lref-vertical').value;
-    const name     = document.getElementById('lref-name').value.trim();
-    const phone    = document.getElementById('lref-phone').value.trim();
-    const ctx      = document.getElementById('lref-context').value.trim();
+    const vertical  = document.getElementById('lref-vertical').value;
+    const name      = document.getElementById('lref-name').value.trim();
+    const phone     = document.getElementById('lref-phone').value.trim();
+    const ctx       = document.getElementById('lref-context').value.trim();
+    const commType  = document.getElementById('lref-commission-type').value;
+    const commValRaw = document.getElementById('lref-commission-value').value;
     if (!vertical) { toast('בחר את תחום הקולגה', 'error'); return; }
     if (!name)     { toast('הכנס את שם הקולגה', 'error'); return; }
-    if (!document.getElementById('lref-consent').checked) { toast('יש לאשר שקיבלת את הסכמת הלקוח', 'error'); return; }
+    if (!this._consentMode) { toast('יש לבחור כיצד קיבלת/תקבל את הסכמת הלקוח', 'error'); return; }
+    let commValue = null;
+    if (commType !== 'none') {
+      commValue = parseFloat(commValRaw);
+      if (!commValue || commValue <= 0) { toast('הכנס ערך עמלה תקין', 'error'); return; }
+      if (commType === 'percent' && commValue > 50) { toast('עמלה מקסימלית: 50%', 'error'); return; }
+      if (commType === 'fixed' && commValue > 1000000) { toast('סכום העמלה המקסימלי הוא ₪1,000,000', 'error'); return; }
+    }
+    const requireConsent = this._consentMode === 'formal';
+    const lead = State.leads.find(l => l.id === this._leadId);
+    if (requireConsent && !lead?.phone) { toast('אין מספר טלפון ללקוח, אי אפשר לשלוח בקשת אישור', 'error'); return; }
     const btn = document.getElementById('lref-btn-create');
     btn.disabled = true; btn.textContent = 'יוצר...';
     try {
       const { data, error } = await sbClient.rpc('create_lead_referral', {
         p_lead_id: this._leadId, p_to_vertical: vertical,
-        p_to_name: name, p_to_phone: phone || null, p_context: ctx || null
+        p_to_name: name, p_to_phone: phone || null, p_context: ctx || null,
+        p_commission_type: commType, p_commission_value: commValue,
+        p_require_consent: requireConsent
       });
       if (error) throw error;
-      this._token = data;
-      const lead = State.leads.find(l => l.id === this._leadId);
-      const link = `https://liders-crm.com/?lref=${data}`;
-      this._lastMsg = `היי ${name} 👋\nיש לי לקוח בשבילך: אני מפנה אליך את ${lead ? lead.name : 'הלקוח'}${ctx ? ' — ' + ctx : ''}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
+      this._token = data.token;
+      const link = `https://liders-crm.com/?lref=${data.token}`;
+
+      if (requireConsent && data.consent_token) {
+        const consentLink = `https://liders-crm.com/?consent=${data.consent_token}`;
+        this._waTargetPhone = lead.phone;
+        this._lastMsg = `היי ${lead.name.split(' ')[0]} 👋\nלצורך המשך טיפול מקצועי, אני מבקש/ת את אישורך להעביר את פרטיך (שם וטלפון בלבד) ל${LeadReferral.VERTICALS[vertical]} שותף.\nלאישור, לחץ/י כאן:\n${consentLink}`;
+        document.getElementById('lref-step2-emoji').textContent = '📨';
+        document.getElementById('lref-step2-title').textContent = 'נשלחת בקשת אישור ללקוח';
+        document.getElementById('lref-step2-sub').textContent = 'שלח את הקישור ללקוח בוואטסאפ. ברגע שיאשר, תוכל לשלוח את קישור ההפניה לקולגה ממסך "ההפניות שלי".';
+      } else {
+        this._waTargetPhone = phone;
+        this._lastMsg = `היי ${name} 👋\nיש לי לקוח בשבילך: אני מפנה אליך את ${lead ? lead.name : 'הלקוח'}${ctx ? ' — ' + ctx : ''}.\nכל הפרטים בקישור (Liders CRM):\n${link}`;
+        document.getElementById('lref-step2-emoji').textContent = '📲';
+        document.getElementById('lref-step2-title').textContent = 'ההפניה מוכנה!';
+        document.getElementById('lref-step2-sub').textContent = 'שלח אותה לקולגה בוואטסאפ — ברגע שיאשר, הליד ייכנס לפייפליין שלו ואתה תקבל 250 XP 🎁';
+      }
       document.getElementById('lref-msg-preview').textContent = this._lastMsg;
       document.getElementById('lref-step-1').classList.add('hidden');
       document.getElementById('lref-step-2').classList.remove('hidden');
+      document.getElementById('lref-copy-btn')?.classList.toggle('hidden', requireConsent);
       btn.classList.add('hidden');
       document.getElementById('lref-btn-done').classList.remove('hidden');
-      toast('🔗 ההפניה נוצרה! שלח אותה לקולגה', 'success');
+      toast('🔗 ההפניה נוצרה!', 'success');
     } catch (e) {
       const msg = (e.message || '').includes('referral_rate_limit')
         ? 'הגעת למקסימום 10 הפניות ביום, נסה שוב מחר'
@@ -10889,7 +11579,7 @@ const LeadReferral = {
 
   shareWhatsApp() {
     if (!this._lastMsg) return;
-    const digits = (document.getElementById('lref-phone').value || '').replace(/\D/g, '');
+    const digits = (this._waTargetPhone || '').replace(/\D/g, '');
     const base = digits ? `https://wa.me/972${digits.replace(/^0/, '')}` : 'https://wa.me/';
     window.open(`${base}?text=${encodeURIComponent(this._lastMsg)}`, '_blank');
   },
@@ -10907,7 +11597,9 @@ const LeadReferral = {
     if (t && /^[a-f0-9]{32}$/.test(t)) localStorage.setItem(this._INBOUND_KEY, t);
   },
 
-  // נקרא אחרי התחברות: אם יש טוקן שמור — מציג את מודל הקבלה
+  // נקרא אחרי התחברות: אם יש טוקן שמור — מציג את מודל הקבלה (או חתימה, אם יש עמלה)
+  _inboundLocked: false,
+
   async processInbound() {
     if (State.isDemo || !DB.tenantId) return;
     const t = localStorage.getItem(this._INBOUND_KEY);
@@ -10915,10 +11607,17 @@ const LeadReferral = {
     try {
       const { data, error } = await sbClient.rpc('get_lead_referral_preview', { p_token: t });
       if (error || !data || !data.found) { localStorage.removeItem(this._INBOUND_KEY); return; }
+      this._inboundLocked = !!data.locked;
       const who  = escapeHtml(data.referrer_name || 'קולגה');
       const lead = escapeHtml(data.lead_first_name || 'לקוח');
-      document.getElementById('lref-accept-text').innerHTML =
-        `<strong>${who}</strong> הפנה אליך לקוח: <strong>${lead}</strong>.<br>קבל את הליד והוא ייכנס ישר לפייפליין שלך.`;
+      if (data.locked) {
+        document.getElementById('lref-accept-text').innerHTML =
+          `<strong>${who}</strong> הפנה אליך לקוח: <strong>${lead}</strong>, בכפוף לעמלת הפניה של <strong>${escapeHtml(data.commission_label||'')}</strong>.<br>יש לחתום על הסכם קצר לפני שהליד ייחשף.`;
+      } else {
+        document.getElementById('lref-accept-text').innerHTML =
+          `<strong>${who}</strong> הפנה אליך לקוח: <strong>${lead}</strong>.<br>קבל את הליד והוא ייכנס ישר לפייפליין שלך.`;
+      }
+      document.getElementById('lref-btn-accept').textContent = data.locked ? '✍️ צפייה בהסכם וחתימה' : '✅ קבל את הליד';
       setTimeout(() => openModal('modal-lead-referral-accept'), 1200);
     } catch (_e) {}
   },
@@ -10926,6 +11625,12 @@ const LeadReferral = {
   dismissInbound() {
     closeModal('modal-lead-referral-accept');
     // הטוקן נשאר שמור — המודל יופיע שוב בכניסה הבאה, עד שיפוג (14 יום)
+  },
+
+  // בלי עמלה: מקבל ישר. עם עמלה: פותח את מסך ההסכם והחתימה.
+  async acceptOrOpenAgreement() {
+    if (this._inboundLocked) { await this.openAgreementModal(); return; }
+    await this.accept();
   },
 
   async accept() {
@@ -10953,11 +11658,69 @@ const LeadReferral = {
         localStorage.removeItem(this._INBOUND_KEY);
         closeModal('modal-lead-referral-accept');
         toast('אי אפשר לקבל הפניה ששלחת בעצמך 🙂', 'info');
+      } else if (m.includes('agreement_required')) {
+        await this.openAgreementModal();
       } else {
         toast('שגיאה: ' + m, 'error');
       }
     }
     btn.disabled = false; btn.textContent = '✅ קבל את הליד';
+  },
+
+  // ── הסכם עמלה + חתימה דיגיטלית ──────────────────────────────────────
+  async openAgreementModal() {
+    const t = localStorage.getItem(this._INBOUND_KEY);
+    if (!t) return;
+    try {
+      const { data, error } = await sbClient.rpc('get_referral_agreement', { p_token: t });
+      if (error) throw error;
+      document.getElementById('ragr-text').textContent = data.agreement_text;
+      document.getElementById('ragr-signer-name').value = '';
+      closeModal('modal-lead-referral-accept');
+      openModal('modal-referral-agreement');
+      setTimeout(() => SignaturePad.init('ragr-signature-canvas'), 50);
+    } catch (e) {
+      toast('שגיאה בטעינת ההסכם: ' + (e.message || e), 'error');
+    }
+  },
+
+  async signAgreement() {
+    const t = localStorage.getItem(this._INBOUND_KEY);
+    if (!t) { closeModal('modal-referral-agreement'); return; }
+    const signerName = document.getElementById('ragr-signer-name').value.trim();
+    if (!signerName) { toast('הכנס שם מלא לחתימה', 'error'); return; }
+    if (SignaturePad.isEmpty()) { toast('נא לחתום בתיבת החתימה', 'error'); return; }
+    const btn = document.getElementById('ragr-btn-sign');
+    btn.disabled = true; btn.textContent = 'חותם...';
+    try {
+      const sigDataUrl = SignaturePad.toDataURL();
+      const { data, error } = await sbClient.rpc('sign_referral_agreement', {
+        p_token: t, p_signer_name: signerName, p_signature_image: sigDataUrl
+      });
+      if (error) throw error;
+      localStorage.removeItem(this._INBOUND_KEY);
+      closeModal('modal-referral-agreement');
+      const loaded = await DB.loadAll();
+      State.leads      = loaded.leads;
+      State.activities = loaded.activities;
+      toast(`🎉 נחתם! הליד ${data?.lead_name || ''} נוסף לפייפליין שלך (עמלה: ${data?.commission_label||''})`, 'success', 6000);
+      App.go('pipeline');
+    } catch (e) {
+      toast('שגיאה: ' + (e.message || e), 'error');
+    }
+    btn.disabled = false; btn.textContent = '✅ חתום וקבל את הליד';
+  },
+
+  async declineAgreement() {
+    const t = localStorage.getItem(this._INBOUND_KEY);
+    if (!t) { closeModal('modal-referral-agreement'); return; }
+    if (!confirm('לדחות את ההפניה? הפעולה סופית.')) return;
+    try {
+      await sbClient.rpc('decline_referral_agreement', { p_token: t, p_reason: null });
+    } catch (_e) {}
+    localStorage.removeItem(this._INBOUND_KEY);
+    closeModal('modal-referral-agreement');
+    toast('ההפניה נדחתה', 'info');
   },
 
   // נקרא בכל התחברות: מזכה את המפנה ב-250 XP על כל הפניה שהתקבלה
@@ -11329,7 +12092,8 @@ const App = {
       State.tenant = t
         ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
             make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null,
-            marketing_addon: t.marketing_addon || false, industry: t.industry || null }
+            marketing_addon: t.marketing_addon || false, industry: t.industry || null,
+            phone: t.phone || null, city: t.city || null, region: t.region || null }
         : { name: 'הסוכנות שלי', plan: 'trial' };
       // Seed localStorage from DB so Make.getWebhook() works offline too
       if (t?.make_webhook_url) localStorage.setItem('make_webhook_url', t.make_webhook_url);
@@ -14856,7 +15620,8 @@ sbClient.auth.onAuthStateChange((event, session) => {
           State.tenant = t
             ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
                 make_webhook_url: t.make_webhook_url || null, whatsapp_number: t.whatsapp_number || null,
-                marketing_addon: t.marketing_addon || false, industry: t.industry || null }
+                marketing_addon: t.marketing_addon || false, industry: t.industry || null,
+                phone: t.phone || null, city: t.city || null, region: t.region || null }
             : { name: 'הסוכנות שלי', plan: 'trial', marketing_addon: false };
           if (t?.make_webhook_url) localStorage.setItem('make_webhook_url', t.make_webhook_url);
           if (t?.whatsapp_number)  localStorage.setItem('whatsapp_number',  t.whatsapp_number);
@@ -14965,6 +15730,8 @@ window.DemoLock   = DemoLock;
 Referral.checkInboundRef();
 // Check for inbound lead-referral token (?lref=) — לולאת הפניות
 LeadReferral.checkInbound();
+// עמוד ציבורי לאישור לקוח (?consent=) — ללא התחברות
+ClientConsent.check();
 // Hide referral "new" badge if user already visited
 if (localStorage.getItem('liders_ref_visited')) {
   document.addEventListener('DOMContentLoaded', () => document.getElementById('nav-ref-badge')?.remove(), { once: true });

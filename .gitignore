@@ -1,3 +1,5 @@
+.claude/settings.local.json
+
 # dist/ — ignore from git (build artifact)
 dist/
 local_cdn/
