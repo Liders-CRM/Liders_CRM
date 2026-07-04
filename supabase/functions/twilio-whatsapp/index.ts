@@ -71,6 +71,30 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Tenant isolation: verify the destination phone belongs to a lead in this user's tenant.
+    // RLS on the leads table automatically scopes the query to the authenticated user's tenant.
+    const rawPhone = to.replace(/^whatsapp:/, '').trim();
+    const altPhone = rawPhone.startsWith('+972')
+      ? '0' + rawPhone.slice(4)
+      : rawPhone.startsWith('0')
+        ? '+972' + rawPhone.slice(1)
+        : null;
+    const phoneFilter = altPhone
+      ? `phone.eq.${rawPhone},phone.eq.${altPhone}`
+      : `phone.eq.${rawPhone}`;
+    const { data: leadCheck } = await sbClient
+      .from('leads')
+      .select('id')
+      .or(phoneFilter)
+      .limit(1)
+      .maybeSingle();
+    if (!leadCheck) {
+      return new Response(
+        JSON.stringify({ error: 'phone_not_in_leads' }),
+        { status: 403, headers: { ...cors, 'Content-Type': 'application/json' } },
+      );
+    }
+
     const safeMessage = message.slice(0, MAX_MESSAGE_LEN);
 
     // Normalise WhatsApp prefix

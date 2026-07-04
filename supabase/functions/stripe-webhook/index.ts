@@ -102,7 +102,13 @@ async function verifyStripeSignature(
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
 
-    return computed === v1;
+    // constant-time compare to prevent timing side-channel attacks
+    const a = new TextEncoder().encode(computed);
+    const b = new TextEncoder().encode(v1);
+    if (a.length !== b.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+    return diff === 0;
   } catch {
     return false;
   }

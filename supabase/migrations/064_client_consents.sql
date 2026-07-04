@@ -231,7 +231,11 @@ BEGIN
   UPDATE client_consents SET
     status              = CASE WHEN p_approved THEN 'approved' ELSE 'declined' END,
     responded_at        = now(),
-    response_ip         = left(coalesce(v_headers->>'x-forwarded-for',''), 100),
+    response_ip         = left(coalesce(
+                            nullif(v_headers->>'cf-connecting-ip',''),
+                            nullif(v_headers->>'x-real-ip',''),
+                            v_headers->>'x-forwarded-for',''
+                          ), 100),
     response_user_agent = left(coalesce(v_headers->>'user-agent',''), 300)
   WHERE id = v_con.id;
 

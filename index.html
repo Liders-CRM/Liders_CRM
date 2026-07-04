@@ -9259,7 +9259,7 @@ const ReferralsList = {
   },
 
   async resume(token) {
-    localStorage.setItem(LeadReferral._INBOUND_KEY, token);
+    sessionStorage.setItem(LeadReferral._INBOUND_KEY, token);
     await LeadReferral.processInbound();
   }
 };
@@ -11743,7 +11743,7 @@ const LeadReferral = {
   // נקרא בטעינת הדף: שומר טוקן נכנס (?lref=) כדי לשרוד התחברות/אונבורדינג
   checkInbound() {
     const t = new URLSearchParams(location.search).get('lref');
-    if (t && /^[a-f0-9]{32}$/.test(t)) localStorage.setItem(this._INBOUND_KEY, t);
+    if (t && /^[a-f0-9]{32}$/.test(t)) sessionStorage.setItem(this._INBOUND_KEY, t);
   },
 
   // נקרא אחרי התחברות: אם יש טוקן שמור — מציג את מודל הקבלה (או חתימה, אם יש עמלה)
@@ -11751,11 +11751,11 @@ const LeadReferral = {
 
   async processInbound() {
     if (State.isDemo || !DB.tenantId) return;
-    const t = localStorage.getItem(this._INBOUND_KEY);
+    const t = sessionStorage.getItem(this._INBOUND_KEY);
     if (!t) return;
     try {
       const { data, error } = await sbClient.rpc('get_lead_referral_preview', { p_token: t });
-      if (error || !data || !data.found) { localStorage.removeItem(this._INBOUND_KEY); return; }
+      if (error || !data || !data.found) { sessionStorage.removeItem(this._INBOUND_KEY); return; }
       this._inboundLocked = !!data.locked;
       const who  = escapeHtml(data.referrer_name || 'קולגה');
       const lead = escapeHtml(data.lead_first_name || 'לקוח');
@@ -11783,14 +11783,14 @@ const LeadReferral = {
   },
 
   async accept() {
-    const t = localStorage.getItem(this._INBOUND_KEY);
+    const t = sessionStorage.getItem(this._INBOUND_KEY);
     if (!t) { closeModal('modal-lead-referral-accept'); return; }
     const btn = document.getElementById('lref-btn-accept');
     btn.disabled = true; btn.textContent = 'מקבל...';
     try {
       const { data, error } = await sbClient.rpc('accept_lead_referral', { p_token: t });
       if (error) throw error;
-      localStorage.removeItem(this._INBOUND_KEY);
+      sessionStorage.removeItem(this._INBOUND_KEY);
       closeModal('modal-lead-referral-accept');
       const loaded = await DB.loadAll();
       State.leads      = loaded.leads;
@@ -11800,11 +11800,11 @@ const LeadReferral = {
     } catch (e) {
       const m = e.message || '';
       if (m.includes('referral_used') || m.includes('referral_expired') || m.includes('referral_not_found')) {
-        localStorage.removeItem(this._INBOUND_KEY);
+        sessionStorage.removeItem(this._INBOUND_KEY);
         closeModal('modal-lead-referral-accept');
         toast('ההפניה כבר נוצלה או שפג תוקפה', 'info');
       } else if (m.includes('referral_own')) {
-        localStorage.removeItem(this._INBOUND_KEY);
+        sessionStorage.removeItem(this._INBOUND_KEY);
         closeModal('modal-lead-referral-accept');
         toast('אי אפשר לקבל הפניה ששלחת בעצמך 🙂', 'info');
       } else if (m.includes('agreement_required')) {
@@ -11818,7 +11818,7 @@ const LeadReferral = {
 
   // ── הסכם עמלה + חתימה דיגיטלית ──────────────────────────────────────
   async openAgreementModal() {
-    const t = localStorage.getItem(this._INBOUND_KEY);
+    const t = sessionStorage.getItem(this._INBOUND_KEY);
     if (!t) return;
     try {
       const { data, error } = await sbClient.rpc('get_referral_agreement', { p_token: t });
@@ -11834,7 +11834,7 @@ const LeadReferral = {
   },
 
   async signAgreement() {
-    const t = localStorage.getItem(this._INBOUND_KEY);
+    const t = sessionStorage.getItem(this._INBOUND_KEY);
     if (!t) { closeModal('modal-referral-agreement'); return; }
     const signerName = document.getElementById('ragr-signer-name').value.trim();
     if (!signerName) { toast('יש להזין שם מלא לחתימה', 'error'); return; }
@@ -11847,7 +11847,7 @@ const LeadReferral = {
         p_token: t, p_signer_name: signerName, p_signature_image: sigDataUrl
       });
       if (error) throw error;
-      localStorage.removeItem(this._INBOUND_KEY);
+      sessionStorage.removeItem(this._INBOUND_KEY);
       closeModal('modal-referral-agreement');
       const loaded = await DB.loadAll();
       State.leads      = loaded.leads;
@@ -11861,13 +11861,13 @@ const LeadReferral = {
   },
 
   async declineAgreement() {
-    const t = localStorage.getItem(this._INBOUND_KEY);
+    const t = sessionStorage.getItem(this._INBOUND_KEY);
     if (!t) { closeModal('modal-referral-agreement'); return; }
     if (!confirm('לדחות את ההפניה? הפעולה סופית.')) return;
     try {
       await sbClient.rpc('decline_referral_agreement', { p_token: t, p_reason: null });
     } catch (_e) {}
-    localStorage.removeItem(this._INBOUND_KEY);
+    sessionStorage.removeItem(this._INBOUND_KEY);
     closeModal('modal-referral-agreement');
     toast('ההפניה נדחתה', 'info');
   },

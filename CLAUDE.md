@@ -717,6 +717,61 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 4/7/2026 — סקירת אבטחה: 3 וקטורים מתקדמים
+
+> ענף: `claude/security-vectors-review-rb6rbl` (מוזג ל-main)
+
+### ✅ הושלם
+1. **`stripe-webhook/index.ts`** — הוחלפה השוואת `computed === v1` בלולאת XOR constant-time
+   למניעת timing side-channel attack על HMAC-SHA256
+2. **`twilio-whatsapp/index.ts`** — נוסף בדיקת tenant isolation לפני שליחת WhatsApp:
+   מוודא שמספר ה-`to` קיים בטבלת leads של ה-tenant המאומת (RLS אוטומטי).
+   תומך בשני פורמטים: `+9725X` ו-`05X`. מחזיר 403 אם לא נמצא.
+3. **`index.html`** — טוקן הפניה (`liders_inbound_lref`) הועבר מ-`localStorage` ל-
+   `sessionStorage` — הוא קצר-חיים ורלוונטי לאותו tab (flow הרשמה)
+4. **`063_referral_commission_agreements.sql` + `064_client_consents.sql`** — IP לביקורת
+   (`signer_ip` / `response_ip`) משתמש כעת ב-`cf-connecting-ip` (Cloudflare, לא ניתן לזייף)
+   כ-primary, `x-real-ip` כ-secondary, `x-forwarded-for` רק כ-fallback
+5. **`privacy-policy.html`** — נוסף כרטיס אבטחה "אימות Webhooks וחתימות דיגיטליות";
+   עדכון סעיף 8 לתיאור מדויק של localStorage ו-8h session ceiling
+6. **`landing.html`** — תשובת FAQ אבטחה עודכנה לכלול אימות חתימות ובידוד tenant
+
+### 📋 לביצוע בסשן הבא — סקירת אבטחה מקיפה עם Sonnet 5
+
+> **הוחלט 4/7/2026**: לבצע `/security-review` ב-`high effort` עם Sonnet 5 על אזורים
+> שלא כוסו בסשן זה. הנחיות לסוכן:
+
+#### מוקד הסקירה — **RLS policies ו-DB schema**:
+- לקרוא את **כל** מיגרציות `supabase/migrations/` (040 ומעלה) ולוודא:
+  - כל טבלה חדשה: `ENABLE ROW LEVEL SECURITY` + policies מתאימות **או** הסבר מפורש
+    ב-comment למה הגישה דרך SECURITY DEFINER RPCs בלבד (דפוס 040/046/061)
+  - `leads`, `pipeline_stages`, `tenants`, `agent_invites`, `ai_usage`,
+    `lead_referrals`, `referral_agreements`, `client_consents`, `opp_board_listings` —
+    לוודא שכל אחת מוגנת ואין גישה ישירה שעוקפת RLS
+- לבדוק את ה-RPCs: האם `get_my_tenant_id()` יכולה להחזיר NULL במצבים לא צפויים?
+  האם כל RPC שמתחיל ב-`SECURITY DEFINER` מטפל ב-NULL tenant_id?
+
+#### מוקד הסקירה — **Edge Functions**:
+- `ai-proxy`: לוודא שה-sanitization לא ניתן לעקוף (prompt injection דרך system prompt)
+- `twilio-whatsapp`: לוודא שה-phone filter החדש (`.or(phoneFilter)`) לא פגיע
+  ל-PostgREST filter injection אם מספר הטלפון מכיל תווים מיוחדים (`,`, `.`, `(`, `)`)
+- `stripe-webhook`: (כוסה בסשן זה — OK)
+
+#### מוקד הסקירה — **Frontend (index.html)**:
+- לחפש `innerHTML` עם ערכים שמגיעים מ-DB/user input — לוודא `escapeHtml()` בכל מקום
+- לבדוק את `Make.trigger()`: האם ה-payload מכיל נתוני tenant שמגיעים מ-localStorage
+  ויכולים להיות מזויפים ע"י משתמש זדוני?
+- לבדוק את `_create_lead_referral_core` — האם ה-`p_context` עובר עם `escapeHtml`
+  בצד ה-frontend לפני שנשלח ל-RPC?
+
+#### מה **לא** לבדוק (כוסה/ידוע):
+- timing-safe HMAC ב-stripe-webhook ✅
+- tenant isolation ב-twilio-whatsapp ✅
+- x-forwarded-for spoofing ✅
+- HttpOnly cookies (בלתי אפשרי ב-GitHub Pages — ידוע ומתועד)
+
+---
+
 ## כללי עבודה
 
 1. **עברית RTL** — כל טקסט UI בעברית

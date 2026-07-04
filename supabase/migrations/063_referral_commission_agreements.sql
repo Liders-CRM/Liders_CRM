@@ -332,7 +332,11 @@ BEGIN
     signature_hash    = encode(sha256(convert_to(
                           v_agr.agreement_text || '|' || trim(p_signer_name) || '|' ||
                           v_signed_at::text   || '|' || v_ref.token, 'UTF8')), 'hex'),
-    signer_ip         = left(coalesce(v_headers->>'x-forwarded-for',''), 100),
+    signer_ip         = left(coalesce(
+                          nullif(v_headers->>'cf-connecting-ip',''),
+                          nullif(v_headers->>'x-real-ip',''),
+                          v_headers->>'x-forwarded-for',''
+                        ), 100),
     signer_user_agent = left(coalesce(v_headers->>'user-agent',''), 300),
     signed_at         = v_signed_at
   WHERE id = v_agr.id;
