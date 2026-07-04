@@ -1371,6 +1371,195 @@
     .sect-blend-light { height: 64px; background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-50) 55%, var(--white) 100%); }
     .sect-blend-dark  { height: 64px; background: linear-gradient(180deg, var(--gray-bg) 0%, var(--navy-100) 45%, var(--navy-900) 100%); }
 
+    /* ══════════════════════════════
+       אנימציות CTA: חללית · כדור הריסה · טרקטור
+    ══════════════════════════════ */
+
+    /* חללית — Hero CTA */
+    .btn-primary.has-rocket { position: relative; overflow: visible; }
+    .rocket-icon {
+      position: absolute;
+      font-size: 1.35rem;
+      bottom: 50%; left: 50%;
+      transform: translate(-50%, 50%) rotate(-45deg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .btn-primary.has-rocket:hover .rocket-icon {
+      animation: rocketLaunch 0.75s ease-out forwards;
+    }
+    @keyframes rocketLaunch {
+      0%   { opacity: 1; transform: translate(-50%, 50%) rotate(-45deg) scale(0.8); }
+      20%  { opacity: 1; transform: translate(-50%, 20%) rotate(-45deg) scale(1.1); }
+      70%  { opacity: 1; transform: translate(-50%, -65px) rotate(-45deg) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -110px) rotate(-45deg) scale(0.7); }
+    }
+
+    /* כדור הריסה — Closing CTA */
+    .wrecking-wrap {
+      position: relative;
+      display: inline-block;
+      padding-top: 68px;
+    }
+    .pendulum {
+      position: absolute;
+      top: 0; left: 16%;
+      width: 2px; height: 44px;
+      transform-origin: top center;
+      animation: pendulumSwing 2.6s ease-in-out infinite;
+    }
+    .wrecking-chain {
+      width: 2px; height: 44px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--gold) 0px 4px, rgba(220,220,220,0.5) 4px 7px
+      );
+    }
+    .wrecking-ball {
+      position: absolute;
+      bottom: -25px; left: -12px;
+      width: 25px; height: 25px;
+      background: radial-gradient(circle at 33% 28%, #d4d4d4, #646464, #1a1a1a);
+      border-radius: 50%;
+      box-shadow: inset 0 0 7px rgba(0,0,0,0.45), 0 4px 10px rgba(0,0,0,0.55);
+    }
+    @keyframes pendulumSwing {
+      0%, 100% { transform: rotate(-32deg); }
+      50%       { transform: rotate(20deg); }
+    }
+    .wrecking-wrap .btn-primary {
+      animation: wreckImpact 2.6s ease-in-out infinite;
+    }
+    .wrecking-wrap .btn-primary:hover { animation-play-state: paused; }
+    @keyframes wreckImpact {
+      0%, 43%, 57%, 100% { transform: translateX(0) scale(1); }
+      50%                 { transform: translateX(4px) scale(0.965, 1.025); }
+    }
+    @media (max-width: 480px) {
+      .wrecking-wrap { padding-top: 0; }
+      .pendulum { display: none; }
+      .wrecking-wrap .btn-primary { animation: none; }
+    }
+
+    /* טרקטור מכרסם — Team Plan CTA */
+    .plan-btn.tractor-btn {
+      overflow: visible;
+      position: relative;
+      animation: btnBite 3.6s ease-in-out infinite;
+    }
+    .plan-btn.tractor-btn::before {
+      content: '🚜';
+      position: absolute;
+      font-size: 1.05rem;
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%);
+      animation: tractorNibble 3.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes tractorNibble {
+      0%, 100% { left: calc(100% + 8px); }
+      35%, 65% { left: calc(100% - 5px); }
+    }
+    @keyframes btnBite {
+      0%, 100% { transform: translateX(0) scale(1); }
+      35%, 65% { transform: translateX(3px) scale(0.975, 1); }
+    }
+    .plan-btn.tractor-btn:hover { animation-play-state: paused; }
+    .plan-btn.tractor-btn:hover::before { animation-play-state: paused; }
+    @media (max-width: 480px) {
+      .plan-btn.tractor-btn::before { display: none; }
+      .plan-btn.tractor-btn { animation: none; }
+    }
+
+    /* ══════════════════════════════
+       סקשן תחומי עיסוק
+    ══════════════════════════════ */
+    .industry-section {
+      background: var(--navy-800);
+      padding: 64px 0;
+    }
+    .industry-section .section-label { color: var(--gold-400); font-size: 15px; font-weight: 800; }
+    .industry-section .section-title { color: var(--white); }
+    .industry-section .section-sub   { color: rgba(255,255,255,0.60); }
+    .industry-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (max-width: 700px) { .industry-cards { grid-template-columns: 1fr; } }
+    .ind-card {
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .ind-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.28); }
+    .ind-icon-row { font-size: 2rem; margin-bottom: 0.75rem; line-height: 1.4; }
+    .ind-title {
+      font-size: 1.15rem; font-weight: 800;
+      color: var(--white); margin-bottom: 0.35rem;
+    }
+    .ind-sub {
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--blue-400); margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+    .ind-terms {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.42);
+      line-height: 2;
+    }
+    /* אנימציות אייקונים */
+    .key-anim {
+      display: inline-block;
+      animation: keyRock 3.2s ease-in-out infinite;
+      transform-origin: 50% 80%;
+    }
+    @keyframes keyRock {
+      0%, 100% { transform: rotate(0deg); }
+      35% { transform: rotate(22deg); }
+      55% { transform: rotate(14deg); }
+    }
+    .scale-anim {
+      display: inline-block;
+      animation: scaleBalance 4s ease-in-out infinite;
+    }
+    @keyframes scaleBalance {
+      0%, 100% { transform: rotate(0deg); }
+      28% { transform: rotate(-11deg); }
+      72% { transform: rotate(11deg); }
+    }
+    .pencil-anim {
+      display: inline-block;
+      animation: pencilDraw 2.8s ease-in-out infinite;
+    }
+    @keyframes pencilDraw {
+      0%, 100% { transform: rotate(0deg) translate(0, 0); }
+      25% { transform: rotate(-18deg) translate(-3px, 2px); }
+      75% { transform: rotate(12deg) translate(3px, -1px); }
+    }
+    /* רקע תכנית אדריכלית לעיצוב פנים */
+    .ind-card.interior-card {
+      background-color: var(--navy-900);
+      background-image:
+        linear-gradient(rgba(99,179,237,0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,179,237,0.09) 1px, transparent 1px);
+      background-size: 22px 22px;
+      transition: transform 0.25s, border-color 0.25s,
+                  background-color 1.4s ease, background-size 1.4s ease;
+    }
+    .ind-card.interior-card:hover {
+      background-color: #1b1040;
+      background-size: 46px 46px;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.001ms !important;
@@ -1393,13 +1582,13 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="badge-dot"></span>
-    בנוי לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ומעצבי פנים
+    בנוי לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ועיצוב פנים
   </div>
 
   <h1>האקסלים שלך יכולים לפרוש.<br><span class="highlight">העסקאות שלך רק מתחילות.</span></h1>
 
   <p class="hero-sub">
-    5 סוכני AI עובדים בשבילך על כל ליד, כל היום. אתה סוגר עסקאות, הם עושים את השאר.
+    5 סוכני AI עובדים על כל ליד, כל היום. כאן סוגרים עסקאות — כל השאר קורה אוטומטית.
   </p>
 
   <div class="hero-actions">
@@ -1408,7 +1597,7 @@
         <span class="crane-cable"></span>
         <span class="crane-load">30 יום 🎁</span>
       </span>
-      <a href="https://liders-crm.com" class="btn-primary pulse-cta cta-drop-target">מתחילים 30 יום בחינם</a>
+      <a href="https://liders-crm.com" class="btn-primary pulse-cta cta-drop-target has-rocket">מתחילים 30 יום בחינם<span class="rocket-icon" aria-hidden="true">🚀</span></a>
     </span>
     <a href="#demo" class="btn-ghost">לראות איך זה עובד</a>
   </div>
@@ -1460,7 +1649,7 @@
       <div class="pain-card fade-up">
         <span class="pain-emoji">😬</span>
         <div class="pain-quote">"שלחתי הצעה לפני שבועיים. אני חושב. אולי שלושה."</div>
-        <div class="pain-after">המערכת מזכירה לך בדיוק מתי לחזור, בלי שתצטרך לזכור בעצמך</div>
+        <div class="pain-after">המערכת מזכירה בדיוק מתי לחזור, בלי צורך לזכור לבד</div>
       </div>
       <div class="pain-card fade-up">
         <span class="pain-emoji">🤦</span>
@@ -1510,28 +1699,28 @@
 <section class="agents-section" id="agents">
   <div class="section-inner">
     <p class="section-label fade-up">לא עוד תוכנה. צוות.</p>
-    <h2 class="section-title fade-up">במקום לעבוד לבד, תביא חיזוק</h2>
+    <h2 class="section-title fade-up">במקום לעבוד לבד, הגיע חיזוק</h2>
     <p class="section-sub fade-up">חמישה סוכני AI יושבים לך בראש כל היום, כל אחד עם תפקיד מוגדר, ועושים בדיוק את מה שאין לך זמן להגיע אליו.</p>
     <div class="agents-grid fade-up">
       <div class="agent-card">
         <span class="agent-icon">🎯</span>
         <div class="agent-title">הסוכן שמדרג לידים</div>
-        <div class="agent-desc">בודק כל ליד ונותן לו ציון מ-0 עד 100. לא ניחוש, חישוב. אתה יודע בדיוק על מי לדבר קודם.</div>
+        <div class="agent-desc">בודק כל ליד ונותן לו ציון מ-0 עד 100. לא ניחוש, חישוב. יודעים בדיוק על מי לדבר קודם.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">✍️</span>
         <div class="agent-title">סוכן השיווק</div>
-        <div class="agent-desc">כותב הצעות, פוסטים לסושיאל וקמפיינים תוך שניות. אתה מאשר, שולח, וזהו.</div>
+        <div class="agent-desc">כותב הצעות, פוסטים לסושיאל וקמפיינים תוך שניות. מאשרים, שולחים, וזהו.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">⚡</span>
         <div class="agent-title">הסוכן שמתעד בשבילך</div>
-        <div class="agent-desc">מסכם שיחה או פגישה למשפט אחד ברור, וישר לתוך כרטיס הליד. אתה מדבר, הוא כותב.</div>
+        <div class="agent-desc">מסכם שיחה או פגישה למשפט אחד ברור, וישר לתוך כרטיס הליד. מדברים — הוא כותב.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">🎧</span>
         <div class="agent-title">סוכן התמיכה</div>
-        <div class="agent-desc">עונה על שאלות לגבי המערכת בכל שעה, כולל ב-2 בלילה כשאתה עוד ער עם ההצעה הבאה.</div>
+        <div class="agent-desc">עונה על שאלות לגבי המערכת בכל שעה, כולל ב-2 בלילה כשעוד ערים עם ההצעה הבאה.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">🔥</span>
@@ -1543,6 +1732,41 @@
   </div>
 </section>
 
+<!-- תחומי עיסוק -->
+<section class="industry-section">
+  <div class="section-inner">
+    <p class="section-label fade-up">שלושה תחומים. כלי אחד.</p>
+    <h2 class="section-title fade-up">בנוי בדיוק בשבילכם</h2>
+    <div class="industry-cards fade-up">
+
+      <!-- סוכני נדל"ן -->
+      <div class="ind-card">
+        <div class="ind-icon-row">🏠 <span class="key-anim">🔑</span> 📊</div>
+        <div class="ind-title">סוכני נדל"ן</div>
+        <div class="ind-sub">עסקאות · לידים · בלעדיות</div>
+        <div class="ind-terms">נכס · קונה · מוכר · ביקור · עמלה · פייפליין</div>
+      </div>
+
+      <!-- עו"ד נדל"ן -->
+      <div class="ind-card">
+        <div class="ind-icon-row"><span class="scale-anim">⚖️</span> 📋 🛡️</div>
+        <div class="ind-title">עו"ד נדל"ן</div>
+        <div class="ind-sub">תיקים · חוזים · בדיקת נאותות</div>
+        <div class="ind-terms">הסכם מכר · טאבו · הערת אזהרה · עסקה · זכויות</div>
+      </div>
+
+      <!-- עיצוב פנים -->
+      <div class="ind-card interior-card">
+        <div class="ind-icon-row"><span class="pencil-anim">✏️</span> 🎨 💡</div>
+        <div class="ind-title">עיצוב פנים</div>
+        <div class="ind-sub">קונספט · הדמיה · סטיילינג</div>
+        <div class="ind-terms">סקיצה · חומרים · תאורה · לוח השראה · Mood board</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <div class="sect-blend-light" aria-hidden="true"></div>
 
 <!-- קצת עלינו -->
@@ -1551,7 +1775,7 @@
     <p class="section-label fade-up">הסיפור שלנו</p>
     <h2 class="section-title fade-up">בנינו את לידרס כי מגיע לעולם הנדל"ן יותר טוב</h2>
     <p class="about-text fade-up">
-      ראינו סוכנים, עורכי דין ומעצבי פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכן נדל"ן, עו"ד נדל"ן ומעצב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות. אתה כבר לא לבד בזה.
+      ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות. כבר לא לבד בזה.
     </p>
     <div class="about-pillars fade-up">
       <div class="about-pillar">
@@ -1601,7 +1825,7 @@
 
     <div class="shots-cta fade-up">
       <p class="shots-cta-note">🔒 את השאר משאירים למי שנכנס. ההרשמה לוקחת דקה.</p>
-      <a href="https://liders-crm.com" class="btn-primary" style="font-size:16px;">רוצה לראות הכל? היכנס וגלה בעצמך</a>
+      <a href="https://liders-crm.com" class="btn-primary" style="font-size:16px;">רוצה לראות הכל? כניסה וגילוי →</a>
     </div>
   </div>
 </section>
@@ -1612,7 +1836,7 @@
   <div class="section-inner">
     <p class="section-label fade-up">מה מקבלים בפנים</p>
     <h2 class="section-title fade-up">לא עוד CRM. מערכת שעובדת בשבילך.</h2>
-    <p class="section-sub fade-up">קצת מהכלים שמחכים לך אחרי ההרשמה, בלי שתצטרך ללמוד שום דבר חדש.</p>
+    <p class="section-sub fade-up">קצת מהכלים שמחכים אחרי ההרשמה, בלי צורך ללמוד שום דבר חדש.</p>
 
     <div class="feature-groups">
       <div class="feature-group fade-up">
@@ -1748,7 +1972,7 @@
       <div class="plan-card fade-up">
         <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">Solo</div>
-        <div class="plan-desc">לעצמאי: סוכן, עו"ד או מעצב</div>
+        <div class="plan-desc">לעצמאי: סוכן נדל"ן, עו"ד, עיצוב פנים</div>
         <div class="plan-price">₪179<small>/חודש</small></div>
         <div class="plan-annual-teaser">📅 שנתי · ₪124/חודש · חיסכון ₪658</div>
         <div class="plan-limit">1 סוכן · עד 200 לידים</div>
@@ -1780,7 +2004,7 @@
           <li>דוחות ביצועים</li>
         </ul>
         <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
-        <a href="https://liders-crm.com" class="plan-btn primary">בוחרים בצוות</a>
+        <a href="https://liders-crm.com" class="plan-btn primary tractor-btn">בוחרים בצוות</a>
       </div>
 
       <div class="plan-card fade-up">
@@ -1840,7 +2064,7 @@
           <span class="mbf-icon">📸</span>
           <div>
             <strong>פוסט לסושיאל מותאם לתחום שלך</strong>
-            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית למעצב — בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
+            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית לעיצוב פנים — בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
           </div>
         </div>
         <div class="mb-feature">
@@ -1893,7 +2117,7 @@
       </details>
       <details class="faq-item">
         <summary>המערכת מתאימה לעצמאי או רק לצוותים גדולים?</summary>
-        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי — סוכן נדל"ן, עו"ד נדל"ן או מעצב פנים — וחבילות צוות וסוכנות גדלות איתך: מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
+        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי — סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים — וחבילות צוות וסוכנות גדלות איתך: מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
       </details>
       <details class="faq-item">
         <summary>כמה זמן לוקח להתחיל לעבוד בפועל?</summary>
@@ -1938,7 +2162,13 @@
   <h2>העסקה הבאה שלך<br>כבר <span class="gold">מחכה.</span></h2>
   <p>אם אחרי 30 יום זה לא בשבילך, לפחות הפייפליין שלך יהיה מסודר בפעם הראשונה.</p>
   <div class="closing-actions">
-    <a href="https://liders-crm.com" class="btn-primary" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
+    <div class="wrecking-wrap">
+      <div class="pendulum" aria-hidden="true">
+        <div class="wrecking-chain"></div>
+        <div class="wrecking-ball"></div>
+      </div>
+      <a href="https://liders-crm.com" class="btn-primary" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
+    </div>
     <p class="closing-micro">בלי כרטיס אשראי · בלי התחייבות · 30 יום מלאים על חשבון הבית</p>
   </div>
 </section>
