@@ -1568,6 +1568,95 @@
       }
     }
 
+    /* ── המשולש הקדוש ─────────────────────────── */
+    .holy-triangle-section {
+      background: var(--white);
+    }
+    .triangle-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      max-width: 860px;
+      margin: 0 auto 40px;
+      flex-wrap: wrap;
+    }
+    .tf-node {
+      flex: 1;
+      min-width: 160px;
+      max-width: 220px;
+      background: var(--gray-bg);
+      border: 2px solid var(--gray-200);
+      border-radius: 20px;
+      padding: 28px 16px 22px;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .tf-node:hover {
+      transform: translateY(-6px);
+      border-color: var(--blue-500);
+      box-shadow: 0 12px 32px rgba(37,99,235,0.13);
+    }
+    .tf-node-gold {
+      border-color: var(--gold-400, #D97706);
+      background: #FFFBEB;
+    }
+    .tf-node-gold:hover { border-color: #B45309; }
+    .tf-icon { font-size: 2.4rem; margin-bottom: 10px; line-height: 1; }
+    .tf-role {
+      font-size: 1rem; font-weight: 800;
+      color: var(--navy-700); margin-bottom: 6px;
+    }
+    .tf-action {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;
+    }
+    .tf-arrow {
+      font-size: 1.8rem;
+      color: var(--blue-400);
+      padding: 0 12px;
+      flex-shrink: 0;
+      align-self: center;
+      line-height: 1;
+    }
+    @media (max-width: 640px) {
+      .triangle-flow { flex-direction: column; gap: 6px; }
+      .tf-arrow { transform: rotate(90deg); padding: 4px 0; }
+      .tf-node { max-width: 100%; min-width: 0; width: 100%; }
+    }
+    .opp-explainer {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--navy-700);
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      text-align: center;
+    }
+    .oe-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: #fff; margin-bottom: 10px;
+    }
+    .oe-desc {
+      font-size: 0.9rem; color: rgba(255,255,255,0.72);
+      line-height: 1.7; margin-bottom: 20px;
+    }
+    .oe-ex-label {
+      font-size: 0.78rem; color: var(--gold-400, #D97706);
+      font-weight: 700; margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .oe-ex-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.6;
+      text-align: right;
+      direction: rtl;
+      font-style: italic;
+    }
+
   </style>
 </head>
 <body>
@@ -1735,8 +1824,8 @@
 <!-- תחומי עיסוק -->
 <section class="industry-section">
   <div class="section-inner">
-    <p class="section-label fade-up">שלושה תחומים. כלי אחד.</p>
-    <h2 class="section-title fade-up">בנוי בדיוק בשבילכם</h2>
+    <p class="section-label fade-up">🔺 המשולש הקדוש של הנדל"ן</p>
+    <h2 class="section-title fade-up">שלושה תחומים שמשלימים כל עסקה</h2>
     <div class="industry-cards fade-up">
 
       <!-- סוכני נדל"ן -->
@@ -1763,6 +1852,44 @@
         <div class="ind-terms">סקיצה · חומרים · תאורה · לוח השראה · Mood board</div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- המשולש הקדוש — זרימת עסקה -->
+<section class="section holy-triangle-section" id="holy-triangle">
+  <div class="section-inner">
+    <p class="section-label fade-up">כך נסגרת עסקת נדל"ן</p>
+    <h2 class="section-title fade-up">המשולש הקדוש — שלושה מקצועות, עסקה אחת</h2>
+    <p class="section-sub fade-up">כל עסקת נדל"ן מתחילה בסוכן שמוצא נכס, עוברת דרך עו"ד שמגן על הלקוח בחתימה, ומסתיימת אצל מעצב פנים שהופך את הדירה לבית. שלושה בעלי מקצוע, לקוח אחד, שרשרת הפניות טבעית — ועכשיו המערכת מגדילה את כולכם יחד.</p>
+
+    <div class="triangle-flow fade-up">
+      <div class="tf-node">
+        <div class="tf-icon">🏠</div>
+        <div class="tf-role">סוכן נדל"ן</div>
+        <div class="tf-action">מוצא את הנכס המתאים ומוביל את הלקוח עד העסקה</div>
+      </div>
+      <div class="tf-arrow">←</div>
+      <div class="tf-node">
+        <div class="tf-icon">⚖️</div>
+        <div class="tf-role">עו"ד נדל"ן</div>
+        <div class="tf-action">בודק את הנכס, מנסח את החוזה ומגן על הלקוח בחתימה</div>
+      </div>
+      <div class="tf-arrow">←</div>
+      <div class="tf-node tf-node-gold">
+        <div class="tf-icon">🎨</div>
+        <div class="tf-role">עיצוב פנים</div>
+        <div class="tf-action">הופך את הדירה החדשה לבית — בהמלצה חמה מהסוכן ומהעו"ד</div>
+      </div>
+    </div>
+
+    <div class="opp-explainer fade-up">
+      <div class="oe-title">📋 לוח ההזדמנויות — שוק ההפניות הפנימי של לידרס</div>
+      <div class="oe-desc">יש לקוח שצריך מישהו מחוץ לתחום שלך או מחוץ לאזור שלך? מפרסמים הזדמנות בלוח הפנימי עם עמלה — הסוכן, העו"ד או המעצב המתאים מגיב, ומסיימים בחתימה דיגיטלית מגובה משפטית. כולם מרוויחים, בלי הסכמים בוואטסאפ שנשכחים.</div>
+      <div class="oe-ex-label">דוגמה ממש מהמערכת</div>
+      <div class="oe-ex-card">
+        "יש לי קונה שמחפש 4 חדרים בנתניה, אבל אני לא מכסה את האזור. מחפש סוכן תותח בנתניה לשיתוף — עמלה: 10% מהרווח על העסקה. כל ההסכמות מגובות בחתימה דיגיטלית דרך המערכת."
+      </div>
     </div>
   </div>
 </section>

@@ -4626,6 +4626,17 @@
         <div class="screen-title">🤝 שיתופי פעולה</div>
       </div>
 
+      <!-- באנר המשולש הקדוש -->
+      <div style="margin:0 16px 4px;background:linear-gradient(135deg,var(--navy-700) 0%,var(--navy-500) 100%);border-radius:16px;padding:16px 18px;color:#fff;">
+        <div style="font-size:13px;font-weight:800;margin-bottom:5px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:16px;">🔺</span> המשולש הקדוש של הנדל"ן
+        </div>
+        <div style="font-size:12px;line-height:1.6;color:rgba(255,255,255,0.80);">
+          סוכן מוצא נכס → עו"ד חותם על ההסכם → מעצב פנים הופך אותו לבית.
+          שלוש הפניות טבעיות בכל עסקה — כולן מנוהלות כאן, עם עמלה וחתימה דיגיטלית.
+        </div>
+      </div>
+
       <div class="partners-tab-bar">
         <button class="partners-tab active" id="ptab-mine" onclick="Partners.switchTab('mine')">שיתפתי</button>
         <button class="partners-tab" id="ptab-join" onclick="Partners.switchTab('join')">הצטרף לשיתוף</button>
@@ -4662,6 +4673,10 @@
 
       <!-- Opportunity board -->
       <div id="ptab-content-board" class="hidden" style="padding:16px;">
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:var(--gray-600);line-height:1.6;">
+          <strong style="color:var(--navy-600);display:block;margin-bottom:3px;">📋 שוק ההפניות הפנימי</strong>
+          יש לקוח שצריך מישהו מחוץ לאזור שלך? פרסמו הזדמנות עם עמלה — הסוכן, העו"ד או המעצב המתאים יגיב, וכל ההסכמות מגובות בחתימה דיגיטלית.
+        </div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12.5px;color:var(--gray-500);">
           <span>📍 האזור שלך (להתראות על הזדמנויות מתאימות):</span>
           <select id="opp-my-region" class="form-input" style="width:auto;font-size:12.5px;padding:6px 8px;" onchange="OppBoard.saveRegion(this.value)">
