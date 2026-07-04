@@ -717,6 +717,46 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 4/7/2026 — סוכן בדיחות יומי + קהילת UGC + סוכן ריביו אוטונומי
+
+> ענף: `claude/daily-joke-agent-oe7jch`
+
+### ✅ הושלם
+1. **כרטיס בדיחה יומית בדשבורד** — CSS (`.joke-card` gradient ענבר), HTML (`id="joke-card"`),
+   JS (`DailyJoke` object). הכרטיס מוצג אחרי כרטיס המוטיבציה. כפתור שיתוף WhatsApp
+   עם מיתוג Liders CRM. כפתור סגירה ל-24 שעות.
+2. **21 בדיחות מקוריות בפול** (j1–j21) — הומור אוניברסלי ורלוונטי: GPS, לשכוח לאן
+   נכנסת לחדר, קבוצת WhatsApp משפחתית, דיאטה, שישי בבוקר, ועוד. פלוס בדיחות על
+   מצבים מצחיקים מול לקוחות לכל אחד מ-3 התחומים. ללא גסויות, ללא זכויות יוצרים.
+3. **רוטציה חכמה** — `localStorage` מבטיח שאותה בדיחה לא חוזרת עד סיום כל הפול.
+   ללא קריאת API — עלות $0 ליום.
+4. **הצעת בדיחה ע"י לקוחות (UGC)** — מודל `modal-joke-submit`, max 3/יום למשתמש,
+   טקסט 20–1200 תווים, בחירת קטגוריה.
+5. **מיגרציה 066** — טבלת `community_jokes` + RLS + RPCs:
+   `submit_community_joke`, `list_approved_jokes`, `pull_joke_approval_xp` (+200 XP),
+   `admin_list_community_jokes`, `admin_approve_community_joke`, `admin_reject_community_joke`.
+   הוחלה על DB החי ✅
+6. **מיגרציה 067** — עדכון `admin_approve_community_joke` לאכיפת הגבלת 1/יום/משתמש.
+   הוספת `auto_approve_joke(UUID)` — ללא PIN, מבוטל מ-anon/authenticated, נגיש
+   רק דרך `execute_sql` (service-level). הוחלה על DB החי ✅
+7. **ממשק אדמין לבדיחות** — טאב חדש "😂 בדיחות" ב-`admin.html`. רשימת כל הבדיחות
+   (ממתינות/מאושרות/נדחות) עם כפתורי אישור/דחייה. אישור ידני נאכף גם ב-1/יום/משתמש.
+8. **XP על אישור בדיחה** — +200 XP. נשמר server-side (`xp_awarded=false → true`),
+   נמשך בכניסה הבאה דרך `pull_joke_approval_xp()` (אותו דפוס כמו `pull_lead_referral_xp`).
+9. **שיתוף בדיחות קהילתיות** — בדיחות מאושרות נטענות לפול הרוטציה לצד הפול הסטטי.
+10. **סוכן ריביו אוטונומי** — trigger יומי (`trig_011sBqLkyFdjiaw83auSqtAy`) מופעל
+    כל יום בשעה 06:00 UTC (09:00 ישראל). סשן חדש בכל הפעלה (`create_new_session_on_fire: true`).
+    הסוכן שולף בדיחות ממתינות, בוחן איכות, מאשר עד 1 לכל משתמש ביום דרך `auto_approve_joke()`,
+    דוחה בדיחות לא מתאימות, ושולח push notification עם סיכום.
+
+### 📋 מה שנשאר לעתיד
+- מסך "הבדיחות שלי" ב-index.html (רשימת הגשות + סטטוס + הודעת זכייה ב-XP)
+- שדרוג פול הבדיחות — הוספה שוטפת של בדיחות חדשות לפי פידבק המשתמשים
+- סטטיסטיקות UGC באדמין (כמה הגשות/כמה אושרו/top submitters)
+- trigger ID לתיעוד: `trig_011sBqLkyFdjiaw83auSqtAy` (cron `0 6 * * *`)
+
+---
+
 ## כללי עבודה
 
 1. **עברית RTL** — כל טקסט UI בעברית
