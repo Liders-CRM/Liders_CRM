@@ -1229,9 +1229,54 @@
       pointer-events: none;
     }
     @keyframes ctaPulseRing {
-      0%   { box-shadow: 0 0 0 0 rgba(37,99,235,0.45); }
-      70%  { box-shadow: 0 0 0 14px rgba(37,99,235,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(37,99,235,0.65); }
+      70%  { box-shadow: 0 0 0 22px rgba(37,99,235,0); }
       100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+    }
+
+    /* ══════════════════════════════
+       גלוֹ מוגבר + שימר — כפתורי הנעה לפעולה
+    ══════════════════════════════ */
+    .btn-primary.pulse-cta.has-rocket {
+      animation: heroCtaGlow 2.6s ease-in-out infinite;
+    }
+    .btn-primary.pulse-cta.has-rocket:hover { animation-play-state: paused; }
+    @keyframes heroCtaGlow {
+      0%, 100% { box-shadow: 0 8px 32px rgba(37,99,235,0.40); }
+      50%       { box-shadow: 0 12px 55px rgba(37,99,235,0.80), 0 0 35px rgba(37,99,235,0.35); }
+    }
+
+    /* שימר (sweeping light) — כל btn-primary שאין לו has-rocket */
+    .btn-primary.shimmer-cta,
+    .btn-primary:not(.has-rocket):not(.pulse-cta) {
+      overflow: hidden;
+      position: relative;
+    }
+    .btn-primary.shimmer-cta::before,
+    .btn-primary:not(.has-rocket):not(.pulse-cta)::before {
+      content: '';
+      position: absolute;
+      top: -10%; left: -130%;
+      width: 55%; height: 120%;
+      background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.32) 50%, transparent 80%);
+      transform: skewX(-15deg);
+      animation: btnShimmer 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes btnShimmer {
+      0%, 15%  { left: -130%; opacity: 0; }
+      20%      { opacity: 1; }
+      55%, 100% { left: 200%; opacity: 0; }
+    }
+
+    /* גלוֹ לכפתורי תמחור */
+    .plan-btn.primary:not(.tractor-btn) {
+      animation: planBtnGlow 2.8s ease-in-out infinite;
+    }
+    .plan-btn.primary:not(.tractor-btn):hover { animation-play-state: paused; }
+    @keyframes planBtnGlow {
+      0%, 100% { box-shadow: 0 4px 18px rgba(37,99,235,0.30); }
+      50%       { box-shadow: 0 6px 32px rgba(37,99,235,0.65); }
     }
 
     /* ══════════════════════════════
@@ -1716,7 +1761,6 @@
       </span>
       <a href="https://liders-crm.com" class="btn-primary pulse-cta cta-drop-target has-rocket">מתחילים 30 יום בחינם<span class="rocket-icon" aria-hidden="true">🚀</span></a>
     </span>
-    <a href="#demo" class="btn-ghost">לראות איך זה עובד</a>
   </div>
   <p class="hero-micro">בלי כרטיס אשראי, בלי התחייבות, בלי תירוצים.</p>
 
@@ -1729,6 +1773,38 @@
         <div class="mockup-dot"></div>
       </div>
       <img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס עם דירוג לידים ב-AI וסטטוס פייפליין">
+    </div>
+  </div>
+</section>
+
+<!-- תצוגת המערכת -->
+<section class="demo-section" id="demo">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">טעימה קטנה ממה שמחכה לכם בפנים</h2>
+    <p class="section-sub fade-up">דשבורד, פייפליין, לוח שנה ועוד. זו רק ההתחלה, את החוויה המלאה מגלים רק מבפנים.</p>
+
+    <div class="shot-gallery">
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס" loading="lazy"></div>
+        <figcaption>הדשבורד. כל מה שחשוב, במבט אחד.</figcaption>
+      </figure>
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/pipeline-desktop.png" alt="לוח פייפליין לידרס" loading="lazy"></div>
+        <figcaption>הפייפליין. גוררים, לא מתעדכנים ידנית.</figcaption>
+      </figure>
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/calendar-desktop.png" alt="לוח שנה לידרס" loading="lazy"></div>
+        <figcaption>לוח השנה. שום פגישה לא נשכחת.</figcaption>
+      </figure>
+      <figure class="shot-card fade-up">
+        <div class="shot-thumb"><img src="assets/screenshots/prohub-desktop.png" alt="מרכז הפיצ'רים Pro Hub" loading="lazy"></div>
+        <figcaption>Pro Hub. החדר הפרטי של הפיצ'רים.</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots-cta fade-up">
+      <p class="shots-cta-note">🔒 את השאר משאירים למי שנכנס. ההרשמה לוקחת דקה.</p>
+      <a href="https://liders-crm.com" class="btn-primary shimmer-cta" style="font-size:16px;">רוצה לראות הכל? כניסה וגילוי →</a>
     </div>
   </div>
 </section>
@@ -1815,14 +1891,14 @@
 <!-- 5 הסוכנים -->
 <section class="agents-section" id="agents">
   <div class="section-inner">
-    <p class="section-label fade-up">לא עוד תוכנה. צוות.</p>
+    <p class="section-label fade-up">חמישה מוחות נוספים - אפס עלות שכר👌</p>
     <h2 class="section-title fade-up">במקום לעבוד לבד, הגיע חיזוק</h2>
     <p class="section-sub fade-up">חמישה סוכני AI יושבים לך בראש כל היום, כל אחד עם תפקיד מוגדר, ועושים בדיוק את מה שאין לך זמן להגיע אליו.</p>
     <div class="agents-grid fade-up">
       <div class="agent-card">
         <span class="agent-icon">🎯</span>
         <div class="agent-title">הסוכן שמדרג לידים</div>
-        <div class="agent-desc">בודק כל ליד ונותן לו ציון מ-0 עד 100. לא ניחוש, חישוב. יודעים בדיוק על מי לדבר קודם.</div>
+        <div class="agent-desc">בודק כל ליד ונותן לו ציון מ-0 עד 100. לא ניחוש, חישוב. יודעים בדיוק עם מי לדבר קודם.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">✍️</span>
@@ -1973,9 +2049,9 @@
 <section class="section about-section" id="about">
   <div class="section-inner">
     <p class="section-label fade-up">הסיפור שלנו</p>
-    <h2 class="section-title fade-up">בנינו את לידרס כי מגיע לעולם הנדל"ן יותר טוב</h2>
+    <h2 class="section-title fade-up">בנינו את Liders כי מגיע לעולם הנדלן טוב יותר</h2>
     <p class="about-text fade-up">
-      ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות. כבר לא לבד בזה.
+      ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות.
     </p>
     <div class="about-pillars fade-up">
       <div class="about-pillar">
@@ -1996,40 +2072,6 @@
     </div>
   </div>
 </section>
-
-<!-- תצוגת המערכת -->
-<section class="demo-section" id="demo">
-  <div class="section-inner">
-    <p class="section-label fade-up">הצצה קטנה. בכוונה.</p>
-    <h2 class="section-title fade-up">טעימה ממה שמחכה לך בפנים</h2>
-    <p class="section-sub fade-up">דשבורד, פייפליין, לוח שנה ועוד. זו רק ההתחלה — את החוויה המלאה מגלים רק מבפנים.</p>
-
-    <div class="shot-gallery">
-      <figure class="shot-card fade-up">
-        <div class="shot-thumb"><img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס" loading="lazy"></div>
-        <figcaption>הדשבורד. כל מה שחשוב, במבט אחד.</figcaption>
-      </figure>
-      <figure class="shot-card fade-up">
-        <div class="shot-thumb"><img src="assets/screenshots/pipeline-desktop.png" alt="לוח פייפליין לידרס" loading="lazy"></div>
-        <figcaption>הפייפליין. גוררים, לא מתעדכנים ידנית.</figcaption>
-      </figure>
-      <figure class="shot-card fade-up">
-        <div class="shot-thumb"><img src="assets/screenshots/calendar-desktop.png" alt="לוח שנה לידרס" loading="lazy"></div>
-        <figcaption>לוח השנה. שום פגישה לא נשכחת.</figcaption>
-      </figure>
-      <figure class="shot-card fade-up">
-        <div class="shot-thumb"><img src="assets/screenshots/prohub-desktop.png" alt="מרכז הפיצ'רים Pro Hub" loading="lazy"></div>
-        <figcaption>Pro Hub. החדר הפרטי של הפיצ'רים.</figcaption>
-      </figure>
-    </div>
-
-    <div class="shots-cta fade-up">
-      <p class="shots-cta-note">🔒 את השאר משאירים למי שנכנס. ההרשמה לוקחת דקה.</p>
-      <a href="https://liders-crm.com" class="btn-primary" style="font-size:16px;">רוצה לראות הכל? כניסה וגילוי →</a>
-    </div>
-  </div>
-</section>
-
 
 <!-- ויטרינת פיצ'רים -->
 <section class="section" id="features">
@@ -2367,7 +2409,7 @@
         <div class="wrecking-chain"></div>
         <div class="wrecking-ball"></div>
       </div>
-      <a href="https://liders-crm.com" class="btn-primary" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
+      <a href="https://liders-crm.com" class="btn-primary shimmer-cta" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
     </div>
     <p class="closing-micro">בלי כרטיס אשראי · בלי התחייבות · 30 יום מלאים על חשבון הבית</p>
   </div>
