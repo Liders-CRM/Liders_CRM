@@ -280,6 +280,79 @@
       color: #000;
       border-color: #FFFF00;
     }
+    /* Visual-flash overlay for accessibility alerts */
+    @keyframes a11y-flash-anim {
+      0%   { opacity: 0; }
+      18%  { opacity: 1; }
+      55%  { opacity: 0.75; }
+      82%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    #a11y-flash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      border: 5px solid #FFFF00;
+      opacity: 0;
+    }
+    #a11y-flash.flashing { animation: a11y-flash-anim 0.75s ease forwards; }
+    /* Quick-reply WA buttons inside lead detail (accessibility mode) */
+    .a11y-quick-replies {
+      margin-top: 10px;
+      padding: 10px 12px 12px;
+      background: rgba(0,207,255,0.08);
+      border: 1px solid rgba(0,207,255,0.25);
+      border-radius: var(--radius-md);
+    }
+    .a11y-qr-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue-500);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    .a11y-qr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .a11y-qr-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 6px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-800);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .a11y-qr-btn:hover { background: var(--gray-50); border-color: var(--blue-400); }
+    body.theme-accessible .a11y-quick-replies { background: #001A22; border-color: #00CFFF; }
+    body.theme-accessible .a11y-qr-btn { background: #111; border-color: #00CFFF; color: #fff; }
+    body.theme-accessible .a11y-qr-btn:hover { background: #1A2C33; border-color: #FFFF00; }
+    .a11y-qr-icon { font-size: 20px; }
+    /* Spam-law legal notice */
+    .spam-law-notice {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: var(--orange-100);
+      border: 1px solid var(--orange-500);
+      border-radius: var(--radius-md);
+      font-size: 11.5px;
+      line-height: 1.55;
+      color: var(--gray-700);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .spam-law-notice .sln-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    body.theme-accessible .spam-law-notice { background: #1A0E00; border-color: #FF9900; color: #EEEEEE; }
 
     /* ═══════════════════════════════════════
        BASE RESET
@@ -4783,6 +4856,10 @@
               <button class="tool-btn-copy" onclick="Tools.copyWa()">📋 העתק</button>
               <a id="wa-send-link" href="#" target="_blank" style="font-size:12px;padding:6px 14px;border-radius:8px;background:#25d366;color:white;font-weight:700;text-decoration:none;display:inline-block;">📱 פתח WhatsApp</a>
             </div>
+            <div class="spam-law-notice">
+              <span class="sln-icon">⚖️</span>
+              <span>שליחת ההודעות מבוצעת ישירות ממכשירך האישי ובאחריותך הבלעדית. באחריות המשתמש לוודא כי הנמענים אינם מתנגדים לקבלת הודעות, בהתאם להוראות חוק התקשורת (חוק הספאם).</span>
+            </div>
           </div>
         </div>
 
@@ -5811,6 +5888,8 @@
      TOAST CONTAINER
 ═══════════════════════════════════════ -->
 <div id="toast-container"></div>
+<!-- Accessibility flash overlay — triggered by flashScreen() -->
+<div id="a11y-flash" aria-hidden="true"></div>
 
 <!-- CONFETTI -->
 <div id="confetti-container"></div>
@@ -8934,6 +9013,18 @@ function toast(msg, type='', duration=3200) {
   t.textContent = msg;
   c.appendChild(t);
   setTimeout(() => t.remove(), duration);
+  if (State?.isAccessibleMode && (type === 'success' || type === 'error' || type === 'warning' || type === 'alert')) {
+    flashScreen();
+  }
+}
+
+function flashScreen() {
+  const el = document.getElementById('a11y-flash');
+  if (!el) return;
+  el.classList.remove('flashing');
+  void el.offsetWidth;
+  el.classList.add('flashing');
+  el.addEventListener('animationend', () => el.classList.remove('flashing'), { once: true });
 }
 
 /* ═══════════════════════════════════════════
@@ -10627,6 +10718,10 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
           <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שלח ב-WA</button>
         </div>
         <button class="btn btn-ghost" style="width:100%;font-size:13px;" onclick="SmartWA.open('${leadId}')">🔄 ייצר הודעה אחרת</button>
+        <div class="spam-law-notice" style="margin-top:10px;">
+          <span class="sln-icon">⚖️</span>
+          <span>שליחת ההודעות מבוצעת ישירות ממכשירך האישי ובאחריותך הבלעדית. באחריות המשתמש לוודא כי הנמענים אינם מתנגדים לקבלת הודעות, בהתאם להוראות חוק התקשורת (חוק הספאם).</span>
+        </div>
       `;
     } catch(e) {
       container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-500);">⚠️ ${escapeHtml(e.message)}</div>`;
@@ -13868,6 +13963,16 @@ const LeadDetail = {
           ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
           ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#15803D,#16A34A);color:white;" onclick="LeadReferral.openModal('${lead.id}')">🔗 הפנה לקולגה</button>` : ''}
         </div>
+        ${State.isAccessibleMode ? `
+        <div class="a11y-quick-replies">
+          <div class="a11y-qr-label">💬 תגובה מהירה לווטסאפ — ניהול Pipeline ללא שיחה קולית</div>
+          <div class="a11y-qr-grid">
+            <button class="a11y-qr-btn" onclick="LeadDetail._quickReply('${lead.id}','intro')"><span class="a11y-qr-icon">👋</span>פנייה ראשונה</button>
+            <button class="a11y-qr-btn" onclick="LeadDetail._quickReply('${lead.id}','proposal')"><span class="a11y-qr-icon">📄</span>הצעת מחיר</button>
+            <button class="a11y-qr-btn" onclick="LeadDetail._quickReply('${lead.id}','followup')"><span class="a11y-qr-icon">🔔</span>תזכורת</button>
+            <button class="a11y-qr-btn" onclick="LeadDetail._quickReply('${lead.id}','closing')"><span class="a11y-qr-icon">🤝</span>סגירה</button>
+          </div>
+        </div>` : ''}
       </div>
       <div class="lead-detail-body">
         <div class="tabs">
@@ -14188,6 +14293,16 @@ const LeadDetail = {
   confirmDirectWA() {
     closeModal('modal-wa-consent');
     if (this._waPending) this._doWA(this._waPending);
+  },
+
+  _quickReply(leadId, type) {
+    const lead = State.leads.find(l => l.id === leadId);
+    if (!lead) return;
+    const firstName = (lead.name || '').split(' ')[0] || 'לקוח';
+    const text = Tools._waTemplates[type]?.(firstName) || '';
+    const phone = (lead.phone || '').replace(/^0/, '').replace(/[-\s]/g, '');
+    if (!phone) { toast('אין מספר טלפון לשליחה', 'error'); return; }
+    window.open('https://wa.me/972' + phone + '?text=' + encodeURIComponent(text), '_blank');
   },
 };
 
@@ -16803,6 +16918,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
 window.App              = App;
 window.State            = State;
 window.AccessibilityMode = AccessibilityMode;
+window.flashScreen      = flashScreen;
 window.DB         = DB;
 window.Voice      = Voice;
 window.Onboarding = Onboarding;
