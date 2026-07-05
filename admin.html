@@ -114,6 +114,15 @@
     }
     .form-input:focus { border-color: var(--gold); }
     .form-group { margin-bottom: 16px; }
+    .pw-wrap { position: relative; }
+    .pw-wrap .form-input { padding-left: 42px; }
+    .pw-eye {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: var(--text-muted); font-size: 18px; line-height: 1;
+      display: flex; align-items: center;
+    }
+    .pw-eye:hover { color: var(--text); }
     .btn-auth {
       width: 100%;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -564,8 +573,11 @@
     </div>
     <div class="form-group">
       <label class="form-label">סיסמה</label>
-      <input type="password" id="auth-password" class="form-input" placeholder="••••••••"
-        onkeydown="if(event.key==='Enter') doLogin()">
+      <div class="pw-wrap">
+        <input type="password" id="auth-password" class="form-input" placeholder="••••••••"
+          onkeydown="if(event.key==='Enter') doLogin()">
+        <button type="button" class="pw-eye" onclick="togglePasswordVisibility()" title="הצג/הסתר סיסמה" id="btn-eye">👁</button>
+      </div>
     </div>
     <button class="btn-auth" id="btn-login" onclick="doLogin()">כניסה לפאנל</button>
     <div id="auth-error"></div>
@@ -1792,6 +1804,39 @@ async function deleteRoadmapItem(id) {
   toast('🗑️ פריט נמחק', 'success');
   await loadRoadmapItems();
 }
+
+function togglePasswordVisibility() {
+  const inp = document.getElementById('auth-password');
+  const btn = document.getElementById('btn-eye');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
+// טיפול באיפוס סיסמה — אם הגיע דרך קישור מייל
+(async () => {
+  const hash = window.location.hash;
+  if (hash.includes('access_token') && hash.includes('type=recovery')) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const newPass = prompt('נא להזין סיסמה חדשה (לפחות 8 תווים):');
+      if (newPass && newPass.length >= 8) {
+        const { error } = await sb.auth.updateUser({ password: newPass });
+        if (error) {
+          alert('שגיאה בעדכון הסיסמה: ' + error.message);
+        } else {
+          alert('✅ הסיסמה עודכנה בהצלחה! נא להתחבר מחדש.');
+          await sb.auth.signOut();
+          window.location.hash = '';
+        }
+      }
+    }
+  }
+})();
 </script>
 </body>
 </html>
