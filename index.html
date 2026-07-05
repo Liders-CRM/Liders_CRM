@@ -355,6 +355,29 @@
     body.theme-accessible .spam-law-notice { background: #1A0E00; border-color: #FF9900; color: #EEEEEE; }
 
     /* ═══════════════════════════════════════
+       ACCESSIBILITY: SKIP LINK
+    ═══════════════════════════════════════ */
+    .skip-link {
+      position: absolute;
+      top: -9999px;
+      right: 0;
+      z-index: 99999;
+      padding: 10px 20px;
+      background: var(--blue-600, #2563EB);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 0 0 8px 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .skip-link:focus {
+      top: 0;
+      outline: 3px solid #FFFF00;
+      outline-offset: 2px;
+    }
+
+    /* ═══════════════════════════════════════
        BASE RESET
     ═══════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -4043,6 +4066,8 @@
 </head>
 <body>
 
+<a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
 <!-- ═══════════════════════════════════════
      LOADING OVERLAY
 ═══════════════════════════════════════ -->
@@ -4238,7 +4263,7 @@
 <div id="app-shell" class="hidden">
 
   <!-- SIDEBAR (desktop) -->
-  <nav id="sidebar">
+  <nav id="sidebar" role="navigation" aria-label="תפריט ראשי">
     <div class="sidebar-brand">
       <div class="sidebar-logo">Liders<span>.</span></div>
       <div class="sidebar-subtitle" id="sidebar-tenant-name">הסוכנות שלי</div>
@@ -4328,7 +4353,7 @@
   </nav>
 
   <!-- MAIN CONTENT -->
-  <main id="main-content">
+  <main id="main-content" tabindex="-1">
     <!-- DEMO BANNER -->
     <div id="demo-banner" class="hidden" style="background:linear-gradient(135deg,#0F1F3D,#1a3a6a);border-bottom:2px solid var(--gold-500);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
       <span style="color:var(--gold-300);">👀 מצב דמו</span><span style="color:rgba(255,255,255,0.75);font-weight:500;font-size:12px;">הנתונים לא נשמרים · AI מנוטרל</span>
@@ -5489,29 +5514,29 @@
   </div>
 
   <!-- BOTTOM NAV (mobile) -->
-  <nav id="bottom-nav">
-    <div class="bottom-nav-item active" data-screen="dashboard" onclick="navRipple(this);App.go('dashboard')">
+  <nav id="bottom-nav" role="navigation" aria-label="ניווט מהיר">
+    <div class="bottom-nav-item active" role="button" tabindex="0" data-screen="dashboard" onclick="navRipple(this);App.go('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" aria-label="בית">
       <div class="bni-icon">📊</div>
       <div>בית</div>
     </div>
-    <div class="bottom-nav-item" data-screen="pipeline" onclick="navRipple(this);App.go('pipeline')">
+    <div class="bottom-nav-item" role="button" tabindex="0" data-screen="pipeline" onclick="navRipple(this);App.go('pipeline')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
       <div class="bni-icon">📋</div>
       <div id="bn-label-pipeline">פייפליין</div>
     </div>
-    <div class="bottom-nav-item" data-screen="properties" onclick="navRipple(this);App.go('properties')">
+    <div class="bottom-nav-item" role="button" tabindex="0" data-screen="properties" onclick="navRipple(this);App.go('properties')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
       <div class="bni-icon" id="bn-icon-properties">🏠</div>
       <div id="bn-label-properties">נכסים</div>
     </div>
-    <div class="bottom-nav-item" data-screen="tasks" onclick="navRipple(this);App.go('tasks')">
+    <div class="bottom-nav-item" role="button" tabindex="0" data-screen="tasks" onclick="navRipple(this);App.go('tasks')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
       <div class="bni-icon">✅</div>
       <div>משימות</div>
     </div>
-    <div class="bottom-nav-item" data-screen="partners" onclick="navRipple(this);App.go('partners')" style="position:relative;">
+    <div class="bottom-nav-item" role="button" tabindex="0" data-screen="partners" onclick="navRipple(this);App.go('partners')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" style="position:relative;">
       <div class="bni-icon">🤝</div>
       <div>שותפים</div>
       <span id="bn-badge-partners" style="display:none;position:absolute;top:6px;right:10px;background:#EF4444;color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;padding:0 4px;display:none;align-items:center;justify-content:center;"></span>
     </div>
-    <div class="bottom-nav-item" data-screen="settings" onclick="navRipple(this);App.go('settings')">
+    <div class="bottom-nav-item" role="button" tabindex="0" data-screen="settings" onclick="navRipple(this);App.go('settings')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
       <div class="bni-icon">⚙️</div>
       <div>הגדרות</div>
     </div>
@@ -5887,7 +5912,7 @@
 <!-- ═══════════════════════════════════════
      TOAST CONTAINER
 ═══════════════════════════════════════ -->
-<div id="toast-container"></div>
+<div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 <!-- Accessibility flash overlay — triggered by flashScreen() -->
 <div id="a11y-flash" aria-hidden="true"></div>
 
@@ -8959,15 +8984,28 @@ function applyIndustryToLeadForm(prefix) {
 /* ═══════════════════════════════════════════
    MODAL UTILS
 ═══════════════════════════════════════════ */
+let _modalLastFocus = null;
 function openModal(id) {
-  document.getElementById(id).classList.remove('hidden');
+  _modalLastFocus = document.activeElement;
+  const modal = document.getElementById(id);
+  modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   if (id === 'modal-add-lead') applyIndustryToLeadForm('new');
   if (id === 'modal-edit-lead') applyIndustryToLeadForm('edit');
+  // Move focus to first focusable element inside the modal
+  requestAnimationFrame(() => {
+    const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable) focusable.focus();
+  });
 }
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
   document.body.style.overflow = '';
+  // Restore focus to the element that triggered the modal
+  if (_modalLastFocus && typeof _modalLastFocus.focus === 'function') {
+    _modalLastFocus.focus();
+    _modalLastFocus = null;
+  }
 }
 function closeModalOnBg(e, id) {
   if (e.target === e.currentTarget) closeModal(id);
@@ -12943,6 +12981,16 @@ const AccessibilityMode = {
 };
 AccessibilityMode.init();
 
+// Sidebar <a> elements have no href so they're not focusable by default — fix that globally
+document.querySelectorAll('#sidebar .nav-item').forEach(el => {
+  if (!el.getAttribute('href')) el.setAttribute('tabindex', '0');
+});
+
+// Modal close buttons: ensure aria-label="סגור" on all that lack one
+document.querySelectorAll('.modal-close:not([aria-label])').forEach(btn => {
+  btn.setAttribute('aria-label', 'סגור');
+});
+
 const App = {
   async loginWithEmail() {
     const email    = document.getElementById('login-email').value.trim();
@@ -13249,12 +13297,18 @@ const App = {
       void target.offsetWidth; // force reflow to restart animation
       target.classList.add('screen-enter');
     }
-    // update nav active
+    // update nav active + aria-current
     document.querySelectorAll('.nav-item').forEach(n => {
-      n.classList.toggle('active', n.dataset.screen === screen);
+      const isCurrent = n.dataset.screen === screen;
+      n.classList.toggle('active', isCurrent);
+      if (isCurrent) n.setAttribute('aria-current', 'page');
+      else n.removeAttribute('aria-current');
     });
     document.querySelectorAll('.bottom-nav-item').forEach(n => {
-      n.classList.toggle('active', n.dataset.screen === screen);
+      const isCurrent = n.dataset.screen === screen;
+      n.classList.toggle('active', isCurrent);
+      if (isCurrent) n.setAttribute('aria-current', 'page');
+      else n.removeAttribute('aria-current');
     });
     // render
     switch (screen) {
@@ -13940,7 +13994,7 @@ const LeadDetail = {
 
     document.getElementById('lead-detail-content').innerHTML = `
       <div class="lead-detail-header">
-        <button class="back-btn" onclick="App.go('pipeline')">← חזרה</button>
+        <button class="back-btn" onclick="App.go('pipeline')" aria-label="חזרה לרשימת הלידים">← חזרה</button>
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div class="lead-detail-name">${escapeHtml(lead.name)}</div>
           <div class="score-badge ${scoreClass(lead.score)}" style="width:44px;height:44px;font-size:15px;">${lead.score}</div>
@@ -13952,16 +14006,16 @@ const LeadDetail = {
           <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${stage?.color+'33'};color:white;">${escapeHtml(stage?.name||'—')}</span>
         </div>
         <div class="lead-detail-actions">
-          <button class="lead-action-btn" data-phone="${escapeHtml(lead.phone)}" onclick="if(State.isDemo){toast('⚡ מצב דמו, בגרסה האמיתית ייחייג ללקוח','warning');}else{CallLog.show('${lead.id}',this.dataset.phone);}">📞 שיחה</button>
-          ${lead.phone2 ? `<button class="lead-action-btn" data-phone="${escapeHtml(lead.phone2)}" onclick="if(State.isDemo){toast('⚡ מצב דמו, בגרסה האמיתית ייחייג ללקוח','warning');}else{CallLog.show('${lead.id}',this.dataset.phone);}">📞 טלפון 2</button>` : ''}
-          <button class="lead-action-btn" onclick="LeadDetail.openDirectWA('${lead.id}')">💬 WhatsApp</button>
-          ${State.tenant?.industry === 'realestate' ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#0369A1,#0EA5E9);color:white;" onclick="LeadDetail.openMadlanModal('${lead.id}')">📞 שלוף ממדלן</button>` : ''}
-          ${Marketing.hasMktgAccess() ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#7C3AED,#2563EB);color:white;" onclick="SmartWA.open('${lead.id}')">✨ WA חכם</button>` : ''}
-          <button class="lead-action-btn" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
-          <button class="lead-action-btn" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
-          <button class="lead-action-btn" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
-          ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
-          ${!State.isDemo ? `<button class="lead-action-btn" style="background:linear-gradient(135deg,#15803D,#16A34A);color:white;" onclick="LeadReferral.openModal('${lead.id}')">🔗 הפנה לקולגה</button>` : ''}
+          <button class="lead-action-btn" aria-label="שיחה טלפונית עם ${escapeHtml(lead.name)}" data-phone="${escapeHtml(lead.phone)}" onclick="if(State.isDemo){toast('⚡ מצב דמו, בגרסה האמיתית ייחייג ללקוח','warning');}else{CallLog.show('${lead.id}',this.dataset.phone);}">📞 שיחה</button>
+          ${lead.phone2 ? `<button class="lead-action-btn" aria-label="שיחה לטלפון שני של ${escapeHtml(lead.name)}" data-phone="${escapeHtml(lead.phone2)}" onclick="if(State.isDemo){toast('⚡ מצב דמו, בגרסה האמיתית ייחייג ללקוח','warning');}else{CallLog.show('${lead.id}',this.dataset.phone);}">📞 טלפון 2</button>` : ''}
+          <button class="lead-action-btn" aria-label="שליחת WhatsApp ל${escapeHtml(lead.name)}" onclick="LeadDetail.openDirectWA('${lead.id}')">💬 WhatsApp</button>
+          ${State.tenant?.industry === 'realestate' ? `<button class="lead-action-btn" aria-label="שליפת מספר טלפון ממדלן עבור ${escapeHtml(lead.name)}" style="background:linear-gradient(135deg,#0369A1,#0EA5E9);color:white;" onclick="LeadDetail.openMadlanModal('${lead.id}')">📞 שלוף ממדלן</button>` : ''}
+          ${Marketing.hasMktgAccess() ? `<button class="lead-action-btn" aria-label="שליחת WhatsApp חכם ל${escapeHtml(lead.name)}" style="background:linear-gradient(135deg,#7C3AED,#2563EB);color:white;" onclick="SmartWA.open('${lead.id}')">✨ WA חכם</button>` : ''}
+          <button class="lead-action-btn" aria-label="שינוי שלב עבור ${escapeHtml(lead.name)}" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
+          <button class="lead-action-btn" aria-label="הוספת פעילות ל${escapeHtml(lead.name)}" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
+          <button class="lead-action-btn" aria-label="עריכת פרטי ${escapeHtml(lead.name)}" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
+          ${!State.isDemo ? `<button class="lead-action-btn" aria-label="שיתוף ${escapeHtml(lead.name)} עם שותף" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
+          ${!State.isDemo ? `<button class="lead-action-btn" aria-label="הפניית ${escapeHtml(lead.name)} לקולגה" style="background:linear-gradient(135deg,#15803D,#16A34A);color:white;" onclick="LeadReferral.openModal('${lead.id}')">🔗 הפנה לקולגה</button>` : ''}
         </div>
         ${State.isAccessibleMode ? `
         <div class="a11y-quick-replies">
@@ -13975,13 +14029,13 @@ const LeadDetail = {
         </div>` : ''}
       </div>
       <div class="lead-detail-body">
-        <div class="tabs">
-          <button class="tab-btn active" onclick="switchTab(this,'tab-info')">מידע</button>
-          <button class="tab-btn" onclick="switchTab(this,'tab-activity')">פעילות (${activities.length})</button>
-          <button class="tab-btn" onclick="switchTab(this,'tab-tasks')">משימות (${tasks.filter(t=>!t.done).length})</button>
-          <button class="tab-btn" onclick="switchTab(this,'tab-match')">${getLabel('matchTab')} (${matchProps.length})</button>
-          <button class="tab-btn" onclick="switchTab(this,'tab-docs'); LeadDocs.load('${lead.id}')">📄 ${getLabel('docLabel')}</button>
-          <button class="tab-btn" onclick="switchTab(this,'tab-ai')">🤖 AI</button>
+        <div class="tabs" role="tablist" aria-label="מידע על ${escapeHtml(lead.name)}">
+          <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-info" onclick="switchTab(this,'tab-info')">מידע</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-activity" onclick="switchTab(this,'tab-activity')">פעילות (${activities.length})</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tasks" onclick="switchTab(this,'tab-tasks')">משימות (${tasks.filter(t=>!t.done).length})</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-match" onclick="switchTab(this,'tab-match')">${getLabel('matchTab')} (${matchProps.length})</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-docs" onclick="switchTab(this,'tab-docs'); LeadDocs.load('${lead.id}')">📄 ${getLabel('docLabel')}</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-ai" onclick="switchTab(this,'tab-ai')">🤖 AI</button>
         </div>
 
         <!-- INFO TAB -->
@@ -14308,9 +14362,13 @@ const LeadDetail = {
 
 function switchTab(btn, tabId) {
   const container = btn.closest('.lead-detail-body, .screen-body');
-  container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  container.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.hasAttribute('aria-selected')) b.setAttribute('aria-selected', 'false');
+  });
   container.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
+  if (btn.hasAttribute('aria-selected')) btn.setAttribute('aria-selected', 'true');
   document.getElementById(tabId).classList.add('active');
 }
 
