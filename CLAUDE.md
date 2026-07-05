@@ -796,6 +796,43 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 5/7/2026 — שדרוג מערכת מקיף (13 משימות)
+
+> ענף: `claude/system-upgrade-plan-whekhk` (מוזג ל-main)
+
+### ✅ שלב א' — Quick Wins
+1. **ניקוי חצים מכפתורים** — הוסרו `→`, `->`, `>` מכל כפתורי index, admin, landing
+2. **הסרת מיתוג AI גלוי** — class `.sh-ai` הוסר, prefix "AI:" הוסר מ-toast/תוצאות
+3. **Admin: Eye icon + Forgot Password** — כפתור 👁 לשדה סיסמה + שיפור UX Forgot Password
+4. **תיקון הזמנת סוכנים** — error handling מפורט ב-`Team.invite()` + הצגת שגיאות ברורות
+5. **הגדרות תחום עסקי** — הוסר ה-`<select>` מ-Settings UI, נוסף notice "לשינוי צרו קשר עם תמיכה" + disclaimer בידוד נתונים
+
+### ✅ שלב ב' — שיפורי קלט
+6. **ולידציית איכות ליד** — `addLead(bypassQuality)` + `modal-lead-quality` מופיע כשאין הערות
+7. **שחזור dropzone ייבוא Excel** — CSS classes חדשים: `import-dropzone`, `import-dropzone-icon/title/sub`, dropzone גדול עם drag-and-drop
+8. **Google Drive לייבוא** — `LeadImport.fetchFromDrive()`: URL → fileId → fetch → CSV; CORS fallback עם הוראות ידניות; toast כחול לקובצי xlsx
+
+### ✅ שלב ג' — Gamification UX
+9. **Onboarding לוקליזציה לפי תחום** — `Onboarding._VERTICAL_COPY` עם 3 verticals; Step 0 מציג feedback תוך כדי בחירה; Step 1 subtitle דינמי + hint box מותאם לתחום
+10. **Activity Ticker + Recent Activity** — `ActivityTicker` (רצועה fixed bottom:58px עם scroll animation); `RecentActivity` עם סינון לפי סוג; ניווט "🕐 פעילות אחרונה" ב-sidebar; `Dashboard.render()` קורא ל-`ActivityTicker.render()`
+
+### ✅ שלב ד' — לוגיקה מורכבת
+11. **Hot/Cold Leads Widgets**:
+    - Hot: carousel עם gradient כתום-צהוב, auto-advance 5s, `_nextAction()` מחשבת פעולה מומלצת, dots navigation
+    - Cold: gradient כחול, ❄️ ימים ללא מגע, כפתור "🔥 חמם ליד" → `App.go('lead-detail') + SmartWA.open()`
+12. **FeatureGate — שערי נעילה**: `FeatureGate.isUnlocked()` (10 לידים OR 7 ימים); `applyOverlay(containerId)` עם live countdown + progress bar; חל על `screen-marketing` ו-`ptab-content-board`
+13. **Madlan + WhatsApp ישיר**:
+    - כפתור "📞 שלוף ממדלן" (רק לתחום `realestate`) → `modal-madlan-phone` עם הוראות copy-paste + ולידציית מספר ישראלי `/^0[2-9]\d{7,8}$/` + שמירה ב-DB
+    - כפתור "💬 WhatsApp" → `LeadDetail.openDirectWA()`: בודק `lead.last_contact` → ישיר אם קיים, אחרת `modal-wa-consent` לאישור הסכמה לפני שליחה
+    - **גארד אבטחה:** אין automated scraping. כל שליפת טלפון היא copy-paste ידני. WA ישיר ללא קשר קודם חסום עד לאישור מפורש.
+
+### 📋 לסשן הבא
+- עדכון CLAUDE.md בסיכום `/security-review` על זרימות חדשות (RPCs אנונימיים)
+- בדיקה ב-`liders-crm.com` אחרי deploy (אם מנגנון GitHub Pages CI אוטומטי)
+- המשך per-vertical features (ראה טבלת רודמאפ למעלה)
+
+---
+
 ## כללי עבודה
 
 1. **עברית RTL** — כל טקסט UI בעברית
