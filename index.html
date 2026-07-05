@@ -123,6 +123,165 @@
     }
 
     /* ═══════════════════════════════════════
+       ACCESSIBILITY MODE — High Contrast Theme
+       body.theme-accessible overrides CSS vars;
+       no existing rule needs to change.
+    ═══════════════════════════════════════ */
+    body.theme-accessible {
+      --bg-app:    #0A0A0A;
+      --bg:        #0A0A0A;
+      --surface:   #1C1C1C;
+      --border:    #FFFF00;
+      --navy:      #0A0A0A;
+      --navy-900:  #000000;
+      --navy-800:  #0D0D0D;
+      --navy-700:  #111111;
+      --navy-600:  #181818;
+      --navy-500:  #1C1C1C;
+      --navy-400:  #2A2A2A;
+      --navy-300:  #383838;
+      --navy-200:  #555555;
+      --navy-100:  #777777;
+      --navy-50:   #AAAAAA;
+      --gray-900:  #FFFFFF;
+      --gray-800:  #F0F0F0;
+      --gray-700:  #E0E0E0;
+      --gray-600:  #CCCCCC;
+      --gray-500:  #BBBBBB;
+      --gray-400:  #999999;
+      --gray-300:  #555555;
+      --gray-200:  #333333;
+      --gray-100:  #222222;
+      --gray-50:   #141414;
+      --blue:      #00CFFF;
+      --blue-600:  #00BFFF;
+      --blue-500:  #00CFFF;
+      --blue-400:  #33D6FF;
+      --blue-300:  #66DDFF;
+      --blue-200:  #99EEFF;
+      --blue-100:  #002233;
+      --green-600: #00FF88;
+      --green-500: #00FF88;
+      --green-100: #003322;
+      --gold-600:  #FFD700;
+      --gold-500:  #FFD700;
+      --gold-400:  #FFDF33;
+      --gold-100:  #332A00;
+      --orange-500:#FF9900;
+      --orange-100:#331E00;
+      --red-600:   #FF4444;
+      --red-500:   #FF5555;
+      --red-100:   #330000;
+      --white:     #FFFFFF;
+      zoom: 1.15;
+    }
+    body.theme-accessible *:focus-visible {
+      outline: 3px solid #FFFF00 !important;
+      outline-offset: 2px;
+    }
+    body.theme-accessible button:focus,
+    body.theme-accessible a:focus,
+    body.theme-accessible input:focus,
+    body.theme-accessible select:focus,
+    body.theme-accessible textarea:focus {
+      outline: 3px solid #FFFF00 !important;
+    }
+    /* Sidebar accessibility toggle */
+    .nav-item.a11y-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      margin-top: 4px;
+    }
+    .nav-item.a11y-btn[aria-pressed="true"] {
+      background: #FFFF00;
+      color: #000000;
+      border-color: #FFFF00;
+      font-weight: 800;
+    }
+    body.theme-accessible .nav-item.a11y-btn {
+      border-color: #FFFF00;
+    }
+    /* FAB mobile */
+    #a11y-fab {
+      display: none;
+      position: fixed;
+      bottom: calc(var(--bottom-nav-h) + 10px);
+      left: 14px;
+      z-index: 200;
+      background: var(--navy-600);
+      color: var(--gray-600);
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    #a11y-fab[aria-pressed="true"] {
+      background: #FFFF00;
+      color: #000;
+      border-color: #FFFF00;
+    }
+    @media (max-width: 767px) { #a11y-fab { display: flex; } }
+    /* Settings accessibility card */
+    .a11y-declaration {
+      background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-600) 100%);
+      border: 1px solid var(--navy-400);
+      border-radius: var(--radius-lg);
+      padding: 18px 16px;
+      margin: 0 0 16px;
+    }
+    body.theme-accessible .a11y-declaration {
+      background: #1C1C1C;
+      border-color: #FFFF00;
+    }
+    .a11y-declaration h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .a11y-declaration p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .a11y-declaration ul {
+      list-style: disc;
+      padding-right: 18px;
+      margin-bottom: 14px;
+    }
+    .a11y-declaration ul li {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.55;
+      margin-bottom: 4px;
+    }
+    .a11y-decl-toggle {
+      width: 100%;
+      padding: 10px 0;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .a11y-decl-toggle:hover { background: rgba(255,255,255,0.20); }
+    .a11y-decl-toggle[aria-pressed="true"] {
+      background: #FFFF00;
+      color: #000;
+      border-color: #FFFF00;
+    }
+
+    /* ═══════════════════════════════════════
        BASE RESET
     ═══════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -4086,6 +4245,12 @@
       <a class="nav-item" onclick="App.logout()">
         <span class="nav-icon">🚪</span> יציאה
       </a>
+      <button class="nav-item a11y-btn" data-a11y-btn
+              onclick="AccessibilityMode.toggle()"
+              aria-pressed="false" aria-label="הפעלת מצב נגישות">
+        <span class="nav-icon">♿</span>
+        <span class="a11y-btn-label">נגישות</span>
+      </button>
     </div>
   </nav>
 
@@ -5274,6 +5439,11 @@
       <div>הגדרות</div>
     </div>
   </nav>
+
+  <!-- Accessibility FAB — mobile only, above bottom-nav -->
+  <button id="a11y-fab" data-a11y-btn
+          onclick="AccessibilityMode.toggle()"
+          aria-pressed="false" aria-label="מצב נגישות">♿</button>
 
   <!-- ═══════════════════════════════════════
        MODAL: SHARE LEAD WITH PARTNER
@@ -7793,6 +7963,7 @@ const State = {
   customLabels: {},
   _pendingRegression: null,
   newCardId: null,
+  isAccessibleMode: false,
 };
 
 /* ═══════════════════════════════════════════
@@ -12638,6 +12809,45 @@ const LoadingOverlay = {
   },
 };
 
+/* ═══════════════════════════════════════════
+   ACCESSIBILITY MODE
+   Manages body.theme-accessible class + localStorage persistence.
+   All toggle buttons carry [data-a11y-btn] so _sync() updates all at once.
+═══════════════════════════════════════════ */
+const AccessibilityMode = {
+  _KEY: 'liders_a11y',
+  init() {
+    if (localStorage.getItem(this._KEY) === '1') this.enable(false);
+  },
+  enable(persist = true) {
+    document.body.classList.add('theme-accessible');
+    State.isAccessibleMode = true;
+    if (persist) localStorage.setItem(this._KEY, '1');
+    this._sync();
+  },
+  disable(persist = true) {
+    document.body.classList.remove('theme-accessible');
+    State.isAccessibleMode = false;
+    if (persist) localStorage.setItem(this._KEY, '0');
+    this._sync();
+  },
+  toggle() { State.isAccessibleMode ? this.disable() : this.enable(); },
+  _sync() {
+    const on = State.isAccessibleMode;
+    document.querySelectorAll('[data-a11y-btn]').forEach(btn => {
+      btn.setAttribute('aria-pressed', String(on));
+      const label = btn.querySelector('.a11y-btn-label');
+      if (label) label.textContent = on ? 'מצב רגיל' : 'נגישות';
+    });
+    const declBtn = document.getElementById('a11y-decl-toggle');
+    if (declBtn) {
+      declBtn.setAttribute('aria-pressed', String(on));
+      declBtn.textContent = on ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעל מצב נגישות';
+    }
+  },
+};
+AccessibilityMode.init();
+
 const App = {
   async loginWithEmail() {
     const email    = document.getElementById('login-email').value.trim();
@@ -14950,6 +15160,21 @@ const Settings = {
           </div>
         </div>
       </div>
+      <div class="a11y-declaration">
+        <h3>♿ נגישות ושוויון הזדמנויות</h3>
+        <p>מערכת Liders CRM אינה מסתפקת בהנגשה בסיסית. אנו מציעים פרופיל חוויית משתמש מותאם אישית (Tailored UX) לבעלי מוגבלויות ראייה, שמיעה ודיבור, כדי להבטיח שוויון הזדמנויות מלא וערך מקצועי זהה לכל משתמש.</p>
+        <ul>
+          <li>ניגודיות גבוהה (High Contrast) — צבעים המאושרים לתקן WCAG AA</li>
+          <li>הגדלת טקסט ב-15% ללחיצה אחת</li>
+          <li>סימון פוקוס ברור לניווט מקלדת</li>
+          <li>ההעדפה נשמרת אוטומטית בין כניסות</li>
+        </ul>
+        <button id="a11y-decl-toggle" class="a11y-decl-toggle"
+                aria-pressed="${State.isAccessibleMode}"
+                onclick="AccessibilityMode.toggle()">
+          ${State.isAccessibleMode ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעל מצב נגישות'}
+        </button>
+      </div>
     `;
   },
   async resetOnboarding() {
@@ -16575,8 +16800,9 @@ sbClient.auth.onAuthStateChange((event, session) => {
 });
 
 // Expose globals for inline onclick handlers (mobile browser compatibility)
-window.App        = App;
-window.State      = State;
+window.App              = App;
+window.State            = State;
+window.AccessibilityMode = AccessibilityMode;
 window.DB         = DB;
 window.Voice      = Voice;
 window.Onboarding = Onboarding;

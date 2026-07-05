@@ -131,6 +131,57 @@
       text-decoration: none;
     }
     .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
+    .nav-a11y-btn {
+      background: transparent;
+      color: rgba(255,255,255,0.80);
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-family: 'Rubik', 'Heebo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-a11y-btn:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+    .nav-a11y-btn[aria-pressed="true"] { background: #FFFF00; color: #000; border-color: #FFFF00; font-weight: 800; }
+
+    /* ═══════════════════════════════════════
+       ACCESSIBILITY MODE — High Contrast
+    ═══════════════════════════════════════ */
+    body.theme-accessible {
+      --white:      #FFFFFF;
+      --text:       #FFFFFF;
+      --text-muted: #CCCCCC;
+      --navy-mid:   #000000;
+      --navy:       #000000;
+      --navy-900:   #000000;
+      --navy-800:   #0D0D0D;
+      --navy-700:   #111111;
+      --navy-600:   #181818;
+      --navy-500:   #1C1C1C;
+      --navy-400:   #2A2A2A;
+      --navy-300:   #383838;
+      --navy-50:    #AAAAAA;
+      --gray-bg:    #0A0A0A;
+      --gray-card:  #1C1C1C;
+      --border:     #FFFF00;
+      --blue:       #00CFFF;
+      --blue-light: #00BFFF;
+      --green:      #00FF88;
+      --gold:       #FFD700;
+      background: #0A0A0A;
+      color: #FFFFFF;
+      zoom: 1.15;
+    }
+    body.theme-accessible *:focus-visible {
+      outline: 3px solid #FFFF00 !important;
+      outline-offset: 2px;
+    }
+    body.theme-accessible nav {
+      background: rgba(0,0,0,0.97);
+      border-bottom: 1px solid #FFFF00;
+    }
 
     /* ══════════════════════════════
        גיבור
@@ -2204,7 +2255,12 @@
 <!-- ניווט -->
 <nav>
   <div class="nav-logo">Liders<span>.</span>CRM</div>
-  <a href="https://liders-crm.com" class="nav-cta">מתחילים בחינם</a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="nav-a11y-btn" data-a11y-btn
+            onclick="toggleA11y()" aria-pressed="false"
+            aria-label="הפעלת מצב נגישות">♿ נגישות</button>
+    <a href="https://liders-crm.com" class="nav-cta">מתחילים בחינם</a>
+  </div>
 </nav>
 
 <!-- גיבור -->
@@ -3049,6 +3105,26 @@
     showTab(0, 'next');
     startAuto();
   })();
+</script>
+
+<script>
+/* Accessibility Mode — landing.html (standalone, no State dependency) */
+(function() {
+  var KEY = 'liders_a11y';
+  var on  = localStorage.getItem(KEY) === '1';
+  function apply() {
+    document.body.classList.toggle('theme-accessible', on);
+    document.querySelectorAll('[data-a11y-btn]').forEach(function(btn) {
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  }
+  window.toggleA11y = function() {
+    on = !on;
+    localStorage.setItem(KEY, on ? '1' : '0');
+    apply();
+  };
+  apply();
+})();
 </script>
 
 </body>
