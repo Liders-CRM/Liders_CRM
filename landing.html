@@ -3,35 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liders CRM — הפלטפורמה שהופכת לידים לעסקאות</title>
-  <meta name="description" content="מערכת CRM לסוכני נדל״ן עם סוכן AI שמנהל את הפייפליין בשבילך. 30 יום חינם, ללא כרטיס אשראי.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <title>Liders CRM: הפלטפורמה שהופכת לידים לעסקאות</title>
+  <meta name="description" content="מערכת CRM לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ומעצבי פנים. 5 סוכני AI שמנהלים את הפייפליין בשבילך. 30 יום חינם, ללא כרטיס אשראי.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://liders-crm.com/landing.html">
+  <meta property="og:title" content="Liders CRM: הפלטפורמה שהופכת לידים לעסקאות">
+  <meta property="og:description" content="מערכת CRM לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ומעצבי פנים. 5 סוכני AI שמנהלים את הפייפליין בשבילך. 30 יום חינם, ללא כרטיס אשראי.">
+  <meta property="og:image" content="https://liders-crm.com/icons/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="he_IL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Liders CRM: הפלטפורמה שהופכת לידים לעסקאות">
+  <meta name="twitter:description" content="מערכת CRM לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ומעצבי פנים. 5 סוכני AI שמנהלים את הפייפליין בשבילך. 30 יום חינם, ללא כרטיס אשראי.">
+  <meta name="twitter:image" content="https://liders-crm.com/icons/og-image.jpg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=Heebo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy:      #0F1F3D;
-      --navy-mid:  #1a3260;
-      --blue:      #2563EB;
-      --blue-light:#3B82F6;
+      /* ── מיובא מ-index.html כדי שדף הנחיתה ישתמש באותה מערכת עיצוב מדויקת ── */
+      --navy:     #1C3E6B;
+      --navy-900: #060F1C;
+      --navy-800: #0A1A2E;
+      --navy-700: #0F2440;
+      --navy-600: #152F52;
+      --navy-500: #1C3E6B;
+      --navy-400: #2A5490;
+      --navy-300: #4B7AB5;
+      --navy-200: #8FB3D9;
+      --navy-100: #C8DDEF;
+      --navy-50:  #EAF2FA;
+
+      --gold-600: #A07820;
+      --gold-500: #C49A2A;
+      --gold-400: #D4A843;
+      --gold-300: #E3C070;
+      --gold-100: #FAF0D0;
+
+      --green-600: #15803D;
+      --green-500: #16A34A;
+      --green-100: #DCFCE7;
+
+      --orange-500: #EA580C;
+      --orange-100: #FFEDD5;
+
+      --blue-600: #1D4ED8;
+      --blue-500: #2563EB;
+      --blue-400: #60A5FA;
+      --blue-200: #BFDBFE;
+      --blue-100: #DBEAFE;
+      --blue-50:  #EFF6FF;
+      --blue:     #2563EB;
+
+      --white: #FFFFFF;
+
+      --shadow-sm: 0 1px 3px rgba(15,43,74,0.08);
+      --shadow-md: 0 4px 12px rgba(15,43,74,0.10);
+      --shadow-lg: 0 8px 24px rgba(15,43,74,0.14);
+      --shadow-xl: 0 16px 48px rgba(15,43,74,0.18);
+
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      /* ── ייחודי לדף הנחיתה, אין מקבילה ב-index ── */
+      --navy-mid:  var(--navy-600);
+      --blue-light:var(--blue-400);
       --gray-bg:   #F1F5F9;
       --gray-card: #F8FAFC;
       --border:    #E2E8F0;
       --text:      #0F172A;
       --text-muted:#64748B;
-      --white:     #FFFFFF;
-      --gold:      #F59E0B;
-      --green:     #10B981;
-      --radius:    16px;
-      --radius-sm: 10px;
-      --shadow:    0 4px 24px rgba(15,31,61,0.10);
-      --shadow-lg: 0 12px 48px rgba(15,31,61,0.16);
+      --gold:      var(--gold-500);
+      --green:     var(--green-500);
+      --radius:    var(--radius-lg);
+      --radius-sm: var(--radius-md);
+      --shadow:    var(--shadow-md);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    :focus-visible {
+      outline: 2px solid var(--blue, #2563EB);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
 
     body {
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       background: var(--white);
       color: var(--text);
       direction: rtl;
@@ -65,7 +128,7 @@
       border: none;
       padding: 10px 20px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
@@ -73,13 +136,64 @@
       text-decoration: none;
     }
     .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
+    .nav-a11y-btn {
+      background: transparent;
+      color: rgba(255,255,255,0.80);
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 8px 14px;
+      border-radius: 99px;
+      font-family: 'Rubik', 'Heebo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-a11y-btn:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+    .nav-a11y-btn[aria-pressed="true"] { background: #FFFF00; color: #000; border-color: #FFFF00; font-weight: 800; }
+
+    /* ═══════════════════════════════════════
+       ACCESSIBILITY MODE — High Contrast
+    ═══════════════════════════════════════ */
+    body.theme-accessible {
+      --white:      #FFFFFF;
+      --text:       #FFFFFF;
+      --text-muted: #CCCCCC;
+      --navy-mid:   #000000;
+      --navy:       #000000;
+      --navy-900:   #000000;
+      --navy-800:   #0D0D0D;
+      --navy-700:   #111111;
+      --navy-600:   #181818;
+      --navy-500:   #1C1C1C;
+      --navy-400:   #2A2A2A;
+      --navy-300:   #383838;
+      --navy-50:    #AAAAAA;
+      --gray-bg:    #0A0A0A;
+      --gray-card:  #1C1C1C;
+      --border:     #FFFF00;
+      --blue:       #00CFFF;
+      --blue-light: #00BFFF;
+      --green:      #00FF88;
+      --gold:       #FFD700;
+      background: #0A0A0A;
+      color: #FFFFFF;
+      zoom: 1.15;
+    }
+    body.theme-accessible *:focus-visible {
+      outline: 3px solid #FFFF00 !important;
+      outline-offset: 2px;
+    }
+    body.theme-accessible nav {
+      background: rgba(0,0,0,0.97);
+      border-bottom: 1px solid #FFFF00;
+    }
 
     /* ══════════════════════════════
        גיבור
     ══════════════════════════════ */
     .hero {
       min-height: 100vh;
-      background: linear-gradient(145deg, var(--navy) 0%, #162B52 60%, #1e3a6e 100%);
+      background: linear-gradient(145deg, var(--navy-900) 0%, var(--navy-700) 60%, var(--navy-600) 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -139,7 +253,7 @@
     }
 
     .hero h1 {
-      font-size: clamp(32px, 6vw, 58px);
+      font-size: clamp(38px, 6.5vw, 66px);
       font-weight: 900;
       color: var(--white);
       line-height: 1.15;
@@ -154,7 +268,7 @@
     }
 
     .hero-sub {
-      font-size: clamp(16px, 2.5vw, 20px);
+      font-size: clamp(18px, 2.8vw, 23px);
       color: rgba(255,255,255,0.70);
       max-width: 560px;
       line-height: 1.7;
@@ -179,7 +293,7 @@
       border: none;
       padding: 16px 36px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 17px;
       font-weight: 800;
       cursor: pointer;
@@ -195,7 +309,7 @@
       border: 1.5px solid rgba(255,255,255,0.25);
       padding: 16px 28px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -213,92 +327,98 @@
     }
 
     /* ══════════════════════════════
-       מוקאפ מסך
+       תצוגות מותאמות לתחום (mock UI)
     ══════════════════════════════ */
-    .hero-mockup {
-      margin-top: 60px;
+    .vertical-previews {
+      margin-top: 52px;
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       position: relative;
       z-index: 1;
-      width: 100%;
-      max-width: 860px;
     }
-    .mockup-frame {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 16px;
-      backdrop-filter: blur(8px);
+    @media (max-width: 680px) {
+      .vertical-previews { grid-template-columns: 1fr; gap: 12px; max-width: 360px; }
     }
-    .mockup-bar {
+    .vp-wrap {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-    .mockup-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .mockup-dot:nth-child(1) { background: #FF5F56; }
-    .mockup-dot:nth-child(2) { background: #FFBD2E; }
-    .mockup-dot:nth-child(3) { background: #27C93F; }
-
-    .kanban-preview {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      flex-direction: column;
       gap: 8px;
-      overflow: hidden;
     }
-    .kanban-col {
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 10px 8px;
-    }
-    .kanban-col-title {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.50);
+    .vp-label {
       text-align: center;
-      margin-bottom: 8px;
-      letter-spacing: 0.03em;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.50);
+      text-transform: uppercase;
     }
-    .kanban-card {
-      background: rgba(255,255,255,0.09);
+    .vp-mockup {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 14px;
+      padding: 12px 11px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .vp-dots { display: flex; gap: 5px; }
+    .vp-d { width: 7px; height: 7px; border-radius: 50%; }
+    .vp-d:nth-child(1) { background: #FF5F56; }
+    .vp-d:nth-child(2) { background: #FFBD2E; }
+    .vp-d:nth-child(3) { background: #27C93F; }
+    .vp-lead {
+      background: rgba(255,255,255,0.07);
       border-radius: 8px;
-      padding: 8px;
-      margin-bottom: 6px;
-      border-right: 3px solid;
-      animation: cardIn 0.5s ease both;
+      padding: 8px 10px;
     }
-    .kanban-card:nth-child(2) { animation-delay: 0.1s; }
-    .kanban-card:nth-child(3) { animation-delay: 0.2s; }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .kanban-card.gray  { border-color: #94A3B8; }
-    .kanban-card.blue  { border-color: #3B82F6; }
-    .kanban-card.purple { border-color: #A855F7; }
-    .kanban-card.orange { border-color: #F97316; }
-    .kanban-card.green  { border-color: #10B981; }
-    .kc-name { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); }
-    .kc-val  { font-size: 9px;  color: rgba(255,255,255,0.45); margin-top: 2px; }
-    .kc-ai   {
+    .vp-lead-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .vp-lead-meta { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .vp-stage {
       display: inline-block;
-      margin-top: 4px;
-      background: rgba(245,158,11,0.20);
-      color: #FCD34D;
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 1px 5px;
       border-radius: 4px;
+      padding: 2px 7px;
+      margin-top: 5px;
+      letter-spacing: 0.02em;
+    }
+    .vp-s2 { background: rgba(37,99,235,0.25); color: #93c5fd; }
+    .vp-s3 { background: rgba(124,58,237,0.25); color: #c4b5fd; }
+    .vp-s4 { background: rgba(234,88,12,0.25); color: #fdba74; }
+    .vp-shortcuts { display: flex; gap: 5px; flex-wrap: wrap; }
+    .vp-btn {
+      font-size: 9.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+    .vp-btn-yad2   { background: rgba(220,38,38,0.18);  color: #fca5a5; }
+    .vp-btn-madlan { background: rgba(37,99,235,0.18);  color: #93c5fd; }
+    .vp-btn-wa     { background: rgba(37,211,102,0.16); color: #86efac; }
+    .vp-btn-pin    { background: rgba(225,29,72,0.18);  color: #fda4af; }
+    .vp-btn-houzz  { background: rgba(22,163,74,0.18);  color: #86efac; }
+    .vp-btn-tabo   { background: rgba(15,31,61,0.55); color: #93c5fd; border: 1px solid rgba(37,99,235,0.28); }
+    .vp-btn-nevo   { background: rgba(37,99,235,0.18);  color: #93c5fd; }
+    .vp-btn-misim  { background: rgba(124,58,237,0.18); color: #c4b5fd; }
+    .vp-ai {
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.5;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 8px;
+      font-style: italic;
     }
 
     /* ══════════════════════════════
        רצועת מספרים
     ══════════════════════════════ */
     .stats-bar {
-      background: var(--navy);
+      background: var(--navy-800);
       padding: 28px 24px;
     }
     .stats-inner {
@@ -329,7 +449,7 @@
        כאב (הזדהות)
     ══════════════════════════════ */
     .section {
-      padding: 80px 24px;
+      padding: 56px 24px;
     }
     .section-inner {
       max-width: 900px;
@@ -345,7 +465,7 @@
       display: block;
     }
     .section-title {
-      font-size: clamp(26px, 4vw, 40px);
+      font-size: clamp(30px, 4.5vw, 46px);
       font-weight: 900;
       color: var(--text);
       text-align: center;
@@ -353,11 +473,11 @@
       margin-bottom: 12px;
     }
     .section-sub {
-      font-size: 16px;
+      font-size: 18px;
       color: var(--text-muted);
       text-align: center;
-      max-width: 520px;
-      margin: 0 auto 48px;
+      max-width: 560px;
+      margin: 0 auto 32px;
       line-height: 1.7;
     }
 
@@ -382,14 +502,14 @@
       display: block;
     }
     .pain-quote {
-      font-size: 15px;
+      font-size: 16.5px;
       font-weight: 600;
       color: var(--text);
       line-height: 1.6;
       margin-bottom: 12px;
     }
     .pain-after {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--green);
       font-weight: 700;
     }
@@ -400,99 +520,280 @@
     ══════════════════════════════ */
     .demo-section {
       background: var(--gray-bg);
-      padding: 80px 24px;
+      padding: 56px 24px;
     }
-    .phone-mockup-wrap {
+    /* ══════════════════════════════
+       קרוסלת מסכים
+    ══════════════════════════════ */
+    .screen-reel { margin-top: 40px; }
+    .reel-window {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(15,31,61,0.12), 0 2px 8px rgba(15,31,61,0.06);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .reel-bar {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: 9px 14px;
       display: flex;
-      justify-content: center;
-      gap: 32px;
-      flex-wrap: wrap;
-      margin-top: 48px;
+      align-items: center;
+      gap: 5px;
     }
-    .phone-frame {
-      width: 240px;
-      background: var(--navy);
-      border-radius: 32px;
-      padding: 16px 12px;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      flex-shrink: 0;
+    .reel-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .reel-dot:nth-child(1) { background: #FF5F56; }
+    .reel-dot:nth-child(2) { background: #FFBD2E; }
+    .reel-dot:nth-child(3) { background: #27C93F; }
+    .reel-url {
+      flex: 1; background: #f1f5f9; border-radius: 6px;
+      padding: 3px 10px; font-size: 11px; color: #64748b;
+      margin: 0 12px; text-align: center;
     }
-    .phone-notch {
-      width: 80px; height: 6px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 4px;
-      margin: 0 auto 14px;
+    .reel-slides { position: relative; height: 258px; overflow: hidden; }
+    @media (max-width: 480px) { .reel-slides { height: 290px; } }
+    .reel-slide {
+      position: absolute; inset: 0;
+      padding: 14px 16px;
+      opacity: 0; transition: opacity 0.45s ease;
+      pointer-events: none;
+      display: flex; flex-direction: column; gap: 10px;
     }
-    .phone-screen {
-      background: #0a1628;
-      border-radius: 20px;
-      padding: 14px 12px;
-      min-height: 360px;
+    .reel-slide.active { opacity: 1; pointer-events: auto; }
+    .reel-caption {
+      background: #f8fafc; border-top: 1px solid var(--border);
+      padding: 10px 16px; text-align: center;
+      font-size: 14px; font-weight: 700; color: var(--text);
+      min-height: 42px; display: flex; align-items: center; justify-content: center;
     }
-    .phone-label {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 700;
+    .reel-dots { display: flex; justify-content: center; gap: 7px; margin-top: 16px; }
+    .reel-pip {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+      border: none; padding: 0;
+    }
+    .reel-pip.active { background: var(--blue); transform: scale(1.35); }
+
+    /* ── Mock UI: Dashboard ── */
+    .mock-ai-card {
+      background: linear-gradient(135deg,#eff6ff,#f0f9ff);
+      border: 1px solid #bfdbfe; border-radius: 10px;
+      padding: 8px 12px; display: flex; align-items: flex-start;
+      gap: 8px; font-size: 12px; color: #1e40af; line-height: 1.4;
+    }
+    .mock-ai-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .mock-ai-text { font-weight: 500; }
+    .mock-kpi-row { display: flex; gap: 8px; }
+    .mock-kpi {
+      flex: 1; background: #f8fafc; border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px; text-align: center;
+    }
+    .mock-kpi-val { font-size: 15px; font-weight: 800; color: var(--navy); }
+    .mock-kpi-label { font-size: 9.5px; color: var(--text-muted); margin-top: 2px; }
+    .mock-lead-list { display: flex; flex-direction: column; gap: 5px; }
+    .mock-lead-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 5px 8px; background: #f8fafc; border-radius: 7px; font-size: 12px;
+    }
+    .mock-lead-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .mock-lead-dot.hot  { background: #ef4444; }
+    .mock-lead-dot.warm { background: #f97316; }
+    .mock-lead-dot.cool { background: #3b82f6; }
+    .mock-lead-name { flex: 1; font-weight: 600; color: var(--text); }
+    .mock-lead-val { font-size: 11px; color: var(--text-muted); }
+    .mock-stage {
+      font-size: 9px; font-weight: 700; border-radius: 4px; padding: 2px 6px;
+    }
+    .mock-s2 { background: rgba(37,99,235,0.1);  color: #1d4ed8; }
+    .mock-s3 { background: rgba(124,58,237,0.1); color: #6d28d9; }
+    .mock-s4 { background: rgba(234,88,12,0.1);  color: #c2410c; }
+
+    /* ── Mock UI: Pipeline ── */
+    .mock-kanban {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 6px; height: 100%;
+    }
+    .mock-col { display: flex; flex-direction: column; gap: 5px; }
+    .mock-col-hdr {
+      font-size: 9px; font-weight: 700; border-radius: 5px;
+      padding: 4px 6px; text-align: center;
+    }
+    .mock-hdr-1 { background: #f1f5f9; color: #64748b; }
+    .mock-hdr-2 { background: rgba(37,99,235,0.1);  color: #1d4ed8; }
+    .mock-hdr-3 { background: rgba(124,58,237,0.1); color: #6d28d9; }
+    .mock-hdr-4 { background: rgba(22,163,74,0.1);  color: #15803d; }
+    .mock-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 7px;
+      font-size: 10px; font-weight: 600; color: var(--text);
+      line-height: 1.4; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .mock-card small { font-weight: 400; color: var(--text-muted); font-size: 9px; }
+    .mock-card-hot { border-right: 3px solid #ef4444; }
+    .mock-card-won { border-right: 3px solid #22c55e; }
+
+    /* ── Mock UI: Calendar ── */
+    .mock-cal { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+    .mock-cal-hdr { font-size: 14px; font-weight: 700; color: var(--navy); text-align: center; }
+    .mock-cal-days {
+      display: grid; grid-template-columns: repeat(6,1fr);
+      text-align: center; font-size: 10px; font-weight: 600; color: var(--text-muted);
+    }
+    .mock-cal-grid {
+      display: grid; grid-template-columns: repeat(6,1fr);
+      gap: 2px; text-align: center; font-size: 11px; color: var(--text);
+    }
+    .mock-cal-grid span {
+      padding: 3px 0; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 1;
+    }
+    .mock-today { background: var(--blue); color: #fff; font-weight: 700; }
+    .mock-event-day { background: #fef3c7; color: #92400e; font-weight: 700; }
+    .mock-event-card {
+      display: flex; align-items: flex-start; gap: 8px;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      border-radius: 8px; padding: 8px 10px; margin-top: auto;
+    }
+    .mock-event-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--blue); flex-shrink: 0; margin-top: 3px;
+    }
+    .mock-event-title { font-size: 11px; font-weight: 700; color: #1e40af; }
+    .mock-event-time  { font-size: 10px; color: #3b82f6; margin-top: 1px; }
+
+    /* ── Mock UI: Tools ── */
+    .mock-tools-header {
+      font-size: 13px; font-weight: 700; color: var(--navy); text-align: center;
+    }
+    .mock-tools-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+    }
+    .mock-tool {
+      background: #f8fafc; border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .mock-tool-icon { font-size: 20px; }
+    .mock-tool-name { font-size: 10px; font-weight: 600; color: var(--text); text-align: center; }
+    .mock-tool-badge { font-size: 8px; font-weight: 700; border-radius: 3px; padding: 1px 5px; }
+    .mock-tool-badge.pro { background: rgba(124,58,237,0.15); color: #6d28d9; }
+    .mock-tool-badge.new { background: rgba(22,163,74,0.15);  color: #15803d; }
+    .shots-cta { text-align: center; margin-top: 32px; }
+    .shots-cta-note {
+      font-size: 14px;
       color: var(--text-muted);
-      margin-top: 12px;
-    }
-
-    .screen-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       margin-bottom: 14px;
-    }
-    .screen-title-txt {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--white);
-    }
-    .screen-badge {
-      background: rgba(37,99,235,0.25);
-      color: #93C5FD;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
-    }
-
-    .lead-card-demo {
-      background: rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-right: 3px solid;
-    }
-    .lead-card-demo.active { border-color: #3B82F6; }
-    .lead-card-demo.hot    { border-color: #F97316; }
-    .lead-card-demo.done   { border-color: #10B981; }
-    .lcd-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.90); }
-    .lcd-info { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; }
-    .lcd-score {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: rgba(245,158,11,0.20);
-      color: #FCD34D;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
-      margin-top: 4px;
+      font-weight: 600;
     }
 
     /* ══════════════════════════════
-       סוכן AI
+       רחוב, עגורן ושלטי חוצות (מעבר בין סקשנים)
     ══════════════════════════════ */
-    .ai-section {
-      background: linear-gradient(160deg, var(--navy) 0%, #162B52 100%);
-      padding: 80px 24px;
+    .street-scene {
+      position: relative;
+      height: 260px;
+      background: linear-gradient(180deg, var(--navy-100) 0%, var(--gray-bg) 100%);
+      overflow: hidden;
+      content-visibility: auto;
+    }
+    .ss-skyline {
+      position: absolute; bottom: 36px; right: 5%;
+      display: flex; align-items: flex-end; gap: 10px;
+    }
+    .ss-building {
+      position: relative;
+      width: 46px;
+      border-radius: 4px 4px 0 0;
+      transform-origin: bottom;
+      background: linear-gradient(180deg, var(--blue-400), var(--navy-700));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+      opacity: 0;
+      transform: scaleY(0);
+    }
+    .ss-b1 { height: 70px; }
+    .ss-b2 { height: 110px; }
+    .ss-b3 { height: 140px; }
+    .ss-b4 { height: 90px; }
+    .ss-b5 { height: 120px; }
+    .street-scene.in-view .ss-building { animation: ss-rise 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+    .street-scene.in-view .ss-b1 { animation-delay: 0s; }
+    .street-scene.in-view .ss-b2 { animation-delay: .12s; }
+    .street-scene.in-view .ss-b3 { animation-delay: .24s; }
+    .street-scene.in-view .ss-b4 { animation-delay: .36s; }
+    .street-scene.in-view .ss-b5 { animation-delay: .48s; }
+    @keyframes ss-rise { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+    .ss-crane {
+      position: absolute; top: -38px; right: 14px;
+      width: 3px; height: 38px; background: var(--gold-400);
+      transform-origin: bottom; opacity: 0;
+    }
+    .street-scene.in-view .ss-crane {
+      animation: ss-crane-in .3s ease .9s forwards, ss-crane-swing 2.8s ease-in-out 1.3s infinite;
+    }
+    .ss-crane::before { content:''; position:absolute; top:0; right:-1px; width:36px; height:3px; background:var(--gold-400); }
+    .ss-crane::after  { content:''; position:absolute; top:0; right:-32px; width:3px; height:14px; background:var(--gold-400); }
+    @keyframes ss-crane-in { to { opacity: 1; } }
+    @keyframes ss-crane-swing { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+    .ss-road {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+      background: #CBD5E1;
+    }
+    .ss-road::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+      transform: translateY(-50%); opacity: .7;
+      background: repeating-linear-gradient(90deg, var(--white) 0 24px, transparent 24px 44px);
+    }
+    .ss-billboard { position: absolute; bottom: 40px; display: flex; flex-direction: column; align-items: center; }
+    .ss-bb1 { right: 40%; }
+    .ss-bb2 { right: 20%; }
+    .ss-bb3 { right: 2%; }
+    .bb-post { width: 5px; height: 38px; background: #94A3B8; }
+    .bb-face {
+      position: relative; width: 150px; height: 64px;
+      background: var(--white); border: 2px solid var(--gold-500);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px 10px; margin-bottom: -2px; text-align: center;
+    }
+    .bb-state {
+      position: absolute; inset: 6px 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: var(--navy);
+      opacity: 0; transform: translateY(4px);
+    }
+    .bb-state-a { animation: bb-cycle-a 7s ease-in-out infinite; }
+    .bb-state-b { animation: bb-cycle-b 7s ease-in-out infinite; }
+    .ss-bb2 .bb-state-a, .ss-bb2 .bb-state-b { animation-duration: 8.5s; }
+    .ss-bb3 .bb-state-a, .ss-bb3 .bb-state-b { animation-duration: 6.2s; }
+    @keyframes bb-cycle-a { 0%, 42% { opacity: 1; transform: translateY(0); } 50%, 100% { opacity: 0; transform: translateY(-4px); } }
+    @keyframes bb-cycle-b { 0%, 42% { opacity: 0; transform: translateY(4px); } 50%, 92% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(4px); } }
+    @media (max-width: 700px) {
+      .street-scene { height: 200px; }
+      .ss-skyline { right: 3%; gap: 5px; }
+      .ss-building { width: 26px; }
+      .ss-b1 { height: 40px; } .ss-b2 { height: 64px; } .ss-b3 { height: 82px; } .ss-b4 { height: 52px; } .ss-b5 { height: 70px; }
+      .ss-crane { display: none; }
+      .bb-face { width: 92px; height: 50px; }
+      .bb-state { font-size: 9.5px; inset: 5px 7px; }
+      .ss-bb1 { right: 66%; }
+      .ss-bb2 { right: 34%; }
+      .ss-bb3 { right: 2%; }
+    }
+
+    /* ══════════════════════════════
+       5 הסוכנים
+    ══════════════════════════════ */
+    .agents-section {
+      background: linear-gradient(160deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      padding: 56px 24px;
       position: relative;
       overflow: hidden;
     }
-    .ai-section::before {
+    .agents-section::before {
       content: '';
       position: absolute;
       width: 500px; height: 500px;
@@ -500,79 +801,35 @@
       background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);
       top: -100px; right: -100px;
     }
-    .ai-section .section-title { color: var(--white); }
-    .ai-section .section-sub { color: rgba(255,255,255,0.60); }
-    .ai-section .section-label { color: var(--gold); font-size: 15px; font-weight: 800; }
+    .agents-section .section-title { color: var(--white); }
+    .agents-section .section-sub { color: rgba(255,255,255,0.60); }
+    .agents-section .section-label { color: var(--gold-400); font-size: 15px; font-weight: 800; }
 
-    .chat-demo {
-      max-width: 540px;
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      max-width: 980px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .agent-card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 20px;
-      padding: 20px;
+      border-radius: var(--radius);
+      padding: 20px 18px;
       backdrop-filter: blur(8px);
+      transition: transform 0.2s, background 0.2s;
     }
-    .chat-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      margin-bottom: 16px;
+    .agent-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.08); }
+    .agent-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+    .agent-title { font-size: 17px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+    .agent-desc { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; }
+    .agents-closing {
+      text-align: center; font-size: 16px; font-weight: 800; color: var(--gold-400);
+      margin-top: 28px; position: relative; z-index: 1;
     }
-    .chat-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue), #7C3AED);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-    .chat-agent-name { font-size: 14px; font-weight: 700; color: var(--white); }
-    .chat-agent-status { font-size: 11px; color: var(--green); }
-
-    .chat-msg {
-      margin-bottom: 12px;
-      animation: msgIn 0.4s ease both;
-    }
-    .chat-msg:nth-child(2) { animation-delay: 0.3s; }
-    .chat-msg:nth-child(3) { animation-delay: 0.8s; }
-    .chat-msg:nth-child(4) { animation-delay: 1.4s; }
-    .chat-msg:nth-child(5) { animation-delay: 2.0s; }
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .msg-user {
-      display: flex;
-      justify-content: flex-start;
-    }
-    .msg-ai {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .msg-bubble {
-      max-width: 82%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 13px;
-      line-height: 1.55;
-      font-weight: 500;
-    }
-    .msg-user .msg-bubble {
-      background: rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.85);
-      border-bottom-right-radius: 4px;
-    }
-    .msg-ai .msg-bubble {
-      background: var(--blue);
-      color: var(--white);
-      border-bottom-left-radius: 4px;
-    }
-    .msg-ai .msg-bubble strong { color: #FCD34D; }
 
     /* ══════════════════════════════
        איך זה עובד
@@ -606,8 +863,8 @@
       margin: 0 auto 16px;
       box-shadow: 0 4px 16px rgba(37,99,235,0.30);
     }
-    .step-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-    .step-desc  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .step-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .step-desc  { font-size: 15.5px; color: var(--text-muted); line-height: 1.65; }
     .step-micro { font-size: 12px; color: var(--blue); font-weight: 700; margin-top: 10px; }
 
     /* ══════════════════════════════
@@ -615,7 +872,7 @@
     ══════════════════════════════ */
     .pricing-section {
       background: var(--gray-bg);
-      padding: 80px 24px;
+      padding: 56px 24px;
     }
     .plans-grid {
       display: grid;
@@ -677,7 +934,7 @@
       margin: 16px 0 24px;
     }
     .plan-features li {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--text-muted);
       padding: 6px 0;
       border-bottom: 1px solid var(--border);
@@ -691,7 +948,7 @@
       width: 100%;
       padding: 14px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 15px;
       font-weight: 800;
       cursor: pointer;
@@ -702,22 +959,100 @@
     }
     .plan-btn.primary { background: var(--blue); color: var(--white); }
     .plan-btn.primary:hover { background: var(--blue-light); transform: translateY(-1px); }
-    .plan-btn.outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-    .plan-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+    .plan-btn.outline { background: transparent; border: 2px solid var(--border); color: var(--text); animation: phoneVibrate 6s ease-in-out infinite; }
+    .plan-btn.outline:hover { border-color: var(--blue); color: var(--blue); animation: none; }
 
     .pricing-note {
       text-align: center;
-      font-size: 13px;
+      font-size: 14.5px;
       color: var(--text-muted);
       margin-top: 24px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-inline: auto;
     }
+    .pricing-note strong { color: var(--navy); }
+
+    /* חיווי מושבים: הרחבת סוכנים בחבילות צוות/סוכנות */
+    .plan-seats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--navy-50);
+      border: 1.5px dashed var(--navy-300);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy-600);
+      margin: 4px 0 8px;
+      line-height: 1.5;
+    }
+    .plan-trial-badge {
+      display: inline-block;
+      background: var(--green-100);
+      color: var(--green-600);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    /* חבילה מותאמת אישית: רצועת Enterprise */
+    .custom-plan-strip {
+      max-width: 900px;
+      margin: 28px auto 0;
+      background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
+      border-radius: var(--radius);
+      padding: 28px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .custom-plan-strip::before {
+      content: '🏗️';
+      position: absolute;
+      font-size: 90px;
+      opacity: 0.10;
+      left: 18px;
+      bottom: -18px;
+      transform: rotate(-8deg);
+    }
+    .cps-title { font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px; }
+    .cps-desc  { font-size: 14.5px; color: rgba(255,255,255,0.70); line-height: 1.6; max-width: 520px; }
+    .cps-btn {
+      background: var(--gold-500);
+      color: var(--navy-900);
+      border: none;
+      padding: 13px 28px;
+      border-radius: 99px;
+      font-family: 'Rubik', 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      white-space: nowrap;
+      position: relative;
+      overflow: visible;
+      z-index: 1;
+    }
+    .cps-btn:hover { background: var(--gold-400); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,154,42,0.40); }
 
     /* ══════════════════════════════
        סגירה חזקה
     ══════════════════════════════ */
     .closing {
-      background: linear-gradient(145deg, var(--navy) 0%, #162B52 100%);
-      padding: 100px 24px;
+      background: linear-gradient(145deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      padding: 80px 24px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -783,13 +1118,12 @@
        רספונסיב
     ══════════════════════════════ */
     @media (max-width: 600px) {
-      .kanban-preview { grid-template-columns: repeat(3, 1fr); }
-      .kanban-col:nth-child(4),
-      .kanban-col:nth-child(5) { display: none; }
       .stats-inner { grid-template-columns: repeat(3, 1fr); }
       .stat-num { font-size: 26px; }
-      .phone-mockup-wrap { gap: 16px; }
-      .phone-frame { width: 200px; }
+      .section, .demo-section, .agents-section, .pricing-section { padding: 44px 20px; }
+      .closing { padding: 60px 20px; }
+      .section-sub { margin-bottom: 28px; }
+      .feature-groups { gap: 24px; }
     }
 
     /* ══════════════════════════════
@@ -870,16 +1204,18 @@
     }
     .btn-marketing {
       display: inline-block;
+      position: relative;
+      overflow: visible;
       background: linear-gradient(135deg, var(--gold), #F97316);
       color: var(--white);
       border: none;
       padding: 16px 36px;
       border-radius: 99px;
-      font-family: 'Heebo', sans-serif;
+      font-family: 'Rubik', 'Heebo', sans-serif;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
       text-decoration: none;
       box-shadow: 0 8px 28px rgba(245,158,11,0.35);
     }
@@ -900,6 +1236,124 @@
     .plan-addon strong { color: #B45309; font-size: 14px; }
 
     /* ══════════════════════════════
+       רצועת אמון / אבטחה
+    ══════════════════════════════ */
+    .trust-strip {
+      background: var(--gray-bg);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .trust-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .trust-grid {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .trust-item .ti-icon { font-size: 18px; }
+    .trust-link {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .trust-link:hover { text-decoration: underline; }
+
+    /* ══════════════════════════════
+       קצת עלינו
+    ══════════════════════════════ */
+    .about-section { background: var(--white); }
+    .about-text {
+      max-width: 660px;
+      margin: 0 auto 36px;
+      font-size: 17.5px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.8;
+    }
+    .about-pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .about-pillar {
+      background: var(--gray-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .about-pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .ap-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+    .ap-title { font-size: 15.5px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .ap-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ══════════════════════════════
+       שאלות ותשובות
+    ══════════════════════════════ */
+    .faq-section { background: var(--gray-bg); }
+    .faq-list {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .faq-item summary {
+      cursor: pointer;
+      padding: 16px 20px;
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      list-style: none;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+';
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--blue);
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+    .faq-item[open] summary { border-bottom: 1px solid var(--border); }
+    .faq-answer {
+      padding: 4px 20px 18px;
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════
        אנימציות כניסה
     ══════════════════════════════ */
     .fade-up {
@@ -911,6 +1365,1067 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ══════════════════════════════
+       ויטרינת פיצ'רים
+    ══════════════════════════════ */
+    .feature-groups { display: flex; flex-direction: column; gap: 28px; }
+    .fg-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--blue);
+    }
+    .fc-icon { font-size: 26px; display: inline-block; position: relative; margin-bottom: 10px; }
+    .fc-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .fc-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+    .feature-card-game .fc-icon::after {
+      content: '🎉';
+      position: absolute;
+      top: -8px;
+      left: -16px;
+      font-size: 15px;
+      opacity: 0;
+      transform: scale(0.3) rotate(-15deg);
+    }
+    .feature-group.visible .feature-card-game .fc-icon::after {
+      animation: confettiPop 1.1s ease-out 0.4s both;
+    }
+    @keyframes confettiPop {
+      0%   { opacity: 0; transform: scale(0.3) rotate(-15deg) translateY(6px); }
+      35%  { opacity: 1; transform: scale(1.15) rotate(8deg) translateY(-4px); }
+      60%  { opacity: 1; transform: scale(1) rotate(-4deg) translateY(-8px); }
+      100% { opacity: 0; transform: scale(0.85) rotate(0deg) translateY(-18px); }
+    }
+
+    /* ═══ FEATURES CAROUSEL ═══ */
+    .feat-carousel { position: relative; overflow: hidden; min-height: 300px; }
+    .feat-carousel .feature-group { display: none; }
+    .feat-carousel .feature-group.ft-active {
+      display: block;
+      animation: featSlideIn 0.42s cubic-bezier(0.4,0,0.2,1) both;
+    }
+    .feat-carousel .feature-group.ft-prev {
+      display: block;
+      animation: featSlideInRtl 0.42s cubic-bezier(0.4,0,0.2,1) both;
+    }
+    @keyframes featSlideIn    { from { opacity:0; transform:translateX(-26px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes featSlideInRtl { from { opacity:0; transform:translateX( 26px); } to { opacity:1; transform:translateX(0); } }
+
+    .feat-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .ft-tab {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 24px;
+      padding: 8px 20px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.62);
+      cursor: pointer;
+      font-family: 'Rubik','Heebo',sans-serif;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .ft-tab.active {
+      background: var(--blue,#2563EB);
+      border-color: var(--blue,#2563EB);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 16px rgba(37,99,235,0.32);
+    }
+    .ft-tab:hover:not(.active) { border-color: rgba(255,255,255,0.42); color: rgba(255,255,255,0.88); }
+
+    .feat-progress {
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      margin-bottom: 26px;
+      overflow: hidden;
+    }
+    .fp-bar { height: 100%; background: var(--blue,#2563EB); width: 0%; border-radius: 2px; }
+
+    /* ══════════════════════════════
+       תמחור: תג השקה וטיזר שנתי
+    ══════════════════════════════ */
+    .plan-launch-badge {
+      display: inline-block;
+      background: rgba(245,158,11,0.12);
+      color: #B45309;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 10px;
+    }
+    .plan-annual-teaser {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    /* ══════════════════════════════
+       רגעי "חיות": בהשראת אפקט הפטיש באונבורדינג
+    ══════════════════════════════ */
+    .btn-primary.pulse-cta { position: relative; }
+    .btn-primary.pulse-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 99px;
+      animation: ctaPulseRing 2.4s ease-out infinite;
+      pointer-events: none;
+    }
+    @keyframes ctaPulseRing {
+      0%   { box-shadow: 0 0 0 0 rgba(37,99,235,0.65); }
+      70%  { box-shadow: 0 0 0 22px rgba(37,99,235,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+    }
+
+    /* ══════════════════════════════
+       גלוֹ מוגבר + שימר — כפתורי הנעה לפעולה
+    ══════════════════════════════ */
+    .btn-primary.pulse-cta.has-rocket {
+      animation: heroCtaGlow 2.6s ease-in-out infinite;
+    }
+    .btn-primary.pulse-cta.has-rocket:hover { animation-play-state: paused; }
+    @keyframes heroCtaGlow {
+      0%, 100% { box-shadow: 0 8px 32px rgba(37,99,235,0.40); }
+      50%       { box-shadow: 0 12px 55px rgba(37,99,235,0.80), 0 0 35px rgba(37,99,235,0.35); }
+    }
+
+    /* שימר (sweeping light) — כל btn-primary שאין לו has-rocket */
+    .btn-primary.shimmer-cta,
+    .btn-primary:not(.has-rocket):not(.pulse-cta) {
+      overflow: hidden;
+      position: relative;
+    }
+    .btn-primary.shimmer-cta::before,
+    .btn-primary:not(.has-rocket):not(.pulse-cta)::before {
+      content: '';
+      position: absolute;
+      top: -10%; left: -130%;
+      width: 55%; height: 120%;
+      background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.32) 50%, transparent 80%);
+      transform: skewX(-15deg);
+      animation: btnShimmer 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes btnShimmer {
+      0%, 15%  { left: -130%; opacity: 0; }
+      20%      { opacity: 1; }
+      55%, 100% { left: 200%; opacity: 0; }
+    }
+
+    /* גלוֹ לכפתורי תמחור */
+    .plan-btn.primary:not(.tractor-btn) {
+      animation: planBtnGlow 2.8s ease-in-out infinite;
+    }
+    .plan-btn.primary:not(.tractor-btn):hover { animation-play-state: paused; }
+    @keyframes planBtnGlow {
+      0%, 100% { box-shadow: 0 4px 18px rgba(37,99,235,0.30); }
+      50%       { box-shadow: 0 6px 32px rgba(37,99,235,0.65); }
+    }
+
+    /* ═══ STAR TWINKLE ═══ */
+    @keyframes starTwinkle {
+      0%, 100% { transform: scale(1)    rotate(0deg);   opacity: 1;    }
+      20%      { transform: scale(1.4)  rotate(18deg);  opacity: 0.9;  }
+      40%      { transform: scale(0.82) rotate(-10deg); opacity: 0.75; }
+      65%      { transform: scale(1.25) rotate(12deg);  opacity: 1;    }
+      85%      { transform: scale(0.92) rotate(-6deg);  opacity: 0.85; }
+    }
+    .star-live {
+      display: inline-block;
+      animation: starTwinkle 2.8s ease-in-out infinite;
+      animation-delay: var(--star-d, 0s);
+      transform-origin: center;
+    }
+    .plan-addon:nth-child(1) .star-live { --star-d: 0s;    }
+    .plan-addon:nth-child(2) .star-live { --star-d: 0.9s;  }
+    .plan-addon:nth-child(3) .star-live { --star-d: 1.8s;  }
+    .marketing-section .star-live       { --star-d: 0.45s; }
+    @media (prefers-reduced-motion: reduce) { .star-live { animation: none; } }
+
+    /* ══════════════════════════════
+       עגורן מעל ה-CTA הראשי: מוריד "משקולת" על הכפתור להדגשה
+    ══════════════════════════════ */
+    .cta-stage { position: relative; display: inline-block; }
+    .cta-crane {
+      position: absolute;
+      bottom: calc(100% - 4px);
+      right: 6px;
+      width: 100px; height: 112px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .cta-crane::before { /* תורן */
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 4px; height: 100%;
+      background: var(--gold-500);
+      border-radius: 2px;
+    }
+    .cta-crane::after { /* זרוע */
+      content: '';
+      position: absolute; top: 0; right: -2px;
+      width: 80px; height: 4px;
+      background: var(--gold-500);
+      border-radius: 2px;
+    }
+    .crane-cable {
+      position: absolute; top: 4px; right: 66px;
+      width: 2px; height: 18px;
+      background: rgba(255,255,255,0.55);
+      animation: craneCable 7s ease-in-out infinite;
+    }
+    .crane-load {
+      position: absolute; top: 22px; right: 48px;
+      min-width: 40px; padding: 3px 8px;
+      background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+      color: var(--navy-900);
+      font-size: 11px; font-weight: 900;
+      border-radius: 7px; text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+      animation: craneLoad 7s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    @keyframes craneCable {
+      0%, 50% { height: 18px; }
+      62%     { height: 62px; }
+      66%     { height: 57px; }
+      74%     { height: 62px; }
+      82%     { height: 62px; }
+      83%     { height: 18px; }
+      100%    { height: 18px; }
+    }
+    @keyframes craneLoad {
+      0%, 50% { transform: translateY(0); opacity: 1; }
+      62%     { transform: translateY(44px); }
+      66%     { transform: translateY(39px); }
+      74%     { transform: translateY(44px); opacity: 1; }
+      82%     { transform: translateY(44px); opacity: 0; }
+      83%     { transform: translateY(0); opacity: 0; }
+      90%, 100% { transform: translateY(0); opacity: 1; }
+    }
+    .cta-drop-target { animation: ctaImpact 7s ease-in-out infinite; }
+    @keyframes ctaImpact {
+      0%, 61% { transform: none; }
+      64%     { transform: scale(1.06, 0.88) translateY(3px); }
+      70%     { transform: scale(0.98, 1.03); }
+      76%, 100% { transform: none; }
+    }
+    .cta-stage::after { /* ענן אבק ברגע הפגיעה */
+      content: '💨';
+      position: absolute; bottom: 6px; right: 30px;
+      font-size: 16px; opacity: 0;
+      pointer-events: none;
+      animation: ctaDust 7s ease-out infinite;
+    }
+    @keyframes ctaDust {
+      0%, 62% { opacity: 0; transform: translate(0,0) scale(0.6); }
+      66%     { opacity: 0.9; transform: translate(12px,-8px) scale(1.1); }
+      78%     { opacity: 0; transform: translate(24px,-16px) scale(1.3); }
+      100%    { opacity: 0; }
+    }
+    @media (max-width: 480px) { .cta-crane { display: none; } .cta-drop-target { animation: none; } .cta-stage::after { display: none; } }
+
+    /* ══════════════════════════════
+       רצועת אתר בנייה: טרקטור, משאית ופועל (מעבר לתמחור)
+    ══════════════════════════════ */
+    .construction-divider {
+      position: relative;
+      height: 130px;
+      background: linear-gradient(180deg, var(--white) 0%, var(--gray-bg) 100%);
+      overflow: hidden;
+      content-visibility: auto;
+    }
+    .cd-sign {
+      position: absolute; top: 18px; left: 0; right: 0;
+      text-align: center;
+      font-size: 14.5px; font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .cd-road {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 26px;
+      background: #CBD5E1;
+    }
+    .cd-road::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px;
+      transform: translateY(-50%); opacity: 0.7;
+      background: repeating-linear-gradient(90deg, var(--white) 0 18px, transparent 18px 34px);
+    }
+    .cd-vehicle {
+      position: absolute; bottom: 16px; right: -70px;
+      font-size: 34px;
+      filter: drop-shadow(0 3px 3px rgba(0,0,0,0.15));
+    }
+    .cd-truck { font-size: 38px; }
+    .construction-divider.in-view .cd-tractor { animation: cdDrive 13s linear infinite; }
+    .construction-divider.in-view .cd-truck   { animation: cdDrive 13s linear 6s infinite; }
+    @keyframes cdDrive {
+      from { transform: translateX(0); }
+      to   { transform: translateX(calc(-100vw - 160px)); }
+    }
+    .cd-worker {
+      position: absolute; bottom: 20px; right: 38%;
+      font-size: 30px;
+      transform-origin: bottom center;
+    }
+    .construction-divider.in-view .cd-worker { animation: cdDig 1.6s ease-in-out infinite; }
+    @keyframes cdDig {
+      0%, 100% { transform: rotate(0); }
+      50%      { transform: rotate(-14deg) translateY(2px); }
+    }
+    .cd-cone { position: absolute; bottom: 19px; font-size: 19px; }
+
+    /* מעברי צבע רכים בין סקשנים כהים לבהירים */
+    .sect-blend-light { height: 64px; background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-50) 55%, var(--white) 100%); }
+    .sect-blend-dark  { height: 64px; background: linear-gradient(180deg, var(--gray-bg) 0%, var(--navy-100) 45%, var(--navy-900) 100%); }
+
+    /* ═══ DOC FUNNEL DIVIDER ═══ */
+    .doc-funnel {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(to bottom, var(--gray-bg, #F1F5F9), #fff);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .df-paper {
+      position: absolute;
+      width: 46px; height: 60px;
+      background: #fff;
+      border-radius: 3px 8px 3px 3px;
+      box-shadow: 0 4px 14px rgba(15,31,61,0.14);
+      display: flex; flex-direction: column;
+      padding: 10px 8px; gap: 5px;
+      opacity: 0;
+      will-change: transform, opacity;
+      transition: transform 0.7s cubic-bezier(.23,1.01,.32,1), opacity 0.6s ease;
+      border: 1px solid #E5E7EB;
+    }
+    .dp-l { height: 4px; background: #CBD5E1; border-radius: 2px; }
+    .dp-s  { width: 55%; }
+
+    .df-p1 { transform: translate(-220px, -50px) rotate(-28deg); }
+    .df-p2 { transform: translate(-150px,  60px) rotate( 18deg); }
+    .df-p3 { transform: translate( -90px, -80px) rotate(-12deg); }
+    .df-p4 { transform: translate( 160px, -40px) rotate( 22deg); }
+    .df-p5 { transform: translate( 110px,  55px) rotate(-18deg); }
+
+    .doc-funnel.in-view .df-p1 { transform: translate(-38px, -8px) rotate(-4deg); opacity:1; transition-delay:0.05s; }
+    .doc-funnel.in-view .df-p2 { transform: translate(-22px,  6px) rotate( 3deg); opacity:1; transition-delay:0.18s; }
+    .doc-funnel.in-view .df-p3 { transform: translate(  -8px,-12px) rotate(-2deg); opacity:1; transition-delay:0.30s; }
+    .doc-funnel.in-view .df-p4 { transform: translate(  20px,  4px) rotate( 2deg); opacity:1; transition-delay:0.40s; }
+    .doc-funnel.in-view .df-p5 { transform: translate(  34px, -6px) rotate(-3deg); opacity:1; transition-delay:0.50s; }
+
+    .df-folder {
+      position: relative; z-index: 10;
+      width: 76px; height: 68px;
+      transform: scale(0.35);
+      transition: transform 0.55s cubic-bezier(.34,1.56,.64,1);
+    }
+    .doc-funnel.in-view .df-folder { transform: scale(1); transition-delay: 0.75s; }
+
+    .df-fold-tab {
+      position: absolute; top: 0; right: 14px;
+      width: 34px; height: 14px;
+      background: #C49A2A;
+      border-radius: 5px 5px 0 0;
+    }
+    .df-fold-body {
+      position: absolute; top: 12px;
+      width: 100%; height: 56px;
+      background: #C49A2A;
+      border-radius: 2px 2px 4px 4px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: inset 0 3px 8px rgba(0,0,0,0.12);
+    }
+    .df-fold-logo {
+      font-size: 26px; font-weight: 900;
+      color: #0F1F3D;
+      font-family: 'Rubik','Heebo',sans-serif;
+    }
+    .df-fold-lid {
+      position: absolute; top: 12px;
+      width: 100%; height: 56px;
+      background: #B8860B;
+      border-radius: 2px 2px 4px 4px;
+      transform-origin: top center;
+      transform: rotateX(0deg);
+      transition: transform 0.45s ease;
+    }
+    .doc-funnel.folding .df-fold-lid { transform: rotateX(-100deg); }
+
+    @keyframes dfAbsorb {
+      0%   { opacity: 1; }
+      80%  { opacity: 0.6; }
+      100% { transform: translate(0,0) scale(0) rotate(0deg); opacity: 0; }
+    }
+    .doc-funnel.folding .df-p1 { animation: dfAbsorb 0.4s 0.10s ease-in forwards; }
+    .doc-funnel.folding .df-p2 { animation: dfAbsorb 0.4s 0.16s ease-in forwards; }
+    .doc-funnel.folding .df-p3 { animation: dfAbsorb 0.4s 0.22s ease-in forwards; }
+    .doc-funnel.folding .df-p4 { animation: dfAbsorb 0.4s 0.08s ease-in forwards; }
+    .doc-funnel.folding .df-p5 { animation: dfAbsorb 0.4s 0.14s ease-in forwards; }
+
+    .df-caption {
+      position: absolute; bottom: 14px; left: 0; right: 0;
+      text-align: center;
+      font-size: 13px; color: var(--text-muted, #64748B);
+      font-family: 'Rubik','Heebo',sans-serif;
+      opacity: 0;
+      transition: opacity 0.5s 0.6s ease;
+    }
+    .doc-funnel.folding .df-caption { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .df-paper  { transition: none; opacity: 1; }
+      .df-folder { transform: scale(1); transition: none; }
+      .df-fold-lid { transition: none; }
+      .doc-funnel.folding .df-caption { opacity: 1; }
+    }
+    /* ═══ end DOC FUNNEL ═══ */
+
+    /* ══════════════════════════════
+       אנימציות CTA: חללית · כדור הריסה · טרקטור
+    ══════════════════════════════ */
+
+    /* חללית — Hero CTA */
+    .btn-primary.has-rocket { position: relative; overflow: visible; }
+    .rocket-icon {
+      position: absolute;
+      font-size: 1.35rem;
+      bottom: 50%; left: 50%;
+      transform: translate(-50%, 50%) rotate(-45deg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .btn-primary.has-rocket:hover .rocket-icon {
+      animation: rocketLaunch 0.75s ease-out forwards;
+    }
+    @keyframes rocketLaunch {
+      0%   { opacity: 1; transform: translate(-50%, 50%) rotate(-45deg) scale(0.8); }
+      20%  { opacity: 1; transform: translate(-50%, 20%) rotate(-45deg) scale(1.1); }
+      70%  { opacity: 1; transform: translate(-50%, -65px) rotate(-45deg) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -110px) rotate(-45deg) scale(0.7); }
+    }
+
+    /* כדור הריסה — Closing CTA */
+    .wrecking-wrap {
+      position: relative;
+      display: inline-block;
+      padding-top: 68px;
+    }
+    .pendulum {
+      position: absolute;
+      top: 0; left: 16%;
+      width: 2px; height: 44px;
+      transform-origin: top center;
+      animation: pendulumSwing 2.6s ease-in-out infinite;
+    }
+    .wrecking-chain {
+      width: 2px; height: 44px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--gold) 0px 4px, rgba(220,220,220,0.5) 4px 7px
+      );
+    }
+    .wrecking-ball {
+      position: absolute;
+      bottom: -25px; left: -12px;
+      width: 25px; height: 25px;
+      background: radial-gradient(circle at 33% 28%, #d4d4d4, #646464, #1a1a1a);
+      border-radius: 50%;
+      box-shadow: inset 0 0 7px rgba(0,0,0,0.45), 0 4px 10px rgba(0,0,0,0.55);
+    }
+    @keyframes pendulumSwing {
+      0%, 100% { transform: rotate(-32deg); }
+      50%       { transform: rotate(20deg); }
+    }
+    .wrecking-wrap .btn-primary {
+      animation: wreckImpact 2.6s ease-in-out infinite;
+    }
+    .wrecking-wrap .btn-primary:hover { animation-play-state: paused; }
+    @keyframes wreckImpact {
+      0%, 43%, 57%, 100% { transform: translateX(0) scale(1); }
+      50%                 { transform: translateX(4px) scale(0.965, 1.025); }
+    }
+    @media (max-width: 480px) {
+      .wrecking-wrap { padding-top: 0; }
+      .pendulum { display: none; }
+      .wrecking-wrap .btn-primary { animation: none; }
+    }
+
+    /* טרקטור מכרסם — Team Plan CTA */
+    .plan-btn.tractor-btn {
+      overflow: visible;
+      position: relative;
+      animation: btnBite 3.6s ease-in-out infinite;
+    }
+    .plan-btn.tractor-btn::before {
+      content: '🚜';
+      position: absolute;
+      font-size: 1.05rem;
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%);
+      animation: tractorNibble 3.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes tractorNibble {
+      0%, 100% { left: calc(100% + 8px); }
+      35%, 65% { left: calc(100% - 5px); }
+    }
+    @keyframes btnBite {
+      0%, 100% { transform: translateX(0) scale(1); }
+      35%, 65% { transform: translateX(3px) scale(0.975, 1); }
+    }
+    .plan-btn.tractor-btn:hover { animation-play-state: paused; }
+    .plan-btn.tractor-btn:hover::before { animation-play-state: paused; }
+    @media (max-width: 480px) {
+      .plan-btn.tractor-btn::before { display: none; }
+      .plan-btn.tractor-btn { animation: none; }
+    }
+
+    /* ══════════════════════════════
+       סקשן תחומי עיסוק
+    ══════════════════════════════ */
+    .industry-section {
+      background: var(--navy-800);
+      padding: 64px 0;
+    }
+    .industry-section .section-label { color: var(--gold-400); font-size: 15px; font-weight: 800; }
+    .industry-section .section-title { color: var(--white); }
+    .industry-section .section-sub   { color: rgba(255,255,255,0.60); }
+    .industry-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (max-width: 700px) { .industry-cards { grid-template-columns: 1fr; } }
+    .ind-card {
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .ind-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.28); }
+    .ind-icon-row { font-size: 2rem; margin-bottom: 0.75rem; line-height: 1.4; }
+    .ind-title {
+      font-size: 1.15rem; font-weight: 800;
+      color: var(--white); margin-bottom: 0.35rem;
+    }
+    .ind-sub {
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--blue-400); margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+    .ind-terms {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.42);
+      line-height: 2;
+    }
+    /* אנימציות אייקונים */
+    .key-anim {
+      display: inline-block;
+      animation: keyRock 3.2s ease-in-out infinite;
+      transform-origin: 50% 80%;
+    }
+    @keyframes keyRock {
+      0%, 100% { transform: rotate(0deg); }
+      35% { transform: rotate(22deg); }
+      55% { transform: rotate(14deg); }
+    }
+    .scale-anim {
+      display: inline-block;
+      animation: scaleBalance 4s ease-in-out infinite;
+    }
+    @keyframes scaleBalance {
+      0%, 100% { transform: rotate(0deg); }
+      28% { transform: rotate(-11deg); }
+      72% { transform: rotate(11deg); }
+    }
+    .pencil-anim {
+      display: inline-block;
+      animation: pencilDraw 2.8s ease-in-out infinite;
+    }
+    @keyframes pencilDraw {
+      0%, 100% { transform: rotate(0deg) translate(0, 0); }
+      25% { transform: rotate(-18deg) translate(-3px, 2px); }
+      75% { transform: rotate(12deg) translate(3px, -1px); }
+    }
+    /* רקע תכנית אדריכלית לעיצוב פנים */
+    .ind-card.interior-card {
+      background-color: var(--navy-900);
+      background-image:
+        linear-gradient(rgba(99,179,237,0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,179,237,0.09) 1px, transparent 1px);
+      background-size: 22px 22px;
+      transition: transform 0.25s, border-color 0.25s,
+                  background-color 1.4s ease, background-size 1.4s ease;
+    }
+    .ind-card.interior-card:hover {
+      background-color: #1b1040;
+      background-size: 46px 46px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    /* ── המשולש הקדוש ─────────────────────────── */
+    .holy-triangle-section {
+      background: var(--white);
+    }
+
+    /* ═══ TRI-STAGE: ANIMATED TRIANGLE ═══ */
+    .tri-stage {
+      position: relative;
+      height: 370px;
+      margin: 0 auto 8px;
+      max-width: 640px;
+    }
+    @media (max-width: 600px) { .tri-stage { height: 280px; } }
+
+    .tri-svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+    .tri-edge {
+      stroke: rgba(15,31,61,0.2);
+      stroke-width: 2.5;
+      fill: none;
+      transition: stroke-dashoffset 1.0s ease;
+    }
+    .tri-stage.drawing .tri-edge:nth-child(1) { stroke-dashoffset: 0; transition-delay: 0.1s; }
+    .tri-stage.drawing .tri-edge:nth-child(2) { stroke-dashoffset: 0; transition-delay: 0.55s; }
+    .tri-stage.drawing .tri-edge:nth-child(3) { stroke-dashoffset: 0; transition-delay: 1.0s; }
+
+    .tri-node {
+      position: absolute;
+      background: #fff;
+      border: 2px solid var(--gray-200, #E5E7EB);
+      border-radius: 16px;
+      padding: 14px 16px;
+      text-align: center;
+      width: 132px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      opacity: 0;
+      transition: transform 0.65s cubic-bezier(.34,1.56,.64,1), opacity 0.5s ease;
+    }
+    /* ימין עליון — סוכן */
+    .tri-n1 { top: 8px; right: 5%; transform: translateX(60px) scale(0.7); }
+    /* שמאל עליון — עו"ד */
+    .tri-n2 { top: 8px; left: 5%;  transform: translateX(-60px) scale(0.7); }
+    /* תחתון מרכז — עיצוב */
+    .tri-n3 { bottom: 2px; left: 50%; transform: translateX(-50%) translateY(40px) scale(0.7); }
+
+    .tri-stage.drawing .tri-n1 { transform: translateX(0) scale(1); opacity: 1; transition-delay: 0s; }
+    .tri-stage.drawing .tri-n2 { transform: translateX(0) scale(1); opacity: 1; transition-delay: 0.25s; }
+    .tri-stage.drawing .tri-n3 { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; transition-delay: 0.5s; }
+
+    .tri-node:hover { border-color: var(--blue, #2563EB); box-shadow: 0 8px 24px rgba(37,99,235,0.14); }
+
+    .tn-icon  { font-size: 26px; margin-bottom: 5px; }
+    .tn-role  { font-size: 13px; font-weight: 800; color: var(--navy, #0F1F3D); margin-bottom: 3px; }
+    .tn-hint  { font-size: 10px; color: var(--text-muted, #64748B); line-height: 1.4; }
+
+    @media (max-width: 600px) {
+      .tri-node { width: 96px; padding: 10px 10px; }
+      .tn-icon  { font-size: 20px; }
+      .tn-role  { font-size: 11px; }
+      .tn-hint  { display: none; }
+    }
+
+    /* Flows — רצועת scroll אנכית אינסופית */
+    .tri-flows {
+      overflow: hidden;
+      padding: 0;
+      margin: 0 auto 28px;
+      max-width: 700px;
+    }
+    .tri-flows-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      animation: triFlowScroll 20s linear infinite;
+    }
+    .tri-flows:hover .tri-flows-track { animation-play-state: paused; }
+    @keyframes triFlowScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .tf-pill {
+      background: var(--gray-bg, #F1F5F9);
+      border: 1px solid var(--gray-200, #E5E7EB);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 12px;
+      color: var(--text-muted, #64748B);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tri-node { transform: scale(1) !important; opacity: 1 !important; transition: none; }
+      .tri-n3   { transform: translateX(-50%) scale(1) !important; }
+      .tri-edge { stroke-dashoffset: 0; transition: none; }
+      .tri-flows-track { animation: none; }
+    }
+    /* ═══ end TRI-STAGE ═══ */
+
+    .triangle-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      max-width: 860px;
+      margin: 0 auto 40px;
+      flex-wrap: wrap;
+    }
+    .tf-node {
+      flex: 1;
+      min-width: 160px;
+      max-width: 220px;
+      background: var(--gray-bg);
+      border: 2px solid var(--gray-200);
+      border-radius: 20px;
+      padding: 28px 16px 22px;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .tf-node:hover {
+      transform: translateY(-6px);
+      border-color: var(--blue-500);
+      box-shadow: 0 12px 32px rgba(37,99,235,0.13);
+    }
+    .tf-node-gold {
+      border-color: var(--gold-400, #D97706);
+      background: #FFFBEB;
+    }
+    .tf-node-gold:hover { border-color: #B45309; }
+    .tf-icon { font-size: 2.4rem; margin-bottom: 10px; line-height: 1; }
+    .tf-role {
+      font-size: 1rem; font-weight: 800;
+      color: var(--navy-700); margin-bottom: 6px;
+    }
+    .tf-action {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;
+    }
+    .tf-arrow {
+      font-size: 1.8rem;
+      color: var(--blue-400);
+      padding: 0 12px;
+      flex-shrink: 0;
+      align-self: center;
+      line-height: 1;
+    }
+    @media (max-width: 640px) {
+      .triangle-flow { flex-direction: column; gap: 6px; }
+      .tf-arrow { transform: rotate(90deg); padding: 4px 0; }
+      .tf-node { max-width: 100%; min-width: 0; width: 100%; }
+    }
+    .opp-explainer {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--navy-700);
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      text-align: center;
+    }
+    .oe-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: #fff; margin-bottom: 10px;
+    }
+    .oe-desc {
+      font-size: 0.9rem; color: rgba(255,255,255,0.72);
+      line-height: 1.7; margin-bottom: 20px;
+    }
+    .oe-ex-label {
+      font-size: 0.78rem; color: var(--gold-400, #D97706);
+      font-weight: 700; margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .oe-ex-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.6;
+      text-align: right;
+      direction: rtl;
+    }
+    .oe-examples { text-align: right; }
+    /* 6 נתיבי הפניה */
+    .referral-flows {
+      max-width: 860px;
+      margin: 0 auto 36px;
+    }
+    .rf-title {
+      font-size: 0.82rem; font-weight: 800;
+      color: var(--gray-500); text-align: center;
+      margin-bottom: 14px; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .rf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 640px) { .rf-grid { grid-template-columns: 1fr; } }
+    .rf-item {
+      background: var(--gray-bg);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .rf-from { font-size: 0.82rem; font-weight: 700; color: var(--navy-600); }
+    .rf-arr  { font-size: 1rem; color: var(--blue-500); margin: 0 4px; }
+    .rf-to   { font-size: 0.82rem; font-weight: 700; color: var(--navy-600); }
+    .rf-desc { font-size: 0.76rem; color: var(--text-muted); margin-top: 5px; line-height: 1.45; }
+
+    /* ══════════════════════════════
+       שורת יתרונות Hero — מודגשת ובולטת
+    ══════════════════════════════ */
+    .hero-trust {
+      font-size: 16px !important;
+      font-weight: 800 !important;
+      color: rgba(255,255,255,0.88) !important;
+      letter-spacing: 0.015em;
+      margin-top: 4px;
+    }
+
+    /* ══════════════════════════════
+       שורת כותרת + אייקון אקסל
+    ══════════════════════════════ */
+    .excel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .excel-title-row .section-title {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 260px;
+      max-width: 600px;
+    }
+    .mini-excel-wrap {
+      flex-shrink: 0;
+      opacity: 0.88;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.18));
+    }
+
+    /* ══════════════════════════════
+       היררכיית כותרות — section-subtitle
+    ══════════════════════════════ */
+    .section-subtitle {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .industry-section .section-subtitle { color: var(--white); }
+    .holy-triangle-section .section-title { font-size: clamp(26px, 4vw, 40px); }
+
+    /* ══════════════════════════════
+       כאב הפניות מחוץ לאזור
+    ══════════════════════════════ */
+    .referral-pain-section {
+      background: var(--white);
+    }
+    .rp-inner {
+      max-width: 760px;
+    }
+    .rp-heading {
+      font-size: clamp(21px, 3.2vw, 28px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.4;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .rp-body {
+      font-size: clamp(16px, 1.9vw, 17px);
+      color: var(--text-muted);
+      line-height: 1.9;
+      text-align: center;
+    }
+    .rp-body p { margin-bottom: 16px; }
+    .rp-body p:last-child { margin-bottom: 0; }
+    .rp-hook {
+      font-size: clamp(17px, 2.1vw, 19px);
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .rp-cta-hint {
+      font-style: italic;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════
+       כפתור גרסה: tf-sep (מחליף tf-arrow)
+    ══════════════════════════════ */
+    .tf-sep {
+      font-size: 1.4rem;
+      color: var(--blue-400);
+      padding: 0 10px;
+      flex-shrink: 0;
+      align-self: center;
+      line-height: 1;
+    }
+    @media (max-width: 640px) {
+      .tf-sep { transform: none; padding: 4px 0; }
+    }
+
+    /* ═══ WAND ANIMATION (btn-marketing) ═══ */
+    @keyframes wandRide {
+      0%, 3%    { left: calc(100% + 14px); opacity: 0; transform: translateY(-50%) rotate(-35deg) scale(1.1); }
+      8%        { opacity: 1; }
+      38%       { left: 46%; opacity: 1; transform: translateY(-50%) rotate(-18deg) scale(1.3); }
+      40%       { transform: translateY(-50%) rotate(-22deg) scale(1.55); }
+      70%       { left: -10%; opacity: 0.5; transform: translateY(-50%) rotate(-8deg) scale(1); }
+      80%, 100% { left: -12%; opacity: 0; transform: translateY(-50%) rotate(-5deg) scale(0.9); }
+    }
+    @keyframes wandGlow {
+      0%, 33%, 50%, 100% {
+        box-shadow: 0 8px 30px rgba(245,158,11,0.38), 0 2px 8px rgba(0,0,0,0.25);
+      }
+      36%, 43% {
+        box-shadow:
+          0 0 0 6px rgba(255,228,50,0.45),
+          0 0 40px rgba(255,200,0,0.85),
+          0 0 72px rgba(245,158,11,0.55),
+          0 8px 20px rgba(245,158,11,0.5);
+      }
+    }
+    .btn-marketing { animation: wandGlow 7s ease-in-out infinite; }
+    .btn-marketing::before {
+      content: '🪄';
+      position: absolute;
+      left: calc(100% + 14px);
+      top: 50%;
+      transform: translateY(-50%) rotate(-35deg) scale(1.1);
+      font-size: 20px;
+      line-height: 1;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      animation: wandRide 7s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn-marketing { animation: none; }
+      .btn-marketing::before { display: none; }
+    }
+
+    /* ═══ PHONE VIBRATE (plan-btn.outline) ═══ */
+    @keyframes phoneVibrate {
+      0%, 8%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+      1%  { transform: translateX(-5px) rotate(-1.5deg) scale(1.01); }
+      2%  { transform: translateX( 5px) rotate( 1.5deg) scale(1.01); }
+      3%  { transform: translateX(-4px) rotate(-1deg)   scale(1.01); }
+      4%  { transform: translateX( 4px) rotate( 1deg)   scale(1.01); }
+      5%  { transform: translateX(-2px) rotate(-0.5deg) scale(1); }
+      6%  { transform: translateX( 2px) rotate( 0.5deg) scale(1); }
+      7%  { transform: translateX(0)    rotate(0deg)    scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .plan-btn.outline { animation: none; }
+    }
+
+    /* ═══ ROCKET LAND (cps-btn) ═══ */
+    @keyframes rocketArrive {
+      0%        { transform: translateX(180px) translateY(-50%) rotate(8deg) scale(0.7);   opacity: 0; }
+      5%        { opacity: 0; }
+      10%       { opacity: 1; transform: translateX(180px) translateY(-50%) rotate(8deg)   scale(0.7); }
+      52%       { transform: translateX(0)     translateY(-50%) rotate(0deg)  scale(1.1);  opacity: 1; }
+      56%       { transform: translateX(-10px) translateY(-50%) rotate(-3deg) scale(1.2); }
+      62%       { transform: translateX(4px)   translateY(-50%) rotate(1deg)  scale(1); }
+      65%, 78%  { transform: translateX(0)     translateY(-50%) rotate(0deg)  scale(1);   opacity: 1; }
+      86%       { opacity: 0.5; transform: translateX(-4px) translateY(-56%) scale(0.8); }
+      93%       { opacity: 0;   transform: translateX(0)    translateY(-80%) scale(0.5); }
+      100%      { opacity: 0;   transform: translateX(180px) translateY(-50%) rotate(8deg) scale(0.7); }
+    }
+    @keyframes rocketBtnBounce {
+      0%, 50%, 70%, 100% { transform: scale(1); }
+      53%  { transform: scale(1.06); }
+      61%  { transform: scale(0.97); }
+      65%  { transform: scale(1); }
+    }
+    .cps-btn { animation: rocketBtnBounce 9s ease-in-out infinite; }
+    .cps-btn::before {
+      content: '🚀';
+      position: absolute;
+      right: calc(100% + 10px);
+      top: 50%;
+      font-size: 22px;
+      line-height: 1;
+      pointer-events: none;
+      transform: translateX(180px) translateY(-50%) rotate(8deg) scale(0.7);
+      opacity: 0;
+      z-index: 10;
+      animation: rocketArrive 9s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cps-btn { animation: none; }
+      .cps-btn::before { display: none; }
+    }
+
+    /* ── CRO additions ── */
+    .pain-free-list { margin: 28px auto 0; max-width: 480px; }
+    .pain-free-item { font-size: 1rem; color: var(--navy-700); margin: 9px 0; line-height: 1.5; }
+    .pain-free-yes { font-weight: 700; color: var(--green-500); margin-top: 14px; }
+    .section-cta-wrap { text-align: center; margin-top: 36px; }
+    .section-pre-cta { font-size: 1rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6; }
+    .cta-trust-line { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; }
+    .plan-cta-reassure { font-size: 0.76rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+
   </style>
 </head>
 <body>
@@ -918,89 +2433,203 @@
 <!-- ניווט -->
 <nav>
   <div class="nav-logo">Liders<span>.</span>CRM</div>
-  <a href="https://liders-crm.com" class="nav-cta">התחל בחינם</a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="nav-a11y-btn" data-a11y-btn
+            onclick="toggleA11y()" aria-pressed="false"
+            aria-label="הפעלת מצב נגישות">♿ נגישות</button>
+    <a href="https://liders-crm.com" class="nav-cta">מתחילים בחינם</a>
+  </div>
 </nav>
 
 <!-- גיבור -->
 <section class="hero">
   <div class="hero-badge">
     <span class="badge-dot"></span>
-    מערכת CRM חכמה לסוכני נדל"ן
+    בנוי לעולם הנדל״ן: סוכני נדל״ן, עו״ד נדל״ן ועיצוב פנים
   </div>
 
-  <h1>הלידים שלך לא הולכים לשום מקום.<br><span class="highlight">העסקאות כן.</span></h1>
+  <h1>תוך 60 שניות עוברים מאקסל מבולגן<br><span class="highlight">למערכת שעובדת בשבילך.</span></h1>
 
   <p class="hero-sub">
-    מערכת CRM שמארגנת את הכאוס, מתזמנת בשבילך ומדרגת כל ליד באמצעות AI.
-    כי לא כל ליד שווה אותו הזמן.
+    כל הלידים, הפולו-אפים והעסקאות — מנוהלים במקום אחד. בלי אקסלים, בלי בלגן.
   </p>
 
   <div class="hero-actions">
-    <a href="https://liders-crm.com" class="btn-primary">התחל 30 יום בחינם</a>
-    <a href="#demo" class="btn-ghost">תראה לי איך זה עובד</a>
+    <span class="cta-stage">
+      <span class="cta-crane" aria-hidden="true">
+        <span class="crane-cable"></span>
+        <span class="crane-load">30 יום 🎁</span>
+      </span>
+      <a href="https://liders-crm.com" class="btn-primary pulse-cta cta-drop-target has-rocket">מתחילים 30 יום בחינם<span class="rocket-icon" aria-hidden="true">🚀</span></a>
+    </span>
   </div>
-  <p class="hero-micro">ללא כרטיס אשראי. ללא התחייבות. כן ממש.</p>
+  <p class="hero-micro hero-trust">30 יום ניסיון &bull; ללא אשראי &bull; ללא התחייבות</p>
 
-  <!-- מוקאפ קנבן -->
-  <div class="hero-mockup">
-    <div class="mockup-frame">
-      <div class="mockup-bar">
-        <div class="mockup-dot"></div>
-        <div class="mockup-dot"></div>
-        <div class="mockup-dot"></div>
+  <!-- 3 תצוגות מותאמות לתחום -->
+  <div class="vertical-previews">
+
+    <!-- סוכן נדל"ן -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">🏠 סוכן נדל&quot;ן</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">נחמן כהן</div>
+          <div class="vp-lead-meta">3 חד' · ₪2.1M</div>
+          <span class="vp-stage vp-s2">יצרנו קשר</span>
+        </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-yad2">יד2</span>
+          <span class="vp-btn vp-btn-madlan">מדלן</span>
+          <span class="vp-btn vp-btn-wa">💬 WhatsApp</span>
+        </div>
+        <div class="vp-ai">🤖 "יש 4 נכסים דומים — שלח לנחמן לפני שיגיע למתחרה"</div>
       </div>
-      <div class="kanban-preview">
-        <div class="kanban-col">
-          <div class="kanban-col-title">ליד חדש</div>
-          <div class="kanban-card gray">
-            <div class="kc-name">אבי כהן</div>
-            <div class="kc-val">2.4M ₪</div>
-            <div class="kc-ai">AI 72</div>
-          </div>
-          <div class="kanban-card gray">
-            <div class="kc-name">מיכל לוי</div>
-            <div class="kc-val">1.8M ₪</div>
-            <div class="kc-ai">AI 58</div>
-          </div>
+    </div>
+
+    <!-- עיצוב פנים -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">🛋 עיצוב פנים</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">מיטל שמואלי</div>
+          <div class="vp-lead-meta">4 חד' · שיפוץ מלא</div>
+          <span class="vp-stage vp-s3">הצעה נשלחה</span>
         </div>
-        <div class="kanban-col">
-          <div class="kanban-col-title">יצרנו קשר</div>
-          <div class="kanban-card blue">
-            <div class="kc-name">דני ברקת</div>
-            <div class="kc-val">3.1M ₪</div>
-            <div class="kc-ai">AI 81</div>
-          </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-pin">📌 Pinterest</span>
+          <span class="vp-btn vp-btn-houzz">🛋 Houzz</span>
+          <span class="vp-btn vp-btn-wa">💬 WhatsApp</span>
         </div>
-        <div class="kanban-col">
-          <div class="kanban-col-title">הצעה נשלחה</div>
-          <div class="kanban-card purple">
-            <div class="kc-name">רחל מזרחי</div>
-            <div class="kc-val">4.5M ₪</div>
-            <div class="kc-ai">AI 88</div>
-          </div>
-          <div class="kanban-card purple">
-            <div class="kc-name">יוסי גבאי</div>
-            <div class="kc-val">2.9M ₪</div>
-            <div class="kc-ai">AI 76</div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-col-title">משא ומתן</div>
-          <div class="kanban-card orange">
-            <div class="kc-name">שרה אביב</div>
-            <div class="kc-val">5.2M ₪</div>
-            <div class="kc-ai">AI 94</div>
-          </div>
-        </div>
-        <div class="kanban-col">
-          <div class="kanban-col-title">עסקה סגורה ✓</div>
-          <div class="kanban-card green">
-            <div class="kc-name">נועם פרץ</div>
-            <div class="kc-val">3.8M ₪</div>
-            <div class="kc-ai">AI 97</div>
-          </div>
-        </div>
+        <div class="vp-ai">🤖 "סגנון סקנדינבי · פלטה: לבן, אפור, גוון עץ טבעי"</div>
       </div>
+    </div>
+
+    <!-- עו"ד נדל"ן -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">⚖️ עו&quot;ד נדל&quot;ן</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">אהרון בר-לב</div>
+          <div class="vp-lead-meta">בדיקת נאותות · חוזה</div>
+          <span class="vp-stage vp-s4">במשא ומתן</span>
+        </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-tabo">🏛 טאבו</span>
+          <span class="vp-btn vp-btn-nevo">📚 נבו</span>
+          <span class="vp-btn vp-btn-misim">💰 מיסוי</span>
+        </div>
+        <div class="vp-ai">🤖 "טאבו נקי · אין עיקולים — ממשיכים לניסוח חוזה"</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- תצוגת המערכת -->
+<section class="demo-section" id="demo">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">טעימה קטנה ממה שמחכה לכם בפנים</h2>
+    <p class="section-sub fade-up">דשבורד, פייפליין, לוח שנה ועוד. זו רק ההתחלה, את החוויה המלאה מגלים רק מבפנים.</p>
+
+    <div class="screen-reel fade-up">
+      <div class="reel-window">
+        <div class="reel-bar">
+          <span class="reel-dot"></span><span class="reel-dot"></span><span class="reel-dot"></span>
+          <span class="reel-url">liders-crm.com</span>
+        </div>
+
+        <div class="reel-slides">
+          <!-- שקף 1: דשבורד -->
+          <div class="reel-slide active">
+            <div class="mock-ai-card">
+              <span class="mock-ai-icon">🤖</span>
+              <span class="mock-ai-text">נחמן עוד לא ענה — כדאי לשלוח WhatsApp לפני הערב</span>
+            </div>
+            <div class="mock-kpi-row">
+              <div class="mock-kpi"><div class="mock-kpi-val">₪3.3M</div><div class="mock-kpi-label">שווי צינור</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val">12</div><div class="mock-kpi-label">פגישות פתוחות</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val">2</div><div class="mock-kpi-label">לידים חדשים</div></div>
+            </div>
+            <div class="mock-lead-list">
+              <div class="mock-lead-row"><span class="mock-lead-dot hot"></span><span class="mock-lead-name">נחמן כהן</span><span class="mock-lead-val">₪2.1M</span><span class="mock-stage mock-s2">יצרנו קשר</span></div>
+              <div class="mock-lead-row"><span class="mock-lead-dot warm"></span><span class="mock-lead-name">שרית לוי</span><span class="mock-lead-val">₪860K</span><span class="mock-stage mock-s3">הצעה נשלחה</span></div>
+              <div class="mock-lead-row"><span class="mock-lead-dot cool"></span><span class="mock-lead-name">גיל שפירא</span><span class="mock-lead-val">₪480K</span><span class="mock-stage mock-s4">במשא ומתן</span></div>
+            </div>
+          </div>
+
+          <!-- שקף 2: פייפליין -->
+          <div class="reel-slide">
+            <div class="mock-kanban">
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-1">ליד חדש</div>
+                <div class="mock-card">יעקב לוי<br><small>₪300K</small></div>
+                <div class="mock-card">רינת פרידמן<br><small>₪180K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-2">יצרנו קשר</div>
+                <div class="mock-card mock-card-hot">נחמן כהן<br><small>₪2.1M</small></div>
+                <div class="mock-card">אלה מורחי<br><small>₪70K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-3">הצעה נשלחה</div>
+                <div class="mock-card">שרית לוי<br><small>₪860K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-4">סגירה ✓</div>
+                <div class="mock-card mock-card-won">ניר לוין<br><small>₪1.1M</small></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- שקף 3: לוח שנה -->
+          <div class="reel-slide">
+            <div class="mock-cal">
+              <div class="mock-cal-hdr">יולי 2026</div>
+              <div class="mock-cal-days"><span>א</span><span>ב</span><span>ג</span><span>ד</span><span>ה</span><span>ו</span></div>
+              <div class="mock-cal-grid">
+                <span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                <span>6</span><span>7</span><span class="mock-today">8</span><span>9</span><span>10</span><span>11</span>
+                <span>12</span><span>13</span><span class="mock-event-day">14</span><span>15</span><span>16</span><span>17</span>
+                <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
+              </div>
+              <div class="mock-event-card">
+                <span class="mock-event-dot"></span>
+                <div><div class="mock-event-title">פגישה: נחמן כהן</div><div class="mock-event-time">יום ב' 14/7 · 14:00</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- שקף 4: כלים -->
+          <div class="reel-slide">
+            <div class="mock-tools-header">כלים חכמים לסגירת עסקאות</div>
+            <div class="mock-tools-grid">
+              <div class="mock-tool"><span class="mock-tool-icon">🤖</span><span class="mock-tool-name">AI שיווקי</span><span class="mock-tool-badge pro">PRO</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">💬</span><span class="mock-tool-name">SmartWA</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">📥</span><span class="mock-tool-name">ייבוא לידים</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">🔗</span><span class="mock-tool-name">לולאת הפניות</span><span class="mock-tool-badge new">חדש</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">🏦</span><span class="mock-tool-name">מחשבון משכנתא</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">⚡</span><span class="mock-tool-name">יומן AI</span><span class="mock-tool-badge pro">PRO</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reel-caption"><span class="reel-caption-text">הדשבורד. כל מה שחשוב, במבט אחד.</span></div>
+      </div>
+
+      <div class="reel-dots">
+        <button class="reel-pip active" aria-label="שקף 1"></button>
+        <button class="reel-pip" aria-label="שקף 2"></button>
+        <button class="reel-pip" aria-label="שקף 3"></button>
+        <button class="reel-pip" aria-label="שקף 4"></button>
+      </div>
+    </div>
+
+    <div class="shots-cta fade-up">
+      <p class="shots-cta-note">🔒 את השאר משאירים למי שנכנס. ההרשמה לוקחת דקה.</p>
+      <a href="https://liders-crm.com" class="btn-primary shimmer-cta" style="font-size:16px;">מעלים לידים ורואים את המערכת בפעולה</a>
     </div>
   </div>
 </section>
@@ -1023,146 +2652,384 @@
   </div>
 </div>
 
-<!-- כאב -->
+<!-- עידן האקסל נגמר -->
 <section class="section">
   <div class="section-inner">
-    <p class="section-label fade-up">רגע של כנות</p>
-    <h2 class="section-title fade-up">זה נשמע מוכר?</h2>
-    <p class="section-sub fade-up">כל סוכן נדל"ן חווה את זה. הפתרון קיים, רק צריך לדעת איפה.</p>
+    <div class="excel-title-row fade-up">
+      <span class="mini-excel-wrap" aria-hidden="true">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="56" height="56" rx="7" fill="white" stroke="#217346" stroke-width="2.5"/>
+          <rect x="1.25" y="1.25" width="53.5" height="14" rx="5" fill="#217346"/>
+          <text x="28" y="11.5" text-anchor="middle" fill="white" font-size="7.5" font-family="Arial,sans-serif" font-weight="bold">XLS</text>
+          <line x1="19" y1="15" x2="19" y2="56" stroke="#C8D3C9" stroke-width="1"/>
+          <line x1="37" y1="15" x2="37" y2="56" stroke="#C8D3C9" stroke-width="1"/>
+          <line x1="0" y1="26" x2="56" y2="26" stroke="#C8D3C9" stroke-width="1"/>
+          <line x1="0" y1="37" x2="56" y2="37" stroke="#C8D3C9" stroke-width="1"/>
+          <line x1="0" y1="48" x2="56" y2="48" stroke="#C8D3C9" stroke-width="1"/>
+          <rect x="20" y="27" width="16" height="9" fill="#FFF3CD" rx="1"/>
+          <rect x="1" y="38" width="17" height="9" fill="#FFCCCC" rx="1"/>
+          <rect x="38" y="27" width="17" height="9" fill="#E8F5E9" rx="1"/>
+          <rect x="20" y="49" width="16" height="6" fill="#FFF3CD" rx="1"/>
+          <line x1="3" y1="21" x2="15" y2="21" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="21" y1="21" x2="33" y2="21" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="39" y1="21" x2="53" y2="21" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="3" y1="30" x2="13" y2="30" stroke="#94A3B8" stroke-width="1" stroke-linecap="round"/>
+          <line x1="21" y1="30" x2="30" y2="30" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="39" y1="30" x2="51" y2="30" stroke="#94A3B8" stroke-width="1" stroke-linecap="round"/>
+          <line x1="3" y1="41" x2="15" y2="41" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="39" y1="41" x2="52" y2="41" stroke="#94A3B8" stroke-width="1" stroke-linecap="round"/>
+          <line x1="3" y1="52" x2="11" y2="52" stroke="#94A3B8" stroke-width="1" stroke-linecap="round"/>
+          <line x1="21" y1="52" x2="33" y2="52" stroke="#94A3B8" stroke-width="1" stroke-linecap="round"/>
+          <text x="27" y="45" text-anchor="middle" fill="#DC2626" font-size="9" font-weight="bold" font-family="Arial,sans-serif">?</text>
+        </svg>
+      </span>
+      <h2 class="section-title" style="margin-bottom:0;">מתי בפעם האחרונה<br>גיליון אקסל סגר לך עסקה?</h2>
+    </div>
+    <p class="section-sub fade-up">בדיוק. הוא לא. הוא רק יושב שם עם עשרות טאבים פתוחים, מחכה שמישהו יזכור שהוא קיים.</p>
     <div class="pain-grid">
+      <div class="pain-card fade-up">
+        <span class="pain-emoji">😵</span>
+        <div class="pain-quote">"יש לי 4 אקסלים, 2 קבוצות וואטסאפ ודוקטור גוגל."</div>
+        <div class="pain-after">כל הלידים במקום אחד. סוף סוף.</div>
+      </div>
       <div class="pain-card fade-up">
         <span class="pain-emoji">😬</span>
         <div class="pain-quote">"שלחתי הצעה לפני שבועיים. אני חושב. אולי שלושה."</div>
-        <div class="pain-after">המערכת מזכירה לך בדיוק מתי לחזור</div>
+        <div class="pain-after">המערכת מזכירה בדיוק מתי לחזור, בלי צורך לזכור לבד</div>
       </div>
       <div class="pain-card fade-up">
         <span class="pain-emoji">🤦</span>
         <div class="pain-quote">"הליד הזה היה חם. בטוח. סתם שכחתי לחזור."</div>
-        <div class="pain-after">ציון AI מסמן מי דחוף לפני שתשכח</div>
+        <div class="pain-after">ציון AI מסמן מי דחוף, לפני שהוא נהיה עוד ליד שנשכח</div>
       </div>
-      <div class="pain-card fade-up">
-        <span class="pain-emoji">😵</span>
-        <div class="pain-quote">"יש לי 4 אקסלים, 2 קבוצות וואטסאפ ודוקטור גוגל."</div>
-        <div class="pain-after">כל הלידים במקום אחד, מסודר, נגיש</div>
+    </div>
+    <p style="text-align:center;font-size:14px;color:var(--text-muted);margin-top:28px;">אם זה נשמע מוכר מדי, תמשיך לקרוא.</p>
+
+    <div class="pain-free-list">
+      <p class="pain-free-item">🚫 לא צריך יותר לעבוד עם אקסלים</p>
+      <p class="pain-free-item">🚫 לא צריך לרדוף אחרי לידים</p>
+      <p class="pain-free-item">🚫 לא צריך לזכור משימות</p>
+      <p class="pain-free-item">🚫 לא צריך לחפש מידע בין WhatsApp, פתקים והודעות</p>
+      <p class="pain-free-item pain-free-yes">✅ הכל נמצא במקום אחד.</p>
+    </div>
+    <div class="section-cta-wrap">
+      <p class="section-pre-cta">הגיע הזמן לנצל יותר הזדמנויות ולהתחיל לבנות את הפייפליין.</p>
+      <a href="https://liders-crm.com" class="btn-primary">מתחילים לסגור יותר עסקאות</a>
+      <p class="cta-trust-line">פתיחת החשבון אורכת כדקה · 30 ימי ניסיון בחינם · ללא כרטיס אשראי</p>
+    </div>
+  </div>
+</section>
+
+<!-- רחוב, עגורן ושלטי חוצות -->
+<div class="street-scene" id="streetScene" aria-hidden="true">
+  <div class="ss-sky"></div>
+  <div class="ss-skyline">
+    <div class="ss-building ss-b1"></div>
+    <div class="ss-building ss-b2"></div>
+    <div class="ss-building ss-b3"><div class="ss-crane"></div></div>
+    <div class="ss-building ss-b4"></div>
+    <div class="ss-building ss-b5"></div>
+  </div>
+  <div class="ss-road"></div>
+  <div class="ss-billboard ss-bb1">
+    <div class="bb-post"></div>
+    <div class="bb-face">
+      <div class="bb-state bb-state-a">🏠 למכירה · דירת 4 חדרים</div>
+      <div class="bb-state bb-state-b">✅ נמכר!</div>
+    </div>
+  </div>
+  <div class="ss-billboard ss-bb2">
+    <div class="bb-post"></div>
+    <div class="bb-face">
+      <div class="bb-state bb-state-a">📐 תוכניות אושרו</div>
+      <div class="bb-state bb-state-b">✓ פרויקט הושלם</div>
+    </div>
+  </div>
+  <div class="ss-billboard ss-bb3">
+    <div class="bb-post"></div>
+    <div class="bb-face">
+      <div class="bb-state bb-state-a">💰 משכנתה אושרה</div>
+      <div class="bb-state bb-state-b">🎉 עסקה נסגרה</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 הסוכנים -->
+<section class="agents-section" id="agents">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">5 סוכנים חכמים שעובדים בשבילך כל החודש מבלי לקחת משכורת 👌</h2>
+    <p class="section-sub fade-up">כל אחד עם תפקיד מוגדר שיודע לבצע את העבודה על הצד המקצועי ביותר.</p>
+    <div class="agents-grid fade-up">
+      <div class="agent-card">
+        <span class="agent-icon">🎯</span>
+        <div class="agent-title">הסוכן שמדרג לידים</div>
+        <div class="agent-desc">בודק כל ליד ונותן לו ציון מ-0 עד 100. לא ניחוש, חישוב. יודעים בדיוק עם מי לדבר קודם.</div>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">✍️</span>
+        <div class="agent-title">סוכן השיווק</div>
+        <div class="agent-desc">כותב הצעות, פוסטים לסושיאל וקמפיינים תוך שניות. מאשרים, שולחים, וזהו.</div>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">⚡</span>
+        <div class="agent-title">הסוכן שמתעד בשבילך</div>
+        <div class="agent-desc">מסכמים בקול או בכתב מה היה בשיחה — המערכת כותבת משפט ברור ישר לכרטיס הליד.</div>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">🎧</span>
+        <div class="agent-title">סוכן התמיכה</div>
+        <div class="agent-desc">עונה על שאלות לגבי המערכת בכל שעה, כולל ב-2 בלילה כשעוד ערים עם ההצעה הבאה.</div>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">🔥</span>
+        <div class="agent-title">סוכן המוטיבציה</div>
+        <div class="agent-desc">כל בוקר מזכיר לך למה התחלת, לפני שהיום מספיק להזכיר לך למה זה קשה.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- תצוגת המערכת -->
-<section class="demo-section" id="demo">
+<!-- תחומי עיסוק -->
+<section class="industry-section">
   <div class="section-inner">
-    <p class="section-label fade-up">מה שתראה בפנים</p>
-    <h2 class="section-title fade-up">ממשק שתשמח לפתוח בבוקר</h2>
-    <p class="section-sub fade-up">מובייל ראשון, RTL מלא, מהיר. בנוי לסוכן שנמצא כל הזמן בתנועה.</p>
+    <h2 class="section-title fade-up">🔺 המשולש הקדוש</h2>
+    <p class="section-sub fade-up" style="font-size:clamp(18px,2.6vw,24px);font-weight:800;color:rgba(255,255,255,0.80);margin-bottom:36px;">שלושה תחומים שמשלימים כל עסקה מוצלחת</p>
+    <div class="industry-cards fade-up">
 
-    <div class="phone-mockup-wrap">
-      <!-- מסך לידים -->
-      <div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="screen-header">
-              <div class="screen-title-txt">הלידים שלי</div>
-              <div class="screen-badge">3 חמים</div>
-            </div>
-            <div class="lead-card-demo hot">
-              <div class="lcd-name">שרה אביב</div>
-              <div class="lcd-info">5.2M ₪ • תל אביב</div>
-              <div class="lcd-score">🔥 AI 94 • חם מאוד</div>
-            </div>
-            <div class="lead-card-demo active">
-              <div class="lcd-name">דני ברקת</div>
-              <div class="lcd-info">3.1M ₪ • הרצליה</div>
-              <div class="lcd-score">⚡ AI 81 • פנה אתמול</div>
-            </div>
-            <div class="lead-card-demo active">
-              <div class="lcd-name">רחל מזרחי</div>
-              <div class="lcd-info">4.5M ₪ • רמת גן</div>
-              <div class="lcd-score">📋 AI 88 • ממתין תשובה</div>
-            </div>
-            <div class="lead-card-demo done">
-              <div class="lcd-name">נועם פרץ</div>
-              <div class="lcd-info">3.8M ₪ • רעננה</div>
-              <div class="lcd-score">✓ עסקה סגורה</div>
-            </div>
-          </div>
-        </div>
-        <div class="phone-label">לוח לידים חכם</div>
+      <!-- סוכני נדל"ן -->
+      <div class="ind-card">
+        <div class="ind-icon-row">🏠 <span class="key-anim">🔑</span> 📊</div>
+        <div class="ind-title">סוכני נדל"ן</div>
+        <div class="ind-sub">עסקאות · לידים · בלעדיות</div>
+        <div class="ind-terms">נכס · קונה · מוכר · ביקור · עמלה · פייפליין</div>
       </div>
 
-      <!-- מסך ליד בודד -->
-      <div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="screen-header">
-              <div class="screen-title-txt">שרה אביב</div>
-              <div class="screen-badge" style="background:rgba(249,115,22,0.25);color:#FCA572;">חם</div>
-            </div>
-            <div style="background:rgba(249,115,22,0.12);border-radius:8px;padding:10px;margin-bottom:10px;">
-              <div style="font-size:9px;color:rgba(255,255,255,0.50);margin-bottom:4px;">ציון AI</div>
-              <div style="font-size:22px;font-weight:900;color:#FCD34D;">94 / 100</div>
-              <div style="font-size:9px;color:rgba(255,255,255,0.50);margin-top:2px;">פוטנציאל גבוה מאוד</div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
-              <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:8px;">
-                <div style="font-size:8px;color:rgba(255,255,255,0.40);">תקציב</div>
-                <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);">5.2M ₪</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:8px;">
-                <div style="font-size:8px;color:rgba(255,255,255,0.40);">שלב</div>
-                <div style="font-size:11px;font-weight:700;color:#FCA572;">משא ומתן</div>
-              </div>
-            </div>
-            <div style="background:rgba(37,99,235,0.15);border-radius:8px;padding:10px;">
-              <div style="font-size:9px;color:#93C5FD;font-weight:700;margin-bottom:4px;">💡 המלצת AI</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.70);line-height:1.5;">לא פנית אליה 5 ימים. על פי הדפוס שלה, עדיף בוקר. שלח הודעה עכשיו.</div>
-            </div>
-          </div>
-        </div>
-        <div class="phone-label">כרטיס ליד חכם</div>
+      <!-- עו"ד נדל"ן -->
+      <div class="ind-card">
+        <div class="ind-icon-row"><span class="scale-anim">⚖️</span> 📋 🛡️</div>
+        <div class="ind-title">עו"ד נדל"ן</div>
+        <div class="ind-sub">תיקים · חוזים · בדיקת נאותות</div>
+        <div class="ind-terms">הסכם מכר · טאבו · הערת אזהרה · עסקה · זכויות</div>
+      </div>
+
+      <!-- עיצוב פנים -->
+      <div class="ind-card interior-card">
+        <div class="ind-icon-row"><span class="pencil-anim">✏️</span> 🎨 💡</div>
+        <div class="ind-title">עיצוב פנים</div>
+        <div class="ind-sub">קונספט · הדמיה · סטיילינג</div>
+        <div class="ind-terms">סקיצה · חומרים · תאורה · לוח השראה · Mood board</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- מעבר מכהה לבהיר -->
+<div class="sect-blend-light" aria-hidden="true"></div>
+
+<!-- כאב: ליד מחוץ לאזור / תחום -->
+<section class="section referral-pain-section">
+  <div class="section-inner rp-inner">
+    <h2 class="rp-heading fade-up">כמה פעמים יצא שקיבלת שיחה ממישהו בעבר שסגרת איתו עסקה מוצלחת, וניסה להפנות לך ליד שלא עובד בתחום האזור שלך?</h2>
+    <div class="rp-body fade-up">
+      <p class="rp-hook">ויתרת על ליד שכנראה יכולת להרוויח עליו כסף.</p>
+      <p>אם זה מוכר לך, אז יש לנו בשורה משמחת. הבאנו את הפתרון המושלם והמדוייק עבור הבעיה.</p>
+      <p>אצלנו ב-Liders תוכלו להרוויח עמלות אמיתיות בכסף על הפניות לסוכן רלוונטי.</p>
+      <p>כל זה מתבצע מתוך המערכת בעמלה שנקבעת על ידי המפנה ומוסכמת על הצד המקבל עם חתימה דיגיטלית, ותופסת מבחינה משפטית.</p>
+      <p class="rp-cta-hint">לוח ההזדמנויות מחכה בפנים — כל ההפניות, העמלות, החוזים — בלחיצה אחת.</p>
+    </div>
+  </div>
+</section>
+
+<!-- המשולש הקדוש — זרימת עסקה -->
+<section class="section holy-triangle-section" id="holy-triangle">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">איך עובד השילוב המיוחד הזה?</h2>
+
+    <!-- משולש הפניות אנימטיבי -->
+    <div class="tri-stage fade-up" id="triStage">
+      <svg class="tri-svg" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path id="triE1" class="tri-edge" d="M 470,55 L 130,55" stroke-dasharray="345" stroke-dashoffset="345"/>
+        <path id="triE2" class="tri-edge" d="M 130,55 L 300,308" stroke-dasharray="415" stroke-dashoffset="415"/>
+        <path id="triE3" class="tri-edge" d="M 300,308 L 470,55" stroke-dasharray="415" stroke-dashoffset="415"/>
+        <circle class="tri-dot" r="7" fill="var(--blue,#2563EB)" opacity="0">
+          <animateMotion dur="2.8s" repeatCount="indefinite" begin="2.2s"><mpath href="#triE1"/></animateMotion>
+          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.2s" fill="freeze"/>
+        </circle>
+        <circle class="tri-dot" r="7" fill="#C49A2A" opacity="0">
+          <animateMotion dur="3.5s" repeatCount="indefinite" begin="3.8s"><mpath href="#triE2"/></animateMotion>
+          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="3.8s" fill="freeze"/>
+        </circle>
+        <circle class="tri-dot" r="7" fill="#7C3AED" opacity="0">
+          <animateMotion dur="3.2s" repeatCount="indefinite" begin="5.4s"><mpath href="#triE3"/></animateMotion>
+          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="5.4s" fill="freeze"/>
+        </circle>
+      </svg>
+      <div class="tri-node tri-n1">
+        <div class="tn-icon">🏠</div>
+        <div class="tn-role">סוכן נדל״ן</div>
+        <div class="tn-hint">מחבר קונים, מוכרים ונכסים</div>
+      </div>
+      <div class="tri-node tri-n2">
+        <div class="tn-icon">⚖️</div>
+        <div class="tn-role">עו״ד נדל״ן</div>
+        <div class="tn-hint">בדיקה, חוזה, הגנה משפטית</div>
+      </div>
+      <div class="tri-node tri-n3">
+        <div class="tn-icon">🎨</div>
+        <div class="tn-role">עיצוב פנים</div>
+        <div class="tn-hint">הופך את הבית לחלום</div>
+      </div>
+    </div>
+
+    <!-- 6 נתיבים — רצועת scroll אופקית -->
+    <div class="tri-flows fade-up" aria-label="נתיבי הפניה">
+      <div class="tri-flows-track">
+        <div class="tf-pill">🏠 סוכן — לקוח מצא נכס — ⚖️ עו״ד</div>
+        <div class="tf-pill">🏠 סוכן — עסקה נסגרה — 🎨 עיצוב</div>
+        <div class="tf-pill">⚖️ עו״ד — לקוח רוצה לקנות — 🏠 סוכן</div>
+        <div class="tf-pill">⚖️ עו״ד — חוזה נחתם — 🎨 עיצוב</div>
+        <div class="tf-pill">🎨 עיצוב — לקוח מחפש דירה — 🏠 סוכן</div>
+        <div class="tf-pill">🎨 עיצוב — צריך בדיקת נאותות — ⚖️ עו״ד</div>
+      </div>
+    </div>
+
+    <div class="opp-explainer fade-up">
+      <div class="oe-title">📋 לוח ההזדמנויות — שוק ההפניות הפנימי של לידרס</div>
+      <div class="oe-desc">יש לקוח שצריך מישהו מחוץ לתחום שלך או מחוץ לאזור? מפרסמים הזדמנות בלוח הפנימי עם עמלה — הבעל מקצוע המתאים מגיב, וכל ההסכמות מגובות בחתימה דיגיטלית. בלי הסכמים בוואטסאפ שנשכחים, בלי אי-נעימויות בסוף.</div>
+      <div class="oe-examples">
+        <div class="oe-ex-label">דוגמאות מהמערכת</div>
+        <div class="oe-ex-card">🏠 <strong>סוכן נדל"ן:</strong> "יש לי קונה שמחפש 4 חדרים בנתניה, אבל אני לא מכסה את האזור. מחפש סוכן מתאים לשיתוף — עמלה 10% מהרווח, חתימה דיגיטלית דרך המערכת."</div>
+        <div class="oe-ex-card" style="margin-top:10px;">⚖️ <strong>עו"ד נדל"ן:</strong> "קיבלתי לקוח שרוצה למכור דירה בתל אביב ומחפש סוכן אמין באזור. מוכן לשתף ליד — עמלה 15% מהעמלה הסופית של הסוכן."</div>
+        <div class="oe-ex-card" style="margin-top:10px;">🎨 <strong>עיצוב פנים:</strong> "לקוח שמחפש לקנות 3 חדרים ברמת גן — צריך סוכן מנוסה באזור. אשמח להפנות בעמלה על הסגירה."</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- סוכן AI -->
-<section class="ai-section">
-  <div class="section-inner">
-    <p class="section-label fade-up">הסוכן החכם שלך</p>
-    <h2 class="section-title fade-up">הסוכן שלא ישן. אף פעם.</h2>
-    <p class="section-sub fade-up">שאל אותו מה שאתה רוצה. הוא יודע יותר ממה שאתה חושב.</p>
+<div class="sect-blend-light" aria-hidden="true"></div>
 
-    <div class="chat-demo fade-up">
-      <div class="chat-header">
-        <div class="chat-avatar">🤖</div>
-        <div>
-          <div class="chat-agent-name">סוכן Liders AI</div>
-          <div class="chat-agent-status">● פעיל עכשיו</div>
+<!-- קצת עלינו -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <p class="section-label fade-up">הסיפור שלנו</p>
+    <h2 class="section-title fade-up">בנינו את Liders כי מגיע לעולם הנדלן טוב יותר</h2>
+    <p class="about-text fade-up">
+      ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות.
+    </p>
+    <div class="about-pillars fade-up">
+      <div class="about-pillar">
+        <span class="ap-icon">🎯</span>
+        <div class="ap-title">פחות ניהול, יותר מכירה</div>
+        <div class="ap-desc">המערכת עושה את העבודה השוטפת, ומפנה זמן למה שמייצר עסקאות</div>
+      </div>
+      <div class="about-pillar">
+        <span class="ap-icon">🇮🇱</span>
+        <div class="ap-title">נבנה לשוק הישראלי</div>
+        <div class="ap-desc">עברית מלאה ב-RTL, מותאם לאופן שבו עובדים כאן באמת</div>
+      </div>
+      <div class="about-pillar">
+        <span class="ap-icon">🤖</span>
+        <div class="ap-title">AI שעובד בשבילך</div>
+        <div class="ap-desc">לא עוד עומס מידע, אלא תובנות פשוטות שעוזרות לך להחליט מהר</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ויטרינת פיצ'רים -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">מה מקבלים בפנים?</h2>
+    <p class="section-subtitle fade-up" style="font-size:clamp(19px,2.8vw,26px);font-weight:800;color:var(--navy);text-align:center;margin-bottom:12px;">מערכת שלמה שנוצרה בול בשבילך</p>
+    <p class="section-sub fade-up">נגיעה קטנה מכלים שמחכים לך בתוך המערכת, שכל הזמן רק הולכת ומתעדכנת, מבלי ללמוד שום דבר חדש. כל עדכון שנבצע במערכת נדאג לעדכן אותך.</p>
+
+    <div class="feat-tabs fade-up" role="tablist">
+      <button class="ft-tab active" data-ftab="0" role="tab" aria-selected="true">📋 פייפליין</button>
+      <button class="ft-tab" data-ftab="1" role="tab" aria-selected="false">🎮 גיימיפיקציה</button>
+      <button class="ft-tab" data-ftab="2" role="tab" aria-selected="false">🏠 כלים ואינטגרציות</button>
+    </div>
+    <div class="feat-progress" aria-hidden="true"><div class="fp-bar"></div></div>
+
+    <div class="feature-groups feat-carousel">
+      <div class="feature-group fade-up" data-tab-panel="0">
+        <h3 class="fg-title">📋 ניהול פייפליין</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="fc-icon">🗂️</span>
+            <div class="fc-title">לוח קנבן בגרירה</div>
+            <div class="fc-desc">גוררים ליד בין שלבים בנגיעה אחת, בלי טפסים ובלי קליקים מיותרים</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🎯</span>
+            <div class="fc-title">ציון AI לכל ליד</div>
+            <div class="fc-desc">המערכת מדרגת כל ליד לפי פוטנציאל סגירה, כדאי לדעת למי לפנות קודם</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">⏰</span>
+            <div class="fc-title">תזכורות חכמות</div>
+            <div class="fc-desc">אף ליד לא נשכח, המערכת מזכירה בדיוק מתי לחזור</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">📥</span>
+            <div class="fc-title">ייבוא וייצוא מהיר</div>
+            <div class="fc-desc">מעבירים את כל הלידים מאקסל בלחיצה אחת, בלי הקלדה ידנית</div>
+          </div>
         </div>
       </div>
 
-      <div class="chat-msg msg-user">
-        <div class="msg-bubble">אילו לידים לא טיפלתי בהם השבוע?</div>
+      <div class="feature-group fade-up" data-tab-panel="1">
+        <h3 class="fg-title">🎮 גיימיפיקציה שגורמת לך לרצות לפתוח את המערכת</h3>
+        <div class="feature-grid">
+          <div class="feature-card feature-card-game">
+            <span class="fc-icon">⭐</span>
+            <div class="fc-title">נקודות XP</div>
+            <div class="fc-desc">כל פעולה במערכת, מהוספת ליד ועד סגירת עסקה, שווה נקודות</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🏆</span>
+            <div class="fc-title">הישגים ואבני דרך</div>
+            <div class="fc-desc">תגי הצלחה שנפתחים ככל שמתקדמים, כי מגיע לך הכרה</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🎁</span>
+            <div class="fc-title">חנות פרסים</div>
+            <div class="fc-desc">צוברים XP ופודים אותו בייעוץ שיווקי, דף נחיתה ועוד</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🔥</span>
+            <div class="fc-title">סטריקים יומיים</div>
+            <div class="fc-desc">שומרים על רצף פעילות, והמערכת חוגגת איתך כל הישג</div>
+          </div>
+        </div>
       </div>
-      <div class="chat-msg msg-ai">
-        <div class="msg-bubble">יש לך <strong>4 לידים</strong> שלא עודכנו מעל 5 ימים. הכי דחוף: שרה אביב, ציון 94, ממתינה לחזרה מאז ראשון.</div>
-      </div>
-      <div class="chat-msg msg-user">
-        <div class="msg-bubble">מי הכי קרוב לסגירה?</div>
-      </div>
-      <div class="chat-msg msg-ai">
-        <div class="msg-bubble">שרה אביב (94) ויוסי גבאי (88). שניהם בשלב משא ומתן. <strong>שרה לא ענתה 5 ימים</strong>, כדאי לפנות עכשיו.</div>
-      </div>
-      <div class="chat-msg msg-user">
-        <div class="msg-bubble">כמה עסקאות סגרתי החודש?</div>
-      </div>
-      <div class="chat-msg msg-ai">
-        <div class="msg-bubble"><strong>3 עסקאות</strong> בסכום כולל של 11.5M ₪. חודש מעולה. ממוצע הזמן לסגירה: 18 ימים.</div>
+
+      <div class="feature-group fade-up" data-tab-panel="2">
+        <h3 class="fg-title">🏠 כלים לעולם הנדל"ן ואינטגרציות</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="fc-icon">🏦</span>
+            <div class="fc-title">מחשבון משכנתא</div>
+            <div class="fc-desc">כלי ייחודי שלא קיים אצל אף מתחרה, ישירות בתוך כרטיס הליד</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">📲</span>
+            <div class="fc-title">חיבור WhatsApp ואוטומציות</div>
+            <div class="fc-desc">התראות והודעות זורמות אוטומטית דרך Make, בלי להתעסק ידנית</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🔗</span>
+            <div class="fc-title">שיתוף ליד מאובטח עם PIN</div>
+            <div class="fc-desc">משתפים ליד ספציפי עם קולגה, מוגן בקוד אישי בלבד וללא גישה לשאר המערכת</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">🤝</span>
+            <div class="fc-title">לולאת הפניות בין קולגות</div>
+            <div class="fc-desc">סגרת עסקה? מפנים את הלקוח לעו"ד או למעצב בוואטסאפ, והליד נכנס ישר לפייפליין שלהם</div>
+          </div>
+        </div>
       </div>
     </div>
-    <p style="text-align:center;font-size:13px;color:rgba(255,255,255,0.35);margin-top:20px;">כי לפעמים צריך מישהו שיגיד לך מה אתה כבר יודע.</p>
   </div>
 </section>
 
@@ -1189,85 +3056,125 @@
       <div class="step-card fade-up">
         <div class="step-num">3</div>
         <div class="step-title">AI עושה את העבודה</div>
-        <div class="step-desc">מדרג לידים, שולח תזכורות, מזהה הזדמנויות. אתה רק צריך להגיע לפגישה.</div>
-        <div class="step-micro">הסוכן עובד גם כשאתה לא.</div>
+        <div class="step-desc">מדרג לידים, שולח תזכורות, מזהה הזדמנויות. נשאר לך רק להגיע לפגישה.</div>
+        <div class="step-micro">הסוכן עובד תמיד, גם מאחורי הקלעים.</div>
       </div>
+    </div>
+    <div class="section-cta-wrap" style="margin-top:40px;">
+      <p class="section-pre-cta">עוד רגע ותעבדו בצורה הרבה יותר מסודרת.<br>✓ כל הלידים במקום אחד &nbsp;·&nbsp; ✓ AI שעובד בשבילכם &nbsp;·&nbsp; ✓ מעקב מלא אחרי כל עסקה</p>
+      <a href="https://liders-crm.com" class="btn-primary">מצטרפים לסוכנים שעובדים חכם יותר</a>
+      <p class="cta-trust-line">30 ימי ניסיון בחינם · גישה מלאה לכל הפיצ'רים · ביטול בכל עת</p>
     </div>
   </div>
 </section>
 
+<!-- divider: מסמכים עפים לתיקיה דיגיטלית — מעבר לתמחור -->
+<div class="doc-funnel" id="docFunnel" aria-hidden="true">
+  <div class="df-paper df-p1"><div class="dp-l"></div><div class="dp-l"></div><div class="dp-l dp-s"></div></div>
+  <div class="df-paper df-p2"><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
+  <div class="df-paper df-p3"><div class="dp-l"></div><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
+  <div class="df-paper df-p4"><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
+  <div class="df-paper df-p5"><div class="dp-l"></div><div class="dp-l dp-s"></div></div>
+  <div class="df-folder" id="dfFolder">
+    <div class="df-fold-tab"></div>
+    <div class="df-fold-body"><div class="df-fold-logo">L</div></div>
+    <div class="df-fold-lid"></div>
+  </div>
+  <p class="df-caption">הכל מסודר, הכל בשליטה</p>
+</div>
+
 <!-- תמחור -->
-<section class="pricing-section">
+<section class="pricing-section" id="pricing">
   <div class="section-inner">
     <p class="section-label fade-up">שקוף לחלוטין</p>
-    <h2 class="section-title fade-up">בחר את הגודל שלך</h2>
+    <h2 class="section-title fade-up">הגודל שמתאים לך</h2>
     <p class="section-sub fade-up">אפשר לשדרג בכל עת. אי אפשר לאבד את הנתונים.</p>
 
     <div class="plans-grid">
       <div class="plan-card fade-up">
+        <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">Solo</div>
-        <div class="plan-desc">לסוכן עצמאי</div>
-        <div class="plan-price">₪150<small>/חודש</small></div>
+        <div class="plan-desc">לעצמאי: סוכן נדל"ן, עו"ד, עיצוב פנים</div>
+        <div class="plan-price">₪179<small>/חודש</small></div>
+        <div class="plan-annual-teaser">📅 שנתי · ₪124/חודש · חיסכון ₪658</div>
         <div class="plan-limit">1 סוכן · עד 200 לידים</div>
+        <div><span class="plan-trial-badge">🎁 כולל 30 יום ניסיון חינם מלא</span></div>
         <ul class="plan-features">
           <li>לוח Kanban מלא</li>
           <li>תזכורות WhatsApp</li>
           <li>ציון AI לכל ליד</li>
           <li>אפליקציה למובייל</li>
-          <li>30 יום ניסיון חינם</li>
+          <li>5 סוכני AI צמודים</li>
         </ul>
-        <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> — שירותי שיווק מלאים</span></div>
-        <a href="https://liders-crm.com" class="plan-btn outline">התחל בחינם</a>
+        <div class="plan-addon"><span class="star-live">✨</span> <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
+        <a href="https://liders-crm.com" class="plan-btn outline">מתחילים בחינם</a>
+        <p class="plan-cta-reassure">ניסיון 30 יום בחינם · ללא כרטיס אשראי · ביטול בכל עת</p>
       </div>
 
       <div class="plan-card featured fade-up">
         <div class="plan-popular">⭐ הכי פופולרי</div>
+        <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">צוות</div>
-        <div class="plan-desc">לצוות קטן</div>
-        <div class="plan-price">₪300<small>/חודש</small></div>
-        <div class="plan-limit">5 סוכנים · עד 1,000 לידים</div>
+        <div class="plan-desc">לצוות שסוגר ביחד</div>
+        <div class="plan-price">₪349<small>/חודש</small></div>
+        <div class="plan-annual-teaser">📅 שנתי · ₪249/חודש · חיסכון ₪1,198</div>
+        <div class="plan-limit">3 סוכנים כלולים · עד 1,000 לידים</div>
+        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 8 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
         <ul class="plan-features">
-          <li>כל מה שב Solo</li>
-          <li>עד 5 סוכנים</li>
+          <li>כל מה שב-Solo</li>
+          <li>3 סוכנים כלולים, ניתן להרחיב עד 8</li>
           <li>אנליטיקס צוות</li>
           <li>דוחות ביצועים</li>
         </ul>
-        <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> — שירותי שיווק מלאים</span></div>
-        <a href="https://liders-crm.com" class="plan-btn primary">בחר צוות</a>
+        <div class="plan-addon"><span class="star-live">✨</span> <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
+        <a href="https://liders-crm.com" class="plan-btn primary tractor-btn">בוחרים בצוות</a>
+        <p class="plan-cta-reassure">30 יום ניסיון מלא · הצוות מתחיל ביחד · ביטול בכל עת</p>
       </div>
 
       <div class="plan-card fade-up">
+        <div class="plan-launch-badge">🚀 מחיר השקה · יעלה בהמשך</div>
         <div class="plan-name">סוכנות</div>
-        <div class="plan-desc">לסוכנות נדל"ן</div>
-        <div class="plan-price">₪550<small>/חודש</small></div>
-        <div class="plan-limit">סוכנים ולידים ללא הגבלה</div>
+        <div class="plan-desc">לסוכנות או משרד גדול</div>
+        <div class="plan-price">₪549<small>/חודש</small></div>
+        <div class="plan-annual-teaser">📅 שנתי · ₪399/חודש · חיסכון ₪1,798</div>
+        <div class="plan-limit">10 סוכנים כלולים · לידים ללא הגבלה</div>
+        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 25 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
         <ul class="plan-features">
-          <li>כל מה שב צוות</li>
-          <li>סוכנים ללא הגבלה</li>
+          <li>כל מה שב-צוות</li>
+          <li>10 סוכנים כלולים, ניתן להרחיב עד 25</li>
           <li>לידים ללא הגבלה</li>
-          <li>תמיכה עדיפות</li>
+          <li>תמיכה בעדיפות גבוהה</li>
         </ul>
-        <div class="plan-addon">✨ <span>+ <strong>₪100/חודש</strong> — שירותי שיווק מלאים</span></div>
-        <a href="https://liders-crm.com" class="plan-btn outline">בחר סוכנות</a>
+        <div class="plan-addon"><span class="star-live">✨</span> <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
+        <a href="https://liders-crm.com" class="plan-btn outline">בוחרים בסוכנות</a>
+        <p class="plan-cta-reassure">ניסיון מלא · תמיכה בעדיפות · ביטול ללא קנסות</p>
       </div>
     </div>
 
-    <p class="pricing-note">כל החבילות כוללות 30 יום ניסיון חינם מלא. ביטול בכל עת. ללא קנסות וללא שאלות.</p>
+    <div class="custom-plan-strip fade-up">
+      <div>
+        <div class="cps-title">צריך חבילה גדולה יותר?</div>
+        <p class="cps-desc">מעל 25 סוכנים, צרכים מיוחדים או סוכנות בצמיחה מהירה? דברו איתנו ונתאים לכם את החבילה המושלמת, בדיוק לפי הצרכים שלכם.</p>
+      </div>
+      <a href="https://liders-crm.com" class="cps-btn">דברו איתנו 💬</a>
+    </div>
+
+    <p class="pricing-note">🎁 <strong>תקופת הניסיון החינם (30 יום) תקפה לחבילת הבסיס בלבד.</strong> בסיום הניסיון אפשר להצטרף לכל חבילה שתרצו ולצרף סוכנים נוספים. ביטול בכל עת, ללא קנסות וללא שאלות.</p>
   </div>
 </section>
 
 <!-- שירותי שיווק -->
 <section class="section marketing-section">
   <div class="section-inner">
-    <p class="section-label fade-up" style="color:#B45309;">✨ תוספת פרימיום · ₪100/חודש</p>
-    <h2 class="section-title fade-up">כלי שיווק מקצועיים — ישירות מהמערכת</h2>
-    <p class="section-sub fade-up">צור הצעות מיוחדות, פוסטים לסושיאל וקמפיינים ללקוחות — בלי לצאת מה-CRM ובלי לבזבז שעות.</p>
+    <h2 class="section-title fade-up" style="color:var(--navy);"><span class="star-live">✨</span> תוספת פרימיום — 100 שח לחודש</h2>
+    <p class="section-subtitle fade-up" style="font-size:clamp(18px,2.6vw,24px);font-weight:800;color:#B45309;text-align:center;margin-bottom:10px;">כלי שיווק מקצועיים</p>
+    <p class="section-sub fade-up" style="font-size:17px;font-weight:700;color:var(--navy);">&#10004;&#65039; יצירת הצעות שיווק מיוחדות &nbsp;&#10004;&#65039; פוסטים וקמפיינים ללקוחות.</p>
 
     <div class="marketing-banner fade-up">
-      <div class="mb-badge">תוספת שיווק — ₪100 לחודש על כל חבילה</div>
-      <h3 class="mb-title">תוכן שיווקי בלחיצה אחת — מותאם אישית לכל לקוח</h3>
+      <div class="mb-badge">תוספת שיווק: ₪100 לחודש על כל חבילה</div>
+      <h3 class="mb-title">תוכן שיווקי בלחיצה אחת, מותאם אישית לכל לקוח</h3>
       <p class="mb-desc">
-        3 כלים מובנים בתוך ה-CRM: מחולל הצעה מיוחדת לכל ליד, יוצר פוסטים לסושיאל לכל נכס, ומחולל קמפיין WhatsApp לרשימת לקוחות. אתה כותב, מעתיק, שולח — תוך שניות.
+        3 כלים מובנים בתוך ה-CRM: מחולל הצעה מיוחדת לכל ליד, יוצר פוסטים לסושיאל לכל נכס, ומחולל קמפיין WhatsApp לרשימת לקוחות. כותבים, מעתיקים, שולחים, הכל תוך שניות.
       </p>
 
       <div class="mb-features">
@@ -1275,34 +3182,34 @@
           <span class="mbf-icon">🎯</span>
           <div>
             <strong>הצעה מיוחדת לכל ליד</strong>
-            <span>בוחר ליד, בוחר סוג הצעה — המערכת כותבת הודעה אישית שתשלח מיידית</span>
+            <span>בוחר ליד, בוחר סוג הצעה, והמערכת כותבת הודעה אישית לשליחה מיידית</span>
           </div>
         </div>
         <div class="mb-feature">
           <span class="mbf-icon">📸</span>
           <div>
-            <strong>פוסט לסושיאל לכל נכס</strong>
-            <span>בוחר נכס ופלטפורמה (Instagram / Facebook / WhatsApp) — מקבל פוסט מוכן</span>
+            <strong>פוסט לסושיאל מותאם לתחום שלך</strong>
+            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית לעיצוב פנים — בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
           </div>
         </div>
         <div class="mb-feature">
           <span class="mbf-icon">📢</span>
           <div>
             <strong>קמפיין WhatsApp מוכן</strong>
-            <span>בוחר נושא (נכס חדש / ירידת מחיר / חג) — מקבל הודעת שידור לכל הלקוחות</span>
+            <span>בוחר נושא (נכס חדש / ירידת מחיר / חג) ומקבל הודעת שידור לכל הלקוחות</span>
           </div>
         </div>
         <div class="mb-feature">
           <span class="mbf-icon">🌟</span>
           <div>
-            <strong>שירות מלא — נציג יפנה אליך</strong>
-            <span>רוצה שנבנה עבורך דפי מכירה ותוכן מותאם? שלח בקשה מתוך המערכת</span>
+            <strong>שירות מלא: נציג יפנה אליך</strong>
+            <span>רוצים שנבנה דפי מכירה ותוכן מותאם? אפשר לשלוח בקשה מתוך המערכת</span>
           </div>
         </div>
       </div>
 
-      <a href="https://liders-crm.com" class="btn-marketing">הוסף שירותי שיווק לחבילה שלי →</a>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:14px;">ניתן להוסיף בכל עת · ביטול ללא קנסות · כמובן שהכל נתון לבחירתך החופשית</p>
+      <a href="https://liders-crm.com" class="btn-marketing">מוסיפים שיווק לחבילה</a>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:14px;">ניתן להוסיף בכל עת · ביטול ללא קנסות · שינוי תמיד אפשרי</p>
     </div>
 
     <!-- שירות מלא בנפרד -->
@@ -1310,21 +3217,83 @@
       <p style="font-size:13px;font-weight:800;color:var(--blue);letter-spacing:.05em;margin-bottom:8px;">שירות פרימיום · תמחור נפרד לכל בקשה</p>
       <h3 style="font-size:22px;font-weight:900;color:var(--navy);margin-bottom:10px;">רוצה שנבנה הכל עבורך?</h3>
       <p style="font-size:14px;color:var(--text-muted);line-height:1.7;max-width:480px;margin:0 auto 20px;">
-        אם תרצה שצוות Liders יבנה עבורך את דפי המכירה, התוכן וההצעות המיוחדות שתשלח ללקוחות — נציג שלנו יפנה אליך עם מספר שאלות שיעזרו לנו לכוון ולבנות בדיוק מה שתרצה, בצורה הטובה ביותר.
+        רוצים שצוות Liders יבנה את דפי המכירה, התוכן וההצעות המיוחדות לשליחה ללקוחות? נציג שלנו יצור קשר עם כמה שאלות שיעזרו לנו לכוון ולבנות בדיוק את הנדרש, בצורה הטובה ביותר.
       </p>
-      <a href="https://liders-crm.com" class="plan-btn primary" style="max-width:260px;display:inline-block;">שלח בקשה לנציג שלנו →</a>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">כמובן שהכל נתון לבחירתך החופשית</p>
+      <a href="https://liders-crm.com" class="plan-btn primary" style="max-width:260px;display:inline-block;">שליחת בקשה לנציג שלנו</a>
     </div>
   </div>
 </section>
 
+<!-- שאלות ותשובות -->
+<section class="section faq-section" id="faq">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">יש תשובה לכל השאלות שלך</h2>
+    <p class="section-sub fade-up">ואם לא ראית כאן את התשובה שלך, תמיד אפשר לפנות אלינו לתמיכה (גם מתוך הסוכן במערכת).</p>
+
+    <div class="faq-list fade-up">
+      <details class="faq-item">
+        <summary>יש התחייבות לתקופה מסוימת?</summary>
+        <div class="faq-answer">לא. אפשר לבטל בכל עת, ללא קנסות וללא שאלות. מתחילים עם 30 יום ניסיון חינם מלא בחבילת הבסיס, ובסיומו אפשר להצטרף לכל חבילה שמתאימה לכם ולצרף סוכנים נוספים.</div>
+      </details>
+      <details class="faq-item">
+        <summary>מה קורה לנתונים שלי אחרי שהניסיון החינמי נגמר?</summary>
+        <div class="faq-answer">הנתונים נשארים שמורים אצלך במערכת. כדי להמשיך להשתמש בהם צריך לשדרג לחבילה בתשלום, אבל שום דבר לא נמחק או הולך לאיבוד.</div>
+      </details>
+      <details class="faq-item">
+        <summary>המערכת מתאימה לעצמאי או רק לצוותים גדולים?</summary>
+        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי — סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים — וחבילות צוות וסוכנות גדלות איתך: מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
+      </details>
+      <details class="faq-item">
+        <summary>כמה זמן לוקח להתחיל לעבוד בפועל?</summary>
+        <div class="faq-answer">נרשמים תוך כ-60 שניות, מכניסים את הלידים הראשונים (ידנית או בייבוא מאקסל), והפייפליין כבר פעיל.</div>
+      </details>
+      <details class="faq-item">
+        <summary>הממשק באמת בעברית מלאה?</summary>
+        <div class="faq-answer">כן, כל המערכת בנויה מההתחלה בעברית וב-RTL מלא, לא תרגום שנדבק על מערכת זרה.</div>
+      </details>
+      <details class="faq-item">
+        <summary>איך הנתונים שלי ושל הלקוחות שלי מאובטחים?</summary>
+        <div class="faq-answer">הצפנת HTTPS/TLS מלאה, בידוד נתונים בין חשבונות, סיסמאות מוצפנות שלא נשמרות כטקסט גלוי, אימות חתימות דיגיטליות על בקשות נכנסות, ובידוד tenant בכל פעולת אוטומציה. אפשר לקרוא עוד בעמוד מדיניות הפרטיות.</div>
+      </details>
+      <details class="faq-item">
+        <summary>יש לי כבר קובץ אקסל עם מאות לידים, אפשר להעביר בלי להתחיל מאפס?</summary>
+        <div class="faq-answer">כן. ייבוא מ-CSV בלחיצה אחת, כל הלידים עולים למערכת בלי להקליד שורה אחת ידנית.</div>
+      </details>
+      <details class="faq-item">
+        <summary>מה זה בעצם 5 הסוכנים? זה AI אמיתי או עוד באזז שיווקי?</summary>
+        <div class="faq-answer">AI אמיתי, בנוי על אחת הטכנולוגיות המתקדמות בעולם, מותאם אישית לכל משימה. לא צ'אטבוט אחד שמנסה לעשות הכל, אלא חמישה כלים ממוקדים שכל אחד עושה דבר אחד טוב.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- רצועת אמון / אבטחה -->
+<section class="trust-strip" id="trust-section">
+  <div class="trust-title">🛡️ הנתונים שלך ושל הלקוחות שלך מוגנים ברמה הגבוהה ביותר</div>
+  <div class="trust-grid fade-up">
+    <div class="trust-item"><span class="ti-icon">🔐</span> הצפנת HTTPS/TLS מלאה</div>
+    <div class="trust-item"><span class="ti-icon">🧩</span> בידוד נתונים מלא בין חשבונות</div>
+    <div class="trust-item"><span class="ti-icon">🇪🇺</span> שרתים מאובטחים באירופה</div>
+    <div class="trust-item"><span class="ti-icon">🔑</span> סיסמאות מוצפנות, לא נשמרות כטקסט גלוי</div>
+  </div>
+  <a href="https://liders-crm.com/privacy-policy.html#security" class="trust-link">לקריאה על מדיניות האבטחה שלנו</a>
+</section>
+
+<div class="sect-blend-dark" aria-hidden="true"></div>
+
 <!-- סגירה -->
 <section class="closing">
-  <h2>הליד הבא שלך<br>כבר <span class="gold">מחכה.</span></h2>
-  <p>אם לא אהבת אחרי 30 יום, לפחות הפייפליין שלך יהיה מסודר.</p>
+  <h2>העסקה הבאה שלך<br>כבר <span class="gold">מחכה.</span></h2>
+  <p>30 יום מלאים על חשבוננו — ללא כרטיס אשראי, ללא שאלות, ללא סיבוכים. אחרי שהפייפליין מסודר בפעם הראשונה — קשה לחזור לאקסל.</p>
   <div class="closing-actions">
-    <a href="https://liders-crm.com" class="btn-primary" style="font-size:18px;padding:18px 48px;">מתחיל עכשיו, בחינם</a>
-    <p class="closing-micro">ללא כרטיס אשראי · ללא התחייבות · ניסיון מלא 30 יום</p>
+    <div class="wrecking-wrap">
+      <div class="pendulum" aria-hidden="true">
+        <div class="wrecking-chain"></div>
+        <div class="wrecking-ball"></div>
+      </div>
+      <a href="https://liders-crm.com" class="btn-primary shimmer-cta" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
+    </div>
+    <p class="closing-micro">בלי כרטיס אשראי · בלי התחייבות · 30 יום מלאים על חשבון הבית</p>
   </div>
 </section>
 
@@ -1334,6 +3303,16 @@
   <div class="footer-links">
     <a href="https://liders-crm.com">כניסה למערכת</a>
     <a href="https://liders-crm.com/privacy-policy.html">מדיניות פרטיות</a>
+    <a href="https://liders-crm.com/#a11y-statement" onclick="document.getElementById('a11y-statement')?.scrollIntoView({behavior:'smooth'});return false;">הצהרת נגישות</a>
+  </div>
+  <div id="a11y-statement" style="margin:18px auto 10px;max-width:560px;padding:14px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;text-align:right;">
+    <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.60);margin-bottom:6px;">♿ הצהרת נגישות</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.7;">
+      Liders CRM פועלת בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998, ולתקנות הנגישות לשירות באינטרנט.
+      רמת תאימות מוצהרת: <strong style="color:rgba(255,255,255,0.55);">WCAG 2.1 AA (חלקית)</strong> · תקן ת"י 5568.
+      המערכת כוללת מצב ניגודיות גבוהה, הגדלת טקסט, ניווט מקלדת מלא ותמיכה בקוראי מסך.
+      לפניות נגישות — כניסה למערכת ← מרכז כלים.
+    </div>
   </div>
   <div class="footer-copy">© 2026 Liders CRM · כל הזכויות שמורות</div>
 </footer>
@@ -1347,9 +3326,229 @@
         observer.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // סצנות נדל"ן (רחוב + אתר בנייה): מתעוררות רק כשנכנסות לתצוגה
+  (function () {
+    const scenes = document.querySelectorAll('.street-scene, .construction-divider');
+    if (!scenes.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.2 });
+    scenes.forEach(s => io.observe(s));
+  })();
+
+  // ═══ קרוסלת מסכים ═══
+  (function () {
+    const slides = document.querySelectorAll('.reel-slide');
+    const pips   = document.querySelectorAll('.reel-pip');
+    const capEl  = document.querySelector('.reel-caption-text');
+    if (!slides.length) return;
+    const captions = [
+      'הדשבורד. כל מה שחשוב, במבט אחד.',
+      'הפייפליין. גוררים, לא מתעדכנים ידנית.',
+      'לוח השנה. שום פגישה לא נשכחת.',
+      'כלים חכמים. עובדים בשבילך.'
+    ];
+    let cur = 0, timer = null;
+    function goTo(n) {
+      slides[cur].classList.remove('active');
+      pips[cur] && pips[cur].classList.remove('active');
+      cur = ((n % slides.length) + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      pips[cur] && pips[cur].classList.add('active');
+      if (capEl) capEl.textContent = captions[cur];
+    }
+    function play()  { if (!timer) timer = setInterval(() => goTo(cur + 1), 2500); }
+    function pause() { clearInterval(timer); timer = null; }
+    const win = document.querySelector('.reel-window');
+    if (win) { win.addEventListener('mouseenter', pause); win.addEventListener('mouseleave', play); }
+    pips.forEach((p, i) => p.addEventListener('click', () => { pause(); goTo(i); play(); }));
+    if (prefersReducedMotion) { goTo(0); } else { goTo(0); play(); }
+  })();
+
+  // ═══ משולש הפניות אנימטיבי ═══
+  (function () {
+    const ts = document.getElementById('triStage');
+    if (!ts) return;
+    const tsObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        ts.classList.add('drawing');
+        tsObs.unobserve(ts);
+      });
+    }, { threshold: 0.2 });
+    tsObs.observe(ts);
+    // הכפלת pills לסקרול אינסופי
+    const track = document.querySelector('.tri-flows-track');
+    if (track) track.parentElement.appendChild(track.cloneNode(true));
+  })();
+
+  // ═══ Doc Funnel Divider ═══
+  (function () {
+    const dfEl = document.getElementById('docFunnel');
+    if (!dfEl) return;
+    const dfObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        dfEl.classList.add('in-view');
+        setTimeout(() => dfEl.classList.add('folding'), 1400);
+        dfObs.unobserve(dfEl);
+      });
+    }, { threshold: 0.3 });
+    dfObs.observe(dfEl);
+  })();
+
+  // ═══ Features Carousel ═══
+  (function () {
+    const groups = Array.from(document.querySelectorAll('[data-tab-panel]'));
+    const tabs   = Array.from(document.querySelectorAll('.ft-tab'));
+    const fpBar  = document.querySelector('.fp-bar');
+    if (!groups.length || !tabs.length) return;
+
+    const DELAY = 4600;
+    let current = 0, timer = null, barRaf = null;
+
+    function showTab(idx, dir) {
+      groups.forEach(g => g.classList.remove('ft-active', 'ft-prev'));
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      const grp = groups[idx];
+      if (grp) grp.classList.add(dir === 'prev' ? 'ft-prev' : 'ft-active');
+      if (tabs[idx]) { tabs[idx].classList.add('active'); tabs[idx].setAttribute('aria-selected', 'true'); }
+      current = idx;
+      resetBar();
+    }
+
+    function resetBar() {
+      if (!fpBar) return;
+      cancelAnimationFrame(barRaf);
+      fpBar.style.transition = 'none';
+      fpBar.style.width = '0%';
+      barRaf = requestAnimationFrame(() => requestAnimationFrame(() => {
+        fpBar.style.transition = 'width ' + DELAY + 'ms linear';
+        fpBar.style.width = '100%';
+      }));
+    }
+
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(() => showTab((current + 1) % groups.length, 'next'), DELAY);
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => { showTab(i, i < current ? 'prev' : 'next'); startAuto(); });
+    });
+
+    const wrap = document.querySelector('.feat-carousel');
+    if (wrap) {
+      wrap.addEventListener('mouseenter', () => clearInterval(timer));
+      wrap.addEventListener('mouseleave', () => startAuto());
+    }
+
+    showTab(0, 'next');
+    startAuto();
+  })();
+</script>
+
+<script>
+/* Accessibility Mode — landing.html (standalone, no State dependency) */
+(function() {
+  var KEY = 'liders_a11y';
+  var on  = localStorage.getItem(KEY) === '1';
+  function apply() {
+    document.body.classList.toggle('theme-accessible', on);
+    document.querySelectorAll('[data-a11y-btn]').forEach(function(btn) {
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  }
+  window.toggleA11y = function() {
+    on = !on;
+    localStorage.setItem(KEY, on ? '1' : '0');
+    apply();
+  };
+  apply();
+})();
+</script>
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HK3080C4GJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HK3080C4GJ');
+</script>
+
+<script>
+/* CTA Funnel Tracking — landing.html
+   Maps each CTA link to a section label and fires:
+   - gtag('event', 'landing_cta_click', { event_category, cta_text, section })
+   - Supabase track_funnel_event RPC (fire-and-forget, no blocking)
+*/
+(function() {
+  var SUPABASE_URL = 'https://scyfywvzoogfrlalgftv.supabase.co';
+  var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMTM3NTIsImV4cCI6MjA2Njc4OTc1Mn0.5aGMSrqSgYdIbZ5qAI1WX2ZBfp6-5TEaqQxOuMfKXkk';
+
+  function getSessionId() {
+    var KEY = 'liders_cro_session';
+    var sid = sessionStorage.getItem(KEY);
+    if (!sid) { sid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, function(c){return(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16);}); sessionStorage.setItem(KEY, sid); }
+    return sid;
+  }
+
+  function trackCta(section, ctaText) {
+    var sid = getSessionId();
+    var data = { section: section, cta_text: ctaText };
+    if (typeof gtag === 'function') {
+      gtag('event', 'landing_cta_click', { event_category: 'landing_cta', section: section, cta_text: ctaText });
+    }
+    fetch(SUPABASE_URL + '/rest/v1/rpc/track_funnel_event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON },
+      body: JSON.stringify({ p_session_id: sid, p_event_name: 'landing_cta_click', p_event_data: data }),
+      keepalive: true
+    }).catch(function(){});
+  }
+
+  // Map: CSS selector → section name
+  var ctaMap = [
+    { sel: '.nav-cta',                                    section: 'nav' },
+    { sel: '.pulse-cta.cta-drop-target.has-rocket',       section: 'hero' },
+    { sel: '.shots-cta .shimmer-cta',                     section: 'preview_shots' },
+    { sel: '.section-cta-wrap .btn-primary:not(.has-rocket)', section: 'referral_loop' },
+    { sel: '.section-cta-wrap:last-child .btn-primary',   section: 'features' },
+    { sel: '.plan-btn.outline:first-of-type',             section: 'pricing_solo' },
+    { sel: '.plan-btn.primary.tractor-btn',               section: 'pricing_team' },
+    { sel: '.plan-btn.outline:last-of-type',              section: 'pricing_agency' },
+    { sel: '.cps-btn',                                    section: 'pricing_enterprise' },
+    { sel: '.btn-marketing',                              section: 'marketing_addon' },
+    { sel: '.plan-btn.primary:not(.tractor-btn)',         section: 'services' },
+    { sel: '.btn-primary.shimmer-cta:last-of-type',       section: 'closing' },
+  ];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href="https://liders-crm.com"]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var section = 'unknown';
+        for (var i = 0; i < ctaMap.length; i++) {
+          try { if (el.matches(ctaMap[i].sel)) { section = ctaMap[i].section; break; } } catch(e) {}
+        }
+        // Fallback: find nearest section ancestor with an id
+        if (section === 'unknown') {
+          var p = el.closest('section, nav, footer');
+          section = (p && p.id) ? p.id : (p ? p.tagName.toLowerCase() : 'unknown');
+        }
+        trackCta(section, (el.textContent || '').trim().slice(0, 80));
+      });
+    });
+  });
+})();
 </script>
 
 </body>

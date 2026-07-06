@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מדיניות פרטיות — Liders CRM</title>
-  <meta name="description" content="מדיניות הפרטיות של Liders CRM — כיצד אנו אוספים, מאחסנים ומגנים על המידע שלך.">
+  <title>מדיניות פרטיות: Liders CRM</title>
+  <meta name="description" content="מדיניות הפרטיות של Liders CRM: כיצד אנו אוספים, מאחסנים ומגנים על המידע שלך.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -92,6 +92,55 @@
     }
     .contact-box a { color: #2563EB; text-decoration: none; }
     .contact-box a:hover { text-decoration: underline; }
+    .security-teaser {
+      background: linear-gradient(135deg, #0F1F3D, #1E3A6D);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 24px 0 32px;
+      color: #fff;
+    }
+    .security-teaser h2 {
+      border: none;
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .security-teaser p { color: #CBD5E1; margin-bottom: 12px; font-size: 14px; }
+    .security-teaser ul { padding-right: 18px; margin-bottom: 14px; }
+    .security-teaser li { color: #E2E8F0; font-size: 13.5px; margin-bottom: 4px; }
+    .security-teaser a {
+      color: #93C5FD;
+      font-weight: 700;
+      font-size: 13.5px;
+      text-decoration: none;
+    }
+    .security-teaser a:hover { text-decoration: underline; }
+    .security-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0 20px;
+    }
+    .security-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .security-card .icon { font-size: 22px; margin-bottom: 6px; display: block; }
+    .security-card h3 {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F1F3D;
+      margin-bottom: 6px;
+    }
+    .security-card p { font-size: 13.5px; color: #475569; margin: 0; }
+    @media (max-width: 600px) {
+      .security-grid { grid-template-columns: 1fr; }
+    }
     footer {
       text-align: center;
       font-size: 13px;
@@ -121,6 +170,18 @@
     <p>אנו מחויבים לשמור על פרטיותך. מסמך זה מסביר בשקיפות מלאה אילו נתונים אנו אוספים, כיצד אנו משתמשים בהם ואיך אנו מגנים עליהם.</p>
   </div>
 
+  <div class="security-teaser">
+    <h2>🛡️ אבטחה היא לא תוספת, היא הבסיס</h2>
+    <p>המערכת נבנתה מהיסוד עם דגש על הגנה מקיפה על הנתונים שלך ושל הלקוחות שלך, בכל שכבה: תקשורת, מסד נתונים, קוד ותהליכי עבודה.</p>
+    <ul>
+      <li>הצפנת תקשורת מלאה (HTTPS/TLS) + הגנת HSTS</li>
+      <li>בידוד מלא בין חשבונות: לקוח לא יכול לראות נתונים של לקוח אחר</li>
+      <li>הגנה אקטיבית מפני הזרקת קוד זדוני (XSS) וניטרול קישורים חשודים</li>
+      <li>סיסמאות ו-PIN מאוחסנים מוצפנים, לעולם לא כטקסט גלוי</li>
+    </ul>
+    <a href="#security">לפירוט המלא על מדיניות האבטחה שלנו ⬇</a>
+  </div>
+
   <h2>1. מי אנחנו</h2>
   <p>Liders CRM הינה מערכת לניהול לידים ופייפליין מכירות, המיועדת לעוסקים ועסקים בישראל. השירות מופעל בכתובת <strong>liders-crm.com</strong>.</p>
   <p>לפניות בנושא פרטיות: <a href="mailto:liders.crm@gmail.com">liders.crm@gmail.com</a></p>
@@ -130,14 +191,14 @@
   <ul>
     <li><strong>פרטי חשבון:</strong> כתובת אימייל וסיסמה מוצפנת (בעת הרשמה)</li>
     <li><strong>פרטי העסק:</strong> שם הסוכנות / העסק, תחום עיסוק</li>
-    <li><strong>נתוני לידים:</strong> שמות לקוחות, מספרי טלפון, אימייל, תקציב, הערות — מידע שאתה מזין בעצמך</li>
+    <li><strong>נתוני לידים:</strong> שמות לקוחות, מספרי טלפון, אימייל, תקציב, הערות: מידע שאתה מזין בעצמך</li>
     <li><strong>נתוני שימוש:</strong> כניסות למערכת, פעולות בממשק (לצורך שיפור השירות)</li>
-    <li><strong>נתוני תשלום:</strong> עסקאות תשלום מנוהלות על ידי Stripe בלבד — אנו לא שומרים פרטי כרטיס אשראי</li>
+    <li><strong>נתוני תשלום:</strong> עסקאות תשלום מנוהלות על ידי Stripe בלבד, אנו לא שומרים פרטי כרטיס אשראי</li>
   </ul>
 
   <h2>3. כיצד אנו משתמשים במידע</h2>
   <ul>
-    <li>מתן השירות — הצגת הנתונים שהזנת ב-CRM</li>
+    <li>מתן השירות: הצגת הנתונים שהזנת ב-CRM</li>
     <li>שליחת התראות על לידים (דרך Make.com / WhatsApp)</li>
     <li>ניהול חיוב ומנויים (דרך Stripe)</li>
     <li>שיפור השירות ותיקון תקלות</li>
@@ -147,21 +208,55 @@
   <h2>4. שיתוף מידע עם צדדים שלישיים</h2>
   <p>אנו <strong>לא מוכרים ולא משתפים</strong> את המידע שלך עם צדדים שלישיים לצורכי שיווק. מידע מועבר לגורמים הבאים <em>בלבד</em>, לצורך מתן השירות:</p>
   <ul>
-    <li><strong>Supabase</strong> (supabase.com) — אחסון מאובטח של הנתונים, שרתים באירופה (EU)</li>
-    <li><strong>Stripe</strong> (stripe.com) — עיבוד תשלומים</li>
-    <li><strong>Make.com</strong> — אוטומציות ושליחת התראות (רק אם הפעלת תכונה זו)</li>
-    <li><strong>Twilio</strong> — שליחת הודעות WhatsApp (רק אם הפעלת תכונה זו)</li>
-    <li><strong>Google Analytics</strong> — נתוני שימוש אנונימיים (ללא מידע מזהה)</li>
+    <li><strong>Supabase</strong> (supabase.com): אחסון מאובטח של הנתונים, שרתים באירופה (EU)</li>
+    <li><strong>Stripe</strong> (stripe.com): עיבוד תשלומים</li>
+    <li><strong>Make.com</strong>: אוטומציות ושליחת התראות (רק אם הפעלת תכונה זו)</li>
+    <li><strong>Twilio</strong>: שליחת הודעות WhatsApp (רק אם הפעלת תכונה זו)</li>
+    <li><strong>Google Analytics</strong>: נתוני שימוש אנונימיים (ללא מידע מזהה)</li>
   </ul>
 
-  <h2>5. אחסון ואבטחת המידע</h2>
-  <ul>
-    <li>כל הנתונים מאוחסנים בשרתי Supabase באירופה (Frankfurt, EU)</li>
-    <li>כל תקשורת מוצפנת ב-HTTPS / TLS</li>
-    <li>סיסמאות מאוחסנות כ-bcrypt hash — לא ניתן לשחזר אותן</li>
-    <li>Row-Level Security (RLS) — כל משתמש רואה רק את הנתונים שלו</li>
-    <li>גיבויים אוטומטיים יומיים</li>
-  </ul>
+  <h2 id="security">5. אחסון ואבטחת המידע</h2>
+  <p>אנו מתייחסים לאבטחת המידע כעקרון יסוד בעיצוב המערכת (Security by Design), ולא כתוספת מאוחרת. להלן פירוט השכבות העיקריות:</p>
+
+  <div class="security-grid">
+    <div class="security-card">
+      <span class="icon">🔐</span>
+      <h3>הצפנה בתעבורה</h3>
+      <p>כל תקשורת בין הדפדפן לשרת מוצפנת ב-HTTPS/TLS. מופעלת מדיניות HSTS המחייבת חיבור מוצפן בלבד ומונעת התקפות downgrade.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">🧩</span>
+      <h3>בידוד נתונים בין לקוחות</h3>
+      <p>Row-Level Security (RLS) ברמת מסד הנתונים, יחד עם הפרדה לפי tenant_id בכל שאילתה, כך שלקוח אחד לעולם לא נחשף לנתונים של לקוח אחר.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">🛡️</span>
+      <h3>הגנה מפני הזרקות קוד</h3>
+      <p>קלט מהמשתמש (כגון הערות על ליד) מוצג באמצעות escaping ולא כ-HTML גולמי, וכל קישור חיצוני עובר סינון שחוסם פרוטוקולים מסוכנים (כגון javascript:). בנוסף מוגדר Content-Security-Policy שמגביל אילו סקריפטים מותר להריץ בדף.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">🔑</span>
+      <h3>אימות מאובטח</h3>
+      <p>סיסמאות וקודי PIN מאוחסנים אך ורק כ-bcrypt hash חד-כיווני, לא ניתן לשחזר אותם גם אם מישהו היה ניגש למסד הנתונים. שיתופי לידים מוגנים ב-PIN עם נעילה אוטומטית לאחר ניסיונות שגויים חוזרים.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">📦</span>
+      <h3>שרשרת אספקה מאובטחת</h3>
+      <p>ספריות קוד חיצוניות (CDN) נטענות עם אימות Subresource Integrity (SRI): אם הקובץ המקורי השתנה ללא ידיעתנו, הדפדפן יחסום את הטעינה שלו.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">🗄️</span>
+      <h3>אחסון וגיבוי</h3>
+      <p>כל הנתונים מאוחסנים בשרתי Supabase באירופה (Frankfurt, EU), עם גיבויים אוטומטיים יומיים ויכולת שחזור נקודתי (Point-in-Time Recovery) במקרה חירום.</p>
+    </div>
+    <div class="security-card">
+      <span class="icon">🔗</span>
+      <h3>אימות Webhooks וחתימות דיגיטליות</h3>
+      <p>כל בקשת webhook נכנסת (למשל עדכוני תשלום) מאומתת באמצעות חתימת HMAC-SHA256 בהשוואה עמידה בפני timing attacks. פעולות אוטומציה (שליחת WhatsApp ללידים) מאומתות פעמיים: זהות המשתמש ושייכות מספר הטלפון לליד בחשבון.</p>
+    </div>
+  </div>
+
+  <p>מעבר לאמצעים הטכניים, אנו פועלים לפי עקרון <strong>הרשאה מינימלית</strong> (Least Privilege): כל גישה למידע, גם שלנו כצוות הפיתוח, מוגבלת למינימום הנדרש. מפתחות API וסודות מערכת אינם נשמרים בקוד או במאגר הגרסאות, אלא במנגנון Secrets ייעודי ומוצפן. אבטחת המערכת נבדקת ומתעדכנת באופן שוטף ככל שהשירות גדל, בהתאם לפרקטיקות המומלצות בתעשייה.</p>
 
   <h2>6. שמירת מידע</h2>
   <p>המידע נשמר כל עוד החשבון פעיל. לאחר ביטול מנוי, הנתונים נשמרים למשך <strong>30 יום נוספים</strong> ולאחר מכן נמחקים לצמיתות.</p>
@@ -175,10 +270,10 @@
     <li><strong>התנגדות:</strong> להתנגד לעיבוד מידע לצורכי שיווק</li>
     <li><strong>ניידות:</strong> לקבל את הנתונים שלך בפורמט קריא (CSV)</li>
   </ul>
-  <p>לממש זכויות אלה — שלח אימייל ל: <a href="mailto:liders.crm@gmail.com">liders.crm@gmail.com</a></p>
+  <p>לממש זכויות אלה, שלח אימייל ל: <a href="mailto:liders.crm@gmail.com">liders.crm@gmail.com</a></p>
 
-  <h2>8. עוגיות (Cookies)</h2>
-  <p>האפליקציה משתמשת ב-<strong>localStorage</strong> בלבד לשמירת מצב הכניסה — ללא עוגיות מעקב. Google Analytics משתמש בעוגיות אנונימיות לצורך ניתוח שימוש. ניתן לחסום זאת דרך הגדרות הדפדפן.</p>
+  <h2>8. עוגיות (Cookies) ואחסון מקומי</h2>
+  <p>האפליקציה משתמשת ב-<strong>localStorage</strong> לשמירת העדפות ממשק, הגדרות וסטטוס UI (כגון שפה, תחום עיסוק, הישגי גמיפיקציה). טוקני כניסה מנוהלים על-ידי ספריית Supabase Auth בצורה מאובטחת, ותוקף כל סשן מוגבל ל-<strong>8 שעות</strong> מרגע הכניסה, לאחריהן נדרשת כניסה מחדש. המערכת אינה משתמשת בעוגיות מעקב. Google Analytics משתמש בעוגיות אנונימיות לצורך ניתוח שימוש; ניתן לחסום זאת דרך הגדרות הדפדפן.</p>
 
   <h2>9. שינויים במדיניות</h2>
   <p>במקרה של שינויים מהותיים, נשלח הודעה לאימייל הרשום לפחות 14 יום מראש. המשך שימוש בשירות לאחר השינוי מהווה הסכמה למדיניות המעודכנת.</p>
