@@ -333,6 +333,14 @@ constraint שבור על `tenants.industry` (ראה בהמשך).
 
 > האדמין מחובר לאותה Supabase. כניסה: אימייל + סיסמה. קישור אליו גם מתוך הגדרות ה-CRM.
 
+### 📧 מיילים של הבעלים
+| שימוש | כתובת |
+|-------|--------|
+| **עסקי (Make.com / התראות / דוחות)** | `liders.crm@gmail.com` |
+| פרטי (Supabase auth, GitHub) | `elgrablidudu@gmail.com` |
+
+> **כל דוח אוטומטי, התראה, Make.com webhook שנשלח למייל — תמיד ל-`liders.crm@gmail.com`**
+
 ---
 
 ## Make.com
