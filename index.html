@@ -566,25 +566,30 @@
     .badge-call    { background: var(--gray-100); color: var(--gray-600); }
     .badge-other   { background: var(--gray-100); color: var(--gray-600); }
 
-    /* Lead role: buyer/seller/both */
+    /* Lead role: buyer/seller/both/renter/landlord */
     .role-badge {
       display: inline-flex; align-items: center; gap: 3px;
       font-size: 11px; font-weight: 800; padding: 3px 9px;
       border-radius: var(--radius-full); white-space: nowrap;
     }
-    .role-badge-buyer  { background: #16A34A; color: #fff; }
-    .role-badge-seller { background: #EAB308; color: #3F2D00; }
-    .role-badge-both   { background: #9E2D50; color: #fff; }
+    .role-badge-buyer    { background: #16A34A; color: #fff; }
+    .role-badge-seller   { background: #EAB308; color: #3F2D00; }
+    .role-badge-both     { background: #9E2D50; color: #fff; }
+    .role-badge-renter   { background: #0891B2; color: #fff; }
+    .role-badge-landlord { background: #7C3AED; color: #fff; }
 
-    .role-picker { display: flex; gap: 6px; }
+    .role-picker { display: flex; gap: 6px; flex-wrap: wrap; }
     .role-pick-btn {
-      flex: 1; padding: 9px 6px; border-radius: 10px; border: 1.5px solid var(--border);
-      background: var(--surface); font-size: 12.5px; font-weight: 700; cursor: pointer;
-      color: var(--gray-500); transition: all .15s; font-family: inherit;
+      flex: 1 1 calc(33% - 6px); min-width: 72px;
+      padding: 9px 4px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--surface); font-size: 12px; font-weight: 700; cursor: pointer;
+      color: var(--gray-500); transition: all .15s; font-family: inherit; text-align: center;
     }
-    .role-pick-btn.active.role-pick-buyer  { background: #16A34A; border-color: #16A34A; color: #fff; }
-    .role-pick-btn.active.role-pick-seller { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
-    .role-pick-btn.active.role-pick-both   { background: #9E2D50; border-color: #9E2D50; color: #fff; }
+    .role-pick-btn.active.role-pick-buyer    { background: #16A34A; border-color: #16A34A; color: #fff; }
+    .role-pick-btn.active.role-pick-seller   { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
+    .role-pick-btn.active.role-pick-both     { background: #9E2D50; border-color: #9E2D50; color: #fff; }
+    .role-pick-btn.active.role-pick-renter   { background: #0891B2; border-color: #0891B2; color: #fff; }
+    .role-pick-btn.active.role-pick-landlord { background: #7C3AED; border-color: #7C3AED; color: #fff; }
 
     .role-filter-pills { display: flex; gap: 6px; padding: 0 16px 10px; flex-wrap: wrap; }
     .role-filter-pill {
@@ -592,10 +597,12 @@
       background: var(--surface); font-size: 12px; font-weight: 700; cursor: pointer;
       color: var(--gray-500); transition: all .15s; font-family: inherit;
     }
-    .role-filter-pill.active.role-filter-buyer  { background: #16A34A; border-color: #16A34A; color: #fff; }
-    .role-filter-pill.active.role-filter-seller { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
-    .role-filter-pill.active.role-filter-both   { background: #9E2D50; border-color: #9E2D50; color: #fff; }
-    .role-filter-pill.active.role-filter-all    { background: var(--navy-500); border-color: var(--navy-500); color: #fff; }
+    .role-filter-pill.active.role-filter-buyer    { background: #16A34A; border-color: #16A34A; color: #fff; }
+    .role-filter-pill.active.role-filter-seller   { background: #EAB308; border-color: #EAB308; color: #3F2D00; }
+    .role-filter-pill.active.role-filter-both     { background: #9E2D50; border-color: #9E2D50; color: #fff; }
+    .role-filter-pill.active.role-filter-renter   { background: #0891B2; border-color: #0891B2; color: #fff; }
+    .role-filter-pill.active.role-filter-landlord { background: #7C3AED; border-color: #7C3AED; color: #fff; }
+    .role-filter-pill.active.role-filter-all      { background: var(--navy-500); border-color: var(--navy-500); color: #fff; }
 
     .badge-status-new      { background: var(--gray-100); color: var(--gray-600); }
     .badge-status-available{ background: var(--green-100); color: var(--green-600); }
@@ -6541,6 +6548,8 @@
           <button type="button" class="role-pick-btn role-pick-buyer active" onclick="selectLeadRole('new','buyer')">💰 קונה</button>
           <button type="button" class="role-pick-btn role-pick-seller" onclick="selectLeadRole('new','seller')">🏠 מוכר</button>
           <button type="button" class="role-pick-btn role-pick-both" onclick="selectLeadRole('new','both')">💰🏠 שניהם</button>
+          <button type="button" class="role-pick-btn role-pick-renter" onclick="selectLeadRole('new','renter')">🔑 שוכר</button>
+          <button type="button" class="role-pick-btn role-pick-landlord" onclick="selectLeadRole('new','landlord')">🏘 משכיר</button>
         </div>
       </div>
       <div class="form-group">
@@ -6879,6 +6888,8 @@
           <button type="button" class="role-pick-btn role-pick-buyer active" onclick="selectLeadRole('edit','buyer')">💰 קונה</button>
           <button type="button" class="role-pick-btn role-pick-seller" onclick="selectLeadRole('edit','seller')">🏠 מוכר</button>
           <button type="button" class="role-pick-btn role-pick-both" onclick="selectLeadRole('edit','both')">💰🏠 שניהם</button>
+          <button type="button" class="role-pick-btn role-pick-renter" onclick="selectLeadRole('edit','renter')">🔑 שוכר</button>
+          <button type="button" class="role-pick-btn role-pick-landlord" onclick="selectLeadRole('edit','landlord')">🏘 משכיר</button>
         </div>
       </div>
       <div class="form-group">
@@ -7275,25 +7286,28 @@ function scoreClass(s) {
   if (s >= 40) return 'score-cool';
   return 'score-cold';
 }
+const ALL_LEAD_ROLES = ['buyer','seller','both','renter','landlord'];
 function roleLabel(r) {
-  return { buyer: 'קונה', seller: 'מוכר', both: 'קונה+מוכר' }[r] || 'קונה';
+  return { buyer: 'קונה', seller: 'מוכר', both: 'קונה+מוכר', renter: 'שוכר', landlord: 'משכיר' }[r] || 'קונה';
 }
 function roleBadgeHtml(r) {
   if (!showsBuyerSellerRole()) return '';
-  const role = ['buyer','seller','both'].includes(r) ? r : 'buyer';
-  const icon = { buyer: '💰', seller: '🏠', both: '💰🏠' }[role];
+  const role = ALL_LEAD_ROLES.includes(r) ? r : 'buyer';
+  const icon = { buyer: '💰', seller: '🏠', both: '💰🏠', renter: '🔑', landlord: '🏘' }[role];
   return `<span class="role-badge role-badge-${role}">${icon} ${roleLabel(role)}</span>`;
 }
-// Buyer/seller only makes sense for real estate transactions (agent or lawyer) -
-// meaningless for an interior design client, so it's hidden for that vertical.
+// Role picker hidden for interior design (buying/selling/renting not relevant).
 function showsBuyerSellerRole() {
   const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
   return ind !== 'interior';
 }
 function roleMatchesFilter(leadRole, filter) {
   if (!filter || filter === 'all') return true;
-  const role = ['buyer','seller','both'].includes(leadRole) ? leadRole : 'buyer';
-  if (filter === 'both') return role === 'both';
+  const role = ALL_LEAD_ROLES.includes(leadRole) ? leadRole : 'buyer';
+  // 'both' = buyer+seller combo; renter/landlord are standalone rental roles
+  if (filter === 'both')     return role === 'both';
+  if (filter === 'renter')   return role === 'renter';
+  if (filter === 'landlord') return role === 'landlord';
   return role === filter || role === 'both';
 }
 function sourceLabel(s) {
@@ -13814,10 +13828,12 @@ const Pipeline = {
     if (!el) return;
     if (!showsBuyerSellerRole()) { el.innerHTML = ''; this._roleFilter = 'all'; return; }
     const pills = [
-      { id: 'all',    label: 'הכל' },
-      { id: 'buyer',  label: '💰 קונים' },
-      { id: 'seller', label: '🏠 מוכרים' },
-      { id: 'both',   label: '💰🏠 שניהם' },
+      { id: 'all',      label: 'הכל' },
+      { id: 'buyer',    label: '💰 קונים' },
+      { id: 'seller',   label: '🏠 מוכרים' },
+      { id: 'both',     label: '💰🏠 שניהם' },
+      { id: 'renter',   label: '🔑 שוכרים' },
+      { id: 'landlord', label: '🏘 משכירים' },
     ];
     el.innerHTML = pills.map(p => `
       <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
@@ -13921,10 +13937,12 @@ const Leads = {
     if (!el) return;
     if (!showsBuyerSellerRole()) { el.innerHTML = ''; this._roleFilter = 'all'; return; }
     const pills = [
-      { id: 'all',    label: 'הכל' },
-      { id: 'buyer',  label: '💰 קונים' },
-      { id: 'seller', label: '🏠 מוכרים' },
-      { id: 'both',   label: '💰🏠 שניהם' },
+      { id: 'all',      label: 'הכל' },
+      { id: 'buyer',    label: '💰 קונים' },
+      { id: 'seller',   label: '🏠 מוכרים' },
+      { id: 'both',     label: '💰🏠 שניהם' },
+      { id: 'renter',   label: '🔑 שוכרים' },
+      { id: 'landlord', label: '🏘 משכירים' },
     ];
     el.innerHTML = pills.map(p => `
       <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
