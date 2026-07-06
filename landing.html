@@ -327,44 +327,91 @@
     }
 
     /* ══════════════════════════════
-       מוקאפ מסך
+       תצוגות מותאמות לתחום (mock UI)
     ══════════════════════════════ */
-    .hero-mockup {
-      margin-top: 60px;
+    .vertical-previews {
+      margin-top: 52px;
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       position: relative;
       z-index: 1;
-      width: 100%;
-      max-width: 860px;
     }
-    .mockup-frame {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 16px;
-      backdrop-filter: blur(8px);
-      overflow: hidden;
+    @media (max-width: 680px) {
+      .vertical-previews { grid-template-columns: 1fr; gap: 12px; max-width: 360px; }
     }
-    .mockup-bar {
+    .vp-wrap {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 14px;
+      flex-direction: column;
+      gap: 8px;
     }
-    .mockup-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
+    .vp-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.50);
+      text-transform: uppercase;
     }
-    .mockup-dot:nth-child(1) { background: #FF5F56; }
-    .mockup-dot:nth-child(2) { background: #FFBD2E; }
-    .mockup-dot:nth-child(3) { background: #27C93F; }
-
-    .mockup-frame img {
-      width: 100%;
-      display: block;
-      border-radius: 12px;
-      max-height: 460px;
-      object-fit: cover;
-      object-position: top;
+    .vp-mockup {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 14px;
+      padding: 12px 11px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .vp-dots { display: flex; gap: 5px; }
+    .vp-d { width: 7px; height: 7px; border-radius: 50%; }
+    .vp-d:nth-child(1) { background: #FF5F56; }
+    .vp-d:nth-child(2) { background: #FFBD2E; }
+    .vp-d:nth-child(3) { background: #27C93F; }
+    .vp-lead {
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .vp-lead-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .vp-lead-meta { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .vp-stage {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-top: 5px;
+      letter-spacing: 0.02em;
+    }
+    .vp-s2 { background: rgba(37,99,235,0.25); color: #93c5fd; }
+    .vp-s3 { background: rgba(124,58,237,0.25); color: #c4b5fd; }
+    .vp-s4 { background: rgba(234,88,12,0.25); color: #fdba74; }
+    .vp-shortcuts { display: flex; gap: 5px; flex-wrap: wrap; }
+    .vp-btn {
+      font-size: 9.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+    .vp-btn-yad2   { background: rgba(220,38,38,0.18);  color: #fca5a5; }
+    .vp-btn-madlan { background: rgba(37,99,235,0.18);  color: #93c5fd; }
+    .vp-btn-wa     { background: rgba(37,211,102,0.16); color: #86efac; }
+    .vp-btn-pin    { background: rgba(225,29,72,0.18);  color: #fda4af; }
+    .vp-btn-houzz  { background: rgba(22,163,74,0.18);  color: #86efac; }
+    .vp-btn-tabo   { background: rgba(15,31,61,0.55); color: #93c5fd; border: 1px solid rgba(37,99,235,0.28); }
+    .vp-btn-nevo   { background: rgba(37,99,235,0.18);  color: #93c5fd; }
+    .vp-btn-misim  { background: rgba(124,58,237,0.18); color: #c4b5fd; }
+    .vp-ai {
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.5;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 8px;
+      font-style: italic;
     }
 
     /* ══════════════════════════════
@@ -2292,16 +2339,66 @@
   </div>
   <p class="hero-micro hero-trust">30 יום ניסיון &bull; ללא אשראי &bull; ללא התחייבות</p>
 
-  <!-- תצוגה אמיתית של הדשבורד -->
-  <div class="hero-mockup">
-    <div class="mockup-frame">
-      <div class="mockup-bar">
-        <div class="mockup-dot"></div>
-        <div class="mockup-dot"></div>
-        <div class="mockup-dot"></div>
+  <!-- 3 תצוגות מותאמות לתחום -->
+  <div class="vertical-previews">
+
+    <!-- סוכן נדל"ן -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">🏠 סוכן נדל&quot;ן</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">נחמן כהן</div>
+          <div class="vp-lead-meta">3 חד' · ₪2.1M</div>
+          <span class="vp-stage vp-s2">יצרנו קשר</span>
+        </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-yad2">יד2</span>
+          <span class="vp-btn vp-btn-madlan">מדלן</span>
+          <span class="vp-btn vp-btn-wa">💬 WhatsApp</span>
+        </div>
+        <div class="vp-ai">🤖 "יש 4 נכסים דומים — שלח לנחמן לפני שיגיע למתחרה"</div>
       </div>
-      <img src="assets/screenshots/dashboard-desktop.png" alt="דשבורד לידרס עם דירוג לידים ב-AI וסטטוס פייפליין">
     </div>
+
+    <!-- עיצוב פנים -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">🛋 עיצוב פנים</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">מיטל שמואלי</div>
+          <div class="vp-lead-meta">4 חד' · שיפוץ מלא</div>
+          <span class="vp-stage vp-s3">הצעה נשלחה</span>
+        </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-pin">📌 Pinterest</span>
+          <span class="vp-btn vp-btn-houzz">🛋 Houzz</span>
+          <span class="vp-btn vp-btn-wa">💬 WhatsApp</span>
+        </div>
+        <div class="vp-ai">🤖 "סגנון סקנדינבי · פלטה: לבן, אפור, גוון עץ טבעי"</div>
+      </div>
+    </div>
+
+    <!-- עו"ד נדל"ן -->
+    <div class="vp-wrap fade-up">
+      <div class="vp-label">⚖️ עו&quot;ד נדל&quot;ן</div>
+      <div class="vp-mockup">
+        <div class="vp-dots"><span class="vp-d"></span><span class="vp-d"></span><span class="vp-d"></span></div>
+        <div class="vp-lead">
+          <div class="vp-lead-name">אהרון בר-לב</div>
+          <div class="vp-lead-meta">בדיקת נאותות · חוזה</div>
+          <span class="vp-stage vp-s4">במשא ומתן</span>
+        </div>
+        <div class="vp-shortcuts">
+          <span class="vp-btn vp-btn-tabo">🏛 טאבו</span>
+          <span class="vp-btn vp-btn-nevo">📚 נבו</span>
+          <span class="vp-btn vp-btn-misim">💰 מיסוי</span>
+        </div>
+        <div class="vp-ai">🤖 "טאבו נקי · אין עיקולים — ממשיכים לניסוח חוזה"</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
