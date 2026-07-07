@@ -640,6 +640,7 @@
 
     /* Property Card */
     .property-card {
+      position: relative;
       background: var(--surface); border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm); border: 1px solid var(--border);
       overflow: hidden; cursor: pointer; transition: var(--transition);
@@ -4750,8 +4751,8 @@
     <!-- ── PROPERTIES ── -->
     <div id="screen-properties" class="screen hidden">
       <div class="screen-header">
-        <div class="screen-title">🏠 נכסים</div>
-        <button class="btn btn-primary btn-sm" onclick="PropImages.resetNew(); openModal('modal-add-property')">+ נכס</button>
+        <div class="screen-title" id="screen-properties-title">🏠 נכסים</div>
+        <button class="btn btn-primary btn-sm" id="properties-add-btn" onclick="PropImages.resetNew(); openModal('modal-add-property')">+ נכס</button>
       </div>
       <div class="properties-grid" id="properties-grid"></div>
     </div>
@@ -6915,17 +6916,17 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">🏠 נכס חדש</div>
+      <div class="modal-title" id="modal-add-property-title">🏠 נכס חדש</div>
       <button class="modal-close" onclick="closeModal('modal-add-property')">×</button>
     </div>
     <div style="display:flex; flex-direction:column; gap:14px;">
       <div class="form-group">
-        <label class="form-label">כותרת הנכס *</label>
+        <label class="form-label" id="lbl-new-prop-title">כותרת הנכס *</label>
         <input type="text" id="new-prop-title" class="form-input" placeholder="לדוגמה: 4 חדרים עם נוף לים">
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">סוג נכס</label>
+          <label class="form-label" id="lbl-new-prop-type">סוג נכס</label>
           <select id="new-prop-type" class="form-input">
             <option value="apartment">דירה</option>
             <option value="house">בית פרטי</option>
@@ -6935,7 +6936,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">סטטוס</label>
+          <label class="form-label" id="lbl-new-prop-status">סטטוס</label>
           <select id="new-prop-status" class="form-input">
             <option value="available">זמין</option>
             <option value="under_offer">בהצעה</option>
@@ -6945,25 +6946,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">מחיר (₪) *</label>
+        <label class="form-label" id="lbl-new-prop-price">מחיר (₪) *</label>
         <input type="number" id="new-prop-price" class="form-input" placeholder="2000000" min="0">
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" id="fg-new-prop-rooms">
           <label class="form-label">חדרים</label>
           <input type="number" id="new-prop-rooms" class="form-input" placeholder="3" min="0" step="0.5">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="fg-new-prop-area">
           <label class="form-label">שטח (מ"ר)</label>
           <input type="number" id="new-prop-area" class="form-input" placeholder="90" min="0">
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" id="fg-new-prop-floor">
           <label class="form-label">קומה</label>
           <input type="number" id="new-prop-floor" class="form-input" placeholder="3" min="0">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="fg-new-prop-city">
           <label class="form-label">עיר</label>
           <input type="text" id="new-prop-city" class="form-input" placeholder="תל אביב">
         </div>
@@ -6974,16 +6975,16 @@
       </div>
       <div class="form-group">
         <label class="form-label">תיאור</label>
-        <textarea id="new-prop-description" class="form-input form-textarea" placeholder="פרטים נוספים על הנכס..."></textarea>
+        <textarea id="new-prop-description" class="form-input form-textarea" placeholder="פרטים נוספים..."></textarea>
       </div>
-      <div class="form-group">
-        <label class="form-label">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
+      <div class="form-group" id="fg-new-prop-images">
+        <label class="form-label" id="lbl-new-prop-images">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
         <div id="new-prop-gallery" class="prop-gallery-grid"></div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-property')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="addProperty()">שמור נכס</button>
+      <button class="btn btn-primary" id="new-prop-save-btn" style="flex:1;" onclick="addProperty()">שמור נכס</button>
     </div>
   </div>
 </div>
@@ -6993,17 +6994,17 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">✏️ עריכת נכס</div>
+      <div class="modal-title" id="modal-edit-property-title">✏️ עריכת נכס</div>
       <button class="modal-close" onclick="closeModal('modal-edit-property')">×</button>
     </div>
     <div style="display:flex; flex-direction:column; gap:14px;">
       <div class="form-group">
-        <label class="form-label">כותרת הנכס *</label>
+        <label class="form-label" id="lbl-edit-prop-title">כותרת הנכס *</label>
         <input type="text" id="edit-prop-title" class="form-input">
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">סוג נכס</label>
+          <label class="form-label" id="lbl-edit-prop-type">סוג נכס</label>
           <select id="edit-prop-type" class="form-input">
             <option value="apartment">דירה</option>
             <option value="house">בית פרטי</option>
@@ -7013,7 +7014,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">סטטוס</label>
+          <label class="form-label" id="lbl-edit-prop-status">סטטוס</label>
           <select id="edit-prop-status" class="form-input">
             <option value="available">זמין</option>
             <option value="under_offer">בהצעה</option>
@@ -7023,25 +7024,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">מחיר (₪) *</label>
+        <label class="form-label" id="lbl-edit-prop-price">מחיר (₪) *</label>
         <input type="number" id="edit-prop-price" class="form-input" min="0">
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" id="fg-edit-prop-rooms">
           <label class="form-label">חדרים</label>
           <input type="number" id="edit-prop-rooms" class="form-input" step="0.5" min="0">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="fg-edit-prop-area">
           <label class="form-label">שטח (מ"ר)</label>
           <input type="number" id="edit-prop-area" class="form-input" min="0">
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" id="fg-edit-prop-floor">
           <label class="form-label">קומה</label>
           <input type="number" id="edit-prop-floor" class="form-input" min="0">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="fg-edit-prop-city">
           <label class="form-label">עיר</label>
           <input type="text" id="edit-prop-city" class="form-input">
         </div>
@@ -7054,8 +7055,8 @@
         <label class="form-label">תיאור</label>
         <textarea id="edit-prop-description" class="form-input form-textarea"></textarea>
       </div>
-      <div class="form-group">
-        <label class="form-label">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
+      <div class="form-group" id="fg-edit-prop-images">
+        <label class="form-label" id="lbl-edit-prop-images">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
         <div id="edit-prop-gallery" class="prop-gallery-grid"></div>
       </div>
     </div>
@@ -7641,6 +7642,7 @@ const DB = {
         desired_area: l.desired_area || '', score: l.score,
         lead_role: l.lead_role || 'buyer',
         notes: l.notes || '', tags: l.tags || [],
+        inspiration_url: l.inspiration_url || null,
         last_contact: l.last_contact?.split('T')[0] || null,
         next_followup: l.next_followup?.split('T')[0] || null,
         created_at: l.created_at?.split('T')[0] || today(),
@@ -7677,6 +7679,7 @@ const DB = {
       desired_area: lead.desired_area || null,
       notes: lead.notes || '',
       lead_role: lead.lead_role || 'buyer',
+      inspiration_url: lead.inspiration_url || null,
       pipeline_stage_id: firstStageId,
       score: 50, next_followup: addDays(1),
     }).select().single();
@@ -7689,6 +7692,7 @@ const DB = {
       desired_area: data.desired_area || '', score: 50,
       lead_role: data.lead_role || 'buyer',
       notes: data.notes || '', tags: [],
+      inspiration_url: data.inspiration_url || null,
       last_contact: null, next_followup: addDays(1), created_at: today(),
     };
   },
@@ -8938,6 +8942,92 @@ function applyIndustryToLeadForm(prefix) {
   if (opts.some(o => o.v === saved)) sel.value = saved;
 }
 
+// The "properties" table also backs "cases" (lawyer) and "projects" (interior) —
+// same DB entity, different real-world meaning per vertical (see getLabel()).
+const PROPERTY_CONFIG = {
+  realestate: {
+    titlePlaceholder: 'לדוגמה: 4 חדרים עם נוף לים',
+    typeLabel: 'סוג נכס',
+    typeOptions: [{v:'apartment',l:'דירה'},{v:'house',l:'בית פרטי'},{v:'penthouse',l:'פנטהאוז'},{v:'commercial',l:'מסחרי'},{v:'land',l:'מגרש'}],
+    statusLabel: 'סטטוס',
+    statusOptions: [{v:'available',l:'זמין'},{v:'under_offer',l:'בהצעה'},{v:'sold',l:'נמכר'},{v:'rented',l:'מושכר'}],
+    statusClass: { available:'badge-status-available', under_offer:'badge-status-offer', sold:'badge-status-sold', rented:'badge-status-sold' },
+    priceLabel: 'מחיר (₪)', priceRequired: true, pricePlaceholder: '2000000',
+    showRooms: true, showArea: true, showFloor: true, showImages: true,
+    imagesLabel: 'תמונות נכס',
+  },
+  interior: {
+    titlePlaceholder: 'לדוגמה: שיפוץ סלון בסגנון מינימליסטי',
+    typeLabel: 'סוג פרויקט',
+    typeOptions: [{v:'living_room',l:'סלון'},{v:'kitchen',l:'מטבח'},{v:'bedroom',l:'חדר שינה'},{v:'full_apartment',l:'דירה שלמה'},{v:'office',l:'משרד'},{v:'commercial',l:'מסחרי'},{v:'other',l:'אחר'}],
+    statusLabel: 'סטטוס',
+    statusOptions: [{v:'planning',l:'בתכנון'},{v:'in_progress',l:'בביצוע'},{v:'completed',l:'הושלם'},{v:'on_hold',l:'בהמתנה'}],
+    statusClass: { planning:'badge-status-new', in_progress:'badge-status-offer', completed:'badge-status-available', on_hold:'badge-status-sold' },
+    priceLabel: 'תקציב (₪)', priceRequired: false, pricePlaceholder: '80000',
+    showRooms: true, showArea: true, showFloor: false, showImages: true,
+    imagesLabel: 'תמונות השראה',
+  },
+  realestate_lawyer: {
+    titlePlaceholder: 'לדוגמה: ליווי רכישת דירה, רחוב הרצל 10',
+    typeLabel: 'סוג תיק',
+    typeOptions: [{v:'purchase',l:'ליווי רכישה'},{v:'sale',l:'ליווי מכירה'},{v:'mortgage',l:'ליווי משכנתא'},{v:'due_diligence',l:'בדיקת נאותות'},{v:'contract',l:'ניסוח חוזה'},{v:'other',l:'אחר'}],
+    statusLabel: 'סטטוס',
+    statusOptions: [{v:'open',l:'פתוח'},{v:'in_progress',l:'בטיפול'},{v:'completed',l:'הושלם'},{v:'on_hold',l:'מוקפא'}],
+    statusClass: { open:'badge-status-new', in_progress:'badge-status-offer', completed:'badge-status-available', on_hold:'badge-status-sold' },
+    priceLabel: 'שכר טרחה (₪)', priceRequired: false, pricePlaceholder: '15000',
+    showRooms: false, showArea: false, showFloor: false, showImages: false,
+    imagesLabel: '',
+  },
+};
+PROPERTY_CONFIG.other = PROPERTY_CONFIG.realestate;
+
+function propConfig() {
+  const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+  return PROPERTY_CONFIG[ind] || PROPERTY_CONFIG.realestate;
+}
+
+function applyIndustryToPropertyForm(prefix) {
+  const cfg = propConfig();
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setPh   = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder = val; };
+  const showFg  = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? '' : 'none'; };
+  const propName = getLabel('property');
+
+  setText(prefix === 'new' ? 'modal-add-property-title' : 'modal-edit-property-title',
+    prefix === 'new' ? `${getLabel('propertiesIcon')} ${propName} חדש` : `✏️ עריכת ${propName}`);
+  setText(`lbl-${prefix}-prop-title`, `כותרת ה${propName} *`);
+  if (prefix === 'new') setPh('new-prop-title', cfg.titlePlaceholder);
+  setText(`lbl-${prefix}-prop-type`,   cfg.typeLabel);
+  setText(`lbl-${prefix}-prop-status`, cfg.statusLabel);
+  setText(`lbl-${prefix}-prop-price`,  cfg.priceLabel + (cfg.priceRequired ? ' *' : ''));
+
+  const typeSel = document.getElementById(`${prefix}-prop-type`);
+  if (typeSel) {
+    const saved = typeSel.value;
+    typeSel.innerHTML = cfg.typeOptions.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+    if (cfg.typeOptions.some(o => o.v === saved)) typeSel.value = saved;
+  }
+  const statusSel = document.getElementById(`${prefix}-prop-status`);
+  if (statusSel) {
+    const saved = statusSel.value;
+    statusSel.innerHTML = cfg.statusOptions.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+    if (cfg.statusOptions.some(o => o.v === saved)) statusSel.value = saved;
+  }
+
+  showFg(`fg-${prefix}-prop-rooms`,  cfg.showRooms);
+  showFg(`fg-${prefix}-prop-area`,   cfg.showArea);
+  showFg(`fg-${prefix}-prop-floor`,  cfg.showFloor);
+  showFg(`fg-${prefix}-prop-images`, cfg.showImages);
+  setText(`lbl-${prefix}-prop-images`, cfg.imagesLabel);
+  // "floor" and "city" share a form-row; when floor is hidden, city must span
+  // both columns or it collapses into floor's grid slot leaving a blank gap.
+  const cityFg = document.getElementById(`fg-${prefix}-prop-city`);
+  if (cityFg) cityFg.style.gridColumn = cfg.showFloor ? '' : '1 / -1';
+  if (prefix === 'new') setPh('new-prop-price', cfg.pricePlaceholder);
+
+  if (prefix === 'new') setText('new-prop-save-btn', `שמור ${propName}`);
+}
+
 /* ═══════════════════════════════════════════
    MODAL UTILS
 ═══════════════════════════════════════════ */
@@ -8949,6 +9039,8 @@ function openModal(id) {
   document.body.style.overflow = 'hidden';
   if (id === 'modal-add-lead') applyIndustryToLeadForm('new');
   if (id === 'modal-edit-lead') applyIndustryToLeadForm('edit');
+  if (id === 'modal-add-property') applyIndustryToPropertyForm('new');
+  if (id === 'modal-edit-property') applyIndustryToPropertyForm('edit');
   // Move focus to first focusable element inside the modal
   requestAnimationFrame(() => {
     const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -10666,6 +10758,7 @@ const CallLog = {
       State.activities.unshift(act);
       const lead = State.leads.find(l => l.id === leadId);
       if (lead) lead.last_contact = today();
+      DB.updateLead(leadId, { last_contact: today() }).catch(()=>{});
       toast('📞 ' + content, 'success');
       Gamify.event('log_activity');
       if (State.screen === 'lead-detail') LeadDetail.render(leadId);
@@ -13193,6 +13286,8 @@ const App = {
     set('bn-label-properties',     getLabel('properties'));
     set('label-properties-icon',   getLabel('propertiesIcon'));
     set('bn-icon-properties',      getLabel('propertiesIcon'));
+    set('screen-properties-title', `${getLabel('propertiesIcon')} ${getLabel('properties')}`);
+    set('properties-add-btn',      `+ ${getLabel('property')}`);
     set('label-all-leads',         getLabel('allLeads'));
     set('label-pipeline',          getLabel('pipeline'));
     set('bn-label-pipeline',       'פייפליין');
@@ -14376,35 +14471,38 @@ function switchTab(btn, tabId) {
 ═══════════════════════════════════════════ */
 const PropertiesScreen = {
   render() {
-    const typeLabels = { apartment:'דירה', house:'בית', penthouse:'פנטהאוז', commercial:'מסחרי', land:'מגרש' };
-    const statusBadge = { available:'זמין', under_offer:'הצעה', sold:'נמכר', rented:'מושכר' };
-    const statusClass = { available:'badge-status-available', under_offer:'badge-status-offer', sold:'badge-status-sold' };
+    const cfg = propConfig();
+    const typeLabels  = Object.fromEntries(cfg.typeOptions.map(o => [o.v, o.l]));
+    const statusBadge = Object.fromEntries(cfg.statusOptions.map(o => [o.v, o.l]));
+    const statusClass = cfg.statusClass;
+    const icon = getLabel('propertiesIcon');
     document.getElementById('properties-grid').innerHTML = State.properties.map(p => `
       <div class="property-card" onclick="openEditProperty('${p.id}')">
         <div class="property-photo">
-          ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : '🏠'}
+          ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : icon}
           ${(p.image_urls?.length || 0) > 1 ? `<span class="img-count-badge">📷 ${p.image_urls.length}</span>` : ''}
         </div>
         <div class="property-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div class="property-price">${formatMoney(p.price)}</div>
+            <div class="property-price">${p.price ? formatMoney(p.price) : '—'}</div>
             <div style="display:flex;gap:6px;align-items:center;">
               <span class="badge ${statusClass[p.status]||'badge-status-new'}">${escapeHtml(statusBadge[p.status]||p.status)}</span>
               <button class="quick-del-btn" onclick="event.stopPropagation();quickDeleteProp('${p.id}')">✕</button>
             </div>
           </div>
           <div class="property-title">${escapeHtml(p.title)}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${escapeHtml(p.address)}, ${escapeHtml(p.city)}</div>
+          ${(p.address || p.city) ? `<div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${escapeHtml(p.address||'')}${p.address && p.city ? ', ' : ''}${escapeHtml(p.city||'')}</div>` : ''}
+          ${(cfg.showRooms || cfg.showArea || cfg.showFloor) ? `
           <div class="property-specs">
-            <div class="property-spec">🛏 ${p.rooms} חד׳</div>
-            <div class="property-spec">📐 ${p.area} מ"ר</div>
-            ${p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
-          </div>
+            ${cfg.showRooms && p.rooms ? `<div class="property-spec">🛏 ${p.rooms} חד׳</div>` : ''}
+            ${cfg.showArea && p.area ? `<div class="property-spec">📐 ${p.area} מ"ר</div>` : ''}
+            ${cfg.showFloor && p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
+          </div>` : ''}
           ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
           <button class="prop-share-btn" onclick="event.stopPropagation();sharePropertyWhatsApp('${p.id}')">📤 שתף ב-WhatsApp</button>
         </div>
       </div>
-    `).join('') || '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🏠</div><div class="empty-title">אין נכסים עדיין</div></div>';
+    `).join('') || `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">${icon}</div><div class="empty-title">אין ${getLabel('properties')} עדיין</div></div>`;
   }
 };
 
@@ -16111,8 +16209,8 @@ async function addLead(bypassQuality) {
       desired_area: document.getElementById('new-lead-area').value,
       notes: document.getElementById('new-lead-notes').value,
       lead_role: document.getElementById('new-lead-role-picker')?.dataset.value || 'buyer',
+      inspiration_url: document.getElementById('new-lead-inspiration').value.trim() || null,
     });
-    lead.inspiration_url = document.getElementById('new-lead-inspiration').value.trim() || null;
     State.leads.unshift(lead);
     await DB.addActivity({ lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר' });
     State.activities.unshift({ id: uid(), lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר', created_at: today() });
@@ -16200,6 +16298,7 @@ async function addActivity() {
     State.activities.unshift(act);
     const lead = State.leads.find(l => l.id === State.currentLeadId);
     if (lead) lead.last_contact = today();
+    DB.updateLead(State.currentLeadId, { last_contact: today() }).catch(()=>{});
     const wasFromChallenge = !!document.getElementById('gamify-lead-sel-group');
     closeModal('modal-add-activity');
     document.getElementById('new-activity-content').value = '';
@@ -16568,8 +16667,8 @@ async function addProperty() {
   if (demoGuard()) return;
   const title = document.getElementById('new-prop-title').value.trim();
   const price = parseFloat(document.getElementById('new-prop-price').value) || 0;
-  if (!title) { toast('נא להזין כותרת לנכס', 'error'); return; }
-  if (!price) { toast('נא להזין מחיר', 'error'); return; }
+  if (!title) { toast('נא להזין כותרת', 'error'); return; }
+  if (propConfig().priceRequired && !price) { toast('נא להזין מחיר', 'error'); return; }
   const saveBtn = document.querySelector('#modal-add-property .btn-primary');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   SaveAnim.show();
@@ -16598,7 +16697,7 @@ async function addProperty() {
         prop.image_url  = urls[0];
         prop.image_urls = urls;
       } catch(imgErr) {
-        toast('הנכס נשמר אבל התמונות לא הועלו: ' + imgErr.message, 'warning');
+        toast(`ה${getLabel('property')} נשמר אבל התמונות לא הועלו: ` + imgErr.message, 'warning');
       }
     }
     State.properties.unshift(prop);
@@ -16608,14 +16707,14 @@ async function addProperty() {
     PropImages.resetNew();
     await new Promise(r => setTimeout(r, Math.max(0, 1500 - (Date.now() - t0))));
     SaveAnim.success(() => {
-      toast(`🏠 נכס "${title}" נוסף בהצלחה`, 'success');
+      toast(`${getLabel('propertiesIcon')} ${getLabel('property')} "${title}" נוסף בהצלחה`, 'success');
       if (State.screen === 'properties') PropertiesScreen.render();
     });
   } catch(e) {
     SaveAnim.hide();
     toast(friendlySaveError(e), 'error');
   } finally {
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'שמור נכס'; }
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = `שמור ${getLabel('property')}`; }
   }
 }
 
@@ -16623,6 +16722,10 @@ function openEditProperty(propId) {
   const p = State.properties.find(x => x.id === propId);
   if (!p) return;
   State.currentPropId = propId;
+  // Rebuild the type/status dropdown options for the current industry BEFORE
+  // setting values below, otherwise p.type/p.status silently fail to match
+  // whatever industry (e.g. realestate) the static HTML options still show.
+  applyIndustryToPropertyForm('edit');
   document.getElementById('edit-prop-title').value       = p.title || '';
   document.getElementById('edit-prop-type').value        = p.type  || 'apartment';
   document.getElementById('edit-prop-status').value      = p.status || 'available';
@@ -16644,8 +16747,8 @@ async function saveEditProperty() {
   if (!prop) return;
   const title = document.getElementById('edit-prop-title').value.trim();
   const price = parseFloat(document.getElementById('edit-prop-price').value) || 0;
-  if (!title) { toast('נא להזין כותרת לנכס', 'error'); return; }
-  if (!price) { toast('נא להזין מחיר', 'error'); return; }
+  if (!title) { toast('נא להזין כותרת', 'error'); return; }
+  if (propConfig().priceRequired && !price) { toast('נא להזין מחיר', 'error'); return; }
   const saveBtn = document.getElementById('edit-prop-save-btn');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   SaveAnim.show();
@@ -16671,7 +16774,7 @@ async function saveEditProperty() {
     closeModal('modal-edit-property');
     await new Promise(r => setTimeout(r, Math.max(0, 1200 - (Date.now() - t0))));
     SaveAnim.success(() => {
-      toast('✅ הנכס עודכן בהצלחה', 'success');
+      toast(`✅ ה${getLabel('property')} עודכן בהצלחה`, 'success');
       if (State.screen === 'properties') PropertiesScreen.render();
     });
   } catch(e) {
@@ -16738,11 +16841,11 @@ async function quickDeleteProp(id) {
   if (demoGuard()) return;
   const prop = State.properties.find(p => p.id === id);
   if (!prop) return;
-  if (!confirm(`למחוק את הנכס "${prop.title}"?`)) return;
+  if (!confirm(`למחוק את ה${getLabel('property')} "${prop.title}"?`)) return;
   try {
     await DB.deleteProperty(id);
     State.properties = State.properties.filter(p => p.id !== id);
-    toast('🗑 הנכס נמחק', 'success');
+    toast(`🗑 ה${getLabel('property')} נמחק`, 'success');
     if (State.screen === 'properties') PropertiesScreen.render();
   } catch(e) {
     toast('שגיאה במחיקה: ' + e.message, 'error');
@@ -16752,15 +16855,16 @@ async function quickDeleteProp(id) {
 function sharePropertyWhatsApp(propId) {
   const p = State.properties.find(x => x.id === propId);
   if (!p) return;
-  const typeLabels = { apartment:'דירה', house:'בית', penthouse:'פנטהאוז', commercial:'מסחרי', land:'מגרש' };
+  const cfg = propConfig();
+  const typeLabels = Object.fromEntries(cfg.typeOptions.map(o => [o.v, o.l]));
   const type = typeLabels[p.type] || p.type || '';
   const lines = [
-    `🏠 ${escapeHtml(p.title)}`,
-    `💰 ${formatMoney(p.price)}`,
+    `${getLabel('propertiesIcon')} ${escapeHtml(p.title)}`,
+    p.price ? `💰 ${formatMoney(p.price)}` : '',
     type ? `📋 ${type}` : '',
-    p.rooms  ? `🛏 ${p.rooms} חדרים` : '',
-    p.area   ? `📐 ${p.area} מ"ר` : '',
-    p.floor > 0 ? `🏢 קומה ${p.floor}` : '',
+    cfg.showRooms && p.rooms ? `🛏 ${p.rooms} חדרים` : '',
+    cfg.showArea  && p.area  ? `📐 ${p.area} מ"ר` : '',
+    cfg.showFloor && p.floor > 0 ? `🏢 קומה ${p.floor}` : '',
     (p.address || p.city) ? `📍 ${[p.address, p.city].filter(Boolean).join(', ')}` : '',
     p.description ? `\n${p.description.slice(0, 200)}` : '',
     '\n📞 לפרטים נוספים צרו קשר',
@@ -16821,13 +16925,13 @@ async function saveEditLead() {
     source: document.getElementById('edit-lead-source').value,
     notes: document.getElementById('edit-lead-notes').value.trim(),
     lead_role: document.getElementById('edit-lead-role-picker')?.dataset.value || 'buyer',
+    inspiration_url: document.getElementById('edit-lead-inspiration').value.trim() || null,
   };
   SaveAnim.show();
   const t0 = Date.now();
 
   try {
     await DB.updateLead(leadId, patch);
-    const inspirationUrl = document.getElementById('edit-lead-inspiration').value.trim() || null;
     Object.assign(lead, {
       name: patch.name,
       phone: patch.phone,
@@ -16839,7 +16943,7 @@ async function saveEditLead() {
       source: patch.source,
       notes: patch.notes || '',
       lead_role: patch.lead_role,
-      inspiration_url: inspirationUrl,
+      inspiration_url: patch.inspiration_url,
     });
     closeModal('modal-edit-lead');
     await new Promise(r => setTimeout(r, Math.max(0, 1100 - (Date.now() - t0))));
@@ -18092,16 +18196,14 @@ const QuickLog = {
       State.activities.unshift(act);
 
       const upd = this._parsed.updates || {};
-      const patch = {};
+      const patch = { last_contact: today() };
       if (upd.budget_max) patch.budget_max = Number(upd.budget_max);
       if (upd.notes) patch.notes = lead.notes ? lead.notes + '\n' + upd.notes : upd.notes;
-      if (Object.keys(patch).length) {
-        await DB.updateLead(this._leadId, patch);
-        const idx = State.leads.findIndex(l => l.id === this._leadId);
-        if (idx >= 0) Object.assign(State.leads[idx], patch);
-      }
+      await DB.updateLead(this._leadId, patch);
+      const idx = State.leads.findIndex(l => l.id === this._leadId);
+      if (idx >= 0) Object.assign(State.leads[idx], patch);
 
-      lead.last_contact = today();
+      lead.last_contact = patch.last_contact;
       try { Gamify.event('log_activity'); } catch(_) {}
 
       document.getElementById('ql-done-msg').textContent = `הרשומה נוספה ל"${lead.name}"`;
