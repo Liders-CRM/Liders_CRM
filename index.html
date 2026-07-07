@@ -6085,9 +6085,10 @@
           <option value="viewer">צופה</option>
         </select>
         <button class="btn btn-primary btn-sm" style="width:100%;" onclick="Team.invite()">📨 שלח הזמנה</button>
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div id="team-invite-link-section" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
           <div style="font-size:11.5px;color:var(--gray-500);margin-bottom:7px;text-align:center;">— או שתף קישור גיוס ישירות —</div>
-          <button class="btn btn-ghost btn-sm" style="width:100%;font-size:12px;" onclick="Team.generateInviteLink()">🔗 צור קישור גיוס לסוכן חדש</button>
+          <button id="team-invite-link-btn" class="btn btn-ghost btn-sm" style="width:100%;font-size:12px;" onclick="Team.generateInviteLink()">🔗 צור קישור גיוס לסוכן חדש</button>
+          <div id="team-invite-link-locked" style="display:none;font-size:11.5px;color:var(--gray-400);text-align:center;padding:6px 0;"></div>
           <div id="team-invite-link-result" style="display:none;margin-top:10px;background:var(--gray-50);border-radius:10px;padding:10px 12px;">
             <div style="font-size:11px;color:var(--gray-500);margin-bottom:6px;">קישור גיוס (תוקף 30 יום, שימוש חד-פעמי):</div>
             <div id="team-invite-link-url" style="font-size:11px;color:var(--blue-600);word-break:break-all;margin-bottom:8px;direction:ltr;text-align:left;background:#fff;border-radius:6px;padding:6px 8px;border:1px solid var(--border);"></div>
@@ -19009,11 +19010,41 @@ const Team = {
     `).join('');
   },
 
+  _applyInviteLinkGate() {
+    const btn    = document.getElementById('team-invite-link-btn');
+    const locked = document.getElementById('team-invite-link-locked');
+    if (!btn || !locked) return;
+
+    // חבילה בתשלום — תמיד פתוח
+    const plan = State.tenant?.plan;
+    if (plan && plan !== 'trial') {
+      btn.style.display   = '';
+      locked.style.display = 'none';
+      return;
+    }
+
+    // ניסיון — נפתח אחרי 20 ימי שימוש
+    const trialEnds = State.tenant?.trial_ends_at;
+    const trialStart = trialEnds ? new Date(trialEnds).getTime() - 30 * 86400000 : null;
+    const daysUsed   = trialStart ? Math.floor((Date.now() - trialStart) / 86400000) : 0;
+
+    if (daysUsed >= 20) {
+      btn.style.display    = '';
+      locked.style.display = 'none';
+    } else {
+      btn.style.display    = 'none';
+      locked.style.display = '';
+      const daysLeft = 20 - daysUsed;
+      locked.textContent   = `🔒 קישור גיוס יהיה זמין בעוד ${daysLeft} ימים`;
+    }
+  },
+
   async open() {
     if (demoGuard()) return;
     await this.fetch();
     this.renderSummary();
     this.renderInvites();
+    this._applyInviteLinkGate();
     openModal('modal-team');
   },
 
