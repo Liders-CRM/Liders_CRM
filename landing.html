@@ -449,7 +449,7 @@
        כאב (הזדהות)
     ══════════════════════════════ */
     .section {
-      padding: 56px 24px;
+      padding: 44px 24px;
     }
     .section-inner {
       max-width: 900px;
@@ -1277,7 +1277,8 @@
     /* ══════════════════════════════
        קצת עלינו
     ══════════════════════════════ */
-    .about-section { background: var(--white); }
+    .about-section { background: var(--white); border-top: 1px solid var(--border); }
+    #features { border-top: 1px solid var(--border); }
     .about-text {
       max-width: 660px;
       margin: 0 auto 36px;
@@ -2014,6 +2015,7 @@
     /* ── המשולש הקדוש ─────────────────────────── */
     .holy-triangle-section {
       background: var(--white);
+      padding: 32px 24px 36px;
     }
 
     /* ═══ TRI-STAGE: ANIMATED TRIANGLE ═══ */
@@ -2767,7 +2769,7 @@
       <div class="agent-card">
         <span class="agent-icon">⚡</span>
         <div class="agent-title">הסוכן שמתעד בשבילך</div>
-        <div class="agent-desc">מסכמים בקול או בכתב מה היה בשיחה — המערכת כותבת משפט ברור ישר לכרטיס הליד.</div>
+        <div class="agent-desc">מסכמים בקול או בכתב מה היה בשיחה, והמערכת כותבת משפט ברור ישר לכרטיס הליד.</div>
       </div>
       <div class="agent-card">
         <span class="agent-icon">🎧</span>
@@ -2821,14 +2823,6 @@
 <!-- מעבר מכהה לבהיר -->
 <div class="sect-blend-light" aria-hidden="true"></div>
 
-<!-- כאב: ליד מחוץ לאזור / תחום -->
-<section class="section referral-pain-section">
-  <div class="section-inner rp-inner">
-    <h2 class="rp-heading fade-up">כמה פעמים ויתרת על ליד שלא היה בתחום שלך ובסוף לא הרווחת עליו כלום</h2>
-    <p class="rp-body fade-up" style="text-align:center;font-size:clamp(16px,1.9vw,18px);color:var(--text-muted);margin-top:12px;">יש פתרון — לוח ההזדמנויות של לידרס מאפשר להפנות ליד לקולגה ולקבל עמלה מוסכמת עם חתימה דיגיטלית.</p>
-  </div>
-</section>
-
 <!-- המשולש הקדוש — זרימת עסקה -->
 <section class="section holy-triangle-section" id="holy-triangle">
   <div class="section-inner">
@@ -2840,18 +2834,24 @@
         <path id="triE1" class="tri-edge" d="M 470,55 L 130,55" stroke-dasharray="345" stroke-dashoffset="345"/>
         <path id="triE2" class="tri-edge" d="M 130,55 L 300,308" stroke-dasharray="415" stroke-dashoffset="415"/>
         <path id="triE3" class="tri-edge" d="M 300,308 L 470,55" stroke-dasharray="415" stroke-dashoffset="415"/>
-        <circle class="tri-dot" r="7" fill="var(--blue,#2563EB)" opacity="0">
+        <g opacity="0">
           <animateMotion dur="2.8s" repeatCount="indefinite" begin="2.2s"><mpath href="#triE1"/></animateMotion>
           <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.2s" fill="freeze"/>
-        </circle>
-        <circle class="tri-dot" r="7" fill="#C49A2A" opacity="0">
+          <circle r="12" fill="#C49A2A"/>
+          <text font-size="13" text-anchor="middle" dominant-baseline="central" fill="#fff" font-weight="900" font-family="Rubik,Heebo,sans-serif">₪</text>
+        </g>
+        <g opacity="0">
           <animateMotion dur="3.5s" repeatCount="indefinite" begin="3.8s"><mpath href="#triE2"/></animateMotion>
           <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="3.8s" fill="freeze"/>
-        </circle>
-        <circle class="tri-dot" r="7" fill="#7C3AED" opacity="0">
+          <circle r="12" fill="#D4A843"/>
+          <text font-size="13" text-anchor="middle" dominant-baseline="central" fill="#fff" font-weight="900" font-family="Rubik,Heebo,sans-serif">₪</text>
+        </g>
+        <g opacity="0">
           <animateMotion dur="3.2s" repeatCount="indefinite" begin="5.4s"><mpath href="#triE3"/></animateMotion>
           <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="5.4s" fill="freeze"/>
-        </circle>
+          <circle r="12" fill="#A07820"/>
+          <text font-size="13" text-anchor="middle" dominant-baseline="central" fill="#fff" font-weight="900" font-family="Rubik,Heebo,sans-serif">₪</text>
+        </g>
       </svg>
       <div class="tri-node tri-n1">
         <div class="tn-icon">🏠</div>
@@ -2870,37 +2870,12 @@
       </div>
     </div>
 
-    <!-- 6 נתיבים — רצועת scroll אופקית -->
-    <div class="tri-flows fade-up" aria-label="נתיבי הפניה">
-      <div class="tri-flows-track">
-        <div class="tf-pill">🏠 סוכן — לקוח מצא נכס — ⚖️ עו״ד</div>
-        <div class="tf-pill">🏠 סוכן — עסקה נסגרה — 🎨 עיצוב</div>
-        <div class="tf-pill">⚖️ עו״ד — לקוח רוצה לקנות — 🏠 סוכן</div>
-        <div class="tf-pill">⚖️ עו״ד — חוזה נחתם — 🎨 עיצוב</div>
-        <div class="tf-pill">🎨 עיצוב — לקוח מחפש דירה — 🏠 סוכן</div>
-        <div class="tf-pill">🎨 עיצוב — צריך בדיקת נאותות — ⚖️ עו״ד</div>
-      </div>
-    </div>
-
-    <div class="opp-explainer fade-up">
-      <div class="oe-title">📋 לוח ההזדמנויות · שוק ההפניות הפנימי של לידרס</div>
-      <div class="oe-desc">יש לקוח שצריך מישהו מחוץ לתחום שלך או מחוץ לאזור? מפרסמים הזדמנות בלוח הפנימי עם עמלה — הבעל מקצוע המתאים מגיב, וכל ההסכמות מגובות בחתימה דיגיטלית. בלי הסכמים בוואטסאפ שנשכחים, בלי אי-נעימויות בסוף.</div>
-      <div class="oe-examples">
-        <div class="oe-ex-label">דוגמאות מהמערכת</div>
-        <div class="oe-ex-card">🏠 <strong>סוכן נדל"ן:</strong> "יש לי קונה שמחפש 4 חדרים בנתניה, אבל אני לא מכסה את האזור. מחפש סוכן מתאים לשיתוף — עמלה 10% מהרווח, חתימה דיגיטלית דרך המערכת."</div>
-        <div class="oe-ex-card" style="margin-top:10px;">⚖️ <strong>עו"ד נדל"ן:</strong> "קיבלתי לקוח שרוצה למכור דירה בתל אביב ומחפש סוכן אמין באזור. מוכן לשתף ליד — עמלה 15% מהעמלה הסופית של הסוכן."</div>
-        <div class="oe-ex-card" style="margin-top:10px;">🎨 <strong>עיצוב פנים:</strong> "לקוח שמחפש לקנות 3 חדרים ברמת גן — צריך סוכן מנוסה באזור. אשמח להפנות בעמלה על הסגירה."</div>
-      </div>
-    </div>
   </div>
 </section>
-
-<div class="sect-blend-light" aria-hidden="true"></div>
 
 <!-- קצת עלינו -->
 <section class="section about-section" id="about">
   <div class="section-inner">
-    <p class="section-label fade-up">הסיפור שלנו</p>
     <h2 class="section-title fade-up">בנינו את Liders כי מגיע לעולם הנדלן טוב יותר</h2>
     <p class="about-text fade-up">
       ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. לידרס נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות.
@@ -3039,20 +3014,23 @@
   </div>
 </section>
 
-<!-- divider: מסמכים עפים לתיקיה דיגיטלית — מעבר לתמחור -->
-<div class="doc-funnel" id="docFunnel" aria-hidden="true">
-  <div class="df-paper df-p1"><div class="dp-l"></div><div class="dp-l"></div><div class="dp-l dp-s"></div></div>
-  <div class="df-paper df-p2"><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
-  <div class="df-paper df-p3"><div class="dp-l"></div><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
-  <div class="df-paper df-p4"><div class="dp-l dp-s"></div><div class="dp-l"></div></div>
-  <div class="df-paper df-p5"><div class="dp-l"></div><div class="dp-l dp-s"></div></div>
-  <div class="df-folder" id="dfFolder">
-    <div class="df-fold-tab"></div>
-    <div class="df-fold-body"><div class="df-fold-logo">L</div></div>
-    <div class="df-fold-lid"></div>
+<!-- לוח ההזדמנויות — ממש לפני התמחור -->
+<section class="section referral-pain-section">
+  <div class="section-inner rp-inner">
+    <h2 class="rp-heading fade-up">כמה פעמים ויתרת על ליד שלא היה בתחום שלך ובסוף לא הרווחת עליו כלום</h2>
+    <p class="rp-body fade-up" style="text-align:center;font-size:clamp(16px,1.9vw,18px);color:var(--text-muted);margin-top:12px;">יש פתרון, לוח ההזדמנויות של לידרס מאפשר להפנות ליד לקולגה ולקבל עמלה מוסכמת עם חתימה דיגיטלית.</p>
+    <div class="opp-explainer fade-up" style="margin-top:28px;">
+      <div class="oe-title">📋 לוח ההזדמנויות · שוק ההפניות הפנימי של לידרס</div>
+      <div class="oe-desc">יש לקוח שצריך מישהו מחוץ לתחום שלך או מחוץ לאזור? מפרסמים הזדמנות בלוח הפנימי עם עמלה, הבעל מקצוע המתאים מגיב, וכל ההסכמות מגובות בחתימה דיגיטלית. בלי הסכמים בוואטסאפ שנשכחים, בלי אי-נעימויות בסוף.</div>
+      <div class="oe-examples">
+        <div class="oe-ex-label">דוגמאות מהמערכת</div>
+        <div class="oe-ex-card">🏠 <strong>סוכן נדל"ן:</strong> "יש לי קונה שמחפש 4 חדרים בנתניה, אבל אני לא מכסה את האזור. מחפש סוכן מתאים לשיתוף, עמלה 10% מהרווח, חתימה דיגיטלית דרך המערכת."</div>
+        <div class="oe-ex-card" style="margin-top:10px;">⚖️ <strong>עו"ד נדל"ן:</strong> "קיבלתי לקוח שרוצה למכור דירה בתל אביב ומחפש סוכן אמין באזור. מוכן לשתף ליד, עמלה 15% מהעמלה הסופית של הסוכן."</div>
+        <div class="oe-ex-card" style="margin-top:10px;">🎨 <strong>עיצוב פנים:</strong> "לקוח שמחפש לקנות 3 חדרים ברמת גן, צריך סוכן מנוסה באזור. אשמח להפנות בעמלה על הסגירה."</div>
+      </div>
+    </div>
   </div>
-  <p class="df-caption">הכל מסודר, הכל בשליטה</p>
-</div>
+</section>
 
 <!-- תמחור -->
 <section class="pricing-section" id="pricing">
@@ -3099,7 +3077,7 @@
         </ul>
         <div class="plan-addon"><span class="star-live">✨</span> <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
         <a href="https://liders-crm.com" class="plan-btn primary tractor-btn">בוחרים בצוות</a>
-        <p class="plan-cta-reassure">30 יום ניסיון מלא · הצוות מתחיל ביחד · ביטול בכל עת</p>
+        <p class="plan-cta-reassure">הצוות מתחיל ביחד · ביטול בכל עת</p>
       </div>
 
       <div class="plan-card fade-up">
@@ -3118,7 +3096,7 @@
         </ul>
         <div class="plan-addon"><span class="star-live">✨</span> <span>+ <strong>₪100/חודש</strong> לשירותי שיווק מלאים</span></div>
         <a href="https://liders-crm.com" class="plan-btn outline">בוחרים בסוכנות</a>
-        <p class="plan-cta-reassure">ניסיון מלא · תמיכה בעדיפות · ביטול ללא קנסות</p>
+        <p class="plan-cta-reassure">תמיכה בעדיפות · ביטול ללא קנסות</p>
       </div>
     </div>
 
@@ -3137,7 +3115,7 @@
 <!-- שירותי שיווק -->
 <section class="section marketing-section">
   <div class="section-inner">
-    <h2 class="section-title fade-up" style="color:var(--navy);"><span class="star-live">✨</span> תוספת פרימיום 100 שח לחודש</h2>
+    <h2 class="section-title fade-up" style="color:var(--navy);"><span class="star-live">✨</span> תוספת פרימיום<br><small style="font-size:0.52em;font-weight:700;color:var(--gold-600);display:block;margin-top:6px;">100 ₪ לחודש על כל חבילה</small></h2>
     <p class="section-subtitle fade-up" style="font-size:clamp(18px,2.6vw,24px);font-weight:800;color:#B45309;text-align:center;margin-bottom:10px;">כלי שיווק מקצועיים</p>
     <p class="section-sub fade-up" style="font-size:17px;font-weight:700;color:var(--navy);">&#10004;&#65039; יצירת הצעות שיווק מיוחדות &nbsp;&#10004;&#65039; פוסטים וקמפיינים ללקוחות.</p>
 
@@ -3160,7 +3138,7 @@
           <span class="mbf-icon">📸</span>
           <div>
             <strong>פוסט לסושיאל מותאם לתחום שלך</strong>
-            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית לעיצוב פנים — בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
+            <span>פוסט על נכס לסוכן, תוכן מקצועי לעו"ד נדל"ן והשראה עיצובית לעיצוב פנים, בוחרים פלטפורמה ומקבלים פוסט מוכן</span>
           </div>
         </div>
         <div class="mb-feature">
@@ -3168,6 +3146,20 @@
           <div>
             <strong>קמפיין WhatsApp מוכן</strong>
             <span>בוחר נושא (נכס חדש / ירידת מחיר / חג) ומקבל הודעת שידור לכל הלקוחות</span>
+          </div>
+        </div>
+        <div class="mb-feature">
+          <span class="mbf-icon">📧</span>
+          <div>
+            <strong>מחולל אימיילים שיווקיים</strong>
+            <span>כותב מייל שיווקי מותאם לכל ליד ומצב בפייפליין, מוכן לשליחה מיידית</span>
+          </div>
+        </div>
+        <div class="mb-feature">
+          <span class="mbf-icon">⚡</span>
+          <div>
+            <strong>אוטומציות לתהליכי עסק</strong>
+            <span>תזכורות אוטומטיות, עדכון סטטוס לידים, ושליחת הודעות ממוקדות בלי התעסקות ידנית</span>
           </div>
         </div>
         <div class="mb-feature">
@@ -3203,7 +3195,7 @@
       </details>
       <details class="faq-item">
         <summary>המערכת מתאימה לעצמאי או רק לצוותים גדולים?</summary>
-        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי — סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים — וחבילות צוות וסוכנות גדלות איתך: מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
+        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי: סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים. חבילות צוות וסוכנות גדלות איתך, מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
       </details>
       <details class="faq-item">
         <summary>כמה זמן לוקח להתחיל לעבוד בפועל?</summary>
@@ -3246,7 +3238,7 @@
 <!-- סגירה -->
 <section class="closing">
   <h2>העסקה הבאה שלך<br>כבר <span class="gold">מחכה</span></h2>
-  <p>30 יום מלאים על חשבוננו — ללא כרטיס אשראי, ללא שאלות, ללא סיבוכים. אחרי שהפייפליין מסודר בפעם הראשונה — קשה לחזור לאקסל.</p>
+  <p>30 יום מלאים על חשבוננו, ללא כרטיס אשראי, ללא שאלות, ללא סיבוכים. אחרי שהפייפליין מסודר בפעם הראשונה, קשה לחזור לאקסל.</p>
   <div class="closing-actions">
     <div class="wrecking-wrap">
       <div class="pendulum" aria-hidden="true">
@@ -3255,7 +3247,16 @@
       </div>
       <a href="https://liders-crm.com" class="btn-primary shimmer-cta" style="font-size:18px;padding:18px 48px;">מתחילים עכשיו, בחינם</a>
     </div>
-    <p class="closing-micro">בלי כרטיס אשראי · בלי התחייבות · 30 יום מלאים על חשבון הבית</p>
+    <p class="closing-micro">בלי כרטיס אשראי · בלי התחייבות</p>
+    <div id="a11y-statement" style="margin:24px auto 0;max-width:560px;padding:14px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);border-radius:12px;text-align:right;">
+      <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.60);margin-bottom:6px;">♿ הצהרת נגישות</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.7;">
+        Liders CRM פועלת בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998, ולתקנות הנגישות לשירות באינטרנט.
+        רמת תאימות מוצהרת: <strong style="color:rgba(255,255,255,0.55);">WCAG 2.1 AA (חלקית)</strong> · תקן ת"י 5568.
+        המערכת כוללת מצב ניגודיות גבוהה, הגדלת טקסט, ניווט מקלדת מלא ותמיכה בקוראי מסך.
+        לפניות נגישות, יש לפנות דרך: כניסה למערכת, מרכז כלים.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -3266,15 +3267,6 @@
     <a href="https://liders-crm.com">כניסה למערכת</a>
     <a href="https://liders-crm.com/privacy-policy.html">מדיניות פרטיות</a>
     <a href="https://liders-crm.com/#a11y-statement" onclick="document.getElementById('a11y-statement')?.scrollIntoView({behavior:'smooth'});return false;">הצהרת נגישות</a>
-  </div>
-  <div id="a11y-statement" style="margin:18px auto 10px;max-width:560px;padding:14px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;text-align:right;">
-    <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.60);margin-bottom:6px;">♿ הצהרת נגישות</div>
-    <div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.7;">
-      Liders CRM פועלת בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998, ולתקנות הנגישות לשירות באינטרנט.
-      רמת תאימות מוצהרת: <strong style="color:rgba(255,255,255,0.55);">WCAG 2.1 AA (חלקית)</strong> · תקן ת"י 5568.
-      המערכת כוללת מצב ניגודיות גבוהה, הגדלת טקסט, ניווט מקלדת מלא ותמיכה בקוראי מסך.
-      לפניות נגישות — כניסה למערכת ← מרכז כלים.
-    </div>
   </div>
   <div class="footer-copy">© 2026 Liders CRM · כל הזכויות שמורות</div>
 </footer>
@@ -3347,24 +3339,6 @@
       });
     }, { threshold: 0.2 });
     tsObs.observe(ts);
-    // הכפלת pills לסקרול אינסופי
-    const track = document.querySelector('.tri-flows-track');
-    if (track) track.parentElement.appendChild(track.cloneNode(true));
-  })();
-
-  // ═══ Doc Funnel Divider ═══
-  (function () {
-    const dfEl = document.getElementById('docFunnel');
-    if (!dfEl) return;
-    const dfObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        dfEl.classList.add('in-view');
-        setTimeout(() => dfEl.classList.add('folding'), 1400);
-        dfObs.unobserve(dfEl);
-      });
-    }, { threshold: 0.3 });
-    dfObs.observe(dfEl);
   })();
 
   // ═══ Features Carousel ═══
