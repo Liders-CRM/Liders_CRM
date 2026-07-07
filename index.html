@@ -7641,6 +7641,7 @@ const DB = {
         desired_area: l.desired_area || '', score: l.score,
         lead_role: l.lead_role || 'buyer',
         notes: l.notes || '', tags: l.tags || [],
+        inspiration_url: l.inspiration_url || null,
         last_contact: l.last_contact?.split('T')[0] || null,
         next_followup: l.next_followup?.split('T')[0] || null,
         created_at: l.created_at?.split('T')[0] || today(),
@@ -7677,6 +7678,7 @@ const DB = {
       desired_area: lead.desired_area || null,
       notes: lead.notes || '',
       lead_role: lead.lead_role || 'buyer',
+      inspiration_url: lead.inspiration_url || null,
       pipeline_stage_id: firstStageId,
       score: 50, next_followup: addDays(1),
     }).select().single();
@@ -7689,6 +7691,7 @@ const DB = {
       desired_area: data.desired_area || '', score: 50,
       lead_role: data.lead_role || 'buyer',
       notes: data.notes || '', tags: [],
+      inspiration_url: data.inspiration_url || null,
       last_contact: null, next_followup: addDays(1), created_at: today(),
     };
   },
@@ -10666,6 +10669,7 @@ const CallLog = {
       State.activities.unshift(act);
       const lead = State.leads.find(l => l.id === leadId);
       if (lead) lead.last_contact = today();
+      DB.updateLead(leadId, { last_contact: today() }).catch(()=>{});
       toast('📞 ' + content, 'success');
       Gamify.event('log_activity');
       if (State.screen === 'lead-detail') LeadDetail.render(leadId);
@@ -16111,8 +16115,8 @@ async function addLead(bypassQuality) {
       desired_area: document.getElementById('new-lead-area').value,
       notes: document.getElementById('new-lead-notes').value,
       lead_role: document.getElementById('new-lead-role-picker')?.dataset.value || 'buyer',
+      inspiration_url: document.getElementById('new-lead-inspiration').value.trim() || null,
     });
-    lead.inspiration_url = document.getElementById('new-lead-inspiration').value.trim() || null;
     State.leads.unshift(lead);
     await DB.addActivity({ lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר' });
     State.activities.unshift({ id: uid(), lead_id: lead.id, type: 'note', content: 'ליד חדש נוצר', created_at: today() });
@@ -16200,6 +16204,7 @@ async function addActivity() {
     State.activities.unshift(act);
     const lead = State.leads.find(l => l.id === State.currentLeadId);
     if (lead) lead.last_contact = today();
+    DB.updateLead(State.currentLeadId, { last_contact: today() }).catch(()=>{});
     const wasFromChallenge = !!document.getElementById('gamify-lead-sel-group');
     closeModal('modal-add-activity');
     document.getElementById('new-activity-content').value = '';
@@ -16821,13 +16826,13 @@ async function saveEditLead() {
     source: document.getElementById('edit-lead-source').value,
     notes: document.getElementById('edit-lead-notes').value.trim(),
     lead_role: document.getElementById('edit-lead-role-picker')?.dataset.value || 'buyer',
+    inspiration_url: document.getElementById('edit-lead-inspiration').value.trim() || null,
   };
   SaveAnim.show();
   const t0 = Date.now();
 
   try {
     await DB.updateLead(leadId, patch);
-    const inspirationUrl = document.getElementById('edit-lead-inspiration').value.trim() || null;
     Object.assign(lead, {
       name: patch.name,
       phone: patch.phone,
@@ -16839,7 +16844,7 @@ async function saveEditLead() {
       source: patch.source,
       notes: patch.notes || '',
       lead_role: patch.lead_role,
-      inspiration_url: inspirationUrl,
+      inspiration_url: patch.inspiration_url,
     });
     closeModal('modal-edit-lead');
     await new Promise(r => setTimeout(r, Math.max(0, 1100 - (Date.now() - t0))));
@@ -18092,16 +18097,14 @@ const QuickLog = {
       State.activities.unshift(act);
 
       const upd = this._parsed.updates || {};
-      const patch = {};
+      const patch = { last_contact: today() };
       if (upd.budget_max) patch.budget_max = Number(upd.budget_max);
       if (upd.notes) patch.notes = lead.notes ? lead.notes + '\n' + upd.notes : upd.notes;
-      if (Object.keys(patch).length) {
-        await DB.updateLead(this._leadId, patch);
-        const idx = State.leads.findIndex(l => l.id === this._leadId);
-        if (idx >= 0) Object.assign(State.leads[idx], patch);
-      }
+      await DB.updateLead(this._leadId, patch);
+      const idx = State.leads.findIndex(l => l.id === this._leadId);
+      if (idx >= 0) Object.assign(State.leads[idx], patch);
 
-      lead.last_contact = today();
+      lead.last_contact = patch.last_contact;
       try { Gamify.event('log_activity'); } catch(_) {}
 
       document.getElementById('ql-done-msg').textContent = `הרשומה נוספה ל"${lead.name}"`;

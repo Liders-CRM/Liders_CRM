@@ -74,18 +74,22 @@ Deno.serve(async (req: Request) => {
     // Tenant isolation: verify the destination phone belongs to a lead in this user's tenant.
     // RLS on the leads table automatically scopes the query to the authenticated user's tenant.
     const rawPhone = to.replace(/^whatsapp:/, '').trim();
+    if (!/^\+?[0-9]{7,15}$/.test(rawPhone)) {
+      return new Response(
+        JSON.stringify({ error: 'invalid phone format' }),
+        { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } },
+      );
+    }
     const altPhone = rawPhone.startsWith('+972')
       ? '0' + rawPhone.slice(4)
       : rawPhone.startsWith('0')
         ? '+972' + rawPhone.slice(1)
         : null;
-    const phoneFilter = altPhone
-      ? `phone.eq.${rawPhone},phone.eq.${altPhone}`
-      : `phone.eq.${rawPhone}`;
+    const candidates = altPhone ? [rawPhone, altPhone] : [rawPhone];
     const { data: leadCheck } = await sbClient
       .from('leads')
       .select('id')
-      .or(phoneFilter)
+      .in('phone', candidates)
       .limit(1)
       .maybeSingle();
     if (!leadCheck) {
