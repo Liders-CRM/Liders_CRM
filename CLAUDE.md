@@ -911,6 +911,32 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 7/7/2026 (ב') — גיוס סוכנים עם קישור מותאם (Recruitment Invite Link)
+
+> ענף: `main` (ישירות)
+
+### ✅ מיגרציה DB — `073_agent_invite_token.sql` (הוחלה על ה-DB החי)
+- עמודת `invite_token text UNIQUE` נוספה ל-`agent_invites`; `email` הפך nullable
+- אינדקס email מחודש עם `AND email IS NOT NULL`; אינדקס חדש על `invite_token`
+- RPC `create_invite_link(p_role)` — authenticated, בדיקת seat limit, מחזיר token 32-hex
+- RPC `get_invite_preview(p_token)` — anon-accessible, מחזיר `{valid, agency_name, industry}` בלבד
+- `ensure_agent_and_tenant` עודכן לקבל `p_ainvite_token`: token check לפני email check
+
+### ✅ שינויים ב-`index.html`
+1. **`AgentInvite` module** — שמירת token ב-sessionStorage, `checkInbound()` בטעינת דף,
+   `_fetchAndShowBanner()` קורא ל-`get_invite_preview`, מנקה `?ainvite=` מה-URL
+2. **כרטיס קבלת פנים** (`#agency-invite-banner`) — מוצג לפני מסך ההתחברות עם שם הסוכנות
+3. **Team modal** — כפתור "🔗 צור קישור גיוס" + `#team-invite-link-result` עם העתק+WA
+4. **`Team.generateInviteLink/copyInviteLink/shareInviteLinkWA`** — יצירת URL, העתק ללוח,
+   תבנית WhatsApp בעברית עם שם הסוכנות
+5. **`DB.ensureAgent`** — מעביר `p_ainvite_token` ל-RPC; מנקה sessionStorage אחרי הצטרפות
+6. **toast ברכה** — "🎉 ברוכים הבאים! הצטרפת לסוכנות X" + "המערכת כבר מוגדרת עבורך"
+7. **גייט 20 ימים** — `Team._applyInviteLinkGate()` מחשב ימי שימוש מ-`trial_ends_at`;
+   מסתיר כפתור ומציג "🔒 קישור גיוס יהיה זמין בעוד X ימים" בתקופת ניסיון קצרה מ-20 יום;
+   בחבילות בתשלום — תמיד פתוח
+
+---
+
 ## כללי עבודה
 
 1. **עברית RTL** — כל טקסט UI בעברית
