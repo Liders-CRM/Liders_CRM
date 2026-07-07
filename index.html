@@ -5317,7 +5317,7 @@
       <!-- Chat / Lead view panel (overlays screen) -->
       <div id="partners-chat-panel" class="hidden">
         <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--gray-100);position:sticky;top:0;z-index:10;">
-          <button onclick="Partners.closeChat()" style="background:none;border:none;font-size:22px;cursor:pointer;line-height:1;padding:4px;">←</button>
+          <button onclick="Partners.closeChat()" style="background:none;border:none;font-size:14px;cursor:pointer;line-height:1;padding:4px;font-weight:700;color:var(--navy-500);">חזרה</button>
           <div style="flex:1;min-width:0;">
             <div id="chat-lead-name" style="font-size:15px;font-weight:700;color:var(--navy-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
             <div id="chat-partner-label" style="font-size:11px;color:var(--gray-500);"></div>
@@ -5547,7 +5547,7 @@
         <div style="font-size:22px;margin-bottom:8px;">💡</div>
         <div style="font-size:15px;font-weight:800;color:var(--navy-500);margin-bottom:4px;">יש לך רעיון לשיפור?</div>
         <div style="font-size:13px;color:var(--gray-500);line-height:1.55;margin-bottom:14px;">רעיון טוב שיאושר = <strong>+300 XP</strong> אוטומטי ✨</div>
-        <button class="btn btn-primary btn-sm" onclick="IdeaBox.open()" style="font-size:14px;padding:10px 24px;">💡 הצע רעיון ← </button>
+        <button class="btn btn-primary btn-sm" onclick="IdeaBox.open()" style="font-size:14px;padding:10px 24px;">💡 הצע רעיון</button>
       </div>
     </div>
 
@@ -6092,7 +6092,7 @@
     <!-- פעולות -->
     <div class="paywall-actions">
       <button class="btn btn-ghost btn-sm" onclick="if(Billing.isExpired()||(Billing.retentionEndsAt()&&new Date()>Billing.retentionEndsAt())){App.logout();}else{document.getElementById('screen-paywall').classList.add('hidden');document.getElementById('app-shell').classList.remove('hidden');App.go('dashboard');}" style="color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.15);flex:1;max-width:160px;">🏠 חזור לבית</button>
-      <button class="btn btn-ghost btn-sm" onclick="App.logout()" style="color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);flex:1;max-width:160px;">← יציאה</button>
+      <button class="btn btn-ghost btn-sm" onclick="App.logout()" style="color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.1);flex:1;max-width:160px;">יציאה</button>
     </div>
 
   </div>
@@ -6192,7 +6192,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-idea-box')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="IdeaBox.submit()">💡 שלח רעיון ← </button>
+      <button class="btn btn-primary" style="flex:1;" onclick="IdeaBox.submit()">💡 שלח רעיון</button>
     </div>
   </div>
 </div>
@@ -6343,7 +6343,7 @@
     <div style="text-align:center;font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px;">לא שמרת את הפרטים</div>
     <div style="text-align:center;font-size:13px;color:var(--gray-500);margin-bottom:20px;">הפרטים שהקלדת יימחקו לגמרי אם תצא עכשיו</div>
     <button class="call-result-btn" style="background:#DCFCE7;color:#166534;font-size:15px;" onclick="addLead()">💾 &nbsp;שמור ליד עכשיו</button>
-    <button class="call-result-btn" style="background:#DBEAFE;color:#1D4ED8;font-size:15px;" onclick="closeDiscardSheet()">← &nbsp;חזור לטופס</button>
+    <button class="call-result-btn" style="background:#DBEAFE;color:#1D4ED8;font-size:15px;" onclick="closeDiscardSheet()">חזור לטופס</button>
     <button class="call-result-btn" style="background:#FEE2E2;color:#991B1B;font-size:15px;" onclick="discardAndClose()">🗑 &nbsp;מחק ויצא בלי לשמור</button>
   </div>
 </div>
@@ -6413,7 +6413,7 @@
         <div style="font-size:14px;font-weight:700;margin-bottom:4px;">🔍 נמצאו כמה לידים תואמים</div>
         <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">בחירת הלקוח הנכון:</div>
         <div id="ql-pick-list"></div>
-        <button onclick="QuickLog._resetToInput()" class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:13px;">← חזרה לעריכה</button>
+        <button onclick="QuickLog._resetToInput()" class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:13px;">חזרה לעריכה</button>
       </div>
 
       <!-- State: confirm -->
@@ -7361,7 +7361,7 @@
       לא רוצה קוד בכל כניסה? לחיצה כאן
     </button>
     <div id="lock-hint" style="opacity:0; transition:opacity 0.3s; margin-top:10px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;">
-      יש להזין את הקוד ← לעבור ישירות להגדרות לביטול
+      יש להזין את הקוד, ואז לעבור להגדרות לביטול
     </div>
   </div>
 </div>
@@ -7385,7 +7385,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="document.getElementById('modal-pin-setup').classList.add('hidden')">ביטול</button>
-      <button class="btn btn-primary" onclick="AppLock.confirmSetup()">אישור ←</button>
+      <button class="btn btn-primary" onclick="AppLock.confirmSetup()">אישור</button>
     </div>
   </div>
 </div>
@@ -7425,8 +7425,8 @@
     </div>
     <div class="modal-body" id="ob-body" style="min-height:220px;"></div>
     <div class="modal-footer" style="display:flex;gap:12px;justify-content:space-between;">
-      <button class="btn btn-ghost" id="ob-back-btn" onclick="Onboarding.back()" style="display:none;">← חזור</button>
-      <button class="btn btn-primary" id="ob-next-btn" onclick="Onboarding.next()" style="margin-right:auto;">הבא ←</button>
+      <button class="btn btn-ghost" id="ob-back-btn" onclick="Onboarding.back()" style="display:none;">חזור</button>
+      <button class="btn btn-primary" id="ob-next-btn" onclick="Onboarding.next()" style="margin-right:auto;">הבא</button>
     </div>
   </div>
 </div>
@@ -8432,7 +8432,7 @@ const Billing = {
         </div>
         <span style="color:rgba(255,255,255,0.45);font-size:10px;white-space:nowrap;">מתוך 30</span>
         <button onclick="Billing.showTrialNoCreditCardModal()" style="background:#2563EB;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-          פרטים →
+          פרטים
         </button>
       </div>
       <div class="trial-ticker"><div class="trial-ticker-track"><span>${tickerMsg}</span><span>${tickerMsg}</span></div></div>
@@ -8596,7 +8596,7 @@ const Billing = {
     return this.PLANS.map(plan => {
       const isFeatured = plan.featured;
       const btnLabel = this.PAYMENTS_LIVE
-        ? `התחל עם ${plan.name} →`
+        ? `התחל עם ${plan.name}`
         : `📬 שמרו לי מקום, ${plan.name}`;
       return `
       <div class="paywall-plan ${isFeatured ? 'paywall-plan--featured' : ''}">
@@ -8889,7 +8889,7 @@ const Onboarding = {
     const nextBtn = document.getElementById('ob-next-btn');
     backBtn.style.display = this._step > 0 ? 'block' : 'none';
     const isLast = this._step === total - 1;
-    nextBtn.textContent = isLast ? '🚀 נתחיל!' : 'הבא ←';
+    nextBtn.textContent = isLast ? '🚀 נתחיל!' : 'הבא';
     nextBtn.style.display = isLast ? 'none' : '';
   },
 
@@ -9877,7 +9877,7 @@ const Partners = {
         `"שתפתי איתך את הליד "${escapeHtml(leadName)}" ב-Liders CRM.<br>` +
         `קוד שיתוף: <strong>${code}</strong><br>` +
         `PIN: <strong>${pin}</strong><br>` +
-        `פתח Liders → שותפים → הצטרף לשיתוף"`;
+        `פתח Liders, עבור לשותפים, הצטרף לשיתוף"`;
       document.getElementById('share-step-1').classList.add('hidden');
       document.getElementById('share-step-2').classList.remove('hidden');
       document.getElementById('share-btn-create').classList.add('hidden');
@@ -11381,7 +11381,7 @@ const Gamify = {
       set('gamify-level-name', 'רמה: מתחיל');
       { const el = document.getElementById('gamify-streak'); if (el) el.innerHTML = '<span class="streak-fire">🔥</span> 0 ימים רצופים'; }
       set('gamify-xp-cur', '0 XP');
-      set('gamify-xp-next', 'פתח חשבון וצבור XP →');
+      set('gamify-xp-next', 'פתח חשבון וצבור XP');
       document.getElementById('gamify-xp-fill')?.style.setProperty('width', '5%');
       set('gamify-leads-count', '—');
       set('gamify-closed-count', '—');
@@ -14354,7 +14354,7 @@ const LeadDetail = {
 
     document.getElementById('lead-detail-content').innerHTML = `
       <div class="lead-detail-header">
-        <button class="back-btn" onclick="App.go('pipeline')" aria-label="חזרה לרשימת הלידים">← חזרה</button>
+        <button class="back-btn" onclick="App.go('pipeline')" aria-label="חזרה לרשימת הלידים">חזרה</button>
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div class="lead-detail-name">${escapeHtml(lead.name)}</div>
           <div class="score-badge ${scoreClass(lead.score)}" style="width:44px;height:44px;font-size:15px;">${lead.score}</div>
@@ -18563,7 +18563,7 @@ const TutorialVideo = {
         { title: '📋 פייפליין עסקאות',            desc: 'לשונית "פייפליין" מציגה את כל הקונים לפי שלבים — מפנייה נכנסה ועד חוזה נחתם. גרירה מעבירה שלב.' },
         { title: '🏠 יד2, מדלן ומחשבון משכנתא', desc: 'קיצורי דרך מהדשבורד לפתיחה מהירה של יד2 ומדלן, ומחשבון משכנתא מהיר לשיתוף עם הקונה.' },
         { title: '🤖 סוכן שיווק ונכסים',         desc: 'כותב בשבילך פוסטים לנכסים, הצעות מיוחדות ומסרי WhatsApp ללקוחות — תוך שניות.' },
-        { title: '🔗 לולאת הפניות',               desc: 'הפנה ליד לעו"ד נדל"ן או מעצב פנים בלחיצה → קיבלת 250 XP + אפשרות לקבל הפניות חזרה.' },
+        { title: '🔗 לולאת הפניות',               desc: 'הפנה ליד לעו"ד נדל"ן או מעצב פנים בלחיצה, תקבל 250 XP ואפשרות לקבל הפניות חזרה.' },
         { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל עסקה שנסגרת, כל ביקור, כל הפניה — מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
       ],
       realestate_lawyer: [
@@ -18571,7 +18571,7 @@ const TutorialVideo = {
         { title: '📋 פייפליין תיקים',             desc: 'לשונית "פייפליין" מציגה כל התיקים לפי שלב — פנייה, ייעוץ ראשוני, בדיקת נאותות, ועד חתימת חוזה.' },
         { title: '⚖️ טאבו, נבו ומיסוי מקרקעין',  desc: 'קיצורי דרך מהדשבורד לטאבו, לנבו ולמיסוי מקרקעין — ישירות מבלי לחפש בדפדפן.' },
         { title: '🤖 תוכן שיווקי מקצועי',         desc: 'כותב טיפים משפטיים לרשתות, מסרי פנייה ללקוחות — בהתאם לכללי פרסומת של לשכת עורכי הדין.' },
-        { title: '🔗 לולאת הפניות',               desc: 'שלח לקוח מעוניין בנכס לסוכן נדל"ן → קבל 250 XP, ובניית שיתוף פעולה שמניב לך הפניות חזרה.' },
+        { title: '🔗 לולאת הפניות',               desc: 'שלח לקוח מעוניין בנכס לסוכן נדל"ן, קבל 250 XP ובנה שיתוף פעולה שמניב הפניות חזרה.' },
         { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל תיק שנסגר, כל ייעוץ, כל הפניה — מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
       ],
       interior: [
@@ -18579,7 +18579,7 @@ const TutorialVideo = {
         { title: '📋 פייפליין פרויקטים',          desc: 'לשונית "פייפליין" מציגה כל הפרויקטים לפי שלב — פנייה, ביקור ראשוני, הצעת מחיר, ועד השלמה.' },
         { title: '📌 Pinterest, Houzz והשראה',    desc: 'קיצורי דרך מהדשבורד ל-Pinterest וּ-Houzz לחיפוש השראה עיצובית — ישירות בלי לחפש.' },
         { title: '🤖 סוכן שיווק עיצובי',          desc: 'כותב בשבילך פוסטים עיצוביים, מסרי פנייה ללקוחות וקמפיין WhatsApp לפרויקט — תוך שניות.' },
-        { title: '🔗 לולאת הפניות',               desc: 'שלח לקוח חדש שרכש דירה לסוכן נדל"ן → קבל 250 XP + בנה שיתוף פעולה שמניב הפניות חזרה.' },
+        { title: '🔗 לולאת הפניות',               desc: 'שלח לקוח חדש שרכש דירה לסוכן נדל"ן, קבל 250 XP ובנה שיתוף פעולה שמניב הפניות חזרה.' },
         { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פרויקט שנסגר, כל הפניה — מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
       ],
       other: [
@@ -18924,7 +18924,7 @@ const GuidedTour = {
         <div style="display:flex;gap:8px;align-items:center;">
           <button class="tour-skip-btn" onclick="GuidedTour.done(false)">דלג</button>
           <button class="tour-next-btn" onclick="GuidedTour._next()">
-            ${step.isLast ? '🚀 נתחיל!' : 'הבא ←'}
+            ${step.isLast ? '🚀 נתחיל!' : 'הבא'}
           </button>
         </div>
       </div>
@@ -19070,7 +19070,7 @@ const IdeaBox = {
     } catch(e) {
       toast('שגיאה בשליחה: ' + e.message, 'error');
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = '💡 שלח רעיון ← '; }
+      if (btn) { btn.disabled = false; btn.textContent = '💡 שלח רעיון'; }
     }
   },
 };
