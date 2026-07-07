@@ -1656,29 +1656,38 @@
     }
     @media (max-width: 480px) { .cta-crane { display: none; } .cta-drop-target { animation: none; } .cta-stage::after { display: none; } }
 
-    /* ══ Hero CTA — בורדו ══ */
+    /* ══ Hero CTA — בורדו זכוכית ══ */
     .hero .btn-primary {
-      background: linear-gradient(135deg, #C41E3A 0%, #8B1A2B 100%);
-      box-shadow: 0 8px 32px rgba(196,30,58,0.48);
+      background: rgba(100, 14, 28, 0.68);
+      border: 1.5px solid rgba(210, 65, 80, 0.36);
+      box-shadow: 0 6px 24px rgba(90, 12, 24, 0.38),
+                  inset 0 1px 0 rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 18px 46px;
+      font-size: 18px;
     }
     .hero .btn-primary:hover {
-      box-shadow: 0 12px 40px rgba(196,30,58,0.68);
+      background: rgba(118, 18, 34, 0.82);
+      border-color: rgba(220, 75, 90, 0.50);
+      box-shadow: 0 10px 34px rgba(90, 12, 24, 0.52),
+                  inset 0 1px 0 rgba(255,255,255,0.14);
     }
     .hero .cta-drop-target {
-      animation: ctaImpact 7s ease-in-out infinite, heroCraneGlow 2.6s ease-in-out infinite;
+      animation: ctaImpact 7s ease-in-out infinite, heroCraneGlow 2.8s ease-in-out infinite;
     }
     .hero .cta-drop-target:hover { animation-play-state: paused; }
     .hero .btn-primary.pulse-cta::after {
-      animation: heroBurgundyPulse 2.4s ease-out infinite !important;
+      animation: heroBurgundyPulse 2.6s ease-out infinite !important;
     }
     @keyframes heroBurgundyPulse {
-      0%   { box-shadow: 0 0 0 0 rgba(196,30,58,0.65); }
-      70%  { box-shadow: 0 0 0 22px rgba(196,30,58,0); }
-      100% { box-shadow: 0 0 0 0 rgba(196,30,58,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(170, 28, 50, 0.40); }
+      70%  { box-shadow: 0 0 0 18px rgba(170, 28, 50, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(170, 28, 50, 0); }
     }
     @keyframes heroCraneGlow {
-      0%, 100% { box-shadow: 0 8px 32px rgba(196,30,58,0.48); }
-      50%       { box-shadow: 0 12px 55px rgba(196,30,58,0.82), 0 0 35px rgba(196,30,58,0.38); }
+      0%, 100% { box-shadow: 0 6px 24px rgba(90,12,24,0.38), inset 0 1px 0 rgba(255,255,255,0.10); }
+      50%       { box-shadow: 0 10px 38px rgba(110,16,30,0.56), inset 0 1px 0 rgba(255,255,255,0.13); }
     }
 
     /* ══════════════════════════════
