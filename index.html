@@ -1000,6 +1000,32 @@
       filter: drop-shadow(0 0 10px rgba(255,255,255,0.10));
       animation: lh-enter .7s cubic-bezier(.34,1.56,.64,1) both;
     }
+    /* Arrow flies in from upper-right, hits the target */
+    #plto-arrow {
+      animation: plto-arrow-fly .58s 1.05s cubic-bezier(.18,.9,.38,1) both;
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+    }
+    @keyframes plto-arrow-fly {
+      0%   { transform: translate(135px, -135px); opacity: 0; }
+      38%  { opacity: 1; }
+      86%  { transform: translate(-5px, 5px); }  /* overshoot — arrow buries in */
+      100% { transform: translate(0, 0); }
+    }
+    /* Impact ripple expanding from bullseye */
+    #plto-impact {
+      animation: plto-ripple .65s 1.53s ease-out both;
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+    }
+    @keyframes plto-ripple {
+      0%   { transform: scale(1);   opacity: .78; }
+      100% { transform: scale(3.6); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #plto-arrow  { animation: none; opacity: 1; }
+      #plto-impact { animation: none; opacity: 0; }
+    }
     @keyframes lh-enter {
       from { opacity: 0; transform: translateY(24px) scale(.88); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -4307,9 +4333,14 @@
       <circle cx="171" cy="40" r="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="9"/>
       <!-- O — inner target ring -->
       <circle cx="171" cy="40" r="10" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="4"/>
-      <!-- Arrow -->
-      <line x1="185" y1="18" x2="172" y2="38" stroke="rgba(255,255,255,0.88)" stroke-width="3.5" stroke-linecap="round"/>
-      <polygon points="185,18 176,21 182,27" fill="rgba(255,255,255,0.88)"/>
+      <!-- Impact ripple — expands on hit, starts invisible -->
+      <circle id="plto-impact" cx="171" cy="40" r="10" fill="none"
+              stroke="rgba(255,255,255,0.72)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      <!-- Arrow — flies in from upper-right -->
+      <g id="plto-arrow">
+        <line x1="185" y1="18" x2="172" y2="38" stroke="rgba(255,255,255,0.88)" stroke-width="3.5" stroke-linecap="round"/>
+        <polygon points="185,18 176,21 182,27" fill="rgba(255,255,255,0.88)"/>
+      </g>
     </svg>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
     <div class="lh-tagline">העסקה הבאה מתחילה כאן.</div>
