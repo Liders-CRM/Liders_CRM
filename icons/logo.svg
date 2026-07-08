@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" role="img" aria-label="PLTO">
   <!-- PLT text -->
   <text x="4" y="62" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700"
-        font-size="68" fill="#595959" letter-spacing="-2">PLT</text>
-  <!-- O as target circle -->
-  <circle cx="171" cy="40" r="30" fill="none" stroke="#595959" stroke-width="9"/>
-  <circle cx="171" cy="40" r="10" fill="none" stroke="#1E6FAD" stroke-width="4"/>
+        font-size="68" fill="rgba(255,255,255,0.95)" letter-spacing="-2">PLT</text>
+  <!-- O — outer ring: frosted glass -->
+  <circle cx="171" cy="40" r="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="9"/>
+  <!-- O — inner target ring -->
+  <circle cx="171" cy="40" r="10" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="4"/>
   <!-- Arrow -->
-  <line x1="185" y1="18" x2="172" y2="38" stroke="#1E6FAD" stroke-width="3.5" stroke-linecap="round"/>
-  <polygon points="185,18 176,21 182,27" fill="#1E6FAD"/>
+  <line x1="185" y1="18" x2="172" y2="38" stroke="rgba(255,255,255,0.88)" stroke-width="3.5" stroke-linecap="round"/>
+  <polygon points="185,18 176,21 182,27" fill="rgba(255,255,255,0.88)"/>
 </svg>

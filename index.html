@@ -994,12 +994,12 @@
       width: 100%; max-width: 440px; padding: 28px 16px 2px;
       text-align: center; position: relative; z-index: 1;
     }
-    .lh-logo {
-      font-size: 58px; font-weight: 900; color: #fff;
-      letter-spacing: -3.5px; line-height: .9;
+    .lh-logo-svg {
+      width: 210px; height: auto;
+      display: block; margin: 0 auto;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.10));
       animation: lh-enter .7s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .lh-logo em { color: #60A5FA; font-style: normal; }
     @keyframes lh-enter {
       from { opacity: 0; transform: translateY(24px) scale(.88); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -4299,7 +4299,18 @@
 
   <!-- ─── HERO ─── -->
   <div class="login-hero">
-    <div class="lh-logo">PLT<em>O</em></div>
+    <svg class="lh-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" aria-label="PLTO" role="img">
+      <!-- PLT text -->
+      <text x="4" y="62" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700"
+            font-size="68" fill="rgba(255,255,255,0.95)" letter-spacing="-2">PLT</text>
+      <!-- O — outer ring: frosted glass -->
+      <circle cx="171" cy="40" r="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="9"/>
+      <!-- O — inner target ring -->
+      <circle cx="171" cy="40" r="10" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="4"/>
+      <!-- Arrow -->
+      <line x1="185" y1="18" x2="172" y2="38" stroke="rgba(255,255,255,0.88)" stroke-width="3.5" stroke-linecap="round"/>
+      <polygon points="185,18 176,21 182,27" fill="rgba(255,255,255,0.88)"/>
+    </svg>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
     <div class="lh-tagline">העסקה הבאה מתחילה כאן.</div>
     <div class="lh-microcopy">30 יום ניסיון בחינם&nbsp;•&nbsp;התחלה תוך פחות מדקה</div>
