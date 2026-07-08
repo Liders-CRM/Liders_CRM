@@ -1534,7 +1534,7 @@ function renderSaasTable(tenants) {
         <td style="font-size:.78rem;color:var(--text-dim);white-space:nowrap;">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') + '<br>' + new Date(t.created_at).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '–'}</td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon" title="פתח CRM" onclick="window.open('https://liders-crm.com/','_blank')" style="font-size:.75rem;">↗</button>
+            <button class="btn-icon" title="פתח CRM" onclick="window.open('https://plto.app/','_blank')" style="font-size:.75rem;">↗</button>
             <button class="btn-icon" title="ניהול לקוח" onclick="openTenantMgmt('${t.id}')" style="font-size:.75rem;color:var(--blue);">⚙</button>
             ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענק גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
             ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזר לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">↩</button>` : ''}

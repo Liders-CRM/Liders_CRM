@@ -14,10 +14,10 @@
   <script>if (self === top) { document.getElementById('antiCJ').remove(); } else { top.location = self.location; }</script>
   <meta name="description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 30 יום.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://liders-crm.com/">
+  <meta property="og:url" content="https://plto.app/">
   <meta property="og:title" content="PLTO: הפלטפורמה שהופכת לידים לעסקאות">
   <meta property="og:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 30 יום.">
-  <meta property="og:image" content="https://liders-crm.com/icons/og-image.jpg">
+  <meta property="og:image" content="https://plto.app/icons/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PLTO: הפלטפורמה שהופכת לידים לעסקאות">
   <meta name="twitter:description" content="מערכת CRM מודרנית לניהול לידים ופייפליין מכירות. ניסיון חינמי 30 יום.">
-  <meta name="twitter:image" content="https://liders-crm.com/icons/og-image.jpg">
+  <meta name="twitter:image" content="https://plto.app/icons/og-image.jpg">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
@@ -10119,8 +10119,8 @@ const ReferralsList = {
     if (!r) return;
     const isExternal = r.to_vertical === 'other';
     const link = isExternal
-      ? `https://liders-crm.com/sign.html?lref=${token}`
-      : `https://liders-crm.com/?lref=${token}`;
+      ? `https://plto.app/sign.html?lref=${token}`
+      : `https://plto.app/?lref=${token}`;
     const msg = isExternal
       ? `היי ${r.other_party || 'קולגה'} 👋\nיש לי לקוח שמחפש ${r.external_profession || 'שירות'}. לקבלת הפרטים, נדרשת חתימה על הסכם עמלה קצר:\n${link}`
       : `היי ${r.other_party || 'קולגה'} 👋\nיש לי לקוח בשבילך: ${r.lead_name || 'לקוח'}.\nכל הפרטים בקישור (PLTO):\n${link}`;
@@ -10131,8 +10131,8 @@ const ReferralsList = {
     const r = this._items.find(i => i.token === token);
     const isExternal = r?.to_vertical === 'other';
     const link = isExternal
-      ? `https://liders-crm.com/sign.html?lref=${token}`
-      : `https://liders-crm.com/?lref=${token}`;
+      ? `https://plto.app/sign.html?lref=${token}`
+      : `https://plto.app/?lref=${token}`;
     navigator.clipboard?.writeText(link).then(() => toast('🔗 הקישור הועתק', 'success'))
       .catch(() => toast(link, 'info', 6000));
   },
@@ -12384,7 +12384,7 @@ const Referral = {
   },
 
   _link() {
-    return `https://liders-crm.com/?ref=${this._code || this._data().code || ''}`;
+    return `https://plto.app/?ref=${this._code || this._data().code || ''}`;
   },
 
   _waMessage() {
@@ -12691,11 +12691,11 @@ const LeadReferral = {
 
       // External recipients go to sign.html; internal to index.html
       const link = isExternal
-        ? `https://liders-crm.com/sign.html?lref=${data.token}`
-        : `https://liders-crm.com/?lref=${data.token}`;
+        ? `https://plto.app/sign.html?lref=${data.token}`
+        : `https://plto.app/?lref=${data.token}`;
 
       if (requireConsent && data.consent_token) {
-        const consentLink = `https://liders-crm.com/?consent=${data.consent_token}`;
+        const consentLink = `https://plto.app/?consent=${data.consent_token}`;
         this._waTargetPhone = lead.phone;
         this._lastMsg = `היי ${lead.name.split(' ')[0]} 👋\nלצורך המשך טיפול מקצועי, אני מבקש להעביר את פרטיך (שם וטלפון בלבד) ל${profession || LeadReferral.VERTICALS[vertical]} שותף.\nלאישור:\n${consentLink}`;
         document.getElementById('lref-step2-emoji').textContent = '📨';
@@ -12741,8 +12741,8 @@ const LeadReferral = {
   copyLink() {
     if (!this._token) return;
     const link = this._isExternal
-      ? `https://liders-crm.com/sign.html?lref=${this._token}`
-      : `https://liders-crm.com/?lref=${this._token}`;
+      ? `https://plto.app/sign.html?lref=${this._token}`
+      : `https://plto.app/?lref=${this._token}`;
     navigator.clipboard?.writeText(link).then(() => toast('🔗 הקישור הועתק', 'success'))
       .catch(() => toast(link, 'info', 6000));
   },
@@ -13355,7 +13355,7 @@ const App = {
     const email = document.getElementById('login-email').value.trim();
     if (!email) { toast('נא להזין קודם את האימייל בשדה למעלה', 'error'); return; }
     const { error } = await sbClient.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://liders-crm.com/',
+      redirectTo: 'https://plto.app/',
     });
     if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
     toast('📧 נשלח אימייל לאיפוס סיסמה, בדוק את תיבת הדואר שלך', 'success');
@@ -13379,7 +13379,7 @@ const App = {
     if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
     const REDIRECT = window.location.origin.includes('localhost')
       ? window.location.href
-      : 'https://liders-crm.com/';
+      : 'https://plto.app/';
     const { error } = await sbClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: REDIRECT },
@@ -15884,7 +15884,7 @@ const Settings = {
     const email = State.agent?.email;
     if (!email) { toast('לא נמצא אימייל, התחבר מחדש', 'error'); return; }
     sbClient.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://liders-crm.com/',
+      redirectTo: 'https://plto.app/',
     }).then(({ error }) => {
       if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
       toast('📧 נשלח אימייל לאיפוס סיסמה, בדוק את תיבת הדואר', 'success');
@@ -17413,7 +17413,7 @@ window.DemoLock   = DemoLock;
   const loginScreen = document.getElementById('screen-login');
   if (loginScreen && !loginScreen.classList.contains('hidden')) {
     const ref = document.referrer;
-    const src = ref.includes('liders-crm.com') || ref.includes('/landing') ? 'landing' : (ref ? 'referral' : 'direct');
+    const src = ref.includes('plto.app') || ref.includes('liders-crm.com') || ref.includes('/landing') ? 'landing' : (ref ? 'referral' : 'direct');
     FunnelTracker.track('login_screen_view', { source: src });
   }
 })();
