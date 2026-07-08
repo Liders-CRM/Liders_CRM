@@ -192,3 +192,56 @@ $fn$;
 
 REVOKE EXECUTE ON FUNCTION public._create_lead_referral_core(uuid,uuid,uuid,text,text,text,text,text,numeric,boolean,uuid,uuid,text) FROM PUBLIC, anon;
 GRANT  EXECUTE ON FUNCTION public._create_lead_referral_core(uuid,uuid,uuid,text,text,text,text,text,numeric,boolean,uuid,uuid,text) TO authenticated;
+
+-- ── 4. select_opportunity_applicant ───────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.select_opportunity_applicant(
+  p_application_id uuid, p_lead_id uuid, p_require_consent boolean DEFAULT false
+) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public' AS $fn$
+DECLARE
+  v_tenant_id uuid := get_my_tenant_id();
+  v_app       opportunity_applications%ROWTYPE;
+  v_opp       partner_opportunities%ROWTYPE;
+  v_applicant tenants%ROWTYPE;
+  v_result    jsonb;
+BEGIN
+  IF v_tenant_id IS NULL THEN RAISE EXCEPTION 'no tenant for current user'; END IF;
+  IF p_lead_id IS NULL THEN RAISE EXCEPTION 'lead_required'; END IF;
+
+  SELECT * INTO v_app FROM opportunity_applications WHERE id = p_application_id FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'application_not_found'; END IF;
+  IF v_app.status <> 'pending' THEN RAISE EXCEPTION 'application_not_pending'; END IF;
+
+  SELECT * INTO v_opp FROM partner_opportunities
+  WHERE id = v_app.opportunity_id AND tenant_id = v_tenant_id FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'opportunity_not_found'; END IF;
+  IF v_opp.status <> 'open' THEN RAISE EXCEPTION 'opportunity_closed'; END IF;
+
+  SELECT * INTO v_applicant FROM tenants WHERE id = v_app.applicant_tenant_id;
+
+  v_result := _create_lead_referral_core(
+    v_tenant_id, auth.uid(), p_lead_id,
+    v_opp.target_vertical,
+    coalesce(v_applicant.name, 'שותף PLTO'),
+    coalesce(v_applicant.phone, ''),
+    'הזדמנות מלוח ההפניות: ' || v_opp.title,
+    v_opp.commission_type, v_opp.commission_value,
+    coalesce(p_require_consent, false),
+    v_app.applicant_tenant_id, v_opp.id
+  );
+
+  UPDATE opportunity_applications SET status = 'selected' WHERE id = v_app.id;
+  UPDATE opportunity_applications SET status = 'rejected'
+  WHERE opportunity_id = v_opp.id AND id <> v_app.id AND status = 'pending';
+  UPDATE partner_opportunities
+  SET status = 'matched', selected_application_id = v_app.id
+  WHERE id = v_opp.id;
+
+  RETURN v_result || jsonb_build_object(
+    'applicant_name',  v_applicant.name,
+    'applicant_phone', v_applicant.phone
+  );
+END;
+$fn$;
+REVOKE EXECUTE ON FUNCTION public.select_opportunity_applicant(uuid,uuid,boolean) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.select_opportunity_applicant(uuid,uuid,boolean) FROM anon;
+GRANT  EXECUTE ON FUNCTION public.select_opportunity_applicant(uuid,uuid,boolean) TO authenticated;

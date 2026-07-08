@@ -375,7 +375,7 @@ BEGIN
   v_result := _create_lead_referral_core(
     v_tenant_id, auth.uid(), p_lead_id,
     v_opp.target_vertical,
-    coalesce(v_applicant.name, 'שותף Liders'),
+    coalesce(v_applicant.name, 'שותף PLTO'),
     coalesce(v_applicant.phone, ''),
     'הזדמנות מלוח ההפניות: ' || v_opp.title,
     v_opp.commission_type, v_opp.commission_value,
