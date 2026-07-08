@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://liders-crm.com/sitemap.xml
+Sitemap: https://plto.app/sitemap.xml

@@ -1,4 +1,4 @@
-# CLAUDE.md — Liders CRM
+# CLAUDE.md — PLTO
 
 ## 🗣️ שפת תקשורת — עברית בלבד, ללא יוצא מן הכלל
 
@@ -1021,6 +1021,71 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 - כפתור ה-hero: **בורדו זכוכית**, טקסט "קח אותי למערכת", עגורן מוריד "עסקה"
 - כותרת H1 hero: גודל מוקטן, מותאם לנייד ודסקטופ
 - כל 5 PRs מוזגו ל-main ✅
+
+---
+
+---
+
+## מה בוצע — סשן 8/7/2026 — Rebrand מלא Liders → PLTO + מעבר דומיין (ענף: `claude/system-name-change-kyc9tn`)
+
+### ✅ Rebrand טקסטואלי מלא (אפס "Liders"/"לידרס" גלוי ללקוח)
+- **כל 4 קבצי HTML** — לוגואים, כותרות, meta, כפתורים, toast, תבניות WA, מוקאפים, watermarks
+- **manifest.json** → `"name": "PLTO"`, **sw.js** → `'plto-v1'`
+- **make_blueprint.json** — שם סצנריו, webhook, נמען → `info@plto.app`
+- **migrations/001–019** — comment headers
+- **migrations/040, 061, 063, 064, 074** — fallback strings ב-SQL: `'משתמש PLTO'`, `'שותף PLTO'`, `'הסכם עמלת הפניה — PLTO'`
+- **`.claude/skills/`** (9 קבצים) + agents + tests
+- **SVG** — `icons/favicon.svg` ו-`icons/logo.svg` נוצרו מחדש (PLTO branding)
+
+### ✅ מה נשמר בכוונה (security/compat)
+- `ADMIN_EMAILS = ['liders.crm@gmail.com', 'elgrablidudu@gmail.com']` — auth guard ב-admin.html + index.html
+- `liders_*` localStorage keys — תאימות לאחור למשתמשים קיימים
+- `liders.crm@gmail.com` בכל SQL RPC guards — זיהוי Supabase auth
+
+### ✅ מעבר דומיין (צעד ביניים — liders-crm.com עדיין חי)
+**Edge Functions** (ALLOWED_ORIGINS) — `plto.app` + `www.plto.app` נוספו לצד `liders-crm.com`:
+- `supabase/functions/ai-proxy/index.ts`
+- `supabase/functions/twilio-whatsapp/index.ts`
+
+**כל קישורי HTML** → `https://plto.app` (כולל OG tags, redirectTo auth, referral/consent/lref links):
+- `index.html`, `landing.html`, `admin.html`, `sign.html`, `privacy-policy.html`
+
+**SEO/config** → `plto.app`:
+- `robots.txt` (Sitemap URL)
+- `sitemap.xml` (כל ה-URLs + נוסף `landing.html`, עדכון תאריכים ל-2026-07-08)
+
+**מיגרציה 075** (`075_post_domain_rename_crons.sql`) — מוכנה להרצה אחרי מעבר DNS:
+- מחליפה cron names: `liders-support-daily-digest` → `plto-support-daily-digest`
+- `liders-leads-daily-digest` → `plto-leads-daily-digest`
+- `liders-cro-weekly-digest` → `plto-cro-weekly-digest`
+
+### 🔴 נותר לביצוע ידני (לפני יום ראשון)
+
+| עדיפות | משימה | היכן |
+|--------|-------|------|
+| 🔴 **חייב** | Merge PR `claude/system-name-change-kyc9tn` → main | GitHub |
+| 🔴 **חייב** | הרץ migration 074 בשלמות ב-Supabase SQL Editor | Supabase Dashboard → SQL Editor |
+| 🔴 **חייב** | Deploy שתי Edge Functions: `ai-proxy` + `twilio-whatsapp` | `supabase functions deploy ai-proxy && supabase functions deploy twilio-whatsapp` |
+| 🔴 **חייב** | DNS — הפנה `plto.app` → `liders-crm.github.io` (CNAME record) | Namecheap/Cloudflare |
+| 🔴 **חייב** | CNAME file — שנה מ-`liders-crm.com` ל-`plto.app` (עושים **אחרי** DNS חי) | קובץ `CNAME` בריפו, commit + push |
+| 🟡 **חשוב** | Gmail — הגדר forwarding מ-`liders.crm@gmail.com` → `info@plto.app` | Gmail Settings |
+| 🟡 **חשוב** | Supabase Auth — שנה sender name בתבניות אימייל מ-"Liders CRM" → "PLTO" | Supabase Dashboard → Auth → Email Templates |
+| 🟡 **חשוב** | Make.com — עדכן 2 סצנריות (שמות + נמענים → `info@plto.app`) | eu1.make.com |
+| 🟢 **אחרי** | הרץ migration 075 (rename crons) | Supabase SQL Editor |
+| 🟢 **אחרי** | הסר `liders-crm.com` מ-ALLOWED_ORIGINS בשתי Edge Functions | קוד + deploy |
+| 🟢 **אחרי** | החלף תמונות: `icon-192.png`, `icon-512.png`, `og-image.jpg` | icons/ folder |
+| 🟢 **אחרי** | GitHub repo rename + Supabase project rename | הגדרות |
+
+### 📌 סדר ביצוע מומלץ ליום ראשון
+1. Merge PR → GitHub Pages מתעדכן
+2. Deploy Edge Functions (Supabase CLI)
+3. הרץ migration 074 (SQL Editor)
+4. DNS: CNAME record `plto.app` → `liders-crm.github.io`
+5. **המתן** עד שה-DNS מתפשט (5–30 דקות)
+6. עדכן CNAME file → `plto.app` → commit + push
+7. אמת: https://plto.app עולה ✅
+8. הרץ migration 075 (rename crons)
+9. הסר `liders-crm.com` מ-ALLOWED_ORIGINS → deploy Edge Functions שוב
 
 ---
 

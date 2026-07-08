@@ -3,7 +3,7 @@
 -- Privacy/anti-spam gate: before a lead is transferred to a partner, the
 -- client themselves can be asked to approve the transfer. The referrer's
 -- WhatsApp opens with a ready message to the CLIENT containing a secure
--- one-time link (https://liders-crm.com/?consent={token}); the client taps
+-- one-time link (https://plto.app/?consent={token}); the client taps
 -- approve/decline on a dedicated page (no login). Approval releases the
 -- referral (awaiting_consent → sent); decline blocks it (consent_declined).
 --
