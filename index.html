@@ -17455,7 +17455,7 @@ window.DemoLock   = DemoLock;
   const loginScreen = document.getElementById('screen-login');
   if (loginScreen && !loginScreen.classList.contains('hidden')) {
     const ref = document.referrer;
-    const src = ref.includes('plto.app') || ref.includes('liders-crm.com') || ref.includes('/landing') ? 'landing' : (ref ? 'referral' : 'direct');
+    const src = ref.includes('plto.app') || ref.includes('/landing') ? 'landing' : (ref ? 'referral' : 'direct');
     FunnelTracker.track('login_screen_view', { source: src });
   }
 })();
