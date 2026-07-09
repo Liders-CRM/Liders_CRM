@@ -5,8 +5,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const ALLOWED_ORIGINS = [
   'https://plto.app',
   'https://www.plto.app',
-  'https://liders-crm.com',
-  'https://www.liders-crm.com',
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];
