@@ -10,10 +10,10 @@
 
 ```bash
 # בדמו-מוד (ללא קרדנשיאלים)
-node /home/user/Liders_CRM/.claude/tests/qa-liders.mjs --url https://liders-crm.com
+node /home/user/Liders_CRM/.claude/tests/qa-liders.mjs --url https://plto.app
 
 # עם כניסה (מייל + סיסמה מ-env)
-QA_EMAIL=xxx QA_PASS=yyy node /home/user/Liders_CRM/.claude/tests/qa-liders.mjs --url https://liders-crm.com --login
+QA_EMAIL=xxx QA_PASS=yyy node /home/user/Liders_CRM/.claude/tests/qa-liders.mjs --url https://plto.app --login
 ```
 
 ---

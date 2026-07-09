@@ -328,8 +328,8 @@ constraint שבור על `tenants.industry` (ראה בהמשך).
 
 | | URL |
 |-|-----|
-| CRM (לקוחות) | https://liders-crm.com/ |
-| פאנל אדמין | https://liders-crm.com/admin.html |
+| CRM (לקוחות) | https://plto.app/ |
+| פאנל אדמין | https://plto.app/admin.html |
 
 > האדמין מחובר לאותה Supabase. כניסה: אימייל + סיסמה. קישור אליו גם מתוך הגדרות ה-CRM.
 
@@ -1155,6 +1155,49 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 ### 📋 עתידי — מיילים נוספים ב-Google Workspace
 כשיגיע הזמן: `support@plto.app`, `noreply@plto.app` — כל אחד כ-connection נפרד ב-Make.com,
 ויחובר ל-route הרלוונטי (תמיכה, אוטומציות, פניות כלליות).
+
+---
+
+## מה בוצע — סשן 9/7/2026 (ג') — ביקורת מקיפה טרום-השקה (QA Audit)
+
+> ענף: `claude/system-qa-plto-migration-7u3y4i`
+
+### ✅ בדיקות שעברו — המערכת תקינה
+
+| בדיקה | תוצאה |
+|-------|--------|
+| CNAME file | `plto.app` ✅ |
+| plto.app חי | HTTP 200, `server: cloudflare`, `cf-ray` נוכח ✅ |
+| ai-proxy ALLOWED_ORIGINS | `plto.app` בלבד (liders-crm.com הוסר) ✅ |
+| twilio-whatsapp ALLOWED_ORIGINS | `plto.app` בלבד ✅ |
+| manifest.json | `"name": "PLTO"` ✅ |
+| sw.js cache key | `plto-v1` ✅ |
+| Migration 074 | הוחל ב-DB החי ✅ |
+| Cron jobs | כולם `plto-*` prefix ✅ |
+| אין "Liders CRM" גלוי ב-HTML | ✅ |
+| landing.html | מיתוג PLTO מלא ✅ |
+| admin.html | "PLTO Admin Panel" ✅ |
+| sign.html | "חתימת הסכם — PLTO" ✅ |
+| privacy-policy.html | אין "לידרס" ✅ |
+| assets/screenshots/ | נמחק ✅ |
+| localStorage keys `liders_*` | נשמרו בכוונה (תאימות לאחור) ✅ |
+| ADMIN_EMAILS `liders.crm@gmail.com` | נשמר בכוונה (auth guard) ✅ |
+| Make.com 2 סצנריות | עודכנו ל-`info@plto.app` ✅ |
+| Supabase Auth sender | "PLTO" + `info@plto.app` ✅ |
+
+### ✅ תיקונים שבוצעו בסשן זה
+
+1. **`qa-liders.md`** — URLs עודכנו מ-`liders-crm.com` ל-`plto.app`
+2. **CLAUDE.md "קישורים חיים"** — עודכן ל-`plto.app`
+3. **LAUNCH_CHECKLIST.md** — סומנו פריטים 1–3 כ-✅ הושלמו
+
+### ⚠️ נקודות פתוחות (לא חוסמות השקה)
+
+| נושא | מצב | הערה |
+|------|-----|-------|
+| Cloudflare Transform Rule (security headers) | ⚠️ עוד לא מאומת | HSTS/X-Frame-Options לא נראו בתגובה. meta CSP + frame-busting JS מגנים בינתיים |
+| Migration 075 לא ב-migrations tracking | ℹ️ OK פונקציונלית | הוחל ידנית, crons בשם `plto-*` בפועל. לא חוסם |
+| `←` ב-span elements (לא buttons) | ℹ️ גבול | שורות 4745, 6195 ב-index.html — spans עם onclick, לא `<button>`. הכלל מגביל "כפתורים" ספציפית |
 
 ---
 

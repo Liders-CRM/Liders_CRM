@@ -28,30 +28,16 @@
 
 ---
 
-## 🔴 נשאר לביצוע ידני (חובה לפני שיווק)
+## ✅ הכל הושלם — המערכת מוכנה להשקה
 
-### 1. אימות שה-SSL של GitHub Pages עלה
-אחרי שינוי CNAME (בוצע היום), GitHub Pages מפיק תעודת Let's Encrypt.
-תהליך זה לוקח 2–10 דקות.
+### 1. אימות SSL ו-DNS — ✅ בוצע ואומת (9/7/2026)
+`plto.app` מחזיר HTTP 200, `server: cloudflare`, `cf-ray` נוכח (אומת דרך pg_net בסשן 9/7).
 
-**איך לאמת** (דרך Supabase SQL Editor — לא curl):
-```sql
-SELECT net.http_get('https://plto.app/') AS req_id;
--- ואז:
-SELECT status_code, headers->>'server' AS server
-FROM net._http_response WHERE id = <req_id>;
--- מצפים: status_code = 200, server = 'cloudflare'
-```
+### 2. Supabase Auth — שם השולח — ✅ בוצע (9/7/2026)
+Sender name עודכן ל-"PLTO", sender email ל-`info@plto.app`.
 
-### 2. Supabase Auth — שם השולח במיילים
-- Supabase Dashboard → Authentication → Email Templates
-- שנה שם השולח מ-"Liders CRM" ל-**"PLTO"**
-- חל על: Confirm signup, Magic Link, Password Reset
-
-### 3. Make.com — עדכון 2 סצנריות
-- https://eu1.make.com/1851801/scenarios/6083347/edit (Lead Notifications)
-- https://eu1.make.com/1851801/scenarios/6185659/edit (Trial Expiry Notifications)
-- **שנה**: שם + נמען → `info@plto.app`
+### 3. Make.com — 2 סצנריות — ✅ בוצע (9/7/2026)
+שמות, subjects, וכל קישורים עודכנו ל-`info@plto.app` + `plto.app`.
 
 ---
 
