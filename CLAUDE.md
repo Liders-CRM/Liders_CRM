@@ -1133,6 +1133,31 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 9/7/2026 (ב') — השלמת הגדרות תשתית Rebrand PLTO
+
+### ✅ הושלם (ידני + אוטומטי)
+
+**ידני (בוצע על ידי המשתמש):**
+1. **Cloudflare** — שני ה-CNAMEs הוחזרו למצב Proxied 🟠
+2. **Supabase Auth** — Sender name עודכן ל-"PLTO", sender email ל-`info@plto.app`
+   (custom SMTP כובה — Supabase משתמש בתבניות ברירת מחדל שלו, לא הכילו "Liders" מלכתחילה)
+
+**אוטומטי (דרך Make MCP API):**
+3. **Make.com — שתי הסצנריות עודכנו במלואן:**
+   - שמות: `Liders CRM — Lead Notifications` → `PLTO — Lead Notifications`
+   - שמות: `Liders CRM — Trial Expiry Notifications` → `PLTO — Trial Expiry Notifications`
+   - כל 11 ה-subjects שהכילו "Liders CRM" → "PLTO"
+   - כל הקישורים: `liders-crm.github.io/liders_crm/` → `https://plto.app`
+   - דוח CRO: `liders-crm.com/admin.html` → `plto.app/admin.html`, הוסר `←`
+   - מייל יום 10 (midtrial): "Liders CRM" → "PLTO", "11 ימים" → "20 ימים", הוסר `→` מכפתור
+   - Connection של Trial Expiry עודכן ל-PLTO (info@plto.app) ידנית על ידי המשתמש
+
+### 📋 עתידי — מיילים נוספים ב-Google Workspace
+כשיגיע הזמן: `support@plto.app`, `noreply@plto.app` — כל אחד כ-connection נפרד ב-Make.com,
+ויחובר ל-route הרלוונטי (תמיכה, אוטומציות, פניות כלליות).
+
+---
+
 ## Quick Commands
 
 ```bash
