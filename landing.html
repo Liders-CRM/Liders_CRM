@@ -1280,33 +1280,78 @@
     ══════════════════════════════ */
     .about-section { background: var(--white); border-top: 1px solid var(--border); }
     #features { border-top: 1px solid var(--border); }
-    .about-text {
-      max-width: 660px;
-      margin: 0 auto 36px;
-      font-size: 17.5px;
-      color: var(--text-muted);
+    .about-pre-title {
       text-align: center;
-      line-height: 1.8;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
-    .about-pillars {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      max-width: 780px;
+    .about-tagline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 14px auto 32px;
+      flex-wrap: wrap;
+    }
+    .about-plto-badge {
+      background: var(--blue);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      padding: 4px 13px;
+      border-radius: 100px;
+      display: inline-block;
+    }
+    .about-tagline-words {
+      font-size: clamp(17px, 2vw, 20px);
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .about-body {
+      max-width: 680px;
+      margin: 0 auto 40px;
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.85;
+      text-align: center;
+    }
+    .about-body p { margin-bottom: 18px; }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-closing {
+      font-weight: 700;
+      color: var(--navy) !important;
+    }
+    .about-commitment {
+      max-width: 620px;
       margin: 0 auto;
-    }
-    .about-pillar {
       background: var(--gray-card);
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      padding: 22px 18px;
+      padding: 32px 28px;
       text-align: center;
-      transition: all 0.2s;
     }
-    .about-pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-    .ap-icon { font-size: 28px; display: block; margin-bottom: 10px; }
-    .ap-title { font-size: 15.5px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
-    .ap-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .about-commit-title {
+      font-size: clamp(18px, 2.4vw, 22px);
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .about-commit-text {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+    .about-commit-text:last-child {
+      margin-bottom: 0;
+      font-weight: 700;
+      color: var(--text);
+    }
 
     /* ══════════════════════════════
        שאלות ותשובות
@@ -2959,10 +3004,30 @@
 <!-- קצת עלינו -->
 <section class="section about-section" id="about">
   <div class="section-inner">
-    <h2 class="section-title fade-up">בנינו את PLTO כי מגיע לעולם הנדלן טוב יותר</h2>
-    <p class="about-text fade-up">
-      ראינו סוכנים, עורכי דין ואנשי עיצוב פנים שמנהלים לידים באקסלים, בקבוצות וואטסאפ ובפתקים מפוזרים. ידע יקר הולך לאיבוד ועסקאות נשכחות, רק כי אין מקום אחד מסודר לכל הנתונים. PLTO נבנתה כדי לתת לשלושת בעלי המקצוע שמלווים כל עסקת נדל"ן מקצה לקצה, סוכני נדל"ן, עו"ד נדל"ן ועיצוב פנים, כלי אחד פשוט, חכם ובעברית מלאה, שמטפל בעבודה השוטפת ומשחרר זמן לדבר הכי חשוב: לסגור עסקאות וליצור קשרים אמיתיים עם לקוחות.
-    </p>
+    <p class="about-pre-title fade-up">קצת עלינו</p>
+    <h2 class="section-title fade-up">מכל המערכות הקיימות — למה שנבחר דווקא בכם?</h2>
+    <div class="about-tagline fade-up">
+      <span class="about-plto-badge">PLTO</span>
+      <span class="about-tagline-words">שליטה, פרודקטביות וצמיחה</span>
+    </div>
+    <div class="about-body fade-up">
+      <p>אחרי יותר מעשור בעולם השיווק והמכירות, הבנו דבר אחד פשוט:</p>
+      <p>בעלי מקצוע לא צריכים עוד מערכת CRM.<br>הם צריכים מערכת שעוזרת להם לעבוד חכם יותר, לחסוך זמן ולהתמקד במה שבאמת חשוב — לסגור יותר עסקאות.</p>
+      <p>בדיוק מתוך החשיבה הזו נולדה PLTO.</p>
+      <p>פלטפורמת השיווק והמכירות שנבנתה עבור עולם הנדל"ן — סוכני נדל"ן, מעצבי פנים ועורכי דין בתחום הנדל"ן.</p>
+      <p>כל מסך, כל תהליך וכל פיצ'ר במערכת נועדו לייצר יותר שליטה על העסק, לשפר את הפרודקטיביות ולהפוך את העבודה היומיומית לפשוטה, מסודרת ויעילה יותר.</p>
+      <p>אבל מבחינתנו, מערכת טובה היא מערכת שלא מפסיקה להשתפר.<br>אנחנו מקשיבים למשתמשים, לומדים את הצרכים שעולים מהשטח ומפתחים את PLTO באופן מתמיד, כדי שתמשיך לייצר ערך אמיתי גם היום וגם בעתיד.</p>
+      <p>המטרה שלנו היא לא רק לעזור לנהל לידים.</p>
+      <p>המטרה שלנו היא לעזור לבנות עסק שעובד טוב יותר, מתקדם מהר יותר ומאפשר להתמקד במה שבאמת מניע את ההצלחה.</p>
+      <p class="about-closing">כי כשיש יותר שליטה, יש יותר פרודקטיביות.<br>וכשיש יותר פרודקטיביות — מגיעה גם הצמיחה.</p>
+    </div>
+
+    <div class="about-commitment fade-up">
+      <h3 class="about-commit-title">ההתחייבות שלנו</h3>
+      <p class="about-commit-text">אנחנו מאמינים ב-PLTO ובערך שהיא יודעת לייצר.</p>
+      <p class="about-commit-text">לכן, אם במהלך תקופת הניסיון לא תורגש תוצאה מהותית בהתנהלות העסקית — נבנה עבורכם דף נחיתה או דף מכירה במתנה, ללא עלות.</p>
+      <p class="about-commit-text">זו לא רק הבטחה.<br>זו רמת הביטחון שלנו במערכת שבנינו.</p>
+    </div>
   </div>
 </section>
 
