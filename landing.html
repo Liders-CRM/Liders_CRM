@@ -959,9 +959,9 @@
       display: inline-block;
     }
     .plan-btn.primary { background: var(--blue); color: var(--white); }
-    .plan-btn.primary:hover { background: var(--blue-light); transform: translateY(-1px); }
+    .plan-btn.primary:hover { background: #8B1A2B; transform: translateY(-1px); }
     .plan-btn.outline { background: transparent; border: 2px solid var(--border); color: var(--text); animation: phoneVibrate 6s ease-in-out infinite; }
-    .plan-btn.outline:hover { border-color: var(--blue); color: var(--blue); animation: none; }
+    .plan-btn.outline:hover { background: #8B1A2B; border-color: #8B1A2B; color: var(--white); animation: none; }
 
     .pricing-note {
       text-align: center;
@@ -1746,6 +1746,22 @@
       50%       { box-shadow: 0 10px 38px rgba(110,16,30,0.56), inset 0 1px 0 rgba(255,255,255,0.13); }
     }
 
+    /* ══ CTA סגירה — אותו בורדו זכוכית כמו ה-hero ══ */
+    .closing .btn-primary {
+      background: rgba(100, 14, 28, 0.68);
+      border: 1.5px solid rgba(210, 65, 80, 0.36);
+      box-shadow: 0 6px 24px rgba(90, 12, 24, 0.38),
+                  inset 0 1px 0 rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .closing .btn-primary:hover {
+      background: rgba(118, 18, 34, 0.82);
+      border-color: rgba(220, 75, 90, 0.50);
+      box-shadow: 0 10px 34px rgba(90, 12, 24, 0.52),
+                  inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+
     /* ══════════════════════════════
        רצועת אתר בנייה: טרקטור, משאית ופועל (מעבר לתמחור)
     ══════════════════════════════ */
@@ -1799,6 +1815,79 @@
     /* מעברי צבע רכים בין סקשנים כהים לבהירים */
     .sect-blend-light { height: 64px; background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-50) 55%, var(--white) 100%); }
     .sect-blend-dark  { height: 64px; background: linear-gradient(180deg, var(--gray-bg) 0%, var(--navy-100) 45%, var(--navy-900) 100%); }
+
+    /* ══════════════════════════════
+       מחבר סקשנים מונפש: ליד עובר מסוכן לקולגה
+       (בין "איך זה עובד" ל"כאב ההפניות")
+    ══════════════════════════════ */
+    .how-section { padding-bottom: 16px; }
+    .handoff-divider {
+      position: relative;
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      overflow: hidden;
+      content-visibility: auto;
+    }
+    .ho-figure {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--border, #E2E8F0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      box-shadow: var(--shadow-sm);
+      position: relative; z-index: 2;
+      flex-shrink: 0;
+    }
+    .ho-track {
+      position: relative;
+      width: 130px; height: 0;
+      border-top: 2px dashed #CBD5E1;
+      flex-shrink: 0;
+    }
+    .ho-card {
+      position: absolute; top: 50%; right: 0;
+      transform: translateY(-50%) scale(0.8);
+      font-size: 21px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.16));
+      opacity: 0;
+    }
+    .handoff-divider.in-view .ho-card { animation: hoTravel 3.8s ease-in-out infinite; }
+    @keyframes hoTravel {
+      0%      { right: 0; opacity: 0; transform: translateY(-50%) scale(0.8); }
+      10%     { opacity: 1; transform: translateY(-50%) scale(1); }
+      48%     { right: calc(100% - 21px); opacity: 1; transform: translateY(-62%) scale(1.05); }
+      58%     { right: calc(100% - 21px); opacity: 1; transform: translateY(-50%) scale(1); }
+      66%     { opacity: 0; }
+      100%    { opacity: 0; right: calc(100% - 21px); }
+    }
+    .handoff-divider.in-view .ho-to { animation: hoReceive 3.8s ease-in-out infinite; }
+    @keyframes hoReceive {
+      0%, 54%   { transform: scale(1); }
+      60%       { transform: scale(1.18); }
+      68%, 100% { transform: scale(1); }
+    }
+    .ho-caption {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin: -4px 0 0;
+      padding: 0 24px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ho-card { opacity: 1 !important; animation: none !important; right: calc(50% - 10px) !important; transform: translateY(-50%) scale(1) !important; }
+      .ho-to   { animation: none !important; }
+    }
+    @media (max-width: 480px) {
+      .handoff-divider { gap: 14px; height: 72px; }
+      .ho-track { width: 84px; }
+      .ho-figure { width: 42px; height: 42px; font-size: 22px; }
+    }
+    .referral-pain-section { padding-top: 16px; }
 
     /* ═══ DOC FUNNEL DIVIDER ═══ */
     .doc-funnel {
@@ -3179,7 +3268,7 @@
 </section>
 
 <!-- איך זה עובד -->
-<section class="section">
+<section class="section how-section">
   <div class="section-inner">
     <p class="section-label fade-up">פשוט כמו שזה נשמע</p>
     <h2 class="section-title fade-up">שלושה צעדים לא יותר</h2>
@@ -3213,6 +3302,16 @@
     </div>
   </div>
 </section>
+
+<!-- מחבר סקשנים מונפש: ליד עובר מסוכן לקולגה -->
+<div class="handoff-divider" aria-hidden="true">
+  <div class="ho-figure ho-from">🙋</div>
+  <div class="ho-track">
+    <span class="ho-card">📇</span>
+  </div>
+  <div class="ho-figure ho-to">🤝</div>
+</div>
+<p class="ho-caption fade-up">מעבירים ליד שלא מתאים לקולגה, בלוח ההזדמנויות</p>
 
 <!-- לוח ההזדמנויות — ממש לפני התמחור -->
 <section class="section referral-pain-section">
@@ -3486,7 +3585,7 @@
 
   // סצנות נדל"ן (רחוב + אתר בנייה): מתעוררות רק כשנכנסות לתצוגה
   (function () {
-    const scenes = document.querySelectorAll('.street-scene, .construction-divider');
+    const scenes = document.querySelectorAll('.street-scene, .construction-divider, .handoff-divider');
     if (!scenes.length) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
