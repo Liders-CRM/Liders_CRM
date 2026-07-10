@@ -1201,6 +1201,66 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## מה בוצע — סשן 10/7/2026 (ב') — בדיקת מוכנות להשקה: פרצת gmail-proxy + ניקוי הרשאות
+
+> ענף: `claude/readiness-check-kubqfi` (מוזג ל-main)
+
+### 🔴 נמצא ותוקן — קריטי
+1. **`gmail-proxy` היה חשוף לגמרי לאינטרנט ללא שום אימות** (`verify_jwt:false`
+   ברמת הפלטפורמה + אין בדיקת `Authorization`/`auth.getUser()` בקוד הפונקציה
+   עצמה, בניגוד ל-`ai-proxy`/`twilio-whatsapp`). כל אחד היה יכול לקרוא ולשלוח
+   מיילים בשם `liders.crm@gmail.com` בלי להתחבר למערכת בכלל. **תוקן**: נוספה
+   בדיקת `Authorization: Bearer` + `auth.getUser()` + הגבלה ל-`ADMIN_EMAILS`
+   (אותה רשימה כמו ב-`index.html`), ותוקן `ALLOWED_ORIGINS` ל-`plto.app`.
+   אומת בפועל: קריאה לא-מאומתת מקבלת `401`, וקריאה עם JWT תקין של
+   `liders.crm@gmail.com` מצליחה (`200`, שרשור מייל אמיתי הוחזר).
+2. **`index.html` — `GmailInbox._proxy()`** הוחלף מ-`fetch()` גולמי (שולח רק
+   `apikey`) ל-`sbClient.functions.invoke()` (שולח את ה-JWT האמיתי של הסשן
+   המחובר) — כדי שהתיקון הנ"ל לא ישבור את מסך המייל בממשק.
+3. **6 RPCs נוספות היו ניתנות להפעלה ע"י `anon`/`authenticated` בלי אימות**
+   בפועל (`send_daily_lead_digest`, `send_cro_weekly_digest`,
+   `auto_approve_daily_jokes`, `admin_list_ab_tests`, `admin_upsert_ab_test`,
+   `get_funnel_summary`) — כי `GRANT ... TO postgres` לא מספיק ב-Supabase:
+   יש GRANT ברירת מחדל ישיר ל-`anon`/`authenticated` על כל פונקציה חדשה
+   בסכימת public, בנוסף ל-PUBLIC הרגיל. שלוש הראשונות (ab_tests/funnel_summary)
+   היו מוגנות גם ב-runtime guard (`current_role`) so לא הייתה חשיפה בפועל;
+   שלוש האחרונות (הדיגסטים + אישור בדיחות) **לא** היה להן שום guard פנימי.
+   **תוקן**: `REVOKE EXECUTE ... FROM anon, authenticated` על כל השש, מיגרציה
+   `077_revoke_public_exec_admin_cron_rpcs.sql`.
+
+### 📎 תיעוד רטרואקטיבי (drift בין DB לגיט)
+התגלה ש-3 Edge Functions (`admin-ops`, `gmail-proxy`, `gmail-oauth-callback`)
+ו-2 טבלאות DB (`gmail_tokens`, `community_jokes` + כל ה-RPCs שלהן) רצו
+בפרודקשן בלי שום קובץ מיגרציה/מקור בריפו — נוצרו ישירות מול Supabase בסשן
+קודם. `admin-ops` כבר מחזירה `Gone (410)` — לא בשימוש, לא נגעתי בה. הוספתי
+לריפו: קוד המקור של `gmail-proxy`/`gmail-oauth-callback`, ומיגרציות
+רטרואקטיביות `078_gmail_tokens_retroactive.sql` ו-
+`079_community_jokes_retroactive.sql` (עם `IF NOT EXISTS` — לא משנות דבר אם
+מורצות, רק מתעדות את המצב החי).
+
+### ⚠️ `community_jokes` — פיצ'ר שלם ב-backend, אין לו UI בכלל
+טבלה + RPCs מלאים (שליחת בדיחה, אישור אדמין דרך PIN, אישור אוטומטי יומי
+ב-cron, XP) — אבל **0 references בכל הקוד** (`index.html`/`admin.html`) ו-0
+בדיחות אושרו אי פעם. נראה כמו פיצ'ר שנבנה באמצע ולא הושלם. **לא הוסר** —
+מחכה להחלטה: להשלים את ה-UI, או להסיר את התשתית (טבלה + RPCs + cron job
+`auto-approve-daily-jokes`).
+
+### ✅ אומת כתקין (ללא שינוי נדרש)
+- `plto.app` חי (200, cloudflare), כל המיגרציות עד 079 מיושמות.
+- שתי סצנריות Make.com (`PLTO — Lead Notifications`, `PLTO — Trial Expiry
+  Notifications`) פעילות עם מיתוג PLTO נכון.
+- `gmail_tokens.access_token` היה פג תוקף (מ-5/7) — ה-refresh flow עבד כצפוי
+  ורענן אוטומטית, לא נדרשת פעולה.
+
+### 📋 לסשן הבא / פעולה ידנית
+- **`auth_leaked_password_protection`** כבוי ב-Supabase Auth — טוגל דקה
+  בדשבורד (Authentication → Policies), אין לו כלי MCP.
+- **החלטה על `community_jokes`** (למעלה) — טרם התקבלה.
+- לא בוצעה בדיקת קצה-לקצה חיה מלאה (הרשמה חדשה → אונבורדינג → ליד →
+  רענון → פייפליין) — עדיין פתוח מסשן 7/7.
+
+---
+
 ## Quick Commands
 
 ```bash
