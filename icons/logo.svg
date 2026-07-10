@@ -4,7 +4,9 @@
         font-size="68" fill="rgba(255,255,255,0.95)" letter-spacing="-2">PLT</text>
   <!-- O — outer ring: frosted glass, sized to match text -->
   <circle cx="171" cy="40" r="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="7"/>
-  <!-- Arrow — thin shaft, tip strikes inward toward center -->
-  <line x1="184" y1="22" x2="172" y2="39" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Arrow — thin straight shaft with fletching, tip strikes inward toward center -->
+  <line x1="193" y1="18" x2="171" y2="40" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="193" y1="18" x2="190" y2="27" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="193" y1="18" x2="184" y2="21" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
   <polygon points="171,40 179,37 175,31" fill="rgba(255,255,255,0.88)"/>
 </svg>
