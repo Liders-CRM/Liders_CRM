@@ -7498,6 +7498,19 @@
   </div>
 </div>
 
+<!-- PWA INSTALL BANNER - lives outside screen-login/app-shell so it can appear on either;
+     placed before the main <script> block so getElementById can find it at parse time -->
+<div id="pwa-install-banner" class="hidden">
+  <div class="pwa-row">
+    <div class="pwa-icon">📲</div>
+    <div class="pwa-text">
+      <strong>שמור כ-App בנייד</strong>
+      <span id="pwa-install-msg">גישה מהירה מהמסך הראשי</span>
+    </div>
+    <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
+  </div>
+  <button class="pwa-btn" id="pwa-install-btn">התקן</button>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════
@@ -17673,8 +17686,10 @@ window.DemoLock   = DemoLock;
 Referral.checkInboundRef();
 // Check for inbound lead-referral token (?lref=) — לולאת הפניות
 LeadReferral.checkInbound();
-// Check for inbound agency recruitment link (?ainvite=) — קישור גיוס
-AgentInvite.checkInbound();
+// Check for inbound agency recruitment link (?ainvite=) — קישור גיוס נעשה בהמשך
+// הקובץ, מיד אחרי הגדרת AgentInvite עצמה (const מוגדר רק בהמשך הסקריפט; קריאה
+// לו כאן הייתה זורקת ReferenceError בגלל temporal dead zone ומפילה את כל
+// הריצה של שאר הסקריפט)
 // עמוד ציבורי לאישור לקוח (?consent=) — ללא התחברות
 ClientConsent.check();
 // Hide referral "new" badge if user already visited
@@ -19348,6 +19363,9 @@ const AgentInvite = {
   clear()       { sessionStorage.removeItem(this._KEY); this._previewData = null; },
 };
 window.AgentInvite = AgentInvite;
+// Check for inbound agency recruitment link (?ainvite=) - קישור גיוס. חייב
+// לרוץ אחרי הגדרת האובייקט הזה (לא בקבוצת בדיקות ה-init המוקדמת למעלה)
+AgentInvite.checkInbound();
 
 const Team = {
   _data: null,
@@ -19798,19 +19816,6 @@ window.PrivacyShield = PrivacyShield;
     </svg>
     <div class="spo-ok-lbl" id="spo-ok-lbl">נשמר בהצלחה</div>
   </div>
-</div>
-
-<!-- PWA INSTALL BANNER - lives outside screen-login/app-shell so it can appear on either -->
-<div id="pwa-install-banner" class="hidden">
-  <div class="pwa-row">
-    <div class="pwa-icon">📲</div>
-    <div class="pwa-text">
-      <strong>שמור כ-App בנייד</strong>
-      <span id="pwa-install-msg">גישה מהירה מהמסך הראשי</span>
-    </div>
-    <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
-  </div>
-  <button class="pwa-btn" id="pwa-install-btn">התקן</button>
 </div>
 
 </body>
