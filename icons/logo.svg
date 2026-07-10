@@ -2,11 +2,9 @@
   <!-- PLT text -->
   <text x="4" y="62" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700"
         font-size="68" fill="rgba(255,255,255,0.95)" letter-spacing="-2">PLT</text>
-  <!-- O — outer ring: frosted glass, sized to match text -->
-  <circle cx="171" cy="40" r="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="7"/>
-  <!-- Arrow — thin straight shaft with fletching, tip strikes inward toward center -->
-  <line x1="193" y1="18" x2="171" y2="40" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="193" y1="18" x2="190" y2="27" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="193" y1="18" x2="184" y2="21" stroke="rgba(255,255,255,0.88)" stroke-width="1.8" stroke-linecap="round"/>
-  <polygon points="171,40 179,37 175,31" fill="rgba(255,255,255,0.88)"/>
+  <!-- O — outer ring: frosted glass, sized and positioned to sit close to the text -->
+  <circle cx="150" cy="40" r="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="7"/>
+  <!-- Feather emerging from the ring -->
+  <path d="M 161.9,28.1 Q 174.8,26.1 177.3,13.8 Q 167.3,18.7 161.9,28.1 Z" fill="rgba(255,255,255,0.92)"/>
+  <path d="M 163.1,26.7 L 176.3,14.6 M 165.5,24.3 L 172.6,20.1 M 168.5,21.4 L 173.8,18.3" stroke="rgba(15,31,61,0.55)" stroke-width="0.75" stroke-linecap="round"/>
 </svg>
