@@ -13093,14 +13093,13 @@ const GmailInbox = {
   _threads: [],
 
   async _proxy(body) {
-    const res = await fetch(SUPABASE_URL + '/functions/v1/gmail-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-      body: JSON.stringify(body)
-    });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(json.error || `שגיאת שרת ${res.status}`);
-    return json;
+    const { data, error } = await sbClient.functions.invoke('gmail-proxy', { body });
+    if (error) {
+      const ctx = await error.context?.json?.().catch(() => null);
+      throw new Error(ctx?.error || error.message || 'שגיאת שרת');
+    }
+    if (data?.error) throw new Error(data.error);
+    return data;
   },
 
   renderScreen() {
