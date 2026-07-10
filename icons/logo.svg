@@ -5,6 +5,6 @@
   <!-- O — outer ring: frosted glass, sized and positioned to sit close to the text -->
   <circle cx="150" cy="40" r="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="7"/>
   <!-- Feather emerging from the ring -->
-  <path d="M 156.7,33.3 Q 175.2,25.2 178.2,11.8 Q 159.8,24.4 156.7,33.3 Z" fill="rgba(255,255,255,0.92)"/>
-  <path d="M 158.2,31.8 L 176.8,13.2 M 163.1,26.9 L 169.8,24.7 M 168.5,21.5 L 175.2,19.2" stroke="rgba(15,31,61,0.55)" stroke-width="0.75" stroke-linecap="round"/>
+  <path d="M 150.7,39.3 Q 170.4,29.4 174.5,15.5 Q 154.9,30.1 150.7,39.3 Z" fill="rgba(255,255,255,0.92)"/>
+  <path d="M 152.9,37.1 L 172.3,17.7 M 157.9,32.1 L 163.3,30.2 M 163.9,26.2 L 169.3,24.3" stroke="rgba(15,31,61,0.55)" stroke-width="0.75" stroke-linecap="round"/>
 </svg>
