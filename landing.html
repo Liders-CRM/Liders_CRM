@@ -1279,6 +1279,16 @@
        קצת עלינו
     ══════════════════════════════ */
     .about-section { background: var(--white); border-top: 1px solid var(--border); }
+
+    /* ── Agent Pains Section ── */
+    .agent-pains-section { background: #F8FAFC; }
+    .ap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+    @media (max-width: 600px) { .ap-grid { grid-template-columns: 1fr; } }
+    .ap-card { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 12px rgba(15,31,61,0.07); border: 1px solid var(--border,#E2E8F0); }
+    .ap-emoji { font-size: 34px; margin-bottom: 10px; }
+    .ap-pain { font-size: 15px; color: var(--gray,#64748B); font-style: italic; line-height: 1.55; margin-bottom: 12px; border-right: 3px solid #E2E8F0; padding-right: 10px; }
+    .ap-solution { font-size: 14px; color: #1E40AF; font-weight: 600; line-height: 1.5; }
+    .ap-solution::before { content: "✓  "; }
     #features { border-top: 1px solid var(--border); }
     .about-pre-title {
       text-align: center;
@@ -3001,6 +3011,37 @@
   </div>
 </section>
 
+<!-- כאבי הסוכן — נבנה מהשטח -->
+<section class="section agent-pains-section" id="agent-pains">
+  <div class="section-inner">
+    <p class="section-label fade-up">נבנה מהשטח, לא מחדר ישיבות</p>
+    <h2 class="section-title fade-up">הכאבים שסוכן נדל"ן מכיר מאוד</h2>
+    <p class="section-sub fade-up">שיחות עם סוכנים ברחבי הארץ לימדו אותנו מה באמת עוצר אתכם. בנינו פתרון לכל אחד מהם.</p>
+    <div class="ap-grid fade-up">
+      <div class="ap-card">
+        <div class="ap-emoji">⏰</div>
+        <p class="ap-pain">"שעות על לידים שלעולם לא יסגרו — ובסוף גם הלקוח הלך."</p>
+        <p class="ap-solution">זיהוי אוטומטי של לידים קרים, הודעת חיזור חכמה שמשמרת את הקשר. ליד קר שמרגיש מכובד הופך למפרסם הכי טוב שלכם.</p>
+      </div>
+      <div class="ap-card">
+        <div class="ap-emoji">🏠</div>
+        <p class="ap-pain">"שכחתי איזה נכסים הראיתי ללקוח הזה ומה חשב על כל אחד."</p>
+        <p class="ap-solution">מעקב נכסים שהוצגו בכרטיס הליד — כתובת, מחיר, תגובת הלקוח (מעוניין, אולי, לא מתאים). הכל במקום אחד.</p>
+      </div>
+      <div class="ap-card">
+        <div class="ap-emoji">📋</div>
+        <p class="ap-pain">"לא זכרתי לחדש את עמלת הסוכנות בזמן."</p>
+        <p class="ap-solution">תזכורת אוטומטית 30 יום לפני חידוש עמלה — מוצגת בדשבורד עם ספירת ימים. אף חוזה לא ייפול בין הכיסאות.</p>
+      </div>
+      <div class="ap-card">
+        <div class="ap-emoji">📁</div>
+        <p class="ap-pain">"בלאגן עם מסמכים וחתימות — אין מושג איפה מה."</p>
+        <p class="ap-solution">תיק דיגיטלי לכל ליד — העלאת חוזים, מסמכים, אישורים. הכל מאורגן, מאובטח, ומוצמד לאותו לקוח.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- קצת עלינו -->
 <section class="section about-section" id="about">
   <div class="section-inner">
@@ -3068,6 +3109,16 @@
             <span class="fc-icon">📥</span>
             <div class="fc-title">ייבוא וייצוא מהיר</div>
             <div class="fc-desc">מעבירים את כל הלידים מאקסל בלחיצה אחת, בלי הקלדה ידנית</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">📍</span>
+            <div class="fc-title">מעקב נכסים שהוצגו</div>
+            <div class="fc-desc">לכל ליד — רשימת נכסים שהוצגו בפועל, עם תגובת הלקוח ותאריך</div>
+          </div>
+          <div class="feature-card">
+            <span class="fc-icon">📋</span>
+            <div class="fc-title">תזכורת חידוש עמלה</div>
+            <div class="fc-desc">ספירה לאחור לתאריך חידוש עמלה — מוצגת בדשבורד 30 יום מראש</div>
           </div>
         </div>
       </div>

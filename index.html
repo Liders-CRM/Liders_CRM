@@ -2996,6 +2996,27 @@
     /* Activity collapsible */
     .activity-toggle-btn { display: block; width: 100%; text-align: center; padding: 10px; color: var(--blue-500); font-size: 13px; font-weight: 600; cursor: pointer; border-top: 1px solid var(--border); margin-top: 4px; background: none; border-right: none; border-left: none; border-bottom: none; font-family: inherit; }
 
+    /* ── Cold Lead philosophy tip ── */
+    .cold-lead-tip { font-size: 13px; color: var(--gray-500); padding: 6px 12px; background: rgba(59,130,246,0.06); border-radius: 8px; margin: 4px 0 10px; line-height: 1.5; }
+    .cold-days { font-weight: 600; }
+    .cold-days.amber { color: #D97706; }
+    .cold-days.orange { color: #EA580C; }
+    .cold-days.red { color: #DC2626; font-weight: 700; }
+
+    /* ── Commission renewal badges ── */
+    .renewal-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .renewal-red    { background: #FEE2E2; color: #DC2626; }
+    .renewal-orange { background: #FFEDD5; color: #EA580C; }
+    .renewal-amber  { background: #FEF3C7; color: #D97706; }
+    .renewal-green  { background: #DCFCE7; color: #16A34A; }
+
+    /* ── Property shown reaction buttons ── */
+    .ps-reaction-btn { flex: 1; padding: 8px 4px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); font-size: 12px; font-weight: 600; cursor: pointer; transition: .15s; color: var(--gray-700); font-family: inherit; }
+    .ps-reaction-btn.ps-reaction-active { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-700); }
+    .ps-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+    .ps-item-content { font-size: 13px; color: var(--gray-800); line-height: 1.5; }
+    .ps-item-date { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
     /* ── Print / PDF Export ── */
     @media print {
       #sidebar, #bottom-nav, #fab-btn, #trial-banner, .btn, nav { display: none !important; }
@@ -4833,6 +4854,7 @@
         <div class="section-link" onclick="App.go('tasks')">כל המשימות</div>
       </div>
       <div class="tasks-list" id="dash-tasks"></div>
+      <div id="dash-renewals" class="hidden"></div>
 
       <!-- HOT LEADS -->
       <div class="section-header" style="margin-top:16px;">
@@ -4858,7 +4880,7 @@
       <!-- COLD LEADS & CHART -->
       <div class="dash-section" style="display:none;">
         <div class="section-header" style="margin-top:16px;">
-          <div class="section-title">❄️ לידים קפואים, 14+ יום ללא קשר</div>
+          <div class="section-title">❄️ לידים שדורשים חיזור מחדש</div>
           <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
         </div>
         <div id="dash-cold-leads"></div>
@@ -5072,6 +5094,9 @@
               </button>
               <button class="wa-template-btn" onclick="Tools.waTemplate('closing')">
                 <span class="wa-icon">🤝</span>סגירה
+              </button>
+              <button class="wa-template-btn" onclick="Tools.waTemplate('cold_referral')">
+                <span class="wa-icon">❄️</span>חיזור ליד קר
               </button>
             </div>
             <div class="wa-template-preview" id="wa-preview"></div>
@@ -6997,6 +7022,45 @@
 <!-- ═══════════════════════════════════════
      MODAL: ADD ACTIVITY
 ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     MODAL: PROPERTY SHOWN
+═══════════════════════════════════════ -->
+<div id="modal-property-shown" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-property-shown')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📍 נכס שהוצג ללקוח</div>
+      <button class="modal-close" onclick="closeModal('modal-property-shown')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="form-group">
+        <label class="form-label">כתובת הנכס</label>
+        <input type="text" id="ps-address" class="form-input" placeholder="רחוב, עיר">
+      </div>
+      <div class="form-group">
+        <label class="form-label">מחיר מבוקש (₪)</label>
+        <input type="number" id="ps-price" class="form-input" placeholder="1500000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">תגובת הלקוח</label>
+        <div style="display:flex;gap:8px;" id="ps-reaction-picker">
+          <button data-v="interested" class="ps-reaction-btn" onclick="PropertyShown.setReaction(this)">💚 מעוניין</button>
+          <button data-v="maybe"      class="ps-reaction-btn" onclick="PropertyShown.setReaction(this)">💛 אולי</button>
+          <button data-v="no"         class="ps-reaction-btn" onclick="PropertyShown.setReaction(this)">❌ לא מתאים</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">הערות</label>
+        <input type="text" id="ps-notes" class="form-input" placeholder="מה אמר הלקוח על הנכס?">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-property-shown')">ביטול</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="PropertyShown.save()">שמור</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-add-activity" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-add-activity')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -7099,6 +7163,14 @@
       <div class="form-group" id="fg-edit-inspiration">
         <label class="form-label">🎨 לוח השראה <span style="color:var(--gray-400);font-weight:400;">(Pinterest / Houzz / אחר)</span></label>
         <input type="url" id="edit-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">📋 תאריך חידוש עמלה <span style="color:var(--gray-400);font-weight:400;">(אופציונלי)</span></label>
+        <input type="date" id="edit-lead-renewal-date" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">הערות לחידוש עמלה</label>
+        <input type="text" id="edit-lead-renewal-notes" class="form-input" placeholder="פרטי החוזה, גובה עמלה...">
       </div>
     </div>
     <div class="modal-footer">
@@ -7850,6 +7922,8 @@ const DB = {
         inspiration_url: l.inspiration_url || null,
         last_contact: l.last_contact?.split('T')[0] || null,
         next_followup: l.next_followup?.split('T')[0] || null,
+        commission_renewal_date: l.commission_renewal_date || null,
+        commission_renewal_notes: l.commission_renewal_notes || '',
         created_at: l.created_at?.split('T')[0] || today(),
       })),
       tasks: (tasksR.data || []).map(t => ({
@@ -9424,8 +9498,9 @@ const AI = {
     return this.call([{ role: 'user', content:
       `כתוב הודעת WhatsApp להחייאת ליד שלא פעיל ${days} ימים.
 שם: ${lead.name} | אזור: ${lead.desired_area || 'לא ידוע'} | תקציב: ${lead.budget_max ? formatMoney(lead.budget_max) : 'לא ידוע'}
-כללים: חמה ולא פולשנית, אל תאמר "לא שמעתי ממך", הצג עדכון שוק קטן כסיבה לפנות, מקסימום 3 שורות.`
-    }], 200);
+כללים: חמה ולא פולשנית, אל תאמר "לא שמעתי ממך", הצג עדכון שוק קטן כסיבה לפנות, מקסימום 3 שורות.
+בסוף ההודעה, הוסף שורה קצרה ועדינה שמזמינה להמליץ לחברים/משפחה אם יש היכרות עם מישהו שמחפש נכס.`
+    }], 220);
   },
 
   async getDealAdvice(lead) {
@@ -9525,6 +9600,7 @@ const Tools = {
     followup: n => `היי ${n||'שם'} 😊\nרק רציתי לוודא שקיבלת את מה ששלחתי.\nיש לי כמה עדכונים קטנים שחשבתי שיעניינו אותך, מתי יהיה נוח לך לדקה?`,
     proposal: n => `היי ${n||'שם'},\nשלחתי לך קצת קודם את ההצעה, הכל מגיע בסדר?\nאם יש לך שאלות או רוצה לשנות משהו, אני כאן 🙌`,
     closing:  n => `היי ${n||'שם'}, תודה על הפגישה, ממש נהניתי!\nכמו שדיברנו, אני שולח לך עכשיו את הפרטים הסופיים.\nאשמח לדעת, מה עוד צריך ממני כדי להתקדם? 🤝`,
+    cold_referral: n => `היי ${n||'שם'}! 😊\nזמן מה לא דיברנו, רציתי לבדוק שלומך.\nיש עדכונים מעניינים באזור שביקשת — אשמח לעדכן.\n\nאם יש היכרות עם מישהו שמחפש לקנות או למכור — אשמח שתיצרו קשר 🙏`,
   },
 
   waTemplate(type) {
@@ -11887,6 +11963,66 @@ ${v.topics ? `נושאים מועדפים: ${v.topics}` : ''}
 };
 
 /* ═══════════════════════════════════════════
+   PROPERTY SHOWN MODULE
+═══════════════════════════════════════════ */
+const PropertyShown = {
+  _leadId: null,
+  _reaction: null,
+
+  open(leadId) {
+    this._leadId = leadId;
+    this._reaction = null;
+    document.getElementById('ps-address').value = '';
+    document.getElementById('ps-price').value = '';
+    document.getElementById('ps-notes').value = '';
+    document.querySelectorAll('.ps-reaction-btn').forEach(b => b.classList.remove('ps-reaction-active'));
+    openModal('modal-property-shown');
+  },
+
+  setReaction(btn) {
+    this._reaction = btn.dataset.v;
+    document.querySelectorAll('.ps-reaction-btn').forEach(b => b.classList.remove('ps-reaction-active'));
+    btn.classList.add('ps-reaction-active');
+  },
+
+  async save() {
+    const address = document.getElementById('ps-address').value.trim();
+    const price   = document.getElementById('ps-price').value.trim();
+    const notes   = document.getElementById('ps-notes').value.trim();
+    if (!address) { toast('יש להזין כתובת נכס', 'error'); return; }
+    const payload = { address, price: price || null, reaction: this._reaction, notes };
+    try {
+      const act = await DB.addActivity({
+        lead_id: this._leadId,
+        type: 'showing',
+        content: `📍 נכס שהוצג: ${address}${price ? ' · ₪' + Number(price).toLocaleString('he-IL') : ''}${this._reaction ? ' · ' + {interested:'💚 מעוניין',maybe:'💛 אולי',no:'❌ לא מתאים'}[this._reaction] : ''}${notes ? ' — ' + notes : ''}`,
+      });
+      act._ps = payload;
+      State.activities.push(act);
+      closeModal('modal-property-shown');
+      toast('📍 נכס נשמר בהצלחה', 'success');
+      const listEl = document.getElementById(`ps-list-${this._leadId}`);
+      if (listEl) listEl.innerHTML = this.renderList(this._leadId);
+    } catch(e) {
+      toast('שגיאה בשמירת הנכס', 'error');
+    }
+  },
+
+  renderList(leadId) {
+    const acts = State.activities.filter(a => a.lead_id === leadId && a.type === 'showing' && a.content.startsWith('📍 נכס שהוצג:'));
+    if (!acts.length) return '<div style="font-size:12px;color:var(--gray-400);padding:6px 0;">טרם הוצגו נכסים — לחץ "הוסף נכס שהוצג" כדי לתעד</div>';
+    return acts.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(a => {
+      const reactionMatch = a.content.match(/· (💚 מעוניין|💛 אולי|❌ לא מתאים)/);
+      const reaction = reactionMatch ? reactionMatch[1] : '';
+      return `<div class="ps-item">
+        <div class="ps-item-content">${escapeHtml(a.content.replace('📍 נכס שהוצג: ', ''))}</div>
+        <div class="ps-item-date">${formatRelDate(a.created_at)}</div>
+      </div>`;
+    }).join('');
+  },
+};
+
+/* ═══════════════════════════════════════════
    LEAD DOCUMENTS MODULE
 ═══════════════════════════════════════════ */
 const LeadDocs = {
@@ -13735,6 +13871,7 @@ const Dashboard = {
     this.renderTasks();
     this.renderHotLeads();
     this.renderColdLeads();
+    this.renderRenewalAlerts();
     this.renderActivity();
     this.renderAIBriefing();
     this.renderGrowthCard();
@@ -13962,18 +14099,53 @@ const Dashboard = {
     if (!cold.length) { el.closest('.dash-section')?.classList.add('hidden'); return; }
     el.closest('.dash-section')?.classList.remove('hidden');
     el.innerHTML = `
+      <div class="cold-lead-tip">💡 ליד קר שמרגיש מכובד הופך למפרסם — שמרו על קשר חם, הסוכן ינסח אוטומטית</div>
       <div style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-radius:14px;padding:4px 2px;overflow:hidden;">
         ${cold.map(l => {
-          const days = l.last_contact ? Math.abs(diffDays(l.last_contact)) : '14+';
+          const daysNum = l.last_contact ? Math.abs(diffDays(l.last_contact)) : 15;
+          const daysCls = daysNum >= 60 ? 'red' : daysNum >= 30 ? 'orange' : 'amber';
           return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(147,197,253,0.35);">
             <div style="flex:1;min-width:0;cursor:pointer;" onclick="App.go('lead-detail',{currentLeadId:'${l.id}'})">
               <div style="font-weight:700;font-size:13.5px;color:#1E3A5F;">${escapeHtml(l.name)}</div>
-              <div style="font-size:11px;color:#3B82F6;">❄️ ${days} ימים ללא מגע · ${formatMoney(l.budget_max)}</div>
+              <div style="font-size:11px;color:#3B82F6;">❄️ <span class="cold-days ${daysCls}">${daysNum} ימים ללא מגע</span> · ${formatMoney(l.budget_max)}</div>
             </div>
-            <button class="btn btn-sm" style="background:linear-gradient(135deg,#EF4444,#F97316);color:white;border:none;font-size:11.5px;padding:5px 10px;border-radius:8px;flex-shrink:0;white-space:nowrap;"
+            <button class="btn btn-sm" style="background:linear-gradient(135deg,#2563EB,#3B82F6);color:white;border:none;font-size:11.5px;padding:5px 10px;border-radius:8px;flex-shrink:0;white-space:nowrap;"
               onclick="App.go('lead-detail',{currentLeadId:'${l.id}'});setTimeout(()=>SmartWA.open('${l.id}'),250)">
-              🔥 חמם ליד
+              💬 שלח חיזור חכם
             </button>
+          </div>`;
+        }).join('')}
+      </div>`;
+  },
+
+  renderRenewalAlerts() {
+    const el = document.getElementById('dash-renewals');
+    if (!el) return;
+    const today = new Date();
+    const soon = State.leads.filter(l => {
+      if (!l.commission_renewal_date) return false;
+      const d = Math.round((new Date(l.commission_renewal_date) - today) / 86400000);
+      return d >= -7 && d <= 30;
+    }).sort((a,b) => new Date(a.commission_renewal_date) - new Date(b.commission_renewal_date));
+    if (!soon.length) { el.classList.add('hidden'); return; }
+    el.classList.remove('hidden');
+    el.innerHTML = `
+      <div class="section-header" style="margin-top:16px;">
+        <div class="section-title">📋 חידוש עמלה — בקרוב</div>
+        <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:14px;padding:4px 2px;overflow:hidden;">
+        ${soon.map(l => {
+          const days = Math.round((new Date(l.commission_renewal_date) - today) / 86400000);
+          const cls = days < 0 ? 'red' : days < 7 ? 'orange' : days < 20 ? 'amber' : 'green';
+          const label = days < 0 ? `פג לפני ${Math.abs(days)} ימים` : days === 0 ? 'היום!' : `עוד ${days} יום${days===1?'':'ים'}`;
+          return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(251,191,36,0.25);cursor:pointer;"
+                    onclick="App.go('lead-detail',{currentLeadId:'${l.id}'})">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:700;font-size:13.5px;color:#78350F;">${escapeHtml(l.name)}</div>
+              <div style="font-size:11px;color:#92400E;">${l.commission_renewal_notes ? escapeHtml(l.commission_renewal_notes) + ' · ' : ''}${l.commission_renewal_date}</div>
+            </div>
+            <span class="renewal-badge renewal-${cls}">${label}</span>
           </div>`;
         }).join('')}
       </div>`;
@@ -14426,6 +14598,13 @@ const LeadDetail = {
             <div class="info-item"><div class="info-label">קשר אחרון</div><div class="info-value">${formatRelDate(lead.last_contact)||'—'}</div></div>
             <div class="info-item"><div class="info-label">מעקב הבא</div><div class="info-value ${diffDays(lead.next_followup)<0?'':''}">
               ${lead.next_followup ? formatRelDate(lead.next_followup) : '—'}</div></div>
+            ${lead.commission_renewal_date ? (() => {
+              const rd = lead.commission_renewal_date;
+              const days = Math.round((new Date(rd) - new Date()) / 86400000);
+              const cls = days < 0 ? 'red' : days < 30 ? 'orange' : days < 60 ? 'amber' : 'green';
+              const label = days < 0 ? `פג לפני ${Math.abs(days)} ימים` : days === 0 ? 'היום!' : `עוד ${days} יום${days===1?'':'ים'}`;
+              return `<div class="info-item info-item-full"><div class="info-label">📋 חידוש עמלה</div><div class="info-value"><span class="renewal-badge renewal-${cls}">${label}</span><span style="color:var(--gray-400);font-size:11px;margin-right:6px;">${rd}</span>${lead.commission_renewal_notes ? `<span style="color:var(--gray-500);font-size:12px;display:block;margin-top:2px;">${escapeHtml(lead.commission_renewal_notes)}</span>` : ''}</div></div>`;
+            })() : ''}
           </div>
           ${lead.notes ? `<div style="background:var(--gray-50);border-radius:var(--radius-md);padding:12px;font-size:14px;color:var(--gray-700);">${escapeHtml(lead.notes)}</div>` : ''}
           ${lead.inspiration_url ? `
@@ -14490,10 +14669,18 @@ const LeadDetail = {
 
         <!-- MATCH TAB -->
         <div class="tab-content" id="tab-match">
-          ${matchProps.length ? `
-            <div style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">
-              נמצאו ${matchProps.length} נכסים מתאימים לפי תקציב ואזור:
+          <!-- נכסים שהוצגו בפועל -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="font-weight:700;font-size:14px;color:var(--navy-700);">📍 נכסים שהוצגו ללקוח</div>
+            <button class="btn btn-sm" style="font-size:12px;padding:5px 10px;" onclick="PropertyShown.open('${lead.id}')">הוסף נכס שהוצג</button>
+          </div>
+          <div id="ps-list-${lead.id}" style="margin-bottom:16px;">${PropertyShown.renderList(lead.id)}</div>
+          <div style="border-top:1px solid var(--border);padding-top:14px;margin-bottom:10px;">
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">
+              ${matchProps.length ? `נמצאו ${matchProps.length} נכסים תואמים לפי תקציב ואזור:` : ''}
             </div>
+          </div>
+          ${matchProps.length ? `
             <div style="display:flex;flex-direction:column;gap:10px;">
               ${matchProps.map(p => `
                 <div class="card" style="padding:14px;display:flex;gap:12px;align-items:center;">
@@ -14506,7 +14693,7 @@ const LeadDetail = {
                 </div>
               `).join('')}
             </div>
-          ` : '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו נכסים מתאימים</div><div class="empty-sub">הוסף נכסים שיתאימו לתקציב ולאזור של הליד</div></div>'}
+          ` : '<div class="empty-state" style="padding:16px 0;"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו נכסים תואמים</div><div class="empty-sub">הוסף נכסים שיתאימו לתקציב ולאזור של הליד</div></div>'}
         </div>
 
         <!-- DOCS TAB -->
@@ -17186,6 +17373,8 @@ function openEditLead(leadId) {
   document.getElementById('edit-lead-area').value = lead.desired_area || '';
   document.getElementById('edit-lead-notes').value = lead.notes || '';
   document.getElementById('edit-lead-inspiration').value = lead.inspiration_url || '';
+  document.getElementById('edit-lead-renewal-date').value = lead.commission_renewal_date || '';
+  document.getElementById('edit-lead-renewal-notes').value = lead.commission_renewal_notes || '';
   selectLeadRole('edit', lead.lead_role || 'buyer');
   State.currentLeadId = leadId;
   openModal('modal-edit-lead'); // rebuilds the source dropdown for the tenant's current industry
@@ -17228,6 +17417,8 @@ async function saveEditLead() {
     notes: document.getElementById('edit-lead-notes').value.trim(),
     lead_role: document.getElementById('edit-lead-role-picker')?.dataset.value || 'buyer',
     inspiration_url: document.getElementById('edit-lead-inspiration').value.trim() || null,
+    commission_renewal_date: document.getElementById('edit-lead-renewal-date')?.value || null,
+    commission_renewal_notes: document.getElementById('edit-lead-renewal-notes')?.value.trim() || '',
   };
   SaveAnim.show();
   const t0 = Date.now();
@@ -17246,6 +17437,8 @@ async function saveEditLead() {
       notes: patch.notes || '',
       lead_role: patch.lead_role,
       inspiration_url: patch.inspiration_url,
+      commission_renewal_date: patch.commission_renewal_date || null,
+      commission_renewal_notes: patch.commission_renewal_notes || '',
     });
     closeModal('modal-edit-lead');
     await new Promise(r => setTimeout(r, Math.max(0, 1100 - (Date.now() - t0))));
