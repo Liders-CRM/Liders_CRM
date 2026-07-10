@@ -1374,14 +1374,6 @@
       .login-trial-badge::after { animation: none !important; }
     }
 
-    .login-demo-btn {
-      background: linear-gradient(135deg, var(--gold-100), #fff8e8);
-      color: var(--gold-600); font-weight: 800;
-      font-size: 14px; padding: 13px; border-radius: var(--radius-md);
-      border: 2px solid var(--gold-300); cursor: pointer; width: 100%;
-      transition: var(--transition); box-shadow: 0 2px 8px rgba(196,154,42,0.15);
-    }
-    .login-demo-btn:hover { background: var(--gold-100); transform: translateY(-1px); }
     .ind-grid {
       display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 4px 0;
     }
@@ -1846,8 +1838,9 @@
       display: flex; align-items: center; gap: 10px;
       padding: 10px 16px;
       background: linear-gradient(135deg, #0F1F3D, #1E3A5F);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      position: sticky; top: 0; z-index: 12;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.25);
       color: #fff;
       font-size: 13px;
     }
@@ -4421,16 +4414,7 @@
       <button id="btn-login-email" type="button" class="btn btn-primary w-full" style="padding:13px; font-size:15px; touch-action:manipulation;">
         כניסה / הרשמה בחינם
       </button>
-      <div style="text-align:center;margin-top:6px;">
-        <button id="btn-login-demo" type="button"
-          style="background:none;border:none;color:var(--gray-500);font-size:13px;cursor:pointer;font-family:inherit;padding:12px 8px;min-height:44px;touch-action:manipulation;display:inline-flex;align-items:center;gap:5px;">
-          👀 צפייה בדמו קצרה קודם
-        </button>
-      </div>
-      <p style="text-align:center;font-size:10.5px;color:var(--gray-400);margin-top:-4px;line-height:1.5;">
-        הדמו מציג חלק מהיכולות בלבד.
-      </p>
-      <p style="text-align:center;font-size:0.82rem;color:var(--gray-400);margin-top:12px;">
+      <p style="text-align:center;font-size:0.82rem;color:var(--gray-400);margin-top:14px;">
         בהרשמה מסכימים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
       </p>
     </div>
@@ -4459,8 +4443,8 @@
       <span class="star-dot" style="--sd:2.7s;--dd:4s;">✦</span>
       <span class="star-dot" style="--sd:2.4s;--dd:4.4s;">✦</span>
     </div>
-    <p class="stars-tagline">מספיק לרדוף אחרי העבודה, תנו לעבודה לרדוף אחריכם</p>
-    <p class="stars-verticals">המערכת שתסגור לכם כל פינה בעסק</p>
+    <p class="stars-tagline">באנו לעשות לך סדר בבלאגן</p>
+    <p class="stars-verticals">המערכת שתסגור לך כל פינה בעסק</p>
   </div>
 </div>
 
@@ -4578,16 +4562,6 @@
       <button onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;" style="background:var(--gold-500);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;">
         🚀 פתח חשבון חינמי
       </button>
-    </div>
-    <!-- PWA INSTALL BANNER -->
-    <div id="pwa-install-banner" class="hidden">
-      <div class="pwa-icon">📲</div>
-      <div class="pwa-text">
-        <strong>הוסף לבית</strong><br>
-        <span id="pwa-install-msg">התקן כאפליקציה לגישה מהירה</span>
-      </div>
-      <button class="pwa-btn" id="pwa-install-btn">התקן</button>
-      <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
     </div>
     <!-- TRIAL BANNER -->
     <div id="trial-banner" class="hidden"></div>
@@ -17648,7 +17622,6 @@ window.DemoLock   = DemoLock;
     el.addEventListener('click', guarded);
   }
   bind('btn-login-email', function(){ App.loginWithEmail(); });
-  bind('btn-login-demo',   function(){ App.loginDemo(); });
   bind('btn-login-google', function(){ App.loginWithGoogle(); });
 })();
 
@@ -17726,8 +17699,10 @@ if ('serviceWorker' in navigator) {
   // Already installed as standalone - never show
   if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) return;
 
-  // Dismissed before - don't nag
-  if (localStorage.getItem('pwa_banner_dismissed') === '1') return;
+  // Dismissed recently - stay quiet for a couple of days, then ask again
+  const RESHOW_MS = 2 * 24 * 60 * 60 * 1000; // 2 days
+  const dismissedAt = Number(localStorage.getItem('pwa_banner_dismissed_at') || 0);
+  if (dismissedAt && (Date.now() - dismissedAt) < RESHOW_MS) return;
 
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isAndroid = /android/i.test(navigator.userAgent);
@@ -17751,12 +17726,7 @@ if ('serviceWorker' in navigator) {
   }
 
   function showBanner() {
-    // Only show once user is inside the app (not on login)
-    const shell = document.getElementById('app-shell');
-    if (shell && shell.classList.contains('hidden')) {
-      setTimeout(showBanner, 2000);
-      return;
-    }
+    // Banner lives outside screen-login/app-shell, so it can show on either
     banner.classList.remove('hidden');
   }
 
@@ -17774,7 +17744,7 @@ if ('serviceWorker' in navigator) {
 
   function dismiss() {
     banner.classList.add('hidden');
-    localStorage.setItem('pwa_banner_dismissed', '1');
+    localStorage.setItem('pwa_banner_dismissed_at', String(Date.now()));
   }
 })();
 
@@ -19814,6 +19784,17 @@ window.PrivacyShield = PrivacyShield;
     </svg>
     <div class="spo-ok-lbl" id="spo-ok-lbl">נשמר בהצלחה</div>
   </div>
+</div>
+
+<!-- PWA INSTALL BANNER - lives outside screen-login/app-shell so it can appear on either -->
+<div id="pwa-install-banner" class="hidden">
+  <div class="pwa-icon">📲</div>
+  <div class="pwa-text">
+    <strong>הוסף לבית</strong><br>
+    <span id="pwa-install-msg">התקן כאפליקציה לגישה מהירה</span>
+  </div>
+  <button class="pwa-btn" id="pwa-install-btn">התקן</button>
+  <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
 </div>
 
 </body>
