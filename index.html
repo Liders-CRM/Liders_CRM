@@ -973,7 +973,7 @@
     #screen-login {
       min-height: 100dvh; display: flex; flex-direction: column; align-items: center;
       background: linear-gradient(160deg, #060e1e 0%, #0a1628 30%, #0f2344 70%, #1a3a5c 100%);
-      padding: 0 0 36px; overflow-y: auto; overflow-x: hidden; position: relative;
+      padding: 0 0 16px; overflow-y: auto; overflow-x: hidden; position: relative;
     }
     .login-card {
       width: calc(100% - 32px); max-width: 390px;
@@ -981,17 +981,17 @@
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
       border: 1px solid rgba(255,255,255,.22);
-      border-radius: 26px; padding: 28px 24px;
+      border-radius: 26px; padding: 20px 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.55);
       position: relative; z-index: 1;
       animation: lh-enter .7s .45s cubic-bezier(.34,1.56,.64,1) both;
     }
     .login-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: var(--gray-900); }
-    .login-form { display: flex; flex-direction: column; gap: 14px; }
+    .login-form { display: flex; flex-direction: column; gap: 10px; }
 
     /* ─── HERO ─── */
     .login-hero {
-      width: 100%; max-width: 440px; padding: 28px 16px 2px;
+      width: 100%; max-width: 440px; padding: 14px 16px 2px;
       text-align: center; position: relative; z-index: 1;
     }
     .lh-logo {
@@ -1018,7 +1018,7 @@
       background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.38);
       color: #F59E0B; font-size: 11px; font-weight: 800;
       letter-spacing: 2px; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 99px; margin: 10px 0 4px;
+      padding: 5px 14px; border-radius: 99px; margin: 6px 0 4px;
       text-shadow: 0 0 12px rgba(245,158,11,.25);
       animation: lh-enter .7s .12s cubic-bezier(.34,1.56,.64,1) both;
     }
@@ -1029,14 +1029,14 @@
     }
     .lh-microcopy {
       font-size: 12px; font-weight: 500; color: rgba(255,255,255,.48);
-      margin: 5px 0 2px; letter-spacing: .3px;
+      margin: 4px 0 2px; letter-spacing: .3px;
       animation: lh-enter .7s .3s cubic-bezier(.34,1.56,.64,1) both;
     }
 
     /* ─── CONSTRUCTION ANIMATION SCENE ─── */
     .login-scene {
       position: relative; height: 112px; width: 240px;
-      margin: 2px auto 8px; direction: ltr; overflow: visible;
+      margin: 2px auto 4px; direction: ltr; overflow: visible;
       animation: lh-enter .7s .32s both;
     }
     /* Building stack: flex col top→bottom = flag→roof→f3→f2→f1→ground */
@@ -1233,7 +1233,7 @@
     /* ─── FEATURE PILLS (below card) ─── */
     .login-pills {
       display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-      padding: 14px 16px 0; position: relative; z-index: 1;
+      padding: 6px 16px 0; position: relative; z-index: 1;
       animation: lh-enter .7s .58s both;
     }
     .login-pill {
@@ -1306,12 +1306,12 @@
 
     /* ─── STARS SOCIAL PROOF ─── */
     .login-stars-section {
-      text-align: center; padding: 16px 16px 4px; position: relative; z-index: 1;
+      text-align: center; padding: 6px 16px 0; position: relative; z-index: 1;
       animation: lh-enter .7s .68s both;
     }
     .star-field {
       display: flex; justify-content: center; gap: 12px;
-      height: 28px; align-items: flex-end; margin-bottom: 8px;
+      height: 24px; align-items: flex-end; margin-bottom: 4px;
     }
     .star-dot {
       font-size: 9px; color: #F59E0B; display: inline-block;
@@ -1327,7 +1327,7 @@
       margin: 0 0 4px; line-height: 1.4;
     }
     .stars-verticals {
-      font-size: 11px; color: rgba(255,255,255,.30); letter-spacing: 0.4px;
+      font-size: 11px; color: rgba(255,255,255,.38); font-weight: 600;
       margin: 0; line-height: 1.4;
     }
 
@@ -4338,7 +4338,7 @@
       </svg>
     </div>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
-    <div class="lh-tagline">העסקה הבאה מתחילה כאן</div>
+    <div class="lh-tagline">ממריאים לעבר העסקה הבאה</div>
     <div class="lh-microcopy">30 יום ניסיון בחינם&nbsp;•&nbsp;התחלה תוך פחות מדקה</div>
 
     <!-- Construction animation - worker builds a tower floor by floor, deal sealed -->
@@ -4376,7 +4376,7 @@
       </div>
       <div style="font-size:11px;opacity:.6;">יש להירשם למטה כדי להצטרף לסוכנות</div>
     </div>
-    <div style="text-align:center;margin-bottom:18px;">
+    <div style="text-align:center;margin-bottom:12px;">
       <div class="login-trial-badge">
         🎁 30 יום ניסיון בחינם, ללא כרטיס אשראי
       </div>
@@ -4459,8 +4459,8 @@
       <span class="star-dot" style="--sd:2.7s;--dd:4s;">✦</span>
       <span class="star-dot" style="--sd:2.4s;--dd:4.4s;">✦</span>
     </div>
-    <p class="stars-tagline">נבנה במיוחד עבור תחום הנדל"ן בישראל</p>
-    <p class="stars-verticals">סוכני נדל"ן &bull; מעצבי פנים &bull; עורכי דין בתחום הנדל"ן</p>
+    <p class="stars-tagline">מספיק לרדוף אחרי העבודה, תנו לעבודה לרדוף אחריכם</p>
+    <p class="stars-verticals">המערכת שתסגור לכם כל פינה בעסק</p>
   </div>
 </div>
 
