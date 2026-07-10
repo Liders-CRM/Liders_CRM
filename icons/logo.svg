@@ -2,11 +2,9 @@
   <!-- PLT text -->
   <text x="4" y="62" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700"
         font-size="68" fill="rgba(255,255,255,0.95)" letter-spacing="-2">PLT</text>
-  <!-- O — outer ring: frosted glass -->
-  <circle cx="171" cy="40" r="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="9"/>
-  <!-- O — inner target ring -->
-  <circle cx="171" cy="40" r="10" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="4"/>
-  <!-- Arrow -->
-  <line x1="185" y1="18" x2="172" y2="38" stroke="rgba(255,255,255,0.88)" stroke-width="3.5" stroke-linecap="round"/>
-  <polygon points="185,18 176,21 182,27" fill="rgba(255,255,255,0.88)"/>
+  <!-- O — outer ring: frosted glass, sized to match text -->
+  <circle cx="171" cy="40" r="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.38)" stroke-width="7"/>
+  <!-- Arrow — tip strikes inward toward center -->
+  <line x1="183" y1="23" x2="171" y2="40" stroke="rgba(255,255,255,0.88)" stroke-width="3.4" stroke-linecap="round"/>
+  <polygon points="171,40 177,36 173,33" fill="rgba(255,255,255,0.88)"/>
 </svg>
