@@ -650,7 +650,7 @@
         <h2>לקוחות פלטפורמה</h2>
         <div class="header-actions">
           <button class="btn-outline btn-sm" onclick="loadAccounts()">🔄 רענן</button>
-          <button class="btn-primary btn-sm" onclick="openAddAccount()">+ הוסף חשבון</button>
+          <button class="btn-primary btn-sm" onclick="openAddAccount()">+ הוספת חשבון</button>
         </div>
       </div>
       <div class="filter-bar">
@@ -688,7 +688,7 @@
         <h2>חשבוניות ותשלומים</h2>
         <div class="header-actions">
           <button class="btn-outline btn-sm" onclick="loadInvoices()">🔄 רענן</button>
-          <button class="btn-primary btn-sm" onclick="openAddInvoice()">+ הוסף חשבונית</button>
+          <button class="btn-primary btn-sm" onclick="openAddInvoice()">+ הוספת חשבונית</button>
         </div>
       </div>
       <div class="filter-bar">
@@ -800,7 +800,7 @@
         <h2>🚧 בתהליך בנייה</h2>
         <div class="header-actions">
           <button class="btn-outline btn-sm" onclick="loadRoadmapItems()">🔄 רענן</button>
-          <button class="btn-primary btn-sm" onclick="openAddRoadmapItem()">+ הוסף פריט</button>
+          <button class="btn-primary btn-sm" onclick="openAddRoadmapItem()">+ הוספת פריט</button>
         </div>
       </div>
       <div style="font-size:.82rem;color:var(--text-dim);margin-bottom:16px;">
@@ -888,7 +888,7 @@
 <div class="modal-overlay hidden" id="modal-account">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modal-account-title">הוסף חשבון</h3>
+      <h3 id="modal-account-title">הוספת חשבון</h3>
       <button class="modal-close" onclick="closeModal('modal-account')">✕</button>
     </div>
     <div class="modal-body">
@@ -926,7 +926,7 @@
 <div class="modal-overlay hidden" id="modal-invoice">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modal-invoice-title">הוסף חשבונית</h3>
+      <h3 id="modal-invoice-title">הוספת חשבונית</h3>
       <button class="modal-close" onclick="closeModal('modal-invoice')">✕</button>
     </div>
     <div class="modal-body">
@@ -968,7 +968,7 @@
 <div class="modal-overlay hidden" id="modal-roadmap-item">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modal-roadmap-item-title">הוסף פריט</h3>
+      <h3 id="modal-roadmap-item-title">הוספת פריט</h3>
       <button class="modal-close" onclick="closeModal('modal-roadmap-item')">✕</button>
     </div>
     <div class="modal-body">
@@ -1066,18 +1066,18 @@
       </div>
       <div class="modal-form-group">
         <label>תגובתך (תוצג ללקוח בתוך האפליקציה בכניסה הבאה שלו לחלונית התמיכה)</label>
-        <textarea id="reply-text" placeholder="כתוב תגובה ללקוח..." style="height:90px;width:100%;resize:none;"></textarea>
+        <textarea id="reply-text" placeholder="תגובה ללקוח..." style="height:90px;width:100%;resize:none;"></textarea>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
           <input type="checkbox" id="reply-resolve" style="cursor:pointer;">
-          סמן כטופל
+          סימון כטופל
         </label>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-support-reply')">ביטול</button>
-      <button class="btn-primary btn-sm" onclick="submitSupportReply()">✉️ שלח תגובה</button>
+      <button class="btn-primary btn-sm" onclick="submitSupportReply()">✉️ שליחת תגובה</button>
     </div>
   </div>
 </div>
@@ -1122,7 +1122,7 @@ async function doLogin() {
   errEl.style.display = 'none';
 
   if (!email || !password) {
-    errEl.textContent = 'נא מלא אימייל וסיסמה';
+    errEl.textContent = 'נא למלא אימייל וסיסמה';
     errEl.style.display = 'block';
     return;
   }
@@ -1148,7 +1148,7 @@ async function doForgotPassword() {
   const msgEl = document.getElementById('forgot-msg');
   const btn   = document.getElementById('btn-forgot');
   if (!email) {
-    document.getElementById('auth-error').textContent = 'הזן אימייל קודם';
+    document.getElementById('auth-error').textContent = 'יש להזין אימייל קודם';
     document.getElementById('auth-error').style.display = 'block';
     return;
   }
@@ -1325,7 +1325,7 @@ function openAddAccount() {
   document.getElementById('acc-email').value = '';
   document.getElementById('acc-plan').value  = 'trial';
   document.getElementById('acc-notes').value = '';
-  document.getElementById('modal-account-title').textContent = 'הוסף חשבון';
+  document.getElementById('modal-account-title').textContent = 'הוספת חשבון';
   openModal('modal-account');
 }
 
@@ -1346,7 +1346,7 @@ async function saveAccount() {
   const name  = document.getElementById('acc-name').value.trim();
   const email = document.getElementById('acc-email').value.trim();
   const plan  = document.getElementById('acc-plan').value;
-  if (!name) { toast('נא מלא שם סוכנות', 'error'); return; }
+  if (!name) { toast('נא למלא שם סוכנות', 'error'); return; }
 
   const { error } = await sb.rpc('admin_save_account', {
     p_id:    id    || null,
@@ -1419,7 +1419,7 @@ function openAddInvoice() {
   document.getElementById('inv-status').value = 'pending';
   document.getElementById('inv-notes').value  = '';
   document.getElementById('inv-date').value   = new Date().toISOString().slice(0,10);
-  document.getElementById('modal-invoice-title').textContent = 'הוסף חשבונית';
+  document.getElementById('modal-invoice-title').textContent = 'הוספת חשבונית';
   // Populate tenant dropdown
   const sel = document.getElementById('inv-tenant');
   sel.innerHTML = allAccounts.map(a => `<option value="${esc(a.id)}">${esc(a.name||a.billing_email||a.id)}</option>`).join('');
@@ -1447,7 +1447,7 @@ async function saveInvoice() {
   const status   = document.getElementById('inv-status').value;
   const notes    = document.getElementById('inv-notes').value.trim();
 
-  if (!tenantId) { toast('נא בחר לקוח', 'error'); return; }
+  if (!tenantId) { toast('יש לבחור לקוח', 'error'); return; }
   if (amount < 0 || amount > 1e7) { toast('סכום לא תקין (0 – 10,000,000)', 'error'); return; }
 
   const { error } = await sb.rpc('admin_save_invoice', {
@@ -1534,7 +1534,7 @@ function renderSaasTable(tenants) {
         <td style="font-size:.78rem;color:var(--text-dim);white-space:nowrap;">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') + '<br>' + new Date(t.created_at).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '–'}</td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon" title="פתח CRM" onclick="window.open('https://plto.app/','_blank')" style="font-size:.75rem;">↗</button>
+            <button class="btn-icon" title="פתיחת CRM" onclick="window.open('https://plto.app/','_blank')" style="font-size:.75rem;">⧉</button>
             <button class="btn-icon" title="ניהול לקוח" onclick="openTenantMgmt('${t.id}')" style="font-size:.75rem;color:var(--blue);">⚙</button>
             ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענק גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
             ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזר לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">↩</button>` : ''}
@@ -1703,13 +1703,13 @@ function renderSupportTable(tickets) {
       <td>
         <div class="action-btns">
           <button class="btn-icon" title="ענה" onclick="openSupportReply('${t.id}')" style="color:var(--blue);font-size:.8rem;">✉️ ענה</button>
-          ${t.status !== 'resolved' ? `<button class="btn-icon" title="סמן כטופל" onclick="resolveSupportTicket('${t.id}')" style="color:var(--green);font-size:.8rem;">✔</button>` : ''}
+          ${t.status !== 'resolved' ? `<button class="btn-icon" title="סימון כטופל" onclick="resolveSupportTicket('${t.id}')" style="color:var(--green);font-size:.8rem;">✔</button>` : ''}
         </div>
       </td>
     </tr>`).join('');
 }
 
-const SUPPORT_ROLE_LABEL = { assistant: '🤖 AI', admin: '👤 אתה' };
+const SUPPORT_ROLE_LABEL = { assistant: '🤖 AI', admin: '👤 הצוות' };
 
 function openSupportReply(ticketId) {
   const t = allSupportTickets.find(x => x.id === ticketId);
@@ -1812,7 +1812,7 @@ function openAddRoadmapItem() {
   document.getElementById('rm-source').value = 'internal';
   document.getElementById('rm-order').value = '0';
   document.getElementById('rm-published').checked = true;
-  document.getElementById('modal-roadmap-item-title').textContent = 'הוסף פריט';
+  document.getElementById('modal-roadmap-item-title').textContent = 'הוספת פריט';
   openModal('modal-roadmap-item');
 }
 
@@ -1833,7 +1833,7 @@ function openEditRoadmapItem(id) {
 async function saveRoadmapItem() {
   const id = document.getElementById('rm-id').value;
   const title = document.getElementById('rm-title').value.trim();
-  if (!title) { toast('נא מלא כותרת', 'error'); return; }
+  if (!title) { toast('נא למלא כותרת', 'error'); return; }
 
   const { error } = await sb.rpc('admin_save_roadmap_item', {
     p_id:           id || null,
@@ -1965,7 +1965,7 @@ const AdminCRO = {
       { label: 'הרשמות הושלמו',   val: d.signup_completed,      icon: '✅' },
       { label: 'סיימו אונבורדינג',val: d.onboarding_done,       icon: '🎯' },
       { label: 'ביטאו עניין שדרוג',val: d.upgrade_intents,      icon: '💎' },
-      { label: 'Demo→הרשמה',      val: d.demo_to_signup,        icon: '🚀' },
+      { label: 'Demo להרשמה',     val: d.demo_to_signup,        icon: '🚀' },
     ];
     funnelEl.innerHTML = steps.map((s, i) => {
       const prev = i > 0 ? steps[i - 1].val : null;
@@ -2030,7 +2030,7 @@ const AdminCRO = {
           <button class="btn-outline btn-sm" onclick="AdminCRO.openAbModal(${JSON.stringify(t)})">עריכה</button>
         </div>`).join('');
     } else if (backlog) {
-      backlog.innerHTML = '<div style="color:var(--text-dim);font-size:.85rem;padding:12px 0;">אין ניסויים בתור — הוסף ניסוי חדש כדי לתכנן את הניסוי הבא</div>';
+      backlog.innerHTML = '<div style="color:var(--text-dim);font-size:.85rem;padding:12px 0;">אין ניסויים בתור — הוספת ניסוי חדש כדי לתכנן את הניסוי הבא</div>';
     }
   },
 

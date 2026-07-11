@@ -4518,7 +4518,7 @@
         <span class="nav-icon">🏆</span> <span style="background:linear-gradient(135deg,#D97706,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">חנות XP</span>
       </a>
       <a class="nav-item" id="nav-referral" data-screen="referral" onclick="App.go('referral');document.querySelector('.nav-new-badge')?.remove();" style="background:linear-gradient(135deg,rgba(22,163,74,0.12),rgba(16,185,129,0.06));border:1px solid rgba(22,163,74,0.22);border-radius:8px;margin-top:4px;">
-        <span class="nav-icon">🎁</span> <span style="background:linear-gradient(135deg,#15803d,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">הזמן חבר</span><span class="nav-new-badge" id="nav-ref-badge">חדש</span>
+        <span class="nav-icon">🎁</span> <span style="background:linear-gradient(135deg,#15803d,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">הזמנת חבר</span><span class="nav-new-badge" id="nav-ref-badge">חדש</span>
       </a>
       <a class="nav-item" data-screen="email" onclick="App.go('email')" style="background:linear-gradient(135deg,rgba(37,99,235,0.10),rgba(30,58,95,0.06));border:1px solid rgba(37,99,235,0.18);border-radius:8px;margin-top:4px;">
         <span class="nav-icon">📧</span> <span style="background:linear-gradient(135deg,#1E40AF,#2563EB);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;">תיבת דואר</span>
@@ -4703,15 +4703,15 @@
         <div id="gamify-activation-gate" style="display:none;text-align:center;padding:4px 0 8px;">
           <div style="font-size:38px;margin-bottom:8px;">📊</div>
           <div style="font-weight:800;font-size:16px;color:#fff;margin-bottom:6px;">הביצועים שלך מחכים לך</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:14px;line-height:1.6;">הוסף לפחות <strong>5 לידים</strong> כדי לראות<br>את הסטטיסטיקות שלך</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:14px;line-height:1.6;">הוספת <strong>5 לידים</strong> לפחות תציג<br>את הסטטיסטיקות שלך</div>
           <div style="background:rgba(255,255,255,.18);border-radius:99px;height:10px;margin-bottom:6px;overflow:hidden;">
             <div id="gamify-act-bar" style="background:var(--gold-400);height:10px;border-radius:99px;width:0%;transition:width 0.5s;"></div>
           </div>
           <div id="gamify-act-count" style="font-size:12px;color:rgba(255,255,255,.65);margin-bottom:16px;">0/5 לידים</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            <button class="btn btn-primary" style="font-size:14px;font-weight:700;" onclick="openModal('modal-add-lead')">➕ הוסף ליד ידנית</button>
+            <button class="btn btn-primary" style="font-size:14px;font-weight:700;" onclick="openModal('modal-add-lead')">➕ הוספת ליד ידנית</button>
             <button class="btn btn-ghost" style="font-size:14px;font-weight:700;color:#fff;border-color:rgba(255,255,255,.4);" onclick="LeadImport.open()">📋 ייבוא מאקסל / CSV</button>
-            <button class="btn btn-ghost" style="font-size:14px;font-weight:700;color:#fff;border-color:rgba(255,255,255,.4);" onclick="App.go('settings')">🔗 חבר טופס לידים אוטומטי</button>
+            <button class="btn btn-ghost" style="font-size:14px;font-weight:700;color:#fff;border-color:rgba(255,255,255,.4);" onclick="App.go('settings')">🔗 חיבור טופס לידים אוטומטי</button>
           </div>
         </div>
         <!-- ── Regular gamify content: shown when 5+ leads ── -->
@@ -4740,7 +4740,7 @@
           <!-- Prizes showcase -->
           <div class="gamify-prizes-title" style="display:flex;align-items:center;justify-content:space-between;">
             <span>🎁 פרסים שמחכים לך</span>
-            <span onclick="App.go('xp-store')" style="font-size:10px;color:rgba(255,255,255,.55);cursor:pointer;font-weight:600;">ראה הכל ←</span>
+            <span onclick="App.go('xp-store')" style="font-size:10px;color:rgba(255,255,255,.55);cursor:pointer;font-weight:600;">ראה הכל</span>
           </div>
           <div class="gamify-prizes-grid" id="gamify-prizes-grid"></div>
           <div class="gamify-stats">
@@ -4808,7 +4808,7 @@
             עדיין אין לך לידים במערכת, זה הזמן להוסיף את הראשון, או לייבא רשימה קיימת בלחיצה אחת.
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            <button class="btn btn-primary" onclick="openModal('modal-add-lead')">➕ הוסף ליד ראשון</button>
+            <button class="btn btn-primary" onclick="openModal('modal-add-lead')">➕ הוספת ליד ראשון</button>
             <button class="btn btn-ghost" onclick="LeadImport.open()">📋 ייבוא רשימת לידים מקובץ</button>
           </div>
           <div style="margin-top:18px; display:flex; flex-direction:column; gap:8px; text-align:right;">
@@ -4846,7 +4846,7 @@
           <span style="font-size:28px;">📋</span>
           <div>
             <div class="dash-import-banner-title">יש לך רשימת לידים?</div>
-            <div class="dash-import-banner-sub">ייבא ישירות מ-Excel / CSV / יד2</div>
+            <div class="dash-import-banner-sub">ייבוא ישירות מ-Excel / CSV / יד2</div>
           </div>
         </div>
         <button class="btn btn-primary w-full" onclick="LeadImport.open()" style="padding:11px;">
@@ -4882,7 +4882,7 @@
       <div class="screen-header">
         <div class="screen-title" id="screen-pipeline-title">📋 פייפליין לידים</div>
         <div class="flex gap-2">
-          <button class="btn btn-ghost btn-sm" onclick="Settings.openPipelineStages()" title="ערוך שמות שלבים">✏️ שלבים</button>
+          <button class="btn btn-ghost btn-sm" onclick="Settings.openPipelineStages()" title="עריכת שמות שלבים">✏️ שלבים</button>
           <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 ייבוא</button>
           <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')">+ ליד</button>
         </div>
@@ -4894,7 +4894,7 @@
         <button id="pipeline-search-clear"
           style="display:none;position:absolute;left:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;color:var(--gray-400);cursor:pointer;width:24px;height:24px;align-items:center;justify-content:center;"
           onclick="document.getElementById('pipeline-search-input').value='';Pipeline.search('');this.style.display='none';"
-          title="נקה חיפוש">×</button>
+          title="ניקוי חיפוש">×</button>
       </div>
       <div class="pipeline-stage-tabs" id="pipeline-stage-tabs"></div>
       <div class="role-filter-pills" id="pipeline-role-filter"></div>
@@ -5051,7 +5051,7 @@
             <div class="tool-card-icon tool-icon-green">💬</div>
             <div>
               <div class="tool-card-title">תבניות WhatsApp מהירות</div>
-              <div class="tool-card-sub">הודעות מוכנות לכל שלב, העתק ושלח</div>
+              <div class="tool-card-sub">הודעות מוכנות לכל שלב, להעתקה ושליחה</div>
             </div>
           </div>
           <div class="tool-card-body">
@@ -5079,7 +5079,7 @@
             <div class="wa-template-preview" id="wa-preview"></div>
             <div class="tool-actions" id="wa-actions" style="display:none;">
               <button class="tool-btn-copy" onclick="Tools.copyWa()">📋 העתק</button>
-              <a id="wa-send-link" href="#" target="_blank" style="font-size:12px;padding:6px 14px;border-radius:8px;background:#25d366;color:white;font-weight:700;text-decoration:none;display:inline-block;">📱 פתח WhatsApp</a>
+              <a id="wa-send-link" href="#" target="_blank" style="font-size:12px;padding:6px 14px;border-radius:8px;background:#25d366;color:white;font-weight:700;text-decoration:none;display:inline-block;">📱 פתיחת WhatsApp</a>
             </div>
             <div class="spam-law-notice">
               <span class="sln-icon">⚖️</span>
@@ -5209,11 +5209,11 @@
             <div class="tool-card-icon" style="background:#EFF6FF;">🧮</div>
             <div>
               <div class="tool-card-title">מחשבון משכנתא</div>
-              <div class="tool-card-sub">חשב תשלום חודשי ושתף לקוח ב-WhatsApp</div>
+              <div class="tool-card-sub">חישוב תשלום חודשי ושיתוף עם לקוח ב-WhatsApp</div>
             </div>
           </div>
           <div class="tool-card-body" style="display:flex;align-items:center;justify-content:center;padding:8px 0;">
-            <button class="btn btn-primary btn-sm" onclick="MortgageCalc.open()">🧮 פתח מחשבון</button>
+            <button class="btn btn-primary btn-sm" onclick="MortgageCalc.open()">🧮 פתיחת מחשבון</button>
           </div>
         </div>
 
@@ -5260,9 +5260,9 @@
           כל אחד מהשלושה יכול להפנות לשניים האחרים — בשני הכיוונים:
         </div>
         <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:rgba(255,255,255,0.72);">
-          <div>🏠 <strong style="color:#fff;">סוכן נדל"ן</strong> → מפנה לעו"ד לחתימה, ולמעצב אחרי הסגירה</div>
-          <div>⚖️ <strong style="color:#fff;">עו"ד נדל"ן</strong> → מפנה לסוכן מי שרוצה לקנות/למכור</div>
-          <div>🎨 <strong style="color:#fff;">עיצוב פנים</strong> → מפנה לסוכן מי שרוצה לקנות דירה</div>
+          <div>🏠 <strong style="color:#fff;">סוכן נדל"ן</strong>, מפנה לעו"ד לחתימה, ולמעצב אחרי הסגירה</div>
+          <div>⚖️ <strong style="color:#fff;">עו"ד נדל"ן</strong>, מפנה לסוכן מי שרוצה לקנות/למכור</div>
+          <div>🎨 <strong style="color:#fff;">עיצוב פנים</strong>, מפנה לסוכן מי שרוצה לקנות דירה</div>
         </div>
         <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.55);">כל הפניה מגובה בעמלה וחתימה דיגיטלית — הכל בתוך המערכת.</div>
       </div>
@@ -5280,7 +5280,7 @@
           <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
             <div style="font-size:40px;margin-bottom:12px;">📤</div>
             <div style="font-size:14px;">עדיין לא שיתפת לידים</div>
-            <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחיצה על "שתף עם שותף"</div>
+            <div style="font-size:12px;margin-top:4px;">פתיחת כרטיס ליד ולחיצה על "שתף עם שותף"</div>
           </div>
         </div>
       </div>
@@ -5355,7 +5355,7 @@
         <!-- Input -->
         <div class="chat-input-row">
           <button class="chat-send-btn" onclick="Partners.sendMessage()">➤</button>
-          <input class="chat-input" id="chat-msg-input" placeholder="כתוב הודעה לשותף..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();Partners.sendMessage();}">
+          <input class="chat-input" id="chat-msg-input" placeholder="הודעה לשותף..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();Partners.sendMessage();}">
         </div>
       </div>
     </div>
@@ -5379,7 +5379,6 @@
           <div style="font-weight:800;font-size:13.5px;color:var(--navy-500);">מה אנחנו בונים עכשיו</div>
           <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">רשימת פיצ'רים בתהליך פיתוח, כולל רעיונות ממשתמשים</div>
         </div>
-        <div style="color:var(--navy-300);font-size:18px;">←</div>
       </div>
 
       <!-- AI ובינה מלאכותית -->
@@ -5413,7 +5412,7 @@
           <div class="pro-card-icon pci-orange">⚡</div>
           <div class="pro-card-info">
             <div class="pro-card-title">אוטומציה חכמה</div>
-            <div class="pro-card-sub">העבר לידים שלב אוטומטית לפי כללים</div>
+            <div class="pro-card-sub">העברת לידים שלב אוטומטית לפי כללים</div>
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
@@ -5426,7 +5425,7 @@
           <div class="pro-card-icon pci-green">📢</div>
           <div class="pro-card-info">
             <div class="pro-card-title">שידור WhatsApp</div>
-            <div class="pro-card-sub">שלח הודעה לכל הלידים בשלב אחד</div>
+            <div class="pro-card-sub">שליחת הודעה לכל הלידים בשלב אחד</div>
           </div>
           <div class="pro-chip pro-chip-ai">AI</div>
         </div>
@@ -5434,7 +5433,7 @@
           <div class="pro-card-icon pci-blue">📧</div>
           <div class="pro-card-info">
             <div class="pro-card-title">קמפיין אימייל</div>
-            <div class="pro-card-sub">שלח אימייל מקצועי לרשימת לידים</div>
+            <div class="pro-card-sub">שליחת אימייל מקצועי לרשימת לידים</div>
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
@@ -5442,7 +5441,7 @@
           <div class="pro-card-icon pci-gold">📄</div>
           <div class="pro-card-info">
             <div class="pro-card-title">הצעת מחיר PDF</div>
-            <div class="pro-card-sub">יצא הצעת מחיר מעוצבת ב-PDF</div>
+            <div class="pro-card-sub">ייצוא הצעת מחיר מעוצבת ב-PDF</div>
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
@@ -5450,7 +5449,7 @@
           <div class="pro-card-icon pci-teal">💾</div>
           <div class="pro-card-info">
             <div class="pro-card-title">תבניות שמורות</div>
-            <div class="pro-card-sub">שמור הודעות WA מותאמות אישית</div>
+            <div class="pro-card-sub">שמירת הודעות WA מותאמות אישית</div>
           </div>
           <div class="pro-chip pro-chip-free">חינם</div>
         </div>
@@ -5463,7 +5462,7 @@
           <div class="pro-card-icon pci-green">📊</div>
           <div class="pro-card-info">
             <div class="pro-card-title">ייצוא לאקסל / CSV</div>
-            <div class="pro-card-sub">הורד את כל הלידים שלך לקובץ</div>
+            <div class="pro-card-sub">הורדת כל הלידים שלך לקובץ</div>
           </div>
           <div class="pro-chip pro-chip-free">חינם</div>
         </div>
@@ -5487,7 +5486,7 @@
           <div class="pro-card-icon pci-teal">✍️</div>
           <div class="pro-card-info">
             <div class="pro-card-title">חתימה דיגיטלית</div>
-            <div class="pro-card-sub">שלח חוזים לחתימה אלקטרונית</div>
+            <div class="pro-card-sub">שליחת חוזים לחתימה אלקטרונית</div>
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
@@ -5516,7 +5515,7 @@
           <div class="pro-card-icon pci-gold">⭐</div>
           <div class="pro-card-info">
             <div class="pro-card-title">ביקורות לקוחות</div>
-            <div class="pro-card-sub">אסוף ביקורות אוטומטית אחרי עסקה</div>
+            <div class="pro-card-sub">איסוף ביקורות אוטומטית אחרי עסקה</div>
           </div>
           <div class="pro-chip pro-chip-pro">PRO</div>
         </div>
@@ -5586,7 +5585,7 @@
         </div>
         <div class="ref-share-row">
           <button class="ref-btn-wa" onclick="Referral.shareWhatsApp()">
-            <span>📲</span> שלח בוואטסאפ
+            <span>📲</span> שליחה בוואטסאפ
           </button>
           <button class="ref-btn-copy" onclick="Referral.copyLink()">🔗 העתק קישור</button>
         </div>
@@ -5635,7 +5634,7 @@
       <!-- Top bar -->
       <div class="inbox-topbar">
         <div class="inbox-topbar-title">📧 תיבת דואר</div>
-        <button class="inbox-compose-btn" onclick="GmailInbox.compose()">✏️ כתוב מייל</button>
+        <button class="inbox-compose-btn" onclick="GmailInbox.compose()">✏️ כתיבת מייל</button>
       </div>
 
       <!-- Filter tabs -->
@@ -5666,8 +5665,8 @@
       <div id="inbox-thread-messages"></div>
       <div class="inbox-reply-area">
         <div class="inbox-reply-to-hint" id="inbox-reply-to-hint"></div>
-        <textarea id="inbox-reply-input" class="inbox-reply-input" placeholder="כתוב תשובה..."></textarea>
-        <button class="inbox-send-btn" onclick="GmailInbox.sendReply()">📤 שלח תשובה</button>
+        <textarea id="inbox-reply-input" class="inbox-reply-input" placeholder="תשובה..."></textarea>
+        <button class="inbox-send-btn" onclick="GmailInbox.sendReply()">📤 שליחת תשובה</button>
       </div>
     </div>
   </div>
@@ -5692,7 +5691,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">תוכן</label>
-        <textarea id="compose-body" class="compose-body-input" placeholder="כתוב את המייל..."></textarea>
+        <textarea id="compose-body" class="compose-body-input" placeholder="תוכן המייל..."></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('modal-inbox-compose')">ביטול</button>
@@ -5767,13 +5766,13 @@
             </p>
           </div>
           <div class="form-group">
-            <label class="form-label">בחר PIN לשיתוף (4–6 ספרות)</label>
+            <label class="form-label">בחירת PIN לשיתוף (4–6 ספרות)</label>
             <input type="tel" id="share-pin-input" class="form-input" placeholder="1234"
               style="direction:ltr;font-size:26px;letter-spacing:8px;text-align:center;font-weight:700;"
               maxlength="6" inputmode="numeric" pattern="[0-9]*">
           </div>
           <div style="font-size:12px;color:var(--gray-400);text-align:center;margin-top:-8px;">
-            שלח את ה-PIN לשותף בנפרד דרך WhatsApp, טלפון, או כל ערוץ אחר
+            יש לשלוח את ה-PIN לשותף בנפרד דרך WhatsApp, טלפון, או כל ערוץ אחר
           </div>
         </div>
         <!-- Step 2: Show code -->
@@ -5816,7 +5815,7 @@
           <div class="form-group">
             <label class="form-label">למי מפנים?</label>
             <select id="lref-vertical" class="form-input" onchange="LeadReferral.onVerticalChange()">
-              <option value="">בחר תחום...</option>
+              <option value="">בחירת תחום...</option>
               <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
               <option value="interior">🎨 עיצוב פנים</option>
               <option value="realestate">🏠 סוכן נדל"ן</option>
@@ -5855,7 +5854,7 @@
             <label class="form-label" id="lref-commission-value-label">אחוז</label>
             <input type="number" id="lref-commission-value" class="form-input" min="0" step="0.1" placeholder="לדוגמה: 10">
             <div id="lref-commission-hint" style="font-size:11.5px;color:var(--gray-500);margin-top:4px;">
-              🔒 כשיש עמלה, הקולגה חייב לחתום דיגיטלית על הסכם עמלה קצר לפני שהליד נחשף אליו.
+              🔒 כשיש עמלה, נדרשת חתימה דיגיטלית של הקולגה על הסכם עמלה קצר לפני שהליד נחשף אליו.
             </div>
           </div>
           <div class="form-group">
@@ -5866,7 +5865,7 @@
             </label>
             <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;">
               <input type="radio" name="lref-consent-mode" id="lref-consent-formal" value="formal" onchange="LeadReferral.toggleConsentMode()">
-              📨 שלח ללקוח קישור לאישור מפורש (מומלץ כשיש עמלה)
+              📨 שליחת קישור ללקוח לאישור מפורש (מומלץ כשיש עמלה)
             </label>
           </div>
         </div>
@@ -5934,7 +5933,7 @@
           <div style="border:1px solid var(--gray-300);border-radius:10px;overflow:hidden;background:#fff;touch-action:none;">
             <canvas id="ragr-signature-canvas" width="400" height="140" style="width:100%;height:140px;display:block;cursor:crosshair;"></canvas>
           </div>
-          <button type="button" class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:12.5px;" onclick="SignaturePad.clear()">🗑️ נקה חתימה</button>
+          <button type="button" class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:12.5px;" onclick="SignaturePad.clear()">🗑️ ניקוי חתימה</button>
         </div>
         <div style="font-size:11px;color:var(--gray-400);line-height:1.5;">
           החתימה מהווה אישור מחייב להסכם שלעיל. מועד החתימה, שמך וכתובת ה-IP נשמרים כראיה.
@@ -5942,7 +5941,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" style="flex:1;" onclick="LeadReferral.declineAgreement()">דחה הפניה</button>
-        <button id="ragr-btn-sign" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.signAgreement()">✅ חתום וקבל את הליד</button>
+        <button id="ragr-btn-sign" class="btn btn-primary" style="flex:2;" onclick="LeadReferral.signAgreement()">✅ חתימה וקבלת הליד</button>
       </div>
     </div>
   </div>
@@ -6043,7 +6042,7 @@
       </div>
       <div class="modal-body">
         <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:#1E40AF;line-height:1.5;">
-          🔒 תוכל לראות רק את הליד הספציפי שהשותף בחר לשתף, אין גישה לשום נתון אחר שלו.
+          🔒 ניתן לראות רק את הליד הספציפי שהשותף בחר לשתף, אין גישה לשום נתון אחר שלו.
         </div>
         <div class="form-group">
           <label class="form-label">קוד שיתוף (8 תווים)</label>
@@ -6069,7 +6068,7 @@
   <button class="fab" id="fab-btn" onclick="fabAction()" title="ליד חדש">+</button>
 
   <!-- Support FAB - hidden until logged in -->
-  <button class="support-fab hidden" id="support-fab-btn" onclick="Support.open()" title="שלח פנייה לתמיכה">
+  <button class="support-fab hidden" id="support-fab-btn" onclick="Support.open()" title="שליחת פנייה לתמיכה">
     💬
   </button>
 
@@ -6173,7 +6172,7 @@
     <div class="milestone-prize-name" id="milestone-prize-name">פרס</div>
     <div class="milestone-prize-desc" id="milestone-prize-desc"></div>
     <button class="milestone-claim-btn" onclick="Gamify.claimMilestone()">🎁 מימוש הפרס</button>
-    <button class="milestone-save-btn" onclick="Gamify.saveForBetter()">🎯 שמור לפרס שווה יותר</button>
+    <button class="milestone-save-btn" onclick="Gamify.saveForBetter()">🎯 שמירה לפרס שווה יותר</button>
     <div class="milestone-save-note" id="milestone-save-note"></div>
     <button class="milestone-close-btn" onclick="Gamify.closeMilestone()">בהמשך</button>
   </div>
@@ -6194,7 +6193,7 @@
       <div style="margin-bottom:14px;">
         <div style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
           <span>🚧 כבר בתהליך בנייה</span>
-          <span onclick="Roadmap.open()" style="color:var(--blue-500);cursor:pointer;font-weight:600;">לרשימה המלאה ←</span>
+          <span onclick="Roadmap.open()" style="color:var(--blue-500);cursor:pointer;font-weight:600;">לרשימה המלאה</span>
         </div>
         <div id="idea-roadmap-list" style="max-height:120px;overflow-y:auto;"></div>
       </div>
@@ -6212,7 +6211,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-idea-box')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="IdeaBox.submit()">💡 שלח רעיון</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="IdeaBox.submit()">💡 שליחת רעיון</button>
     </div>
   </div>
 </div>
@@ -6244,24 +6243,24 @@
     <div style="padding:0 20px 16px;">
       <div id="team-seats-summary"></div>
       <div id="team-invite-form" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
-        <label class="form-label">הזמן סוכן חדש</label>
+        <label class="form-label">הזמנת סוכן חדש</label>
         <input type="email" id="team-invite-email" class="form-input" placeholder="email@example.com" style="direction:ltr;margin-bottom:8px;">
         <select id="team-invite-role" class="form-input" style="margin-bottom:10px;">
           <option value="agent">סוכן</option>
           <option value="admin">אדמין</option>
           <option value="viewer">צופה</option>
         </select>
-        <button class="btn btn-primary btn-sm" style="width:100%;" onclick="Team.invite()">📨 שלח הזמנה</button>
+        <button class="btn btn-primary btn-sm" style="width:100%;" onclick="Team.invite()">📨 שליחת הזמנה</button>
         <div id="team-invite-link-section" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
           <div style="font-size:11.5px;color:var(--gray-500);margin-bottom:7px;text-align:center;">— או שתף קישור גיוס ישירות —</div>
-          <button id="team-invite-link-btn" class="btn btn-ghost btn-sm" style="width:100%;font-size:12px;" onclick="Team.generateInviteLink()">🔗 צור קישור גיוס לסוכן חדש</button>
+          <button id="team-invite-link-btn" class="btn btn-ghost btn-sm" style="width:100%;font-size:12px;" onclick="Team.generateInviteLink()">🔗 יצירת קישור גיוס לסוכן חדש</button>
           <div id="team-invite-link-locked" style="display:none;font-size:11.5px;color:var(--gray-400);text-align:center;padding:6px 0;"></div>
           <div id="team-invite-link-result" style="display:none;margin-top:10px;background:var(--gray-50);border-radius:10px;padding:10px 12px;">
             <div style="font-size:11px;color:var(--gray-500);margin-bottom:6px;">קישור גיוס (תוקף 30 יום, שימוש חד-פעמי):</div>
             <div id="team-invite-link-url" style="font-size:11px;color:var(--blue-600);word-break:break-all;margin-bottom:8px;direction:ltr;text-align:left;background:#fff;border-radius:6px;padding:6px 8px;border:1px solid var(--border);"></div>
             <div style="display:flex;gap:8px;">
               <button class="btn btn-ghost btn-sm" style="flex:1;font-size:11px;" onclick="Team.copyInviteLink()">📋 העתק</button>
-              <button class="btn btn-ghost btn-sm" style="flex:1;font-size:11px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;" onclick="Team.shareInviteLinkWA()">💬 שלח WhatsApp</button>
+              <button class="btn btn-ghost btn-sm" style="flex:1;font-size:11px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;" onclick="Team.shareInviteLinkWA()">💬 שליחה ב-WhatsApp</button>
             </div>
           </div>
         </div>
@@ -6362,9 +6361,9 @@
     <div style="text-align:center;margin-bottom:6px;font-size:22px;">⚠️</div>
     <div style="text-align:center;font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px;">לא שמרת את הפרטים</div>
     <div style="text-align:center;font-size:13px;color:var(--gray-500);margin-bottom:20px;">הפרטים שהקלדת יימחקו לגמרי אם תצא עכשיו</div>
-    <button class="call-result-btn" style="background:#DCFCE7;color:#166534;font-size:15px;" onclick="addLead()">💾 &nbsp;שמור ליד עכשיו</button>
+    <button class="call-result-btn" style="background:#DCFCE7;color:#166534;font-size:15px;" onclick="addLead()">💾 &nbsp;שמירת ליד עכשיו</button>
     <button class="call-result-btn" style="background:#DBEAFE;color:#1D4ED8;font-size:15px;" onclick="closeDiscardSheet()">חזור לטופס</button>
-    <button class="call-result-btn" style="background:#FEE2E2;color:#991B1B;font-size:15px;" onclick="discardAndClose()">🗑 &nbsp;מחק ויצא בלי לשמור</button>
+    <button class="call-result-btn" style="background:#FEE2E2;color:#991B1B;font-size:15px;" onclick="discardAndClose()">🗑 &nbsp;מחיקה ויציאה בלי שמירה</button>
   </div>
 </div>
 
@@ -6387,7 +6386,7 @@
         placeholder="מה הבעיה? פרטים נוספים יעזרו לטפל מהר יותר..."
         style="width:100%;height:96px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
         onfocus="this.style.borderColor='var(--blue-400)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-      <button id="support-submit-btn" onclick="Support.submit()" class="btn btn-primary" style="width:100%;margin-top:10px;">🚀 שלח לתמיכה</button>
+      <button id="support-submit-btn" onclick="Support.submit()" class="btn btn-primary" style="width:100%;margin-top:10px;">🚀 שליחה לתמיכה</button>
       <div id="support-ai-quota" style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:6px;"></div>
       <div id="support-ai-response" class="hidden"></div>
 
@@ -6405,7 +6404,7 @@
     <div style="background:linear-gradient(135deg,#0F1F3D,#1a3a6a);padding:18px 16px 14px;display:flex;justify-content:space-between;align-items:center;">
       <div>
         <div style="font-size:16px;font-weight:800;color:#fff;">⚡ יומן מהיר AI</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;">כתוב בחופשיות, AI יסדר ויכניס לליד</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;">כתיבה חופשית, AI יסדר ויכניס לליד</div>
       </div>
       <button onclick="closeModal('modal-quicklog')" style="background:rgba(255,255,255,.15);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
@@ -6413,7 +6412,7 @@
 
       <!-- State: input -->
       <div id="ql-state-input">
-        <p style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">כתוב מה היה בשיחה/פגישה, שם הלקוח, מה דיברתם, עדכונים חשובים. AI יסדר ויכניס לליד הנכון.</p>
+        <p style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">תיאור קצר של מה שהיה בשיחה/פגישה, שם הלקוח, מה דיברתם, עדכונים חשובים. AI יסדר ויכניס לליד הנכון.</p>
         <textarea id="ql-input"
           placeholder='לדוגמה: "שוחחתי עם אבי לוי, הצעתי לו נכסים לפי האיזור שביקש. מוכן להעלות טיפה בתקציב אם תבוא עסקה טובה..."'
           style="width:100%;height:128px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
@@ -6450,7 +6449,7 @@
 
         <div style="display:flex;gap:8px;margin-top:4px;">
           <button onclick="QuickLog._resetToInput()" class="btn btn-ghost" style="flex:1;font-size:13px;">✏️ ערוך</button>
-          <button onclick="QuickLog.confirm()" class="btn btn-primary" style="flex:2;font-size:13px;">✅ אישור, שמור בליד</button>
+          <button onclick="QuickLog.confirm()" class="btn btn-primary" style="flex:2;font-size:13px;">✅ אישור ושמירה בליד</button>
         </div>
       </div>
 
@@ -6463,9 +6462,9 @@
         <div id="ql-meeting-actions" class="hidden" style="margin-top:16px;border:1px solid var(--blue-200);border-radius:var(--radius-md);padding:12px;text-align:right;background:var(--blue-50);">
           <div style="font-size:11px;font-weight:700;color:var(--blue-600);margin-bottom:8px;">📅 פגישה זוהתה, פעולות מהירות</div>
           <a id="ql-gcal-btn" href="#" target="_blank" rel="noopener"
-             class="btn btn-outline" style="font-size:13px;text-decoration:none;display:block;margin-bottom:6px;">📅 הוסף ל-Google Calendar</a>
+             class="btn btn-outline" style="font-size:13px;text-decoration:none;display:block;margin-bottom:6px;">📅 הוספה ל-Google Calendar</a>
           <a id="ql-wa-btn" href="#" target="_blank" rel="noopener"
-             style="font-size:13px;text-decoration:none;display:block;text-align:center;background:#fff;border:1.5px solid #25D366;color:#128C7E;border-radius:var(--radius-md);padding:10px;font-weight:700;">💬 שלח אישור פגישה ב-WhatsApp</a>
+             style="font-size:13px;text-decoration:none;display:block;text-align:center;background:#fff;border:1.5px solid #25D366;color:#128C7E;border-radius:var(--radius-md);padding:10px;font-weight:700;">💬 שליחת אישור פגישה ב-WhatsApp</a>
         </div>
         <button onclick="QuickLog.openNew()" class="btn btn-primary" style="margin-top:14px;width:100%;">⚡ רישום נוסף</button>
         <button onclick="closeModal('modal-quicklog')" class="btn btn-ghost" style="margin-top:8px;width:100%;font-size:13px;">סגור</button>
@@ -6500,7 +6499,7 @@
       <li>✅ סוכן חכם ותיקי נכסים</li>
       <li>✅ ייצוא נתונים וכלים מקצועיים</li>
     </ul>
-    <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:12px;">🚀 פתח חשבון ניסיון, חינם</button>
+    <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:12px;">🚀 פתיחת חשבון ניסיון, חינם</button>
     <button type="button" onclick="DemoLock.hide()" style="background:none;border:none;color:var(--gray-400);font-size:12px;cursor:pointer;padding:6px;text-decoration:underline;font-family:inherit;">המשך לסייר בדמו</button>
   </div>
 </div>
@@ -6581,7 +6580,7 @@
     </div>
     <div id="pro-bc-body" style="min-height:60px;"></div>
     <div style="margin-top:12px;">
-      <button class="btn btn-primary w-full" onclick="ProHub._bcSendAll()" style="padding:13px;">📢 שלח לכולם</button>
+      <button class="btn btn-primary w-full" onclick="ProHub._bcSendAll()" style="padding:13px;">📢 שליחה לכולם</button>
     </div>
   </div>
 </div>
@@ -6615,7 +6614,7 @@
       <div class="form-group">
         <textarea class="form-input" id="pro-tmpl-text-input" rows="3" placeholder="תוכן ההודעה... ניתן להשתמש בـ {שם}"></textarea>
       </div>
-      <button class="btn btn-primary w-full" onclick="ProHub._addTemplate()">💾 שמור תבנית</button>
+      <button class="btn btn-primary w-full" onclick="ProHub._addTemplate()">💾 שמירת תבנית</button>
     </div>
   </div>
 </div>
@@ -6635,7 +6634,7 @@
         <div style="font-size:12px;font-weight:700;color:#7C3AED;margin-bottom:6px;">✨ מה כלול בגרסה PRO</div>
         <div id="pro-locked-perks"></div>
       </div>
-      <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#7C3AED,#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתח חשבון ניסיון, חינם</button>
+      <button onclick="DemoLock.signup()" style="width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#7C3AED,#2563EB);color:white;font-size:15px;font-weight:800;border:none;cursor:pointer;margin-bottom:10px;">🚀 פתיחת חשבון ניסיון, חינם</button>
       <button onclick="closeModal('modal-pro-locked')" style="width:100%;padding:10px;border-radius:12px;background:var(--gray-100);color:var(--gray-500);font-size:13px;font-weight:600;border:none;cursor:pointer;">חזור לרשימת הפיצ'רים</button>
     </div>
   </div>
@@ -6694,7 +6693,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-mortgage')">סגור</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="MortgageCalc.shareWhatsApp()">📤 שתף ב-WhatsApp</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="MortgageCalc.shareWhatsApp()">📤 שיתוף ב-WhatsApp</button>
     </div>
   </div>
 </div>
@@ -6765,7 +6764,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="tryCloseAddLead()">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="addLead()">שמור ליד</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="addLead()">שמירת ליד</button>
     </div>
   </div>
 </div>
@@ -6802,9 +6801,9 @@
     <div class="modal-body" style="padding:16px;">
       <div style="background:var(--blue-50,#EFF6FF);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13.5px;line-height:1.9;color:var(--navy);">
         <div style="font-weight:700;margin-bottom:6px;">שלבים פשוטים:</div>
-        <div>1️⃣ פתח את הנכס של הלקוח במדלן</div>
+        <div>1️⃣ פתיחת הנכס של הלקוח במדלן</div>
         <div>2️⃣ מצא את מספר הטלפון של המוכר או הסוכן</div>
-        <div>3️⃣ העתק את המספר</div>
+        <div>3️⃣ העתקת המספר</div>
         <div>4️⃣ הדבק בשדה למטה ולחיצה על שמור</div>
       </div>
       <label class="form-label">מספר טלפון</label>
@@ -6814,7 +6813,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-madlan-phone')">ביטול</button>
-      <button class="btn btn-primary" onclick="LeadDetail.saveMadlanPhone()">💾 שמור טלפון</button>
+      <button class="btn btn-primary" onclick="LeadDetail.saveMadlanPhone()">💾 שמירת טלפון</button>
     </div>
   </div>
 </div>
@@ -6833,7 +6832,7 @@
       </div>
     </div>
     <div class="modal-footer" style="flex-direction:column;gap:8px;">
-      <button class="btn btn-primary" style="width:100%;" onclick="LeadDetail.confirmDirectWA()">כן, יש הסכמה — פתח WhatsApp</button>
+      <button class="btn btn-primary" style="width:100%;" onclick="LeadDetail.confirmDirectWA()">כן, יש הסכמה — פתיחת WhatsApp</button>
       <button class="btn btn-ghost" style="width:100%;" onclick="closeModal('modal-wa-consent')">ביטול</button>
     </div>
   </div>
@@ -6871,11 +6870,11 @@
       </p>
       <div id="pipeline-stages-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
       <button class="btn btn-ghost btn-sm" style="width:100%;border:1.5px dashed var(--gray-300);color:var(--gray-500);"
-              onclick="Settings.addPipelineStage()">+ הוסף שלב</button>
+              onclick="Settings.addPipelineStage()">+ הוספת שלב</button>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-edit-stages')">ביטול</button>
-      <button class="btn btn-primary" onclick="Settings.savePipelineStages()">💾 שמור שלבים</button>
+      <button class="btn btn-primary" onclick="Settings.savePipelineStages()">💾 שמירת שלבים</button>
     </div>
   </div>
 </div>
@@ -6914,7 +6913,7 @@
     </div>
     <div id="regression-xp-preview" style="font-size:0.85rem; color:#ef4444; font-weight:600; margin-top:8px; min-height:20px;"></div>
     <div style="margin-top:16px; display:flex; gap:10px;">
-      <button class="btn btn-danger" onclick="confirmLeadRegression()" style="flex:1;">אשר החזרה</button>
+      <button class="btn btn-danger" onclick="confirmLeadRegression()" style="flex:1;">אישור החזרה</button>
       <button class="btn btn-secondary" onclick="closeModal('modal-regression-note')" style="flex:1;">ביטול</button>
     </div>
   </div>
@@ -6931,10 +6930,10 @@
       <button class="modal-close" onclick="closeModal('modal-mktg-consent')">×</button>
     </div>
     <div style="background:var(--blue-100);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:14px;font-size:0.88rem;color:var(--gray-800);line-height:1.6;">
-      לפני שתתחיל ליצור תוכן שיווקי, חשוב שתדע:
+      לפני יצירת תוכן שיווקי, חשוב לדעת:
     </div>
     <ul style="font-size:0.88rem;line-height:2.1;color:var(--gray-700);padding-right:18px;margin:0 0 14px;">
-      <li>📁 כל התוכן שתצור <strong>שייך ושמור בלעדית</strong> במערכת PLTO</li>
+      <li>📁 כל התוכן שנוצר <strong>שייך ושמור בלעדית</strong> במערכת PLTO</li>
       <li>🏷️ בכל תוכן שנוצר תופיע <strong>חותמת שיווקית</strong> של PLTO</li>
       <li>🚫 לא ניתן לייצא תוכן למערכות אחרות</li>
       <li>⏳ אם המנוי יסתיים, הנתונים נשמרים <strong>30 יום נוספים</strong> ואז נמחקים</li>
@@ -6991,7 +6990,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-task')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="addTask()">שמור משימה</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="addTask()">שמירת משימה</button>
     </div>
   </div>
 </div>
@@ -7042,7 +7041,7 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">📝 הוסף פעילות</div>
+      <div class="modal-title">📝 הוספת פעילות</div>
       <button class="modal-close" onclick="closeModal('modal-add-activity')">×</button>
     </div>
     <div style="display:flex; flex-direction:column; gap:14px;">
@@ -7064,7 +7063,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-activity')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="addActivity()">שמור פעילות</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="addActivity()">שמירת פעילות</button>
     </div>
   </div>
 </div>
@@ -7152,7 +7151,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-edit-lead')">ביטול</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="saveEditLead()">שמור שינויים</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveEditLead()">שמירת שינויים</button>
     </div>
   </div>
 </div>
@@ -7232,7 +7231,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-property')">ביטול</button>
-      <button class="btn btn-primary" id="new-prop-save-btn" style="flex:1;" onclick="addProperty()">שמור נכס</button>
+      <button class="btn btn-primary" id="new-prop-save-btn" style="flex:1;" onclick="addProperty()">שמירת נכס</button>
     </div>
   </div>
 </div>
@@ -7311,9 +7310,9 @@
     <div class="modal-footer" style="flex-direction:column; gap:8px;">
       <div style="display:flex; gap:8px; width:100%;">
         <button class="btn btn-ghost" onclick="closeModal('modal-edit-property')">ביטול</button>
-        <button id="edit-prop-save-btn" class="btn btn-primary" style="flex:1;" onclick="saveEditProperty()">שמור שינויים</button>
+        <button id="edit-prop-save-btn" class="btn btn-primary" style="flex:1;" onclick="saveEditProperty()">שמירת שינויים</button>
       </div>
-      <button class="btn btn-ghost" id="delete-prop-btn" style="width:100%; color:var(--red-500); font-size:13px;" onclick="deleteProperty()">🗑 מחק נכס</button>
+      <button class="btn btn-ghost" id="delete-prop-btn" style="width:100%; color:var(--red-500); font-size:13px;" onclick="deleteProperty()">🗑 מחיקת נכס</button>
     </div>
   </div>
 </div>
@@ -7344,7 +7343,7 @@
       לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים. שירותי תשתית (Supabase לאחסון, Tranzila לחיוב) מקבלים גישה מוגבלת לנדרש בלבד.</p>
 
       <p><strong>זכות מחיקה</strong><br>
-      לבקשת מחיקת כל הנתונים שלך, שלח אימייל ל-<a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a></p>
+      לבקשת מחיקת כל הנתונים שלך, יש לשלוח אימייל ל-<a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a></p>
 
       <h3 style="margin:20px 0 8px;font-size:1rem;color:var(--navy-700);">2. תנאי שימוש</h3>
 
@@ -7388,7 +7387,7 @@
         עדכון אחרון: יוני 2026 | שאלות: <a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a>
       </p>
       <p style="margin-top:8px;font-size:0.82rem;">
-        <a href="/privacy-policy.html" target="_blank" style="color:var(--blue-500);">לצפייה בדף המדיניות המלא ←</a>
+        <a href="/privacy-policy.html" target="_blank" style="color:var(--blue-500);">לצפייה בדף המדיניות המלא</a>
       </p>
     </div>
   </div>
@@ -7504,7 +7503,7 @@
   <div class="pwa-row">
     <div class="pwa-icon">📲</div>
     <div class="pwa-text">
-      <strong>שמור כ-App בנייד</strong>
+      <strong>שמירה כ-App בנייד</strong>
       <span id="pwa-install-msg">גישה מהירה מהמסך הראשי</span>
     </div>
     <button class="pwa-close" id="pwa-install-close" aria-label="סגור">×</button>
@@ -7637,7 +7636,7 @@ function maskPhone(phone) {
 function friendlySaveError(e) {
   const msg = e?.message || '';
   if (e?.code === '42501' || /row-level security/i.test(msg)) {
-    return 'השמירה נחסמה, ייתכן שתוקף המנוי/הניסיון פג. רענן את הדף או פנה לתמיכה.';
+    return 'השמירה נחסמה, ייתכן שתוקף המנוי/הניסיון פג. יש לרענן את הדף או לפנות לתמיכה.';
   }
   return 'שגיאה בשמירה: ' + msg;
 }
@@ -8646,7 +8645,7 @@ const Billing = {
     }
     const url = this.CHECKOUT_URLS[planId];
     if (!url || url.includes('REPLACE')) {
-      toast('🔧 הגדר קישור תשלום ב-Billing.CHECKOUT_URLS', 'error');
+      toast('🔧 יש להגדיר קישור תשלום ב-Billing.CHECKOUT_URLS', 'error');
       return;
     }
     const tenantId = State.tenant?.id || DB.tenantId || '';
@@ -8853,7 +8852,7 @@ const Onboarding = {
               onmouseup="this.style.transform=''"
               ontouchstart="this.style.transform='scale(0.97)'"
               ontouchend="this.style.transform=''">
-              🚀 הפעל את PLTO שלי!
+              🚀 הפעלת PLTO שלי!
             </button>
           </div>`;
       },
@@ -9162,7 +9161,7 @@ const MICRO_COPY = {
     realestate:        { icon:'🏠', title:'הפייפליין ריק לגמרי',   sub:'כל עסקה גדולה התחילה בליד אחד. מתי מוסיפים אותו?' },
     realestate_lawyer: { icon:'⚖️', title:'אין תיקים פעילים',      sub:'הרגע הנכון לרשום לקוח חדש ולהתחיל לנהל.' },
     interior:          { icon:'🎨', title:'הפרויקטים ממתינים',     sub:'כל עיצוב מדהים מתחיל בשיחה הראשונה עם לקוח.' },
-    other:             { icon:'👥', title:'עדיין אין לידים',         sub:'הוסף את הליד הראשון, או ייבא רשימה קיימת מקובץ.' },
+    other:             { icon:'👥', title:'עדיין אין לידים',         sub:'הוספת הליד הראשון, או ייבוא רשימה קיימת מקובץ.' },
   },
   aiLimitSuffix: {
     realestate:        'הסוכן ינוח עד מחר בבוקר.',
@@ -9294,8 +9293,8 @@ function applyIndustryToPropertyForm(prefix) {
   if (cityFg) cityFg.style.gridColumn = cfg.showFloor ? '' : '1 / -1';
   if (prefix === 'new') setPh('new-prop-price', cfg.pricePlaceholder);
 
-  if (prefix === 'new') setText('new-prop-save-btn', `שמור ${propName}`);
-  if (prefix === 'edit') setText('delete-prop-btn', `🗑 מחק ${propName}`);
+  if (prefix === 'new') setText('new-prop-save-btn', `שמירת ${propName}`);
+  if (prefix === 'edit') setText('delete-prop-btn', `🗑 מחיקת ${propName}`);
 }
 
 /* ═══════════════════════════════════════════
@@ -9410,7 +9409,7 @@ const AI = {
 
   async call(messages, maxTokens = 400, opts = {}) {
     if (State.isDemo) throw Object.assign(new Error('demo_locked'), { isDemo: true });
-    if (!AiLimits.hasAiAccess()) throw new Error('⏰ תקופת הניסיון הסתיימה, שדרג לתוסף ה-AI (₪100/חודש)');
+    if (!AiLimits.hasAiAccess()) throw new Error('⏰ תקופת הניסיון הסתיימה, יש לשדרג לתוסף ה-AI (₪100/חודש)');
     const type = opts.type || 'general';
     if (!AiLimits.canUse(type)) {
       const lim    = AiLimits._lim()[type];
@@ -9469,7 +9468,7 @@ const AI = {
     const text = await this.call([{ role: 'user', content: prompt }], 300);
     if (!text) return null;
     try { return JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || text); }
-    catch { return { score: 50, reason: text.slice(0, 200), next_action: 'בדוק ידנית' }; }
+    catch { return { score: 50, reason: text.slice(0, 200), next_action: 'בדיקה ידנית' }; }
   },
 
   async writeFollowup(lead) {
@@ -9862,7 +9861,7 @@ const Partners = {
           <div style="font-size:48px;margin-bottom:12px;">🤝</div>
           <div style="font-size:16px;font-weight:700;color:var(--navy-500);margin-bottom:8px;">שיתופי פעולה</div>
           <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;line-height:1.6;">
-            שתף לידים עם שותפים שעובדים עם PLTO, סוכני נדל"ן, עו"ד נדל"ן ומעצבי פנים.<br>
+            שיתוף לידים עם שותפים שעובדים עם PLTO, סוכני נדל"ן, עו"ד נדל"ן ומעצבי פנים.<br>
             רק הליד הספציפי יהיה גלוי. כל השאר, מאובטח לחלוטין.
           </div>
           <div style="font-size:13px;color:var(--gray-400);">(זמין בחשבון אמיתי)</div>
@@ -9905,7 +9904,7 @@ const Partners = {
         <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
           <div style="font-size:40px;margin-bottom:12px;">📤</div>
           <div style="font-size:14px;">עדיין לא שיתפת לידים</div>
-          <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחיצה על "🤝 שתף עם שותף"</div>
+          <div style="font-size:12px;margin-top:4px;">פתיחת כרטיס ליד ולחיצה על "🤝 שתף עם שותף"</div>
         </div>`;
       return;
     }
@@ -9990,12 +9989,12 @@ const Partners = {
         `"שתפתי איתך את הליד "${escapeHtml(leadName)}" ב-PLTO.<br>` +
         `קוד שיתוף: <strong>${code}</strong><br>` +
         `PIN: <strong>${pin}</strong><br>` +
-        `פתח PLTO, עבור לשותפים, הצטרף לשיתוף"`;
+        `פתיחת PLTO, מעבר לשותפים, הצטרפות לשיתוף"`;
       document.getElementById('share-step-1').classList.add('hidden');
       document.getElementById('share-step-2').classList.remove('hidden');
       document.getElementById('share-btn-create').classList.add('hidden');
       document.getElementById('share-btn-done').classList.remove('hidden');
-      toast('שיתוף נוצר! שלח את הקוד לשותף', 'success');
+      toast('שיתוף נוצר! יש לשלוח את הקוד לשותף', 'success');
     } catch(e) {
       toast('שגיאה: ' + (e.message || e), 'error');
     }
@@ -10008,7 +10007,7 @@ const Partners = {
     const lead = State.leads.find(l => l.id === this._pendingLeadId);
     const txt  = `קוד שיתוף PLTO: ${code}\nPIN: ${pin}\n(ליד: ${lead ? lead.name : ''})`;
     navigator.clipboard?.writeText(txt).then(() => toast('הועתק!', 'success'))
-      .catch(() => toast('לא ניתן להעתיק, העתק ידנית', 'info'));
+      .catch(() => toast('לא ניתן להעתיק, יש להעתיק ידנית', 'info'));
   },
 
   _copyCode(code) {
@@ -10032,7 +10031,7 @@ const Partners = {
       await this.render();
       this._renderTab('join');
     } catch(e) {
-      toast(e.message || 'שגיאה, בדוק קוד ו-PIN', 'error');
+      toast(e.message || 'שגיאה, יש לבדוק קוד ו-PIN', 'error');
     }
     if (btn) { btn.disabled = false; btn.textContent = 'הצטרף לשיתוף'; }
   },
@@ -10106,7 +10105,7 @@ const Partners = {
       const msgs = await DB.getSharedMessages(this._currentShare.share_id);
       const el   = document.getElementById('chat-messages-list');
       if (!msgs.length) {
-        el.innerHTML = `<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:20px;">אין הודעות עדיין, שלח הודעה ראשונה 👋</div>`;
+        el.innerHTML = `<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:20px;">אין הודעות עדיין, ניתן לשלוח הודעה ראשונה 👋</div>`;
         return;
       }
       const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
@@ -10175,7 +10174,7 @@ const ReferralsList = {
         <div style="text-align:center;padding:40px 0;color:var(--gray-400);">
           <div style="font-size:40px;margin-bottom:12px;">🔗</div>
           <div style="font-size:14px;">עדיין אין הפניות</div>
-          <div style="font-size:12px;margin-top:4px;">פתח כרטיס ליד ולחיצה על "🔗 הפנה לקולגה"</div>
+          <div style="font-size:12px;margin-top:4px;">פתיחת כרטיס ליד ולחיצה על "🔗 הפנה לקולגה"</div>
         </div>`;
       return;
     }
@@ -10222,7 +10221,7 @@ const ReferralsList = {
           <span class="share-status-badge" style="background:${s.bg};color:${s.c};flex-shrink:0;">${s.t}</span>
         </div>
         ${canResume ? `<button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:12.5px;padding:8px;" onclick="ReferralsList.resume('${r.token}')">${r.status === 'awaiting_signature' ? '✍️ להשלמת החתימה' : '📥 לצפייה ולקבלה'}</button>` : ''}
-        ${canSend ? `<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary" style="flex:1;font-size:12.5px;padding:8px;" onclick="ReferralsList.sendToColleague('${r.token}')">${isExternal ? '📋 שלח לחתימה' : '💬 שלח לקולגה'}</button><button class="btn btn-ghost" style="font-size:12.5px;padding:8px;" onclick="ReferralsList.copyColleagueLink('${r.token}')">🔗 העתק</button></div>` : ''}
+        ${canSend ? `<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary" style="flex:1;font-size:12.5px;padding:8px;" onclick="ReferralsList.sendToColleague('${r.token}')">${isExternal ? '📋 שליחה לחתימה' : '💬 שליחה לקולגה'}</button><button class="btn btn-ghost" style="font-size:12.5px;padding:8px;" onclick="ReferralsList.copyColleagueLink('${r.token}')">🔗 העתקה</button></div>` : ''}
       </div>`;
   },
 
@@ -10430,12 +10429,12 @@ const OppBoard = {
           ${a.message ? `<div style="font-size:12.5px;color:var(--gray-600);margin-top:6px;background:#fff;border-radius:8px;padding:8px;">"${escapeHtml(a.message)}"</div>` : ''}
           ${a.status === 'pending' ? `
             <div style="margin-top:10px;">
-              <select id="opp-select-lead-${a.id}" class="form-input" style="font-size:12.5px;margin-bottom:6px;"><option value="">בחר ליד להעברה...</option>${leadsOptions}</select>
+              <select id="opp-select-lead-${a.id}" class="form-input" style="font-size:12.5px;margin-bottom:6px;"><option value="">בחירת ליד להעברה...</option>${leadsOptions}</select>
               <label style="display:flex;align-items:flex-start;gap:6px;font-size:11.5px;color:var(--gray-500);cursor:pointer;margin-bottom:6px;">
                 <input type="checkbox" id="opp-select-consent-${a.id}" style="margin-top:2px;">
                 בקש אישור מהלקוח בקישור לפני שהפרטים ייחשפו
               </label>
-              <button class="btn btn-primary" style="width:100%;font-size:12.5px;padding:8px;" onclick="OppBoard.selectApplicant('${a.id}')">✅ בחר שותף זה</button>
+              <button class="btn btn-primary" style="width:100%;font-size:12.5px;padding:8px;" onclick="OppBoard.selectApplicant('${a.id}')">✅ בחירת שותף זה</button>
             </div>` : `<div style="font-size:11.5px;color:var(--gray-400);margin-top:8px;">${a.status === 'selected' ? '✅ נבחר' : a.status === 'rejected' ? 'לא נבחר' : 'בוטל'}</div>`}
         </div>`).join('');
     } catch (_e) {
@@ -10446,7 +10445,7 @@ const OppBoard = {
   async selectApplicant(applicationId) {
     const leadId = document.getElementById(`opp-select-lead-${applicationId}`)?.value;
     const requireConsent = !!document.getElementById(`opp-select-consent-${applicationId}`)?.checked;
-    if (!leadId) { toast('בחר ליד להעברה', 'error'); return; }
+    if (!leadId) { toast('יש לבחור ליד להעברה', 'error'); return; }
     try {
       const { data, error } = await sbClient.rpc('select_opportunity_applicant', {
         p_application_id: applicationId, p_lead_id: leadId, p_require_consent: requireConsent
@@ -10563,7 +10562,7 @@ const FeatureGate = {
         <div style="font-size:36px;margin-bottom:10px;">🔓</div>
         <div style="color:#fff;font-size:17px;font-weight:900;margin-bottom:6px;">הפיצ'ר ייפתח אוטומטית</div>
         <div style="color:rgba(255,255,255,0.7);font-size:13px;margin-bottom:18px;line-height:1.7;">
-          הוסף עוד ${leadsLeft > 0 ? leadsLeft + ' לידים לפתיחה מיידית' : ''}<br>
+          הוספת עוד ${leadsLeft > 0 ? leadsLeft + ' לידים לפתיחה מיידית' : ''}<br>
           ${leadsLeft > 0 ? 'או המתן עד לסיום מבחן 7 ימים' : ''}
         </div>
         <div style="color:#60A5FA;font-size:22px;font-weight:900;letter-spacing:2px;margin-bottom:16px;">⏳ ${fmt(ms)}</div>
@@ -10612,7 +10611,7 @@ const Marketing = {
           <div class="mktg-locked">
             <div class="mktg-locked-icon">🚀</div>
             <h3>רוצה לנסות את זה באמת?</h3>
-            <p>בדמו אפשר לראות, בחשבון אמיתי אפשר לעשות. פתח חשבון חינמי ותקבל 14 יום ניסיון מלא עם כלי השיווק:</p>
+            <p>בדמו אפשר לראות, בחשבון אמיתי אפשר לעשות. פתיחת חשבון חינמי מזכה ב-14 יום ניסיון מלא עם כלי השיווק:</p>
             <ul class="mktg-locked-features">
               <li>✨ מחולל הצעה אישית ללקוח, מבוסס AI</li>
               <li>📸 יוצר פוסטים לסושיאל, מבוסס AI</li>
@@ -10621,7 +10620,7 @@ const Marketing = {
             </ul>
             <button class="mktg-upgrade-btn"
               onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
-              🚀 פתח חשבון חינמי, 14 יום ניסיון
+              🚀 פתיחת חשבון חינמי, 14 יום ניסיון
             </button>
             <p class="mktg-upgrade-micro">ללא כרטיס אשראי · ביטול בכל עת</p>
           </div>`;
@@ -10633,9 +10632,9 @@ const Marketing = {
 
     const leads = State.leads || [];
     const properties = State.properties || [];
-    const leadOptions = leads.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+    const leadOptions = leads.map(l => `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join('');
     const propOptions = `<option value="">ללא ${getLabel('property')} ספציפי</option>` +
-      properties.map(p => `<option value="${p.id}">${p.title || p.city}</option>`).join('');
+      properties.map(p => `<option value="${p.id}">${escapeHtml(p.title || p.city)}</option>`).join('');
     const usageLabel = AiLimits.limitLabel('marketing');
     const ind        = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
     const isLawyer    = ind === 'realestate_lawyer';
@@ -10643,11 +10642,11 @@ const Marketing = {
     const trialBanner = !hasAccess ? `
       <div style="background:linear-gradient(90deg,#7C3AED,#2563EB);color:#fff;padding:10px 18px;border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
         <span style="font-weight:600;font-size:0.9rem;">🔒 זה מה שכלול בתוסף השיווק, ₪100/חודש</span>
-        <span onclick="toast('לרכישת התוסף פנה אלינו: info@plto.app','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">הפעל עכשיו</span>
+        <span onclick="toast('לרכישת התוסף פנה אלינו: info@plto.app','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">הפעלה עכשיו</span>
       </div>` : (!isAddon && trialLeft > 0) ? `
       <div style="background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;padding:10px 18px;border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
         <span style="font-weight:600;font-size:0.9rem;">⏰ ניסיון חינמי, ${trialLeft} ימים נותרו</span>
-        <span onclick="toast('לשדרוג פנה אלינו: info@plto.app','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">שדרג ל-₪100/חודש</span>
+        <span onclick="toast('לשדרוג פנה אלינו: info@plto.app','info')" style="cursor:pointer;font-size:0.82rem;text-decoration:underline;white-space:nowrap;">שדרוג ל-₪100/חודש</span>
       </div>` : '';
 
     el.innerHTML = `
@@ -10796,12 +10795,12 @@ const Marketing = {
           רוצים שצוות PLTO יבנה עבורכם את דפי המכירה, התוכן וההצעות המיוחדות? זה אפשרי בתמחור נפרד לכל בקשה.<br>
           נציג שלנו יפנה בהקדם עם מספר שאלות שיעזרו לנו לכוון ולבנות בדיוק מה שצריך.
         </div>
-        <button class="mktg-fs-btn" onclick="Marketing.toggleFsForm()">שלח בקשה לנציג</button>
+        <button class="mktg-fs-btn" onclick="Marketing.toggleFsForm()">שליחת בקשה לנציג</button>
         <div class="mktg-fs-form" id="mktg-fs-form">
           <input type="text" id="mktg-fs-name" placeholder="שמך המלא" />
           <input type="tel" id="mktg-fs-phone" placeholder="מספר טלפון לחזרה" />
           <textarea id="mktg-fs-need" placeholder="תיאור קצר של מה שצריך לבנות..."></textarea>
-          <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שלח בקשה</button>
+          <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שליחת בקשה</button>
         </div>
         <p class="mktg-fs-micro">כמובל שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
       </div>`;
@@ -10810,9 +10809,9 @@ const Marketing = {
 
   _templates: {
     offer: {
-      exclusive: (name, prop, agency) => `שלום ${name}! 👋\n\nרציתי לשתף אותך בהזדמנות שמחכה לך לפני שהיא יוצאת לשוק הרחב.\n${prop ? `\n🏠 ${prop}\n` : ''}\nלפני שאני מפרסם את הנכס לכולם, אני פונה אליך ראשון. יש לי כמה ימים לפני שיוצא לאוויר.\n\nאם מעניין אותך, נתאם ביקור בלעדי השבוע, ללא לחץ ולפי הזמן שלך.\n\nמחכה לשמוע 🙏\n${agency}`,
+      exclusive: (name, prop, agency) => `שלום ${name}! 👋\n\nרציתי לשתף אותך בהזדמנות שמחכה לך לפני שהיא יוצאת לשוק הרחב.\n${prop ? `\n🏠 ${prop}\n` : ''}\nלפני שאני מפרסם את הנכס לכולם, אני פונה אליך לפני כולם. יש לי כמה ימים לפני שיוצא לאוויר.\n\nאם מעניין אותך, נתאם ביקור בלעדי השבוע, ללא לחץ ולפי הזמן שלך.\n\nמחכה לשמוע 🙏\n${agency}`,
       special_price: (name, prop, agency) => `שלום ${name} 👋\n\nיש לי עבורך הצעה שאינה זמינה לכולם, ואני פונה אליך לפני כולם.\n${prop ? `\n🏠 ${prop}\n` : ''}\nבשל סיום מהיר שחשוב למוכר, יש אפשרות לתנאים מיוחדים שלא יוצגו ברשת. הפרטים, ישירות בשיחה.\n\nכדאי שנדבר השבוע ⚡\n${agency}`,
-      limited: (name, prop, agency) => `שלום ${name}!\n\nהצעה שתקפה לשבוע הקרוב בלבד, וחשבתי עליך 🎯\n${prop ? `\n🏠 ${prop}\n` : ''}\nמסיבות שאסביר לך בשיחה, יש הזדמנות מעניינת שנפתחה לאחרונה. לא מדובר במשהו שיחכה הרבה.\n\nאם רלוונטי, שלח לי הודעה והדאג\n${agency}`,
+      limited: (name, prop, agency) => `שלום ${name}!\n\nהצעה שתקפה לשבוע הקרוב בלבד, וחשבתי עליך 🎯\n${prop ? `\n🏠 ${prop}\n` : ''}\nמסיבות שאסביר לך בשיחה, יש הזדמנות מעניינת שנפתחה לאחרונה. לא מדובר במשהו שיחכה הרבה.\n\nאם רלוונטי, שלחו לי הודעה בהקדם\n${agency}`,
       first: (name, prop, agency) => `שלום ${name} 😊\n\nאני פונה אליך לפני כולם בקשר לנכס הזה.\n${prop ? `\n🏠 ${prop}\n` : ''}\nעדיין לא פרסמתי, רציתי שיהיה לך ראש ראשון לראות את זה לפני כולם.\n\nמתי נוח לך לדבר? 📞\n${agency}`,
     },
     post: {
@@ -11130,7 +11129,7 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
         <p style="font-size:11px;color:var(--gray-400);margin:0 0 10px;text-align:center;">✏️ סוכן השיווק יכול לפעמים לא לדייק, אפשר לערוך את ההודעה ב-WhatsApp לפני השליחה</p>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(msg)}">📋 העתק</button>
-          <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שלח ב-WA</button>
+          <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שליחה ב-WA</button>
         </div>
         <button class="btn btn-ghost" style="width:100%;font-size:13px;" onclick="SmartWA.open('${leadId}')">🔄 ייצר הודעה אחרת</button>
         <div class="spam-law-notice" style="margin-top:10px;">
@@ -11494,7 +11493,7 @@ const Gamify = {
       set('gamify-level-name', 'רמה: מתחיל');
       { const el = document.getElementById('gamify-streak'); if (el) el.innerHTML = '<span class="streak-fire">🔥</span> 0 ימים רצופים'; }
       set('gamify-xp-cur', '0 XP');
-      set('gamify-xp-next', 'פתח חשבון וצבור XP');
+      set('gamify-xp-next', 'פתיחת חשבון וצבירת XP');
       document.getElementById('gamify-xp-fill')?.style.setProperty('width', '5%');
       set('gamify-leads-count', '—');
       set('gamify-closed-count', '—');
@@ -11777,7 +11776,7 @@ const Gamify = {
       const footer = isClaimed
         ? `<div style="display:flex;align-items:center;gap:8px;"><span class="xps-claimed-tag">✅ מומש</span>${m.action ? `<button class="xps-claim-btn" style="padding:4px 10px;" onclick="RewardGen.open(${m.xp})">🔄 יצירה נוספת</button>` : ''}</div>`
         : isUnlocked
-        ? `<div style="display:flex;gap:8px;">${isDeferred ? '<span style="font-size:10px;color:var(--gold-400);font-weight:700;">🎯 שמור לפרס גדול</span>' : ''}
+        ? `<div style="display:flex;gap:8px;">${isDeferred ? '<span style="font-size:10px;color:var(--gold-400);font-weight:700;">🎯 שמירה לפרס גדול</span>' : ''}
            <button class="xps-claim-btn" onclick="Gamify.showMilestone(Gamify.MILESTONES.find(x=>x.xp===${m.xp}))">🎁 מימוש הפרס</button></div>`
         : `<span class="xps-xp-req">${m.xp.toLocaleString('he-IL')} XP</span>
            <div class="xps-locked-bar-wrap"><div class="xps-locked-bar" style="width:${pct}%"></div></div>`;
@@ -12029,7 +12028,7 @@ const PropertyShown = {
 
   renderList(leadId) {
     const acts = State.activities.filter(a => a.lead_id === leadId && a.type === 'showing' && a.content.startsWith('📍 נכס שהוצג:'));
-    if (!acts.length) return '<div style="font-size:12px;color:var(--gray-400);padding:6px 0;">טרם הוצגו נכסים — לחיצה על "הוסף נכס שהוצג" כדי לתעד</div>';
+    if (!acts.length) return '<div style="font-size:12px;color:var(--gray-400);padding:6px 0;">טרם הוצגו נכסים — לחיצה על "הוספת נכס שהוצג" כדי לתעד</div>';
     return acts.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(a => {
       const reactionMatch = a.content.match(/· (💚 מעוניין|💛 אולי|❌ לא מתאים)/);
       const reaction = reactionMatch ? reactionMatch[1] : '';
@@ -12065,7 +12064,7 @@ const LeadDocs = {
       this._cache[leadId] = data || [];
       container.innerHTML = data?.length
         ? data.map(d => this._renderDocRow(d)).join('')
-        : this._renderEmpty('אין מסמכים עדיין, העלה את הראשון');
+        : this._renderEmpty('אין מסמכים עדיין, ניתן להעלות את הראשון');
     } catch(e) {
       container.innerHTML = this._renderEmpty('שגיאה בטעינת מסמכים');
     }
@@ -12075,7 +12074,7 @@ const LeadDocs = {
     const sent = doc.sent_at
       ? `<span style="color:var(--green-600);font-size:11px;">✅ נשלח ${doc.sent_to_email ? 'ל-' + escapeHtml(doc.sent_to_email) : ''}</span>`
       : `<button class="btn btn-ghost btn-sm" style="padding:2px 8px;font-size:12px;"
-           onclick="LeadDocs.sendEmail('${doc.id}','${doc.lead_id}')">📧 שלח למייל הליד</button>`;
+           onclick="LeadDocs.sendEmail('${doc.id}','${doc.lead_id}')">📧 שליחה למייל הליד</button>`;
     return `
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-app);border-radius:8px;border:1px solid var(--border);">
         <div style="font-size:22px;">📄</div>
@@ -12132,7 +12131,7 @@ const LeadDocs = {
     const doc  = this._cache[leadId]?.find(d => d.id === docId);
     const lead = State.leads.find(l => l.id === leadId);
     if (!doc || !lead) return;
-    if (!lead.email) { toast('לליד אין כתובת מייל, הוסף מייל בעריכה', 'error'); return; }
+    if (!lead.email) { toast('לליד אין כתובת מייל, ניתן להוסיף מייל בעריכה', 'error'); return; }
     toast('שולח מייל...', '');
     try {
       await Make.trigger('document.sent', {
@@ -12308,9 +12307,9 @@ const Make = {
 
   async test() {
     const url = this.getWebhook();
-    if (!url) { toast('הוסף Webhook URL קודם', 'error'); return; }
+    if (!url) { toast('יש להוסיף Webhook URL קודם', 'error'); return; }
     await this.trigger('webhook.test', { message: '✅ בדיקת חיבור מ-PLTO עובד!' });
-    toast('✅ Webhook נשלח, בדוק את Make.com', 'success');
+    toast('✅ Webhook נשלח, ניתן לבדוק ב-Make.com', 'success');
   },
 };
 
@@ -12360,11 +12359,11 @@ const Twilio = {
 
   async test() {
     const to = Make.getWhatsApp();
-    if (!to) { toast('הגדר מספר WhatsApp בהגדרות קודם', 'error'); return; }
+    if (!to) { toast('יש להגדיר מספר WhatsApp בהגדרות קודם', 'error'); return; }
     toast('שולח הודעת בדיקה...', '');
     const data = await this.send(to, '✅ בדיקת חיבור מ-PLTO, Twilio WhatsApp עובד! 🎉');
     if (data?.success) toast('✅ הודעת בדיקה נשלחה ל-WhatsApp שלך!', 'success');
-    else toast('שגיאה בשליחה, בדוק שהמספר הצטרף ל-Sandbox', 'error');
+    else toast('שגיאה בשליחה, יש לבדוק שהמספר הצטרף ל-Sandbox', 'error');
   },
 };
 
@@ -12571,7 +12570,7 @@ const Referral = {
 
   copyLink() {
     navigator.clipboard.writeText(this._link()).then(() => {
-      toast('✅ הקישור הועתק! שתף עם חבר 🔗', 'success');
+      toast('✅ הקישור הועתק! ניתן לשתף עם חבר 🔗', 'success');
     }).catch(() => {
       toast(`קישור: ${this._link()}`, 'info', 5000);
     });
@@ -12647,7 +12646,7 @@ const Referral = {
       Gamify.renderWidget();
       Gamify.checkMilestones();
       floatXP(xpGained);
-      toast(`🎉 ${count > 1 ? `${count} חברים שהזמנת הצטרפו` : 'חבר שהזמנת הצטרף'}! +${xpGained} XP, בדוק מה נפתח בחנות הפרסים 🏆`, 'success', 5000);
+      toast(`🎉 ${count > 1 ? `${count} חברים שהזמנת הצטרפו` : 'חבר שהזמנת הצטרף'}! +${xpGained} XP, ניתן לבדוק מה נפתח בחנות הפרסים 🏆`, 'success', 5000);
       this.renderScreen();
     } catch (_e) {}
   },
@@ -12735,8 +12734,8 @@ const ClientConsent = {
         <div style="font-size:15px;font-weight:800;color:var(--navy-500,#0F1F3D);margin-bottom:4px;">בקשה להעברת פרטים</div>
         <div style="font-size:12.5px;color:var(--gray-500,#64748B);margin-bottom:14px;">מ${escapeHtml(data.business_name||'עסק')} אל ${escapeHtml(data.to_vertical_label||'בעל מקצוע')}</div>
         <div style="background:var(--gray-50,#F8FAFC);border:1px solid var(--gray-200,#E2E8F0);border-radius:10px;padding:12px;font-size:13px;color:var(--gray-700,#334155);line-height:1.6;text-align:right;margin-bottom:16px;">${escapeHtml(data.consent_text||'')}</div>
-        <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="ClientConsent.respond(true)">✅ מאשר/ת</button>
-        <button class="btn btn-ghost" style="width:100%;" onclick="ClientConsent.respond(false)">דוחה</button>
+        <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="ClientConsent.respond(true)">✅ לאשר</button>
+        <button class="btn btn-ghost" style="width:100%;" onclick="ClientConsent.respond(false)">לדחות</button>
       `;
     } catch (_e) {
       body.innerHTML = `<div style="font-size:13px;color:var(--gray-500,#64748B);">שגיאה בטעינה, נסה שוב מאוחר יותר</div>`;
@@ -12802,7 +12801,7 @@ const LeadReferral = {
     if (hint) {
       hint.textContent = this._isExternal
         ? '🔒 הנמען יקבל קישור לדף חתימה ייעודי. פרטי הלקוח ייחשפו רק לאחר חתימתו על ההסכם.'
-        : '🔒 כשיש עמלה, הקולגה חייב לחתום דיגיטלית על הסכם עמלה קצר לפני שהליד נחשף אליו.';
+        : '🔒 כשיש עמלה, נדרשת חתימה דיגיטלית של הקולגה על הסכם עמלה קצר לפני שהליד נחשף אליו.';
     }
   },
 
@@ -12828,7 +12827,7 @@ const LeadReferral = {
     const profession = document.getElementById('lref-profession')?.value.trim() || '';
     const isExternal = this._isExternal;
 
-    if (!vertical) { toast('בחר את תחום הקולגה', 'error'); return; }
+    if (!vertical) { toast('יש לבחור את תחום הקולגה', 'error'); return; }
     if (!name)     { toast('יש להזין את שם הקולגה', 'error'); return; }
     if (isExternal && !profession) { toast('יש לציין את תחום המקצוע', 'error'); return; }
     if (isExternal && commType === 'none') { toast('לשליחה לבעל מקצוע חיצוני יש להגדיר עמלת הפניה', 'error'); return; }
@@ -12872,14 +12871,14 @@ const LeadReferral = {
         this._lastMsg = `היי ${lead.name.split(' ')[0]} 👋\nלצורך המשך טיפול מקצועי, אני מבקש להעביר את פרטיך (שם וטלפון בלבד) ל${profession || LeadReferral.VERTICALS[vertical]} שותף.\nלאישור:\n${consentLink}`;
         document.getElementById('lref-step2-emoji').textContent = '📨';
         document.getElementById('lref-step2-title').textContent = 'נשלחת בקשת אישור ללקוח';
-        document.getElementById('lref-step2-sub').textContent = 'שלח את הקישור ללקוח בוואטסאפ. ברגע שיאשר, תוכל לשלוח את קישור ההפניה לקולגה ממסך "ההפניות שלי".';
+        document.getElementById('lref-step2-sub').textContent = 'יש לשלוח את הקישור ללקוח בוואטסאפ. ברגע שיאשר, ניתן יהיה לשלוח את קישור ההפניה לקולגה ממסך "ההפניות שלי".';
       } else if (isExternal) {
         this._waTargetPhone = phone;
         const commLabel = commType === 'percent' ? `${commValue}% מהתמורה` : `₪${commValue}`;
         this._lastMsg = `היי ${name} 👋\nיש לי לקוח שמחפש ${profession} — אשמח להפנות אותם אליך.\nכדי לקבל את פרטי הלקוח, נדרשת חתימה קצרה על הסכם עמלת הפניה (${commLabel} בסגירת עסקה).\nלחתימה ולקבלת הפרטים:\n${link}`;
         document.getElementById('lref-step2-emoji').textContent = '📋';
         document.getElementById('lref-step2-title').textContent = 'הסכם מוכן לחתימה!';
-        document.getElementById('lref-step2-sub').textContent = `שלח את הקישור ל${name} בוואטסאפ. ברגע שיחתום, ההסכם יישמר ופרטי הלקוח ייחשפו אליו 🔒`;
+        document.getElementById('lref-step2-sub').textContent = `יש לשלוח את הקישור ל${name} בוואטסאפ. ברגע שיחתום, ההסכם יישמר ופרטי הלקוח ייחשפו אליו 🔒`;
       } else {
         this._waTargetPhone = phone;
         this._lastMsg = `היי ${name} 👋\nיש לי לקוח בשבילך: אני מפנה אליך את ${lead ? lead.name : 'הלקוח'}${ctx ? ' — ' + ctx : ''}.\nכל הפרטים בקישור (PLTO):\n${link}`;
@@ -13036,7 +13035,7 @@ const LeadReferral = {
     } catch (e) {
       toast('שגיאה: ' + (e.message || e), 'error');
     }
-    btn.disabled = false; btn.textContent = '✅ חתום וקבל את הליד';
+    btn.disabled = false; btn.textContent = '✅ חתימה וקבלת הליד';
   },
 
   async declineAgreement() {
@@ -13201,7 +13200,7 @@ const GmailInbox = {
           <span class="inbox-msg-date">${escapeHtml(this._fmtDate(m.date))}</span>
         </div>
         <div class="inbox-msg-to">אל: ${escapeHtml(m.to || '')}</div>
-        <div class="inbox-msg-body">${m.body || '<em style="color:var(--gray-400)">אין תוכן</em>'}</div>
+        <div class="inbox-msg-body">${m.body ? escapeHtml(m.body).replace(/\n/g, '<br>') : '<em style="color:var(--gray-400)">אין תוכן</em>'}</div>
       </div>
     `).join('');
 
@@ -13235,7 +13234,7 @@ const GmailInbox = {
     } catch (e) {
       toast(e.message || 'שגיאה בשליחה', 'error');
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = '📤 שלח תשובה'; }
+      if (btn) { btn.disabled = false; btn.textContent = '📤 שליחת תשובה'; }
     }
   },
 
@@ -13328,7 +13327,7 @@ const AnnualUpsell = {
       },
       streak_18: {
         icon:  '💼',
-        title: 'המתחרים שלך כבר עובדים עם AI, האם גם אתה?',
+        title: 'המתחרים כבר עובדים עם AI — הזמן להצטרף אליהם',
         body:  `<p style="color:var(--gray-600);line-height:1.6;margin:0 0 14px;">כלי שיווק AI כותבים פוסטים, מנסחים הצעות מחיר, ומייצרים תוכן תוך שניות. מי שמשתמש בהם, מגיע ללקוחות מהר יותר ונשמע מקצועי יותר. החבילה השנתית שלנו כוללת <strong>הכל ביחד</strong>: CRM + שיווק AI, מחיר אחד, נעול שנה שלמה.</p>
           <div class="aum-saving-card">
             <div class="aum-saving-row"><span>CRM + שיווק AI, בנפרד</span><span>₪279/חודש</span></div>
@@ -13458,7 +13457,7 @@ const AccessibilityMode = {
     const declBtn = document.getElementById('a11y-decl-toggle');
     if (declBtn) {
       declBtn.setAttribute('aria-pressed', String(on));
-      declBtn.textContent = on ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעל מצב נגישות';
+      declBtn.textContent = on ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעלת מצב נגישות';
     }
   },
 };
@@ -13925,7 +13924,7 @@ const Dashboard = {
           </div>
           <div class="dash-growth-btns">
             <button class="dash-growth-btn-main" onclick="AnnualUpsell.tryShow('settings_cta')">אני רוצה לחסוך 📅</button>
-            <button class="dash-growth-btn-sec"  onclick="App.go('referral')">🎁 הזמן חבר</button>
+            <button class="dash-growth-btn-sec"  onclick="App.go('referral')">🎁 הזמנת חבר</button>
           </div>
         </div>`;
     } else {
@@ -13934,7 +13933,7 @@ const Dashboard = {
           <button class="dash-growth-dismiss" onclick="localStorage.setItem('${KEY}','dismissed');document.getElementById('dash-growth-card-wrap').innerHTML='';">✕</button>
           <div class="dash-growth-row">
             <div class="dash-growth-left">
-              <div class="dash-growth-title">🎁 הזמן חבר, שניכם מרוויחים</div>
+              <div class="dash-growth-title">🎁 הזמנת חבר, שניכם מרוויחים</div>
               <div class="dash-growth-sub">חבר שמצטרף = +250 XP לך<br>הוא מקבל +100 XP + 20% הנחה</div>
             </div>
             <div class="dash-growth-stat">
@@ -13943,7 +13942,7 @@ const Dashboard = {
             </div>
           </div>
           <div class="dash-growth-btns">
-            <button class="dash-growth-btn-main" onclick="App.go('referral')">שלח קוד לחבר 📲</button>
+            <button class="dash-growth-btn-main" onclick="App.go('referral')">שליחת קוד לחבר 📲</button>
             <button class="dash-growth-btn-sec"  onclick="App.go('xp-store')">🏆 חנות XP</button>
           </div>
         </div>`;
@@ -14129,7 +14128,7 @@ const Dashboard = {
             </div>
             <button class="btn btn-sm" style="background:linear-gradient(135deg,#2563EB,#3B82F6);color:white;border:none;font-size:11.5px;padding:5px 10px;border-radius:8px;flex-shrink:0;white-space:nowrap;"
               onclick="App.go('lead-detail',{currentLeadId:'${l.id}'});setTimeout(()=>SmartWA.open('${l.id}'),250)">
-              💬 שלח חיזור חכם
+              💬 שליחת חיזור חכם
             </button>
           </div>`;
         }).join('')}
@@ -14180,14 +14179,14 @@ const Dashboard = {
         <div style="text-align:center;padding:6px 0 2px;">
           <div class="ai-empty-robot">🤖</div>
           <div style="font-weight:700;font-size:14px;margin:8px 0 3px;color:var(--navy-700);">הסוכן מוכן, מחכה לנתונים שלך</div>
-          <div style="font-size:12px;color:var(--gray-500);line-height:1.5;margin-bottom:2px;">הוסף ליד אחד לגלות מה הסוכן יכול לעשות</div>
+          <div style="font-size:12px;color:var(--gray-500);line-height:1.5;margin-bottom:2px;">הוספת ליד אחד תגלה מה הסוכן יכול לעשות</div>
           <div class="ai-empty-preview">
             🎯 <strong>המוקד של היום:</strong> לפנות לאמיר, הכי קרוב לסגירה<br>
             👥 <strong>לטפל בדחיפות:</strong> שרה (ביקור מחר), מיכל (לא ענתה 7 ימים)<br>
             💡 <strong>תובנה:</strong> 3 לידים ללא follow-up, פניה עכשיו מכפילה סיכוי
           </div>
           <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')" style="width:100%;">
-            ✨ הוסף ליד ראשון, הפעּל את הסוכן
+            ✨ הוספת ליד ראשון מפעילה את הסוכן
           </button>
         </div>
       `;
@@ -14252,9 +14251,9 @@ const Dashboard = {
         <div style="text-align:center;padding:12px 8px;color:var(--gray-500);">
           <div style="font-size:24px;margin-bottom:8px;">📋</div>
           <div style="font-weight:600;font-size:13px;margin-bottom:6px;">צריך לפחות 5 לידים כדי להפעיל את הסוכן</div>
-          <div style="font-size:12px;line-height:1.6;margin-bottom:12px;">הוסף לידים ידנית או העלה רשימה, והסוכן יתחיל לעבוד בשבילך.</div>
+          <div style="font-size:12px;line-height:1.6;margin-bottom:12px;">הוספת לידים ידנית או העלאת רשימה, והסוכן יתחיל לעבוד בשבילך.</div>
           <div style="display:flex;gap:8px;justify-content:center;">
-            <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 העלה רשימה</button>
+            <button class="btn btn-ghost btn-sm" onclick="LeadImport.open()">📋 העלאת רשימה</button>
             <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-lead')">➕ הוסף ליד</button>
           </div>
         </div>`;
@@ -14312,10 +14311,10 @@ function pipelineEmptyTip(stageIdx) {
   if (stageIdx !== 0) return '';
   const ind = localStorage.getItem('liders_industry') || 'other';
   const tips = {
-    realestate:        '💡 רוב הקונות מגיעות מהפניות, שלח הודעה ל-3 לקוחות ישנים השבוע',
+    realestate:        '💡 רוב הקונות מגיעות מהפניות, כדאי לשלוח הודעה ל-3 לקוחות ישנים השבוע',
     interior:          '💡 פרסם תמונה מפרויקט אחרון באינסטגרם, לידים מגיעים מ-portfolio',
     realestate_lawyer: '💡 רוב התיקים מגיעים מסוכנים ומתווכים, יצרת קשר עם 2 סוכנים השבוע?',
-    other:             '💡 הוסף את הליד הראשון שלך כדי להתחיל',
+    other:             '💡 הוספת הליד הראשון שלך כדי להתחיל',
   };
   const tip = tips[ind] || tips.other;
   return `<div style="padding:14px 10px;text-align:center;color:var(--gray-400);font-size:12px;border:1px dashed var(--border);border-radius:10px;margin:8px 4px;line-height:1.5;">${tip}</div>`;
@@ -14363,7 +14362,7 @@ const Pipeline = {
                 : pipelineEmptyTip(stageIdx)
             }
           </div>
-          <button class="kanban-add-btn" onclick="openModal('modal-add-lead')">+ הוסף ליד</button>
+          <button class="kanban-add-btn" onclick="openModal('modal-add-lead')">+ הוספת ליד</button>
         </div>
       `;
     }).join('');
@@ -14583,7 +14582,7 @@ const LeadDetail = {
           <button class="lead-action-btn" aria-label="שינוי שלב עבור ${escapeHtml(lead.name)}" onclick="openMoveStage('${lead.id}')">🔄 שנה שלב</button>
           <button class="lead-action-btn" aria-label="הוספת פעילות ל${escapeHtml(lead.name)}" onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">📝 הוסף</button>
           <button class="lead-action-btn" aria-label="עריכת פרטי ${escapeHtml(lead.name)}" onclick="openEditLead('${lead.id}')">✏️ עריכה</button>
-          ${!State.isDemo ? `<button class="lead-action-btn" aria-label="שיתוף ${escapeHtml(lead.name)} עם שותף" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שתף עם שותף</button>` : ''}
+          ${!State.isDemo ? `<button class="lead-action-btn" aria-label="שיתוף ${escapeHtml(lead.name)} עם שותף" style="background:linear-gradient(135deg,#0F1F3D,#2563EB);color:white;" onclick="Partners.openShareModal('${lead.id}')">🤝 שיתוף עם שותף</button>` : ''}
           ${!State.isDemo ? `<button class="lead-action-btn" aria-label="הפניית ${escapeHtml(lead.name)} לקולגה" style="background:linear-gradient(135deg,#15803D,#16A34A);color:white;" onclick="LeadReferral.openModal('${lead.id}')">🔗 הפנה לקולגה</button>` : ''}
         </div>
         ${State.isAccessibleMode ? `
@@ -14634,7 +14633,6 @@ const LeadDetail = {
               <div style="font-size:12px;font-weight:700;color:var(--gray-600);">לוח השראה</div>
               <div style="font-size:12px;color:var(--blue-500);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;">${escapeHtml(lead.inspiration_url)}</div>
             </div>
-            <span style="font-size:16px;color:var(--blue-400);">↗</span>
           </a>` : ''}
           <div style="margin:16px 0 90px;">
             <div style="font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:8px;">שנה שלב:</div>
@@ -14655,7 +14653,7 @@ const LeadDetail = {
           <div style="display:flex;gap:8px;margin-bottom:16px;">
             <button class="btn btn-ghost btn-sm" style="flex:1;"
                     onclick="State.currentLeadId='${lead.id}'; openModal('modal-add-activity')">
-              + הוסף פעילות
+              + הוספת פעילות
             </button>
             <button class="btn btn-outline btn-icon" id="voice-btn" onclick="Voice.toggle()" title="הקלט הערה קולית" style="display:flex;align-items:center;gap:4px;padding:6px 12px;font-size:14px;">
               <span id="voice-icon">🎤</span>
@@ -14679,7 +14677,7 @@ const LeadDetail = {
         <div class="tab-content" id="tab-tasks">
           <button class="btn btn-ghost btn-sm w-full" style="margin-bottom:16px;"
                   onclick="openModal('modal-add-task')">
-            + הוסף משימה
+            + הוספת משימה
           </button>
           <div style="display:flex;flex-direction:column;gap:8px;">
             ${tasks.length ? tasks.map(t => renderTaskItem(t)).join('') : '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">אין משימות פתוחות</div></div>'}
@@ -14692,7 +14690,7 @@ const LeadDetail = {
           <!-- נכסים שהוצגו בפועל -->
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
             <div style="font-weight:700;font-size:14px;color:var(--navy-700);">📍 נכסים שהוצגו ללקוח</div>
-            <button class="btn btn-sm" style="font-size:12px;padding:5px 10px;" onclick="PropertyShown.open('${lead.id}')">הוסף נכס שהוצג</button>
+            <button class="btn btn-sm" style="font-size:12px;padding:5px 10px;" onclick="PropertyShown.open('${lead.id}')">הוספת נכס שהוצג</button>
           </div>
           <div id="ps-list-${lead.id}" style="margin-bottom:16px;">${PropertyShown.renderList(lead.id)}</div>
           <div style="border-top:1px solid var(--border);padding-top:14px;margin-bottom:10px;">
@@ -14718,7 +14716,7 @@ const LeadDetail = {
                 </div>
               `).join('')}
             </div>
-          ` : '<div class="empty-state" style="padding:16px 0;"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו נכסים תואמים</div><div class="empty-sub">הוסף נכסים שיתאימו לתקציב ולאזור של הליד</div></div>'}
+          ` : '<div class="empty-state" style="padding:16px 0;"><div class="empty-icon">🔍</div><div class="empty-title">לא נמצאו נכסים תואמים</div><div class="empty-sub">הוספת נכסים שיתאימו לתקציב ולאזור של הליד</div></div>'}
         </div>
 
         <!-- DOCS TAB -->
@@ -14727,7 +14725,7 @@ const LeadDetail = {
           <label class="btn btn-ghost w-full" style="cursor:pointer;justify-content:center;display:flex;gap:8px;align-items:center;">
             <input type="file" id="doc-file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                    style="display:none" onchange="LeadDocs.upload('${lead.id}', this)">
-            📎 העלה מסמך (PDF / Word / תמונה)
+            📎 העלאת מסמך (PDF / Word / תמונה)
           </label>
           <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:6px;">עד 10MB לקובץ</p>
         </div>
@@ -14749,7 +14747,7 @@ const LeadDetail = {
               </div>
               <button class="btn btn-primary w-full" style="padding:15px;font-size:1rem;font-weight:800;"
                 onclick="document.getElementById('screen-login').classList.remove('hidden');document.getElementById('app-shell').classList.add('hidden');State.isDemo=false;">
-                🚀 פתח חשבון חינמי, 14 יום ניסיון
+                🚀 פתיחת חשבון חינמי, 14 יום ניסיון
               </button>
               <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">ללא כרטיס אשראי · ביטול בכל עת</div>
             </div>
@@ -14761,7 +14759,7 @@ const LeadDetail = {
               </button>
               <div id="ai-score-result" class="hidden"></div>
               <button class="btn btn-ghost w-full" style="margin-top:4px;" onclick="LeadDetail.runFollowup()">
-                💬 כתוב הודעת מעקב ל-WhatsApp
+                💬 כתיבת הודעת מעקב ל-WhatsApp
               </button>
               <div id="ai-followup-result" class="hidden"></div>
               ${(!lead.last_contact || diffDays(lead.last_contact) < -7) ? `
@@ -14995,7 +14993,7 @@ const PropertiesScreen = {
             ${cfg.showFloor && p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
           </div>` : ''}
           ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
-          <button class="prop-share-btn" onclick="event.stopPropagation();sharePropertyWhatsApp('${p.id}')">📤 שתף ב-WhatsApp</button>
+          <button class="prop-share-btn" onclick="event.stopPropagation();sharePropertyWhatsApp('${p.id}')">📤 שיתוף ב-WhatsApp</button>
         </div>
       </div>
     `).join('') || `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">${icon}</div><div class="empty-title">אין ${getLabel('properties')} עדיין</div></div>`;
@@ -15404,7 +15402,7 @@ const Calendar = {
 
     if (!allItems.length) {
       html += `<div style="color:var(--gray-400);font-size:13px;text-align:center;padding:20px 0;">אין אירועים ביום זה</div>`;
-      html += `<button class="btn btn-ghost btn-sm w-full" onclick="openModal('modal-add-task')">+ הוסף משימה</button>`;
+      html += `<button class="btn btn-ghost btn-sm w-full" onclick="openModal('modal-add-task')">+ הוספת משימה</button>`;
     } else {
       html += allItems.map(item => `
         <div class="cal-event-item">
@@ -15417,7 +15415,7 @@ const Calendar = {
              style="flex-shrink:0;font-size:11px;color:var(--blue-500);text-decoration:none;background:var(--blue-50);border:1px solid var(--blue-200);border-radius:6px;padding:2px 6px;white-space:nowrap;">📅 Google</a>
         </div>
       `).join('');
-      html += `<button class="btn btn-ghost btn-sm w-full" style="margin-top:8px;" onclick="openModal('modal-add-task')">+ הוסף משימה</button>`;
+      html += `<button class="btn btn-ghost btn-sm w-full" style="margin-top:8px;" onclick="openModal('modal-add-task')">+ הוספת משימה</button>`;
     }
 
     panel.innerHTML = html;
@@ -15594,7 +15592,7 @@ const IdleSession = {
     this._clear();
     await DB.signOut();
     localStorage.removeItem('liders_pin_hash');
-    toast('החיבור פג עקב חוסר פעילות, אנא התחבר מחדש', 'warning');
+    toast('החיבור פג עקב חוסר פעילות, יש להתחבר מחדש', 'warning');
     location.reload();
   },
 
@@ -15626,7 +15624,7 @@ const Settings = {
           <div class="settings-row-icon">🔑</div>
           <div class="settings-row-body">
             <div class="settings-row-label">שינוי סיסמה</div>
-            <div class="settings-row-sub">שלח אימייל לאיפוס סיסמה</div>
+            <div class="settings-row-sub">שליחת אימייל לאיפוס סיסמה</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -15658,14 +15656,14 @@ const Settings = {
         </div>
         <div class="settings-row" onclick="if(confirm('לבטל את נעילת ה-PIN?'))AppLock.disable();" style="cursor:pointer;">
           <div class="settings-row-icon">🔓</div>
-          <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כבה נעילת PIN</div></div>
+          <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כיבוי נעילת PIN</div></div>
           <div class="settings-arrow">›</div>
         </div>
         ` : `
         <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
           <div class="settings-row-icon">🔒</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">הפעל נעילת PIN</div>
+            <div class="settings-row-label">הפעלת נעילת PIN</div>
             <div class="settings-row-sub">אופציונלי, הגן על הנתונים עם קוד 4 ספרות. ניתן לבטל בכל עת.</div>
           </div>
           <div class="settings-arrow">›</div>
@@ -15691,7 +15689,7 @@ const Settings = {
           <div class="settings-row-icon">👥</div>
           <div class="settings-row-body">
             <div class="settings-row-label">סוכנים</div>
-            <div class="settings-row-sub">הזמן סוכנים לצוות</div>
+            <div class="settings-row-sub">הזמנת סוכנים לצוות</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
@@ -15780,7 +15778,7 @@ const Settings = {
             ${Make.getWebhook() ? `<button class="btn btn-ghost btn-sm" onclick="Make.test()">בדוק חיבור</button>` : ''}
           </div>
           ${!Make.getWebhook() ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.5;padding:8px;background:var(--gray-50);border-radius:6px;">
-            💡 <strong>איך מגדירים?</strong> make.com → Scenarios → Create → Custom webhook → העתק URL לכאן
+            💡 <strong>איך מגדירים?</strong> make.com, Scenarios, Create, Custom webhook, ואז העתקת ה-URL לכאן
           </div>` : ''}
         </div>
         <div class="settings-row">
@@ -15836,7 +15834,7 @@ const Settings = {
             <div class="settings-row-icon">🔗</div>
             <div class="settings-row-body" style="flex:1;">
               <div class="settings-row-label">Stripe Webhook URL</div>
-              <div class="settings-row-sub" style="color:var(--gray-500);">הדבק ב-Stripe → Developers → Webhooks</div>
+              <div class="settings-row-sub" style="color:var(--gray-500);">הדבקה ב-Stripe, Developers, Webhooks</div>
             </div>
           </div>
           <div class="api-key-row" style="margin-top:6px;">
@@ -15876,7 +15874,7 @@ const Settings = {
             <div class="settings-row-label">פאנל אדמין PLTO</div>
             <div class="settings-row-sub">ניהול לקוחות, חשבוניות ו-SaaS</div>
           </div>
-          <div class="settings-arrow">↗</div>
+          <div class="settings-arrow">›</div>
         </div>
       </div>` : ''}
       <div class="settings-section">
@@ -15895,7 +15893,7 @@ const Settings = {
         <div class="settings-row" onclick="Support.open()" style="cursor:pointer;">
           <div class="settings-row-icon">🎧</div>
           <div class="settings-row-body">
-            <div class="settings-row-label">שלח פנייה לתמיכה</div>
+            <div class="settings-row-label">שליחת פנייה לתמיכה</div>
             <div class="settings-row-sub">נציג AI עונה מיד, ואם צריך - האדמין יחזור אליך</div>
           </div>
           <div class="settings-arrow">›</div>
@@ -15945,7 +15943,7 @@ const Settings = {
         <button id="a11y-decl-toggle" class="a11y-decl-toggle"
                 aria-pressed="${State.isAccessibleMode}"
                 onclick="AccessibilityMode.toggle()">
-          ${State.isAccessibleMode ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעל מצב נגישות'}
+          ${State.isAccessibleMode ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעלת מצב נגישות'}
         </button>
       </div>
     `;
@@ -16038,7 +16036,7 @@ const Settings = {
       : `<input class="form-input pipeline-stage-input" placeholder="${escapeHtml(placeholder||'שם השלב החדש')}" style="flex:1;padding:7px 10px;font-size:13px;">`;
     row.innerHTML = `<span class="stage-num" style="background:var(--navy-400);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${index+1}</span>
       ${inputPart}
-      <button onclick="Settings.removePipelineStage(this)" style="background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0;border-radius:4px;" title="מחק שלב">×</button>`;
+      <button onclick="Settings.removePipelineStage(this)" style="background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0;border-radius:4px;" title="מחיקת שלב">×</button>`;
     return row;
   },
   removePipelineStage(btn) {
@@ -16111,12 +16109,12 @@ const Settings = {
   changePassword() {
     if (demoGuard()) return;
     const email = State.agent?.email;
-    if (!email) { toast('לא נמצא אימייל, התחבר מחדש', 'error'); return; }
+    if (!email) { toast('לא נמצא אימייל, יש להתחבר מחדש', 'error'); return; }
     sbClient.auth.resetPasswordForEmail(email, {
       redirectTo: 'https://plto.app/',
     }).then(({ error }) => {
       if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
-      toast('📧 נשלח אימייל לאיפוס סיסמה, בדוק את תיבת הדואר', 'success');
+      toast('📧 נשלח אימייל לאיפוס סיסמה, ניתן לבדוק את תיבת הדואר', 'success');
     });
   },
 };
@@ -16278,7 +16276,7 @@ const LeadImport = {
     const file = input.files?.[0];
     if (!file) return;
     if (/\.xlsx?$/i.test(file.name) || file.type.includes('spreadsheetml') || file.type.includes('ms-excel')) {
-      toast('קובץ Excel זוהה — כדי לייבא, פתח ב-Google Sheets ← קובץ ← הורד ← CSV, ואז העלה את ה-CSV', 'info', 7000);
+      toast('קובץ Excel זוהה — לייבוא: פתיחה ב-Google Sheets, קובץ, הורדה, CSV, ולאחר מכן העלאת קובץ ה-CSV', 'info', 7000);
       input.value = '';
       return;
     }
@@ -16453,7 +16451,7 @@ ${fileData}
             ondrop="event.preventDefault();this.classList.remove('drag-over');LeadImport.handleFile({files:event.dataTransfer.files})"
             for="import-file-input">
             <div class="import-dropzone-icon">📊</div>
-            <div class="import-dropzone-title">גרור קובץ לכאן, או לחיצה לבחירה</div>
+            <div class="import-dropzone-title">גרירת קובץ לכאן, או לחיצה לבחירה</div>
             <div class="import-dropzone-sub">
               כבר יש רשימת לידים ב-Excel או ב-CSV?<br>
               ✨ המערכת תזהה אוטומטית את העמודות — שם, טלפון, מייל, אזור ועוד.
@@ -16466,10 +16464,10 @@ ${fileData}
           </label>
           <div class="import-drive-section">
             <div style="font-size:12.5px;font-weight:700;color:var(--gray-700);margin-bottom:8px;">📂 טעינה מ-Google Drive</div>
-            <div style="font-size:12px;color:var(--gray-500);margin-bottom:8px;line-height:1.5;">פתח את הקובץ ב-Drive, לחיצה ימנית → "קבל קישור" → שנה ל"כל מי שיש לו הקישור" → הדבק כאן:</div>
+            <div style="font-size:12px;color:var(--gray-500);margin-bottom:8px;line-height:1.5;">פתיחת הקובץ ב-Drive, לחיצה ימנית, "קבל קישור", שינוי ל"כל מי שיש לו הקישור", והדבקה כאן:</div>
             <div class="import-drive-row">
               <input class="import-drive-input" id="import-drive-url" type="url" placeholder="https://drive.google.com/file/d/..." dir="ltr">
-              <button class="btn btn-ghost btn-sm" onclick="LeadImport.fetchFromDrive()">טען</button>
+              <button class="btn btn-ghost btn-sm" onclick="LeadImport.fetchFromDrive()">טעינה</button>
             </div>
             <div id="import-drive-status" style="font-size:11.5px;color:var(--gray-500);margin-top:6px;"></div>
           </div>
@@ -16550,7 +16548,7 @@ ${fileData}
     if (!fileId) {
       status.innerHTML = `
         <span style="color:var(--red-500);">⚠️ לא זוהה קישור Google Drive תקין.</span><br>
-        יש לפתוח את הקובץ ב-Drive → לחצן שיתוף → "כל מי שיש לו הקישור" → העתק קישור.`;
+        יש לפתוח את הקובץ ב-Drive, לחצן שיתוף, "כל מי שיש לו הקישור", והעתקת קישור.`;
       return;
     }
 
@@ -16579,10 +16577,10 @@ ${fileData}
       status.innerHTML = `
         <div style="background:var(--blue-50,#EFF6FF);border:1px solid var(--blue-200,#BFDBFE);border-radius:8px;padding:10px 12px;margin-top:4px;font-size:12px;line-height:1.7;">
           <strong style="color:var(--blue-700,#1D4ED8);">📋 הורדה ישירה חסומה — שלבים לעקיפה:</strong><br>
-          1. פתח את הקישור ב-Drive<br>
+          1. פתיחת הקישור ב-Drive<br>
           2. לחיצה על ⋮ (שלוש נקודות) — "הורד"<br>
           3. שמירה כ-CSV (אם Excel: Google Sheets — קובץ — הורד — CSV)<br>
-          4. העלה את הקובץ בכפתור "בחירת קובץ" למעלה
+          4. העלאת הקובץ בכפתור "בחירת קובץ" למעלה
         </div>`;
     }
   },
@@ -16919,7 +16917,7 @@ function openMoveStage(leadId) {
 
 function demoGuard() {
   if (!State.isDemo) return false;
-  toast('⚡ מצב דמו, התחבר כדי לשמור נתונים אמיתיים', 'warning');
+  toast('⚡ מצב דמו, יש להתחבר כדי לשמור נתונים אמיתיים', 'warning');
   return true;
 }
 
@@ -16978,7 +16976,7 @@ const PropImages = {
     return `<label class="prop-img-upload-zone" style="grid-column:1/-1; padding:18px; display:flex; flex-direction:column; align-items:center;">
       <input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="${fn}">
       <div style="font-size:26px; margin-bottom:6px;">📷</div>
-      <div style="font-size:13px; font-weight:600; color:var(--gray-600);">הוסף תמונות</div>
+      <div style="font-size:13px; font-weight:600; color:var(--gray-600);">הוספת תמונות</div>
       <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">עד 5 תמונות · JPG PNG WEBP</div>
     </label>`;
   },
@@ -16991,7 +16989,7 @@ const PropImages = {
     grid.innerHTML = files.map((f, i) => `
       <div class="prop-gallery-thumb">
         <img src="${f._preview}">
-        ${i === this.mainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainNew(${i})" title="הפוך לתמונה ראשית">⭐</button>`}
+        ${i === this.mainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainNew(${i})" title="הפיכה לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeNew(${i})">✕</button>
       </div>`).join('')
       + (files.length < 5 ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="PropImages.addNewFiles(this)"></label>` : '');
@@ -17026,7 +17024,7 @@ const PropImages = {
     const existing = this.editUrls.map((url, i) => `
       <div class="prop-gallery-thumb">
         <img src="${escapeHtml(url)}" onerror="this.style.display='none'">
-        ${i === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${i})" title="הפוך לתמונה ראשית">⭐</button>`}
+        ${i === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${i})" title="הפיכה לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeEditUrl(${i})">✕</button>
       </div>`).join('');
     const added = this.editFiles.map((f, i) => {
@@ -17034,7 +17032,7 @@ const PropImages = {
       return `
       <div class="prop-gallery-thumb" style="outline:2px solid var(--blue-400);">
         <img src="${f._preview}">
-        ${combinedIdx === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${combinedIdx})" title="הפוך לתמונה ראשית">⭐</button>`}
+        ${combinedIdx === this.editMainIndex ? '<span class="gal-main">ראשי</span>' : `<button class="gal-setmain" onclick="PropImages.setMainEdit(${combinedIdx})" title="הפיכה לתמונה ראשית">⭐</button>`}
         <button class="gal-remove" onclick="PropImages.removeEditFile(${i})">✕</button>
       </div>`;
     }).join('');
@@ -17228,7 +17226,7 @@ async function addProperty() {
     SaveAnim.hide();
     toast(friendlySaveError(e), 'error');
   } finally {
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = `שמור ${getLabel('property')}`; }
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = `שמירת ${getLabel('property')}`; }
   }
 }
 
@@ -17295,7 +17293,7 @@ async function saveEditProperty() {
     SaveAnim.hide();
     toast(friendlySaveError(e), 'error');
   } finally {
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'שמור שינויים'; }
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'שמירת שינויים'; }
   }
 }
 
@@ -17545,6 +17543,10 @@ sbClient.auth.onAuthStateChange((event, session) => {
       // (the query waits on the same lock the callback is blocking). Defer the
       // actual work to a macrotask so it runs after the callback returns and
       // the lock is released. See supabase/supabase-js auth deadlock issues.
+      // This deferral also happens to save modules defined later in this file
+      // (e.g. Support) from a temporal-dead-zone ReferenceError, since by the
+      // time this macrotask runs the whole script has already finished parsing.
+      // Don't remove it without keeping that guarantee some other way.
       setTimeout(async () => {
         LoadingOverlay.show('מתחבר...');
         try {
@@ -17600,7 +17602,7 @@ sbClient.auth.onAuthStateChange((event, session) => {
       State.isDemo = false;
       DB.tenantId  = null;
       DB.agentId   = null;
-      toast('פג תוקף ההתחברות, אנא התחבר מחדש', 'warning');
+      toast('פג תוקף ההתחברות, יש להתחבר מחדש', 'warning');
     }
   }
 });
@@ -17846,7 +17848,7 @@ const ProHub = {
 
     const rows = leads.slice(0, 12).map(l => `
       <div class="pro-score-item">
-        <div class="pro-score-name">${l.name}</div>
+        <div class="pro-score-name">${escapeHtml(l.name)}</div>
         <div class="pro-score-bar-wrap">
           <div class="pro-score-bar">
             <div class="pro-score-fill" style="width:${l.score}%;background:${this._scoreColor(l.score)};"></div>
@@ -17910,7 +17912,7 @@ const ProHub = {
 
     document.getElementById('pro-bc-body').innerHTML = `
       <div class="form-group">
-        <label class="form-label">שלח אל</label>
+        <label class="form-label">שליחה אל</label>
         <select class="form-input" id="bc-stage" onchange="ProHub._bcUpdateList()">
           <option value="">כל הלידים הפעילים</option>
           ${opts}
@@ -17922,7 +17924,7 @@ const ProHub = {
       </div>
       <div id="bc-list-wrap" style="margin-bottom:4px;max-height:200px;overflow-y:auto;"></div>
       <div style="font-size:11.5px;color:var(--gray-500);background:var(--orange-100);border-radius:8px;padding:8px 10px;line-height:1.5;">
-        ⚠️ כל לחיצה פותחת WhatsApp עם ההודעה המוכנה, שלח ידנית
+        ⚠️ כל לחיצה פותחת WhatsApp עם ההודעה המוכנה, השליחה בפועל ידנית
       </div>`;
     this._bcUpdateList();
     openModal('modal-pro-broadcast');
@@ -17942,7 +17944,7 @@ const ProHub = {
       leads.map(l => `
         <div class="pro-bc-lead">
           <span style="font-size:15px;">💬</span>
-          <span style="flex:1;font-size:13px;font-weight:600;">${l.name}</span>
+          <span style="flex:1;font-size:13px;font-weight:600;">${escapeHtml(l.name)}</span>
           <span style="font-size:11px;color:var(--gray-400);margin-left:4px;">${stageNames[l.stage] || ''}</span>
           <button onclick="ProHub._sendWa('${l.id}')" style="background:#25d366;color:white;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">שלח</button>
         </div>`).join('');
@@ -17996,7 +17998,7 @@ const ProHub = {
           <div style="font-size:11px;color:var(--green-600);min-width:28px;text-align:center;font-weight:700;">${d.closed ? d.closed + '✓' : ''}</div>
         </div>`).join('')}
       <div style="font-size:12px;color:var(--gray-500);margin-top:12px;background:var(--blue-100);border-radius:8px;padding:8px 10px;line-height:1.5;">
-        💡 הגדר מקור בעת יצירת ליד לניתוח מדויק יותר
+        💡 הגדרת מקור בעת יצירת ליד, לניתוח מדויק יותר
       </div>` :
       '<div style="text-align:center;color:var(--gray-400);padding:20px;font-size:13px;">אין לידים לניתוח</div>';
 
@@ -18050,13 +18052,13 @@ const ProHub = {
     if (!wrap) return;
     const tpls = this._getTemplates();
     if (!tpls.length) {
-      wrap.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:16px;font-size:13px;">עדיין אין תבניות שמורות<br>הוסף את הראשונה מטה 👇</div>';
+      wrap.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:16px;font-size:13px;">עדיין אין תבניות שמורות<br>ניתן להוסיף את הראשונה מטה 👇</div>';
       return;
     }
     wrap.innerHTML = tpls.map((t, i) => `
       <div class="pro-tmpl-item">
-        <div class="pro-tmpl-name">${t.name}</div>
-        <div class="pro-tmpl-text">${t.text}</div>
+        <div class="pro-tmpl-name">${escapeHtml(t.name)}</div>
+        <div class="pro-tmpl-text">${escapeHtml(t.text)}</div>
         <div class="pro-tmpl-actions">
           <button onclick="ProHub._copyTemplate(${i})" style="flex:1;padding:6px;background:var(--blue-100);color:var(--blue-500);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">📋 העתק</button>
           <button onclick="ProHub._deleteTemplate(${i})" style="padding:6px 10px;background:var(--red-100);color:var(--red-500);border:none;border-radius:8px;font-size:12px;cursor:pointer;">🗑️</button>
@@ -18111,15 +18113,15 @@ const ProHub = {
       perks: ['⚡ העברת לידים אוטומטית בין שלבים', '📱 WA אוטומטי כשמגיע ליד חדש', '🔔 תזכורת אוטומטית אחרי X ימים'],
       mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">⚡ כללי אוטומציה פעילים</div>
         <div class="pro-preview-mockup">
-          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>אחרי שיחה → העבר ל"יצרנו קשר" אוטומטית</span></div>
-          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>נשלח הצעה → שלח תזכורת פולואפ בעוד 3 ימים</span></div>
-          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>7 ימים ללא קשר → שלח התראה לסוכן</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>אחרי שיחה, מעבר אוטומטי ל"יצרנו קשר"</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>נשלחה הצעה, תזכורת פולואפ אוטומטית בעוד 3 ימים</span></div>
+          <div class="pro-preview-row"><span style="font-size:15px;">✅</span><span>7 ימים ללא קשר, התראה אוטומטית לסוכן</span></div>
         </div>`
     },
     'email-campaign': {
-      icon: '📧', title: 'קמפיין אימייל', sub: 'שלח אימייל מקצועי לרשימת לידים',
+      icon: '📧', title: 'קמפיין אימייל', sub: 'שליחת אימייל מקצועי לרשימת לידים',
       perks: ['📧 תבניות מקצועיות בעברית', '📊 מעקב פתיחות וקליקים', '🎯 פילוח לפי שלב בפייפליין'],
-      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📤 שלח קמפיין</div>
+      mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📤 שליחת קמפיין</div>
         <div class="pro-preview-mockup">
           <div class="pro-preview-row"><span>נמענים:</span><span style="font-weight:700;">12 לידים בשלב "הצעה נשלחה"</span></div>
           <div class="pro-preview-row"><span>נושא:</span><span style="font-weight:700;">עדכון על הנכס שמצא לך...</span></div>
@@ -18128,7 +18130,7 @@ const ProHub = {
         <div style="background:var(--green-100);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--green-600);">✅ קמפיין אחרון: 68% שיעור פתיחה</div>`
     },
     'pdf-proposal': {
-      icon: '📄', title: 'הצעת מחיר PDF', sub: 'יצא הצעת מחיר מעוצבת בלחיצה אחת',
+      icon: '📄', title: 'הצעת מחיר PDF', sub: 'ייצוא הצעת מחיר מעוצבת בלחיצה אחת',
       perks: ['🎨 עיצוב מקצועי עם הלוגו שלך', '📱 נשלח כלינק או קובץ PDF', '✏️ ניתן לעריכה לפני שליחה'],
       mockup: `<div style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;">
         <div style="background:var(--navy-700);padding:12px 14px;color:white;font-size:13px;font-weight:700;">📄 הצעת מחיר, PLTO</div>
@@ -18168,7 +18170,7 @@ const ProHub = {
       <div style="text-align:center;font-size:12px;color:var(--gray-500);">שיתוף ב-WA, הלקוח מקבל דף פרופיל אישי</div>`
     },
     'esign': {
-      icon: '✍️', title: 'חתימה דיגיטלית', sub: 'שלח חוזים לחתימה אלקטרונית חוקית',
+      icon: '✍️', title: 'חתימה דיגיטלית', sub: 'שליחת חוזים לחתימה אלקטרונית חוקית',
       perks: ['📜 חתימה חוקית לפי חוק', '📲 הלקוח חותם מהטלפון', '🗂️ ארכיון מסמכים חתומים'],
       mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">📋 מסמכים לחתימה</div>
         <div class="pro-preview-mockup">
@@ -18194,7 +18196,7 @@ const ProHub = {
       </div>`
     },
     'reviews': {
-      icon: '⭐', title: 'ביקורות לקוחות', sub: 'אסוף המלצות אוטומטית אחרי כל עסקה',
+      icon: '⭐', title: 'ביקורות לקוחות', sub: 'איסוף המלצות אוטומטית אחרי כל עסקה',
       perks: ['🚀 בקשה אוטומטית עם סגירת עסקה', '⭐ ציון ממוצע בפרופיל שלך', '📲 שיתוף ביקורות ב-WhatsApp'],
       mockup: `<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">⭐ ביקורות שנאספו</div>
         <div class="pro-preview-mockup">
@@ -18353,7 +18355,7 @@ const Support = {
     const btn  = document.getElementById('support-submit-btn');
     if (inp)  inp.value = '';
     if (aiEl) { aiEl.className = 'hidden'; aiEl.innerHTML = ''; }
-    if (btn)  { btn.textContent = '🚀 שלח לתמיכה'; btn.disabled = false; }
+    if (btn)  { btn.textContent = '🚀 שליחה לתמיכה'; btn.disabled = false; }
     this._updateQuota(document.getElementById('support-ai-quota'));
     this.loadHistory();
     openModal('modal-support');
@@ -18524,7 +18526,7 @@ const Support = {
     } catch(e) {
       toast('שגיאה בשליחה: ' + e.message, 'error');
     } finally {
-      btn.textContent = '🚀 שלח לתמיכה'; btn.disabled = false;
+      btn.textContent = '🚀 שליחה לתמיכה'; btn.disabled = false;
       this._busy = false;
     }
   },
@@ -18565,7 +18567,7 @@ const QuickLog = {
   async process() {
     if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו להשתמש ביומן המהיר עם AI ✨'); this._setState('input'); return; }
     if (!AiLimits.hasAiAccess()) {
-      toast('⏰ תקופת הניסיון הסתיימה, שדרג לתוסף ה-AI (₪100/חודש) להמשך שימוש', 'warning');
+      toast('⏰ תקופת הניסיון הסתיימה, יש לשדרג לתוסף ה-AI (₪100/חודש) להמשך שימוש', 'warning');
       this._setState('input'); return;
     }
     if (!AiLimits.canUse('quicklog')) {
@@ -18684,7 +18686,7 @@ const QuickLog = {
     const upd = this._parsed.updates || {};
     const updEl = document.getElementById('ql-updates-preview');
     const lines = [];
-    if (upd.budget_max) lines.push(`💰 תקציב מקסימלי → ${formatMoney(upd.budget_max)}`);
+    if (upd.budget_max) lines.push(`💰 תקציב מקסימלי: ${formatMoney(upd.budget_max)}`);
     if (upd.notes)      lines.push(`📋 הערה: "${escapeHtml(upd.notes)}"`);
     if (lines.length) {
       updEl.innerHTML = '<strong>עדכונים שיבוצעו:</strong><br>' + lines.join('<br>');
@@ -18907,7 +18909,7 @@ const MotivationAgent = {
   _quotes: [
     'כל ליד הוא הזדמנות. כל שיחה היא צעד קדימה. המשך כך! 💪',
     'עסקאות לא נסגרות בישיבה, הן נסגרות בפעולה. קדימה! 🚀',
-    'המנהלי המצליחים ביותר שמעו "לא" כמה פעמים שאתה, ועדיין המשיכו.',
+    'המנהלים המצליחים ביותר שמעו "לא" פעמים רבות, ועדיין המשיכו.',
     'כל יום שבונים את הפייפליין, בונים את העתיד.',
     'הצלחה היא הסכום של מאמצים קטנים שחוזרים יום אחרי יום.',
   ],
@@ -19427,7 +19429,7 @@ const Team = {
           <div style="font-size:12.5px;font-weight:600;color:var(--gray-800);">${escapeHtml(i.email)}</div>
           <div style="font-size:11px;color:var(--gray-500);">${this._ROLE_LABELS[i.role] || i.role} · ממתין</div>
         </div>
-        ${canManage ? `<button class="btn btn-ghost btn-sm" onclick="Team.revoke('${i.id}')" style="padding:4px 10px;font-size:11px;">בטל</button>` : ''}
+        ${canManage ? `<button class="btn btn-ghost btn-sm" onclick="Team.revoke('${i.id}')" style="padding:4px 10px;font-size:11px;">ביטול</button>` : ''}
       </div>
     `).join('');
   },
@@ -19491,7 +19493,7 @@ const Team = {
       const msg = e.message || '';
       if (msg.includes('seat_limit_reached')) {
         if (State.tenant?.plan === 'pro') {
-          toast('הגעת למקסימום המושבים בחבילת צוות, שדרג לחבילת סוכנות להוספת סוכנים נוספים', 'warning', 6000);
+          toast('הגעת למקסימום המושבים בחבילת צוות, יש לשדרג לחבילת סוכנות להוספת סוכנים נוספים', 'warning', 6000);
         } else {
           closeModal('modal-team');
           Support.open();
@@ -19547,7 +19549,7 @@ const Team = {
         toast('שגיאה: ' + msg, 'error');
       }
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = '🔗 צור קישור גיוס לסוכן חדש'; }
+      if (btn) { btn.disabled = false; btn.textContent = '🔗 יצירת קישור גיוס לסוכן חדש'; }
     }
   },
 
@@ -19668,12 +19670,12 @@ const InjectionGuard = {
         <div style="color:#fca5a5;font-size:21px;font-weight:900;margin-bottom:10px;">אזהרת אבטחה!</div>
         <div style="color:#fee2e2;font-size:14px;line-height:1.65;margin-bottom:14px;">
           זוהה ניסיון להזרקת הוראות זרות לתוך הסוכן.<br>
-          <strong style="color:#f87171;font-size:15px;">עוד ניסיון אחד, החשבון שלך ייחסם מיידית</strong><br>
-          ותיק אירוע יועבר לצוות PLTO.
+          <strong style="color:#f87171;font-size:15px;">בניסיון נוסף תתבצע התנתקות מיידית מהמערכת</strong><br>
+          והאירוע יתועד ביומן האבטחה.
         </div>
         <div style="color:#fca5a5;font-size:12px;padding:10px 14px;background:rgba(255,0,0,0.12);border-radius:10px;margin-bottom:20px;line-height:1.6;">
           ⚠️ PLTO מוגנת בשכבות אבטחה מרובות.<br>
-          כל ניסיון פריצה נרשם, מתועד ומועבר לטיפול.
+          כל ניסיון חריג נרשם ומתועד.
         </div>
         <button onclick="document.getElementById('inj-warn-modal')?.remove()" style="background:#dc2626;color:white;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">
           הבנתי, לא אחזור על זה
@@ -19689,13 +19691,17 @@ const InjectionGuard = {
     overlay.innerHTML = `
       <div style="text-align:center;padding:32px;">
         <div style="font-size:68px;margin-bottom:16px;">🔒</div>
-        <div style="color:#dc2626;font-size:26px;font-weight:900;margin-bottom:14px;">החשבון נחסם</div>
+        <div style="color:#dc2626;font-size:26px;font-weight:900;margin-bottom:14px;">בוצעה התנתקות מהחשבון</div>
         <div style="color:#fca5a5;font-size:14px;max-width:300px;line-height:1.7;margin:0 auto;">
           זוהו ניסיונות חוזרים להזרקת הוראות זרות.<br>
-          החשבון נחסם זמנית ותיק האירוע הועבר לצוות PLTO לטיפול.
+          האירוע תועד ביומן האבטחה. יש להתחבר מחדש כדי להמשיך.
         </div>
       </div>`;
     document.body.appendChild(overlay);
+
+    AuditLog.log('security.injection_blocked', 'agent', State.agent?.id, {
+      suspicious_text: String(suspiciousText).slice(0, 300),
+    });
 
     try {
       await Make.trigger('security.injection_blocked', {
