@@ -17300,6 +17300,14 @@ async function saveEditLead() {
 
 // Back button / popstate support
 window.addEventListener('popstate', function(e) {
+  // Physical/browser back while the onboarding wizard is open: treat it exactly
+  // like the ✕ button (Onboarding.skip) so it closes deliberately and the
+  // "onboarding_done" flag is saved, instead of silently disappearing without
+  // ever being marked complete (which made it reappear on the next login).
+  const onboardingModal = document.getElementById('modal-onboarding');
+  if (onboardingModal && !onboardingModal.classList.contains('hidden')) {
+    Onboarding.skip();
+  }
   // Only navigate within the app if the app shell is visible
   const appShell = document.getElementById('app-shell');
   if (!appShell || appShell.classList.contains('hidden')) return;

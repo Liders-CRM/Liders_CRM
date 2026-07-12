@@ -1645,6 +1645,37 @@ Liders מתחרה ב-Pipedrive ו-monday.com בתחום ה-SMB. הם גובים 
 
 ---
 
+## 🔴 באג פתוח — כניסה עם Google מפנה ל-liders-crm.com ומקבלת 404 (התגלה 12/7/2026)
+
+> התגלה כשמשתמש ניסה להתחבר עם Google וקיבל דף 404 של GitHub Pages. בשורת
+> הכתובת נראה בבירור `liders-crm.com/#access_token=...` — כלומר Supabase Auth
+> מפנה בחזרה לדומיין הישן (ל-`liders-crm.com` כבר אין GitHub Pages מאז שה-CNAME
+> הוחלף ל-`plto.app` בסשן 9/7), במקום ל-`redirectTo:'https://plto.app/'`
+> שמוגדר בקוד (`index.html`, `App.loginWithGoogle` + `forgotPassword`).
+
+**אבחנה**: זהו פער שנשמט ממעבר הדומיין (Rebrand PLTO, סשנים 8–9/7) — עודכנו אז
+ה-Edge Functions (`ALLOWED_ORIGINS`) וכל קישורי ה-HTML, אבל **לא** הוגדרות ה-Auth
+עצמן ב-Supabase Dashboard. כש-`redirectTo` שמועבר בקריאת `signInWithOAuth`/
+`resetPasswordForEmail` לא נמצא ברשימת ה-Redirect URLs המורשות של הפרויקט,
+Supabase מתעלם ממנו ונופל בחזרה ל-Site URL ברירת המחדל, שכנראה עדיין
+`liders-crm.com`.
+
+**תיקון נדרש (ידני בלבד — אין כלי MCP שנוגע בהגדרת Auth URL Configuration)**:
+1. Supabase Dashboard → פרויקט `scyfywvzoogfrlalgftv` → **Authentication → URL
+   Configuration**
+2. **Site URL** → לשנות ל-`https://plto.app`
+3. **Redirect URLs** → להוסיף `https://plto.app/**` (ואפשר גם `https://www.plto.app/**`
+   ליתר ביטחון)
+4. לבדוק גם Google Cloud Console → OAuth Client → Authorized redirect URIs
+   (אמור להיות כתובת ה-callback של Supabase עצמו, `https://scyfywvzoogfrlalgftv.
+   supabase.co/auth/v1/callback` — זה כנראה לא קשור לבאג הזה ולא היה צריך
+   להשתנות עם הדומיין, אבל שווה לוודא)
+5. אחרי התיקון: לבדוק כניסה עם Google מקצה לקצה בפועל
+
+**סטטוס**: טרם תוקן, ממתין לפעולה ידנית של המשתמש בדשבורד Supabase.
+
+---
+
 ## Quick Commands
 
 ```bash
