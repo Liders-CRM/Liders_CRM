@@ -576,7 +576,7 @@
       <div class="pw-wrap">
         <input type="password" id="auth-password" class="form-input" placeholder="••••••••"
           onkeydown="if(event.key==='Enter') doLogin()">
-        <button type="button" class="pw-eye" onclick="togglePasswordVisibility()" title="הצג/הסתר סיסמה" id="btn-eye">👁</button>
+        <button type="button" class="pw-eye" onclick="togglePasswordVisibility()" title="הצגה או הסתרה של הסיסמה" id="btn-eye">👁</button>
       </div>
     </div>
     <button class="btn-auth" id="btn-login" onclick="doLogin()">כניסה לפאנל</button>
@@ -622,7 +622,7 @@
       <div class="section-header">
         <h2>דשבורד</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadAll()">🔄 רענן הכל</button>
+          <button class="btn-outline btn-sm" onclick="loadAll()">🔄 רענון הכל</button>
         </div>
       </div>
       <div class="stats-row" id="dash-stats"></div>
@@ -649,7 +649,7 @@
       <div class="section-header">
         <h2>לקוחות פלטפורמה</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadAccounts()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="loadAccounts()">🔄 רענון</button>
           <button class="btn-primary btn-sm" onclick="openAddAccount()">+ הוספת חשבון</button>
         </div>
       </div>
@@ -687,7 +687,7 @@
       <div class="section-header">
         <h2>חשבוניות ותשלומים</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadInvoices()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="loadInvoices()">🔄 רענון</button>
           <button class="btn-primary btn-sm" onclick="openAddInvoice()">+ הוספת חשבונית</button>
         </div>
       </div>
@@ -726,7 +726,7 @@
       <div class="section-header">
         <h2>לקוחות SaaS שנרשמו בפועל</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadSaasTenants()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="loadSaasTenants()">🔄 רענון</button>
         </div>
       </div>
       <div class="stats-row" id="saas-stats-row" style="margin-bottom:1.25rem;"></div>
@@ -769,7 +769,7 @@
       <div class="section-header">
         <h2>🎫 פניות תמיכה</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadSupportTickets()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="loadSupportTickets()">🔄 רענון</button>
         </div>
       </div>
       <div id="support-stats-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;"></div>
@@ -799,7 +799,7 @@
       <div class="section-header">
         <h2>🚧 בתהליך בנייה</h2>
         <div class="header-actions">
-          <button class="btn-outline btn-sm" onclick="loadRoadmapItems()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="loadRoadmapItems()">🔄 רענון</button>
           <button class="btn-primary btn-sm" onclick="openAddRoadmapItem()">+ הוספת פריט</button>
         </div>
       </div>
@@ -835,7 +835,7 @@
             <option value="14">14 ימים</option>
             <option value="30">30 ימים</option>
           </select>
-          <button class="btn-outline btn-sm" onclick="AdminCRO.load()">🔄 רענן</button>
+          <button class="btn-outline btn-sm" onclick="AdminCRO.load()">🔄 רענון</button>
         </div>
       </div>
 
@@ -917,7 +917,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-account')">ביטול</button>
-      <button class="btn-primary btn-sm" onclick="saveAccount()">שמור</button>
+      <button class="btn-primary btn-sm" onclick="saveAccount()">שמירה</button>
     </div>
   </div>
 </div>
@@ -959,7 +959,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-invoice')">ביטול</button>
-      <button class="btn-primary btn-sm" onclick="saveInvoice()">שמור</button>
+      <button class="btn-primary btn-sm" onclick="saveInvoice()">שמירה</button>
     </div>
   </div>
 </div>
@@ -1010,7 +1010,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-roadmap-item')">ביטול</button>
-      <button class="btn-primary btn-sm" onclick="saveRoadmapItem()">שמור</button>
+      <button class="btn-primary btn-sm" onclick="saveRoadmapItem()">שמירה</button>
     </div>
   </div>
 </div>
@@ -1044,8 +1044,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-outline btn-sm" onclick="closeModal('modal-tenant-mgmt')">סגור</button>
-      <button class="btn-primary btn-sm" onclick="saveTenantMgmt()">שמור</button>
+      <button class="btn-outline btn-sm" onclick="closeModal('modal-tenant-mgmt')">סגירה</button>
+      <button class="btn-primary btn-sm" onclick="saveTenantMgmt()">שמירה</button>
     </div>
   </div>
 </div>
@@ -1515,8 +1515,8 @@ function renderSaasTable(tenants) {
     const planBadgeHtml = `<span class="badge ${planMap[t.plan]||'badge-dim'}">${esc(t.plan||'?')}</span>`;
     const mktg = t.marketing_addon;
     const mktgCell = mktg
-      ? `<button class="btn-icon" title="כבה שיווק" onclick="toggleMarketing('${t.id}',false)" style="color:var(--green);font-size:.75rem;">📣 פעיל</button>`
-      : `<button class="btn-icon" title="הפעל שיווק" onclick="toggleMarketing('${t.id}',true)" style="color:var(--text-dim);font-size:.75rem;">📣 כבוי</button>`;
+      ? `<button class="btn-icon" title="כיבוי שיווק" onclick="toggleMarketing('${t.id}',false)" style="color:var(--green);font-size:.75rem;">📣 פעיל</button>`
+      : `<button class="btn-icon" title="הפעלת שיווק" onclick="toggleMarketing('${t.id}',true)" style="color:var(--text-dim);font-size:.75rem;">📣 כבוי</button>`;
     const seats = allTenantSeats[t.id];
     const seatsCell = seats
       ? `<span style="font-weight:600;">${seats.seats_active}/${seats.seats_max}</span>${seats.overage_seats > 0 ? `<div style="font-size:.72rem;color:var(--gold);font-weight:700;">+${seats.overage_seats} מעבר, ₪${seats.monthly_overage_charge}/חוד'</div>` : ''}`
@@ -1536,8 +1536,8 @@ function renderSaasTable(tenants) {
           <div class="action-btns">
             <button class="btn-icon" title="פתיחת CRM" onclick="window.open('https://plto.app/','_blank')" style="font-size:.75rem;">⧉</button>
             <button class="btn-icon" title="ניהול לקוח" onclick="openTenantMgmt('${t.id}')" style="font-size:.75rem;color:var(--blue);">⚙</button>
-            ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענק גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
-            ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזר לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">↩</button>` : ''}
+            ${t.plan !== 'premium' ? `<button class="btn-icon" title="הענקת גישה חינמית לצמיתות" onclick="grantFreePlan('${t.id}')" style="font-size:.75rem;color:var(--gold)">⭐</button>` : ''}
+            ${t.plan === 'premium' && !['liders.crm@gmail.com','elgrablidudu@gmail.com'].includes(t.billing_email) ? `<button class="btn-icon" title="החזרה לניסיון" onclick="resetToTrial('${t.id}')" style="font-size:.75rem;color:var(--text-muted)">החזרה</button>` : ''}
           </div>
         </td>
       </tr>`;
@@ -1564,7 +1564,7 @@ async function resetToTrial(tenantId) {
     p_trial_ends_at: new Date(Date.now() + 30 * 864e5).toISOString(),
   });
   if (error) { alert('שגיאה: ' + error.message); return; }
-  toast('↩ הוחזר לניסיון', '');
+  toast('הוחזר לניסיון', '');
   loadSaasTenants();
 }
 
@@ -1702,7 +1702,7 @@ function renderSupportTable(tickets) {
       <td style="font-size:.78rem;color:var(--text-dim);white-space:nowrap;">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') + '<br>' + new Date(t.created_at).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '—'}</td>
       <td>
         <div class="action-btns">
-          <button class="btn-icon" title="ענה" onclick="openSupportReply('${t.id}')" style="color:var(--blue);font-size:.8rem;">✉️ ענה</button>
+          <button class="btn-icon" title="מענה" onclick="openSupportReply('${t.id}')" style="color:var(--blue);font-size:.8rem;">✉️ מענה</button>
           ${t.status !== 'resolved' ? `<button class="btn-icon" title="סימון כטופל" onclick="resolveSupportTicket('${t.id}')" style="color:var(--green);font-size:.8rem;">✔</button>` : ''}
         </div>
       </td>
@@ -1936,7 +1936,7 @@ function togglePasswordVisibility() {
     </div>
     <div class="modal-footer">
       <button class="btn-outline btn-sm" onclick="closeModal('modal-ab-test')">ביטול</button>
-      <button class="btn-primary btn-sm" onclick="AdminCRO.saveAbTest()">שמור</button>
+      <button class="btn-primary btn-sm" onclick="AdminCRO.saveAbTest()">שמירה</button>
     </div>
   </div>
 </div>
@@ -2026,7 +2026,7 @@ const AdminCRO = {
             <div style="font-weight:600;font-size:.9rem;">${esc(t.name)}</div>
             ${t.hypothesis ? `<div style="font-size:.8rem;color:var(--text-dim);margin-top:2px;">${esc(t.hypothesis)}</div>` : ''}
           </div>
-          <button class="btn-primary btn-sm" onclick="AdminCRO.activateTest('${t.id}')">הפעל</button>
+          <button class="btn-primary btn-sm" onclick="AdminCRO.activateTest('${t.id}')">הפעלה</button>
           <button class="btn-outline btn-sm" onclick="AdminCRO.openAbModal(${JSON.stringify(t)})">עריכה</button>
         </div>`).join('');
     } else if (backlog) {
