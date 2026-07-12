@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>חתימת הסכם עמלת הפניה — PLTO</title>
+  <title>חתימת הסכם עמלת הפניה, PLTO</title>
   <meta name="description" content="חתימה דיגיטלית על הסכם עמלת הפניה">
   <meta name="robots" content="noindex,nofollow">
   <meta http-equiv="Content-Security-Policy"
@@ -376,7 +376,7 @@
           <div class="pb-from">הפניה מאת</div>
           <div class="pb-name" id="rdy-referrer"></div>
           <div style="font-size:13px;color:var(--gray-600);margin-bottom:8px;">
-            מעביר/ת אליך ליד: <strong id="rdy-lead-name"></strong>
+            ליד מועבר אליך: <strong id="rdy-lead-name"></strong>
           </div>
           <div class="pb-commission">
             💰 עמלת הפניה: <span id="rdy-commission"></span>
@@ -407,7 +407,7 @@
           <div class="sig-canvas-wrap">
             <canvas id="sig-canvas" width="480" height="140"></canvas>
           </div>
-          <button type="button" class="sig-clear-btn" onclick="SignPad.clear()">🗑️ נקה חתימה</button>
+          <button type="button" class="sig-clear-btn" onclick="SignPad.clear()">🗑️ ניקוי חתימה</button>
         </div>
 
         <div class="legal-note">
@@ -447,15 +447,15 @@
         </div>
 
         <a id="suc-wa-btn" class="btn-call" href="#" target="_blank" rel="noopener">
-          💬 שלח הודעת וואטסאפ ללקוח
+          💬 שליחת הודעת וואטסאפ ללקוח
         </a>
 
         <div style="text-align:center;font-size:12.5px;color:var(--gray-400);margin:10px 0 12px;">
-          ─── מנהל/ת הפניות? ───
+          ניהול הפניות?
         </div>
 
         <a class="btn-join" href="https://plto.app/" target="_blank" rel="noopener">
-          🚀 נהל את ההפניות שלך ב-PLTO — 30 יום חינם
+          🚀 ניהול ההפניות שלך ב-PLTO, 30 יום חינם
         </a>
       </div>
 
@@ -581,7 +581,7 @@ const Page = {
     this._token  = params.get('lref') || '';
 
     if (!this._token || !/^[a-f0-9]{32}$/.test(this._token)) {
-      this.showError('קישור לא תקין', 'הקישור שנשלח אליך אינו תקין. בקש מהמפנה לשלוח מחדש.');
+      this.showError('קישור לא תקין', 'הקישור שנשלח אליך אינו תקין. יש לבקש מהמפנה לשלוח מחדש.');
       return;
     }
 
@@ -599,13 +599,13 @@ const Page = {
     } catch (e) {
       const m = e.message || '';
       if (m.includes('referral_expired')) {
-        this.showError('הקישור פג תוקף', 'קישורי ההפניה תקפים ל-14 יום. בקש מהמפנה לשלוח קישור חדש.');
+        this.showError('הקישור פג תוקף', 'קישורי ההפניה תקפים ל-14 יום. יש לבקש מהמפנה לשלוח קישור חדש.');
       } else if (m.includes('referral_used')) {
         this.showError('ההפניה כבר טופלה', 'הסכם זה כבר נחתם או נדחה בעבר.');
       } else if (m.includes('no_agreement_needed')) {
         this.showError('אין הסכם להצגה', 'הפניה זו אינה כוללת עמלה ואינה דורשת חתימה.');
       } else {
-        this.showError('שגיאה בטעינת ההסכם', 'אירעה שגיאה טכנית. נסה לרענן את הדף. אם הבעיה נמשכת — בקש מהמפנה לשלוח קישור חדש.');
+        this.showError('שגיאה בטעינת ההסכם', 'אירעה שגיאה טכנית. יש לרענן את הדף, ואם הבעיה נמשכת, לבקש מהמפנה לשלוח קישור חדש.');
       }
     }
   },
@@ -617,7 +617,7 @@ const Page = {
     if (SignPad.isEmpty()) { this._flash('נא לחתום בתיבת החתימה'); return; }
 
     const btn = document.getElementById('btn-sign');
-    btn.disabled = true; btn.textContent = 'חותם...';
+    btn.disabled = true; btn.textContent = 'ביצוע חתימה...';
 
     try {
       const { data, error } = await sbClient.rpc('sign_referral_agreement_anon', {
@@ -655,7 +655,7 @@ const Page = {
       if (m.includes('referral_used') || m.includes('agreement_not_pending')) {
         this.showError('ההפניה כבר טופלה', 'הסכם זה כבר נחתם קודם לכן.');
       } else if (m.includes('referral_expired')) {
-        this.showError('הקישור פג תוקף', 'בקש מהמפנה לשלוח קישור חדש.');
+        this.showError('הקישור פג תוקף', 'יש לבקש מהמפנה לשלוח קישור חדש.');
       } else {
         btn.disabled = false; btn.textContent = '✅ חתימה וקבלת פרטי הלקוח';
         this._flash('שגיאה: ' + m);
