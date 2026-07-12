@@ -1080,7 +1080,8 @@
     }
     .lp-value {
       font-size: 10px; font-weight: 600; color: rgba(255,255,255,.46);
-      direction: ltr; text-align: right;
+      direction: rtl; text-align: right;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .lp-card--closed .lp-value { color: rgba(147,197,253,.82); }
     /* ─── Google button animation ─── */
@@ -4199,25 +4200,25 @@
       </svg>
     </div>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
-    <div class="lh-tagline">העסקאות שלך לא יסגרו את עצמן</div>
-    <div class="lh-microcopy">תוך דקה יש לך מערכת שחוסכת שעות של עבודה</div>
+    <div class="lh-tagline">פותחים חשבון ומתחילים לעבוד</div>
+    <div class="lh-microcopy">המערכת מוכנה, ההרשמה לוקחת פחות מדקה</div>
 
-    <!-- Mini pipeline visualization: 3 lead cards at different stages -->
+    <!-- Mini benefits visualization: 3 core capabilities -->
     <div class="login-pipeline" aria-hidden="true">
       <div class="lp-card lp-card--new">
-        <div class="lp-stage">ליד חדש</div>
-        <div class="lp-name">דן לוי</div>
-        <div class="lp-value">4.8M ₪</div>
+        <div class="lp-stage">ניהול</div>
+        <div class="lp-name">לידים ולקוחות</div>
+        <div class="lp-value">הכל מתועד</div>
       </div>
       <div class="lp-card lp-card--offer">
-        <div class="lp-stage">הצעה נשלחה</div>
-        <div class="lp-name">סמר נסאר</div>
-        <div class="lp-value">2.3M ₪</div>
+        <div class="lp-stage">אוטומציה</div>
+        <div class="lp-name">תזכורות חכמות</div>
+        <div class="lp-value">תמיד בזמן</div>
       </div>
       <div class="lp-card lp-card--closed">
-        <div class="lp-stage">נסגר ✓</div>
-        <div class="lp-name">עמית כהן</div>
-        <div class="lp-value">6.1M ₪</div>
+        <div class="lp-stage">תוצאה ✓</div>
+        <div class="lp-name">ניהול עסקאות</div>
+        <div class="lp-value">עד לסגירה</div>
       </div>
     </div>
   </div>
@@ -4240,7 +4241,7 @@
       </div>
       <div style="font-size:11px;opacity:.6;">יש להירשם למטה כדי להצטרף לסוכנות</div>
     </div>
-    <p class="login-card-title">הגעת למקום הנכון</p>
+    <p class="login-card-title">ברוכים הבאים ל-PLTO</p>
     <div style="text-align:center;margin-bottom:12px;">
       <div class="login-trial-badge">
         🎁 30 יום ניסיון בחינם, ללא כרטיס אשראי
@@ -4280,7 +4281,7 @@
         </button>
       </div>
       <button id="btn-login-email" type="button" class="btn btn-primary w-full" style="padding:13px; font-size:15px; touch-action:manipulation;">
-        כניסה / הרשמה בחינם
+        התחלה בחינם
       </button>
       <p style="text-align:center;font-size:0.82rem;color:var(--gray-400);margin-top:14px;">
         בהרשמה מסכימים ל<span onclick="openModal('modal-privacy')" style="color:var(--blue-400);cursor:pointer;text-decoration:underline;">תנאי השימוש ומדיניות הפרטיות</span>
@@ -13464,7 +13465,7 @@ const App = {
       }
       document.getElementById('loading-overlay')?.classList.add('hidden');
     } finally {
-      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'כניסה / הרשמה בחינם'; }
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'התחלה בחינם'; }
     }
   },
   _showApp() {
