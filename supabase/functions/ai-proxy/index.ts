@@ -23,14 +23,21 @@ const ALLOWED_MODELS = [
   'claude-sonnet-4-6',
 ];
 
-const ALLOWED_TYPES = ['general', 'marketing', 'quicklog', 'support', 'motivation'];
+const ALLOWED_TYPES = ['general', 'marketing', 'quicklog', 'support', 'motivation', 'lead_image_import'];
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 
 // Hard caps — client cannot exceed these
-const MAX_TOKENS_CAP   = 1000;
+const MAX_TOKENS_CAP        = 1000;
+const MAX_TOKENS_CAP_IMAGE  = 1500; // lead_image_import: JSON array of leads can run longer
 const MAX_SYSTEM_LEN   = 2000; // chars
 const MAX_CONTENT_LEN  = 4000; // chars per message
 const MAX_MESSAGES     = 6;
+
+// lead_image_import: one image per request, capped size/type. Client already
+// downscales to Claude's own effective resolution (1568px longest edge)
+// before sending, so this cap is a hard backstop, not the expected size.
+const MAX_IMAGE_BASE64_LEN = 4_500_000; // ~3.3MB raw image
+const ALLOWED_IMAGE_TYPES  = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 serve(async (req) => {
   const origin = req.headers.get('origin');
@@ -70,10 +77,9 @@ serve(async (req) => {
 
     // ── 3. Server-side quota enforcement ────────────────────────────────
     const aiType = ALLOWED_TYPES.includes(rawType) ? rawType : 'general';
-    const { data: quota, error: quotaErr } = await sbClient.rpc(
-      'check_and_increment_ai_usage',
-      { p_type: aiType }
-    );
+    const { data: quota, error: quotaErr } = aiType === 'lead_image_import'
+      ? await sbClient.rpc('check_and_increment_lead_image_import')
+      : await sbClient.rpc('check_and_increment_ai_usage', { p_type: aiType });
     if (quotaErr || !quota?.allowed) {
       return Response.json(
         {
@@ -83,6 +89,7 @@ serve(async (req) => {
           used:  quota?.used  ?? 0,
           limit: quota?.limit ?? 0,
           retry_after_seconds: quota?.retry_after_seconds ?? null,
+          available_at: quota?.available_at ?? null,
         },
         { status: 429, headers: cors }
       );
@@ -90,7 +97,8 @@ serve(async (req) => {
 
     // ── 4. Validate and sanitize messages ───────────────────────────────
     // Cap max_tokens server-side regardless of client value
-    const max_tokens = Math.min(Number(body.max_tokens) || 400, MAX_TOKENS_CAP);
+    const tokenCap = aiType === 'lead_image_import' ? MAX_TOKENS_CAP_IMAGE : MAX_TOKENS_CAP;
+    const max_tokens = Math.min(Number(body.max_tokens) || 400, tokenCap);
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return Response.json({ error: 'messages required' }, { status: 400, headers: cors });
@@ -99,13 +107,49 @@ serve(async (req) => {
       return Response.json({ error: 'Too many messages' }, { status: 400, headers: cors });
     }
 
-    const safeMessages = messages.map((m: { role: string; content: string }) => ({
-      role: m.role === 'assistant' ? 'assistant' : 'user',
-      content: (typeof m.content === 'string' ? m.content : '').slice(0, MAX_CONTENT_LEN),
-    }));
+    let safeMessages;
+    if (aiType === 'lead_image_import') {
+      let imageSeen = false;
+      safeMessages = messages.map((m: { role: string; content: unknown }) => {
+        const role = m.role === 'assistant' ? 'assistant' : 'user';
+        if (!Array.isArray(m.content)) {
+          return { role, content: (typeof m.content === 'string' ? m.content : '').slice(0, MAX_CONTENT_LEN) };
+        }
+        const blocks: Record<string, unknown>[] = [];
+        for (const block of m.content as Record<string, unknown>[]) {
+          if (block?.type === 'text') {
+            blocks.push({ type: 'text', text: (typeof block.text === 'string' ? block.text : '').slice(0, MAX_CONTENT_LEN) });
+          } else if (block?.type === 'image' && !imageSeen) {
+            const source = block.source as Record<string, unknown> | undefined;
+            const mediaType = source?.media_type;
+            const data = source?.data;
+            if (
+              typeof mediaType === 'string' && ALLOWED_IMAGE_TYPES.includes(mediaType) &&
+              typeof data === 'string' && data.length > 0 && data.length <= MAX_IMAGE_BASE64_LEN
+            ) {
+              blocks.push({ type: 'image', source: { type: 'base64', media_type: mediaType, data } });
+              imageSeen = true;
+            }
+          }
+        }
+        return { role, content: blocks };
+      });
+      if (!imageSeen) {
+        return Response.json({ error: 'image required' }, { status: 400, headers: cors });
+      }
+    } else {
+      safeMessages = messages.map((m: { role: string; content: string }) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: (typeof m.content === 'string' ? m.content : '').slice(0, MAX_CONTENT_LEN),
+      }));
+    }
 
     const safeSystem = typeof system === 'string' ? system.slice(0, MAX_SYSTEM_LEN) : undefined;
-    const model = ALLOWED_MODELS.includes(requestedModel) ? requestedModel : DEFAULT_MODEL;
+    // lead_image_import always forced to Haiku regardless of what the client sent —
+    // cost predictability for a vision call matters more than letting it drift to Sonnet.
+    const model = aiType === 'lead_image_import'
+      ? 'claude-haiku-4-5-20251001'
+      : (ALLOWED_MODELS.includes(requestedModel) ? requestedModel : DEFAULT_MODEL);
 
     // ── 5. Forward to Anthropic ─────────────────────────────────────────
     const reqBody: Record<string, unknown> = {
