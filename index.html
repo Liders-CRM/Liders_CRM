@@ -423,20 +423,9 @@
     ═══════════════════════════════════════ */
     .hidden { display: none !important; }
     .flex { display: flex; }
-    .flex-col { display: flex; flex-direction: column; }
-    .items-center { align-items: center; }
-    .gap-1 { gap: 4px; }
     .gap-2 { gap: 8px; }
-    .gap-3 { gap: 12px; }
-    .gap-4 { gap: 16px; }
-    .text-sm { font-size: 13px; }
-    .text-xs { font-size: 11px; }
-    .text-muted { color: var(--gray-500); }
-    .font-bold { font-weight: 700; }
-    .font-semibold { font-weight: 600; }
     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .w-full { width: 100%; }
-    .mt-1 { margin-top: 4px; }
     .mt-2 { margin-top: 8px; }
     .mt-4 { margin-top: 16px; }
 
@@ -540,8 +529,6 @@
       padding: 12px; margin-top: 10px;
     }
     .support-history-item .sh-msg { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
-    .support-history-item .sh-ai  { font-size: 12px; color: var(--blue-600); margin-top: 6px; font-style: italic; }
-    .support-history-item .sh-adm { font-size: 12px; color: #15803d; margin-top: 6px; font-weight: 700; }
     .support-history-item .sh-meta{ font-size: 11px; color: var(--gray-400); margin-top: 4px; }
     .support-chat { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .support-chat-msg {
@@ -1953,14 +1940,6 @@
       content: ''; position: absolute; inset: 0;
       background: rgba(255,255,255,.07); pointer-events: none;
     }
-    .lft-mortgage { background: linear-gradient(135deg,#1a5f8a,#2196c4); }
-    .lft-ai       { background: linear-gradient(135deg,#5b21b6,#7c3aed); }
-    .lft-agent    { background: linear-gradient(135deg,#0f4c2a,#16a34a); }
-    .lft-prizes   { background: linear-gradient(135deg,#8a4a00,#d4a82a); }
-    .lft-icon { font-size: 26px; line-height: 1; }
-    .lft-title { font-size: 12px; font-weight: 800; line-height: 1.3; }
-    .lft-sub { font-size: 10px; opacity: .75; font-weight: 500; }
-
     /* ═══════════════════════════════════════
        SETUP / LOADING SCREEN (post-onboarding)
     ═══════════════════════════════════════ */
@@ -3836,39 +3815,6 @@
   .chat-send-btn { width:42px; height:42px; border-radius:50%; background:var(--navy-500); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; transition:var(--transition); }
   .chat-send-btn:active { transform:scale(0.9); }
   .share-code-box { font-size:32px; font-weight:900; letter-spacing:8px; color:var(--navy-500); font-family:monospace; background:var(--gray-50); padding:14px 20px; border-radius:12px; border:2px dashed #93C5FD; text-align:center; }
-
-  /* ── EMAIL AI SCREEN ── */
-  .email-ai-header { background:linear-gradient(135deg,#1E3A5F,#2563EB); color:#fff; padding:20px 16px 16px; border-radius:0 0 20px 20px; margin-bottom:16px; }
-  .email-ai-header h2 { font-size:20px; font-weight:900; margin:0 0 4px; }
-  .email-ai-header p  { font-size:12px; opacity:.75; margin:0; }
-  .email-paste-card   { background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:16px; margin:0 16px 14px; }
-  .email-paste-label  { font-size:12px; font-weight:700; color:var(--gray-500); margin-bottom:8px; }
-  .email-paste-area   { width:100%; min-height:120px; border:1.5px solid var(--gray-200); border-radius:12px; padding:12px; font-size:13px; font-family:inherit; direction:rtl; resize:vertical; outline:none; color:var(--gray-700); line-height:1.6; box-sizing:border-box; }
-  .email-paste-area:focus { border-color:var(--blue-400); }
-  .email-analyze-btn  { width:100%; margin-top:12px; padding:14px; background:linear-gradient(135deg,#1E40AF,#2563EB); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; transition:var(--transition); }
-  .email-analyze-btn:active { transform:scale(0.98); }
-  .email-analyze-btn:disabled { opacity:.55; cursor:default; }
-  .email-result-card  { background:#fff; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:16px; margin:0 16px 14px; display:none; }
-  .email-result-card.visible { display:block; }
-  .email-class-row    { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
-  .email-badge        { display:inline-flex; align-items:center; gap:4px; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:700; }
-  .email-badge-high   { background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; }
-  .email-badge-med    { background:#FFFBEB; color:#D97706; border:1px solid #FDE68A; }
-  .email-badge-low    { background:#F0FDF4; color:#16A34A; border:1px solid #BBF7D0; }
-  .email-badge-sales  { background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; }
-  .email-badge-support{ background:#F5F3FF; color:#7C3AED; border:1px solid #DDD6FE; }
-  .email-badge-spam   { background:#FFF7ED; color:#EA580C; border:1px solid #FED7AA; }
-  .email-badge-other  { background:var(--gray-100); color:var(--gray-600); border:1px solid var(--gray-200); }
-  .email-summary-box  { background:var(--gray-50); border-radius:10px; padding:12px; font-size:13px; color:var(--gray-700); line-height:1.6; margin-bottom:14px; border-right:3px solid #2563EB; }
-  .email-reply-label  { font-size:12px; font-weight:700; color:var(--gray-500); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
-  .email-reply-box    { background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:12px; padding:14px; font-size:13px; color:var(--gray-800); line-height:1.8; white-space:pre-wrap; direction:rtl; min-height:80px; }
-  .email-copy-btn     { width:100%; margin-top:10px; padding:12px; background:#16A34A; color:#fff; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:var(--transition); }
-  .email-copy-btn:active { transform:scale(0.98); }
-  .email-quota-badge  { font-size:11px; color:var(--gray-400); text-align:center; margin-top:6px; }
-  .email-tips-card    { background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(124,58,237,.04)); border:1px solid rgba(37,99,235,.12); border-radius:14px; padding:14px 16px; margin:0 16px 20px; }
-  .email-tips-title   { font-size:12px; font-weight:800; color:var(--navy-500); margin-bottom:10px; }
-  .email-tip          { font-size:12px; color:var(--gray-600); margin-bottom:6px; line-height:1.5; display:flex; gap:6px; }
-  .email-tip:last-child { margin-bottom:0; }
 
   /* ═══════════════════════════════════════
      INBOX — תיבת דואר עסקית
@@ -10766,27 +10712,6 @@ const Marketing = {
         <p class="mktg-fs-micro">כמובל שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
       </div>`;
     FeatureGate.applyOverlay('screen-marketing');
-  },
-
-  _templates: {
-    offer: {
-      exclusive: (name, prop, agency) => `שלום ${name}! 👋\n\nרציתי לשתף אותך בהזדמנות שמחכה לך לפני שהיא יוצאת לשוק הרחב.\n${prop ? `\n🏠 ${prop}\n` : ''}\nלפני שאני מפרסם את הנכס לכולם, אני פונה אליך לפני כולם. יש לי כמה ימים לפני שיוצא לאוויר.\n\nאם מעניין אותך, נתאם ביקור בלעדי השבוע, ללא לחץ ולפי הזמן שלך.\n\nמחכה לשמוע 🙏\n${agency}`,
-      special_price: (name, prop, agency) => `שלום ${name} 👋\n\nיש לי עבורך הצעה שאינה זמינה לכולם, ואני פונה אליך לפני כולם.\n${prop ? `\n🏠 ${prop}\n` : ''}\nבשל סיום מהיר שחשוב למוכר, יש אפשרות לתנאים מיוחדים שלא יוצגו ברשת. הפרטים, ישירות בשיחה.\n\nכדאי שנדבר השבוע ⚡\n${agency}`,
-      limited: (name, prop, agency) => `שלום ${name}!\n\nהצעה שתקפה לשבוע הקרוב בלבד, וחשבתי עליך 🎯\n${prop ? `\n🏠 ${prop}\n` : ''}\nמסיבות שאסביר לך בשיחה, יש הזדמנות מעניינת שנפתחה לאחרונה. לא מדובר במשהו שיחכה הרבה.\n\nאם רלוונטי, שלחו לי הודעה בהקדם\n${agency}`,
-      first: (name, prop, agency) => `שלום ${name} 😊\n\nאני פונה אליך לפני כולם בקשר לנכס הזה.\n${prop ? `\n🏠 ${prop}\n` : ''}\nעדיין לא פרסמתי, רציתי שיהיה לך ראש ראשון לראות את זה לפני כולם.\n\nמתי נוח לך לדבר? 📞\n${agency}`,
-    },
-    post: {
-      instagram: (p) => `🏡 ${p.title || 'נכס חדש'}, ${p.city || ''}\n\n✨ הנכס שחיכית לו\n\n${p.rooms ? `🛏 ${p.rooms} חדרים` : ''} ${p.area ? `| 📐 ${p.area} מ״ר` : ''} ${p.floor ? `| 🏢 קומה ${p.floor}` : ''}\n📍 ${p.city || ''}${p.address ? ', ' + p.address : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר למתעניינים'}\n\n${p.description ? p.description.slice(0,120) + '...' : 'נכס מרהיב שמחכה לדיירים הבאים שלו.'}\n\n📞 לתיאום ביקור והפרטים המלאים, כתבו לי ישירות\n\n#נדלן #${(p.city||'').replace(/\s/g,'')} #נכסחדש #קניתדירה #RealEstate`,
-      facebook: (p) => `🏠 נכס מצוין בשוק, ${p.city || ''}\n\n${p.title || 'נכס ייחודי'} ${p.rooms ? `| ${p.rooms} חדרים` : ''} ${p.area ? `| ${p.area} מ״ר` : ''}\n📍 ${p.city || ''}${p.address ? ', ' + p.address : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר לפי פניה'}\n\n${p.description ? p.description.slice(0,200) : 'נכס בתנאים מצוינים, מתאים למשפחה, ממוקם היטב.'}\n\nלפרטים נוספים ותיאום ביקור, שלחו הודעה פרטית 📩`,
-      whatsapp: (p) => `*${p.title || 'נכס חדש'}* 🏡\n\n📍 *${p.city || ''}*${p.address ? ', ' + p.address : ''}\n${p.rooms ? `🛏 ${p.rooms} חדרים` : ''}${p.area ? ` | 📐 ${p.area} מ״ר` : ''}${p.floor ? ` | קומה ${p.floor}` : ''}\n💰 ${p.price ? Number(p.price).toLocaleString('he-IL') + ' ₪' : 'מחיר למתעניינים'}\n\n${p.description ? p.description.slice(0,150) : 'נכס מעולה, פרטים נוספים בשיחה.'}\n\nלתיאום ביקור ▶️ כתבו לי`,
-    },
-    campaign: {
-      new_listing: (sig) => `שלום! 👋\n\nרציתי לעדכן אתכם, *נכס חדש* זה עתה נכנס לפורטפוליו שלנו!\n\nטרם פורסם ברשת, ואתם, כלקוחות קיימים, מקבלים ראשונים את האפשרות לראות אותו.\n\nאם מעניין, שלחו הודעה ואשמח לתאם ביקור בימים הקרובים 📅\n\n${sig}`,
-      price_drop: (sig) => `📉 *ירידת מחיר, הזדמנות לפעול!*\n\nנכס שעקבתם אחריו (או שיכול לעניין אתכם) ירד במחיר לאחרונה.\n\nזה הזמן הנכון לשיחה, לפני שמישהו אחר יזוז ראשון.\n\nשלחו לי הודעה ואעביר לכם את הפרטים 💬\n\n${sig}`,
-      market_update: (sig) => `📊 *עדכון שוק, ${new Date().toLocaleDateString('he-IL', {month:'long',year:'numeric'})}*\n\nהשוק ממשיך להניב הזדמנויות למי שיודע איפה להסתכל.\n\nאם אתם שוקלים לרכוש, למכור או פשוט לשמוע מה קורה, כדאי שנדבר בימים הקרובים.\n\nכרגיל, תמיד כאן בשבילכם 🙏\n\n${sig}`,
-      holiday: (sig) => `✨ *חג שמח וברכות חמות!*\n\nמאחל לכם ולמשפחותיכם בריאות, שמחה והרבה הצלחות, בעסקים ובחיים.\n\nאם עלה בכם רעיון לנכס חלומי חדש, אני כאן 😊\n\nבברכה ובהוקרה,\n${sig}`,
-      exclusive: (sig) => `🎁 *מבצע בלעדי ללקוחות קיימים!*\n\nבחרתי לפנות אליכם לפני כולם, כי אתם לקוחות שמיוחדים לי.\n\nיש לי כמה הזדמנויות שלא פרסמתי ברשת, ואשמח להעמיד אתכם ראשונים בתור.\n\nרק שלחו לי הודעה ונדבר 📞\n\n${sig}`,
-    },
   },
 
   async genOffer() {
