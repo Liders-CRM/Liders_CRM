@@ -1086,37 +1086,25 @@
     /* ─── Google button animation ─── */
     .google-btn-wrap { position: relative; margin-bottom: 8px; }
 
-    /* Shimmer sweep across button */
+    /* Brand-blue shimmer sweep across Google button */
     .btn-google::after {
       content: ''; position: absolute;
       top: 0; left: -110%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.38), transparent);
+      background: linear-gradient(90deg, transparent, rgba(37,99,235,.14), rgba(147,197,253,.18), rgba(37,99,235,.14), transparent);
       border-radius: var(--radius-md);
-      animation: g-shine 3.2s ease-in-out infinite;
+      animation: g-shine 4s ease-in-out infinite;
       pointer-events: none;
     }
     @keyframes g-shine {
       0%     { left: -110%; opacity: 0; }
-      6%     { opacity: 1; }
-      36%    { left: 140%; opacity: 0; }
+      8%     { opacity: 1; }
+      38%    { left: 140%; opacity: 0; }
       100%   { left: 140%; opacity: 0; }
     }
-
-    /* Cycling Google-color border glow */
-    @keyframes g-button-spark {
-      0%,100% { box-shadow: var(--shadow-sm), 0 0 0 2px rgba(66,133,244,.4), 0 0 16px rgba(66,133,244,.16); }
-      25%     { box-shadow: var(--shadow-sm), 0 0 0 2px rgba(52,168,83,.4),  0 0 16px rgba(52,168,83,.16); }
-      50%     { box-shadow: var(--shadow-sm), 0 0 0 2px rgba(251,188,5,.4),  0 0 16px rgba(251,188,5,.16); }
-      75%     { box-shadow: var(--shadow-sm), 0 0 0 2px rgba(234,67,53,.4),  0 0 16px rgba(234,67,53,.16); }
-    }
-
-    /* "מהיר יותר" badge — bottom of button */
-    .g-faster-badge {
-      display: block; text-align: center; margin-top: 6px;
-      font-size: 10px; font-weight: 800; color: #1d4ed8;
-      background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.18);
-      border-radius: 99px; padding: 2px 12px; width: fit-content;
-      margin-inline: auto; letter-spacing: .02em;
+    /* Breathing glow — brand blue */
+    @keyframes google-breathe {
+      0%, 100% { box-shadow: var(--shadow-sm); }
+      50%       { box-shadow: var(--shadow-sm), 0 0 0 4px rgba(37,99,235,.10), 0 6px 22px rgba(37,99,235,.13); }
     }
 
     /* ─── BACKGROUND ORBS ─── */
@@ -1277,7 +1265,7 @@
 
     /* ─── REDUCED MOTION ─── */
     @media (prefers-reduced-motion: reduce) {
-      .login-pill, .star-dot, .btn-google,
+      .login-pill, .star-dot, .btn-google, .btn-google::after,
       .lbg-orb, .lbg-deal, .lp-card,
       .login-trial-badge::after { animation: none !important; }
     }
@@ -1300,13 +1288,13 @@
     .ind-label { font-size: 11px; font-weight: 700; color: var(--gray-700); line-height: 1.2; }
     .btn-google {
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      background: white; color: #3c4043; font-weight: 600; font-size: 14px;
-      padding: 11px; border-radius: var(--radius-md); width: 100%;
+      background: white; color: #3c4043; font-weight: 600; font-size: 16px;
+      padding: 16px; border-radius: var(--radius-md); width: 100%;
       border: 1.5px solid var(--border); cursor: pointer;
       transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-      box-shadow: var(--shadow-sm), 0 0 0 0 rgba(66,133,244,.35);
       box-shadow: var(--shadow-sm);
       position: relative; overflow: hidden;
+      animation: google-breathe 3.5s ease-in-out infinite;
     }
     .btn-google:hover {
       background: var(--gray-50);
@@ -4279,7 +4267,7 @@
     </div>
     <div class="login-form">
       <div class="google-btn-wrap">
-        <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation; padding:13px; font-size:15px; width:100%;">
+        <button id="btn-login-google" type="button" class="btn-google" style="touch-action:manipulation;">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -4288,7 +4276,6 @@
           </svg>
           כניסה / הרשמה עם Google
         </button>
-        <span class="g-faster-badge">מהיר יותר</span>
       </div>
       <div class="login-divider">לחלופין, עם אימייל וסיסמה</div>
       <div class="form-group">
