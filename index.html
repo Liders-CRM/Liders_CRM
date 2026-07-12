@@ -1029,162 +1029,53 @@
     }
     .lh-microcopy {
       font-size: 12px; font-weight: 500; color: rgba(255,255,255,.48);
-      margin: 4px 0 2px; letter-spacing: .3px;
+      margin: 4px 0 2px; letter-spacing: .3px; line-height: 1.65;
       animation: lh-enter .7s .3s cubic-bezier(.34,1.56,.64,1) both;
     }
 
-    /* ─── CONSTRUCTION ANIMATION SCENE ─── */
-    .login-scene {
-      position: relative; height: 112px; width: 240px;
-      margin: 2px auto 4px; direction: ltr; overflow: visible;
+    /* ─── MINI PIPELINE VISUALIZATION ─── */
+    .login-pipeline {
+      display: flex; align-items: stretch; gap: 6px;
+      justify-content: center; width: 100%; max-width: 316px;
+      margin: 10px auto 6px; direction: rtl;
       animation: lh-enter .7s .32s both;
     }
-    /* Building stack: flex col top→bottom = flag→roof→f3→f2→f1→ground */
-    .lscene-bld {
-      position: absolute; bottom: 6px; left: 28px;
-      width: 62px; display: flex; flex-direction: column;
-      align-items: center; gap: 1px;
+    .lp-card {
+      flex: 1; background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.11);
+      border-top: 2.5px solid transparent;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 10px; padding: 9px 10px 8px;
+      min-width: 0; text-align: right;
     }
-    .lscene-ground {
-      width: 80px; height: 6px;
-      background: linear-gradient(90deg,#334155,#64748b,#334155);
-      border-radius: 3px;
+    .lp-card--new   { border-top-color: #3b82f6; animation: lp-bob 4.2s ease-in-out infinite; }
+    .lp-card--offer { border-top-color: #8b5cf6; animation: lp-bob 5.1s ease-in-out infinite .7s; }
+    .lp-card--closed {
+      border-top-color: #22c55e; border-color: rgba(74,222,128,.28);
+      background: rgba(74,222,128,.06);
+      animation: lp-bob 4.6s ease-in-out infinite 1.3s;
     }
-    .lscene-f1, .lscene-f2, .lscene-f3 {
-      width: 62px; height: 20px;
-      background: linear-gradient(180deg,#2563eb,#1e40af);
-      border: 1px solid rgba(255,255,255,.22); border-radius: 2px 2px 0 0;
-      transform-origin: bottom center;
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,.3); font-size: 8px;
+    @keyframes lp-bob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
     }
-    .lscene-f1::after, .lscene-f2::after, .lscene-f3::after { content: '▪ ▪ ▪'; }
-    .lscene-roof {
-      width: 0; height: 0;
-      border-left: 32px solid transparent;
-      border-right: 32px solid transparent;
-      border-bottom: 15px solid #1e40af;
-      transform-origin: bottom center;
+    .lp-stage {
+      font-size: 8px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; margin-bottom: 5px;
+      white-space: nowrap; overflow: hidden;
     }
-    .lscene-flag { font-size: 15px; height: 16px; line-height: 1; }
-    /* Floor rise animations */
-    .lscene-f1 { animation: f1-rise 9s ease-out infinite; }
-    .lscene-f2 { animation: f2-rise 9s ease-out infinite; }
-    .lscene-f3 { animation: f3-rise 9s ease-out infinite; }
-    .lscene-roof { animation: roof-rise 9s ease-out infinite; }
-    .lscene-flag { animation: flag-pop 9s ease-out infinite; }
-    @keyframes f1-rise {
-      0%,14%   { opacity:0; transform:scaleY(0); }
-      18%      { opacity:1; transform:scaleY(1.12); }
-      21%      { transform:scaleY(.93); }
-      23%      { transform:scaleY(1); }
-      82%      { opacity:1; } 92%,100%{ opacity:0; transform:scaleY(0); }
+    .lp-card--new   .lp-stage { color: #60a5fa; }
+    .lp-card--offer .lp-stage { color: #a78bfa; }
+    .lp-card--closed .lp-stage { color: #4ade80; }
+    .lp-name {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,.85);
+      margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    @keyframes f2-rise {
-      0%,31%   { opacity:0; transform:scaleY(0); }
-      35%      { opacity:1; transform:scaleY(1.12); }
-      38%      { transform:scaleY(.93); }
-      40%      { transform:scaleY(1); }
-      82%      { opacity:1; } 92%,100%{ opacity:0; transform:scaleY(0); }
+    .lp-value {
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,.46);
+      direction: ltr; text-align: right;
     }
-    @keyframes f3-rise {
-      0%,48%   { opacity:0; transform:scaleY(0); }
-      52%      { opacity:1; transform:scaleY(1.12); }
-      55%      { transform:scaleY(.93); }
-      57%      { transform:scaleY(1); }
-      82%      { opacity:1; } 92%,100%{ opacity:0; transform:scaleY(0); }
-    }
-    @keyframes roof-rise {
-      0%,63%   { opacity:0; transform:scaleX(0); }
-      67%      { opacity:1; transform:scaleX(1.12); }
-      70%      { transform:scaleX(1); }
-      82%      { opacity:1; } 92%,100%{ opacity:0; transform:scaleX(0); }
-    }
-    @keyframes flag-pop {
-      0%,68%   { opacity:0; transform:scale(0) rotate(45deg); }
-      73%      { opacity:1; transform:scale(1.3) rotate(-10deg); }
-      77%      { transform:scale(1) rotate(0); }
-      82%      { opacity:1; } 92%,100%{ opacity:0; }
-    }
-    /* Worker */
-    .lscene-worker {
-      position: absolute; bottom: 8px; left: 96px;
-      font-size: 28px; line-height: 1; transform-origin: bottom center;
-      animation: worker-anim 9s ease-in-out infinite;
-    }
-    /* Hammer */
-    .lscene-hammer {
-      position: absolute; bottom: 34px; left: 88px;
-      font-size: 19px; line-height: 1; transform-origin: bottom right;
-      animation: hammer-swing 9s ease-in-out infinite;
-    }
-    /* Dust particles */
-    .lscene-dust {
-      position: absolute; bottom: 26px; left: 76px;
-      font-size: 10px; pointer-events: none;
-      animation: dust-puff 9s ease-out infinite;
-    }
-    @keyframes worker-anim {
-      0%,100%  { transform:translateY(0) scaleX(-1); }
-      5%       { transform:translateY(-2px) scaleX(-1); }
-      9%       { transform:translateY(0) scaleX(-1); }
-      15%      { transform:translateY(-2px) scaleX(-1); }
-      19%      { transform:translateY(0) scaleX(-1); }
-      22%      { transform:translateY(-2px) scaleX(-1); }
-      26%      { transform:translateY(0) scaleX(-1); }
-      32%      { transform:translateY(-2px) scaleX(-1); }
-      36%      { transform:translateY(0) scaleX(-1); }
-      39%      { transform:translateY(-2px) scaleX(-1); }
-      43%      { transform:translateY(0) scaleX(-1); }
-      49%      { transform:translateY(-2px) scaleX(-1); }
-      53%      { transform:translateY(0) scaleX(-1); }
-      56%      { transform:translateY(-2px) scaleX(-1); }
-      60%      { transform:translateY(0) scaleX(-1); }
-      68%      { transform:translateY(0) scaleX(1); }
-      73%      { transform:translateY(-14px) scaleX(1); }
-      78%      { transform:translateY(0) scaleX(1); }
-      83%      { transform:translateY(-8px) scaleX(1); }
-      87%      { transform:translateY(0) scaleX(1); }
-      93%,100% { opacity:0; }
-    }
-    @keyframes hammer-swing {
-      0%   { transform:rotate(-55deg); opacity:1; }
-      5%   { transform:rotate(22deg); }
-      9%   { transform:rotate(-50deg); }
-      15%  { transform:rotate(22deg); }
-      19%  { transform:rotate(-50deg); }
-      22%  { transform:rotate(22deg); }
-      26%  { transform:rotate(-50deg); }
-      32%  { transform:rotate(22deg); }
-      36%  { transform:rotate(-50deg); }
-      39%  { transform:rotate(22deg); }
-      43%  { transform:rotate(-50deg); }
-      49%  { transform:rotate(22deg); }
-      53%  { transform:rotate(-50deg); }
-      56%  { transform:rotate(22deg); }
-      60%  { transform:rotate(-50deg); }
-      67%  { transform:rotate(-90deg); opacity:0; }
-      93%  { opacity:0; transform:rotate(-55deg); }
-      96%  { opacity:1; }
-      100% { transform:rotate(-55deg); opacity:1; }
-    }
-    @keyframes dust-puff {
-      0%,3%,8%,13%,18%,21%,26%,31%,35%,40%,45%,50%,54%,60%,64%,100%
-                               { opacity:0; transform:scale(0); }
-      6%  { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      11% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      16% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      20% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      24% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      29% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      33% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      38% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      43% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      48% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      52% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      58% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-      62% { opacity:.5; transform:scale(1) translate(-5px,-7px); }
-    }
+    .lp-card--closed .lp-value { color: rgba(74,222,128,.8); }
     /* ─── Google button animation ─── */
     .google-btn-wrap { position: relative; margin-bottom: 8px; }
 
@@ -1372,27 +1263,16 @@
       transform: translateY(-1px);
     }
 
-    /* ─── HAMMER CAPTION ─── */
-    .lscene-caption {
-      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-      font-size: 10px; color: rgba(255,255,255,.55); white-space: nowrap;
-      pointer-events: none; background: rgba(22,163,74,.18);
-      border: 1px solid rgba(22,163,74,.35); border-radius: 99px;
-      padding: 2px 10px; font-weight: 700;
-      animation: caption-pop 9s ease-out infinite;
-    }
-    @keyframes caption-pop {
-      0%, 68%  { opacity: 0; transform: translateX(-50%) translateY(-4px); }
-      74%      { opacity: 1; transform: translateX(-50%) translateY(0); }
-      86%      { opacity: 1; transform: translateX(-50%) translateY(0); }
-      93%,100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+    /* ─── LOGIN CARD TITLE ─── */
+    .login-card-title {
+      font-size: 15px; font-weight: 800; color: var(--navy-700, #1e3a5f);
+      text-align: center; margin: 0 0 10px; letter-spacing: -.2px;
     }
 
     /* ─── REDUCED MOTION ─── */
     @media (prefers-reduced-motion: reduce) {
       .login-pill, .star-dot, .btn-google,
-      .lbg-orb, .lbg-deal, .login-scene *,
-      .lscene-caption,
+      .lbg-orb, .lbg-deal, .lp-card,
       .login-trial-badge::after { animation: none !important; }
     }
 
@@ -4357,23 +4237,26 @@
       </svg>
     </div>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
-    <div class="lh-tagline">עסקאות לא סוגרות את עצמן.</div>
-    <div class="lh-microcopy">30 יום ניסיון בחינם&nbsp;•&nbsp;התחלה תוך פחות מדקה</div>
+    <div class="lh-tagline">העסקאות שלך לא יסגרו את עצמן</div>
+    <div class="lh-microcopy">30 יום ניסיון ללא התחייבות<br>תוך דקה יש לך מערכת שחוסכת שעות של עבודה</div>
 
-    <!-- Construction animation - worker builds a tower floor by floor, deal sealed -->
-    <div class="login-scene" aria-hidden="true">
-      <div class="lscene-bld">
-        <div class="lscene-flag">🚩</div>
-        <div class="lscene-roof"></div>
-        <div class="lscene-f3"></div>
-        <div class="lscene-f2"></div>
-        <div class="lscene-f1"></div>
-        <div class="lscene-ground"></div>
+    <!-- Mini pipeline visualization: 3 lead cards at different stages -->
+    <div class="login-pipeline" aria-hidden="true">
+      <div class="lp-card lp-card--new">
+        <div class="lp-stage">ליד חדש</div>
+        <div class="lp-name">דן לוי</div>
+        <div class="lp-value">4.8M ₪</div>
       </div>
-      <div class="lscene-worker">👷</div>
-      <div class="lscene-hammer">🔨</div>
-      <div class="lscene-dust">💨</div>
-      <div class="lscene-caption">עסקה נסגרה ✓</div>
+      <div class="lp-card lp-card--offer">
+        <div class="lp-stage">הצעה נשלחה</div>
+        <div class="lp-name">סמר נסאר</div>
+        <div class="lp-value">2.3M ₪</div>
+      </div>
+      <div class="lp-card lp-card--closed">
+        <div class="lp-stage">נסגר ✓</div>
+        <div class="lp-name">עמית כהן</div>
+        <div class="lp-value">6.1M ₪</div>
+      </div>
     </div>
   </div>
 
@@ -4395,6 +4278,7 @@
       </div>
       <div style="font-size:11px;opacity:.6;">יש להירשם למטה כדי להצטרף לסוכנות</div>
     </div>
+    <p class="login-card-title">הגעת למקום הנכון</p>
     <div style="text-align:center;margin-bottom:12px;">
       <div class="login-trial-badge">
         🎁 30 יום ניסיון בחינם, ללא כרטיס אשראי
