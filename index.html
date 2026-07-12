@@ -201,12 +201,13 @@
     body.theme-accessible .nav-item.a11y-btn {
       border-color: #FFFF00;
     }
-    /* FAB mobile */
+    /* FAB mobile — stacked above the "+ ליד" FAB (56px tall, bottom: bottom-nav-h+16px)
+       so the two never overlap on the dashboard, where both are visible together. */
     #a11y-fab {
       display: none;
       position: fixed;
-      bottom: calc(var(--bottom-nav-h) + 10px);
-      left: 14px;
+      bottom: calc(var(--bottom-nav-h) + 82px);
+      left: 26px;
       z-index: 200;
       background: var(--navy-600);
       color: var(--gray-600);
@@ -228,6 +229,11 @@
       border-color: #FFFF00;
     }
     @media (max-width: 767px) { #a11y-fab { display: flex; } }
+    /* Shown only on the login screen and the dashboard (see
+       AccessibilityMode._initFabVisibility) so it doesn't sit on top of the
+       "+ ליד" FAB on every other screen — activating it once already applies
+       system-wide via body.theme-accessible. */
+    #a11y-fab.a11y-fab-hidden { display: none !important; }
     /* Settings accessibility card */
     .a11y-declaration {
       background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-600) 100%);
@@ -604,6 +610,12 @@
     .role-filter-pill.active.role-filter-renter   { background: #0891B2; border-color: #0891B2; color: #fff; }
     .role-filter-pill.active.role-filter-landlord { background: #7C3AED; border-color: #7C3AED; color: #fff; }
     .role-filter-pill.active.role-filter-all      { background: var(--navy-500); border-color: var(--navy-500); color: #fff; }
+    .role-filter-edit-btn {
+      padding: 6px 10px; border-radius: var(--radius-full); border: 1.5px dashed var(--border);
+      background: var(--surface); font-size: 12px; cursor: pointer; line-height: 1;
+      color: var(--gray-400); font-family: inherit; transition: all .15s;
+    }
+    .role-filter-edit-btn:hover { color: var(--blue-600); border-color: var(--blue-400); }
 
     .badge-status-new      { background: var(--gray-100); color: var(--gray-600); }
     .badge-status-available{ background: var(--green-100); color: var(--green-600); }
@@ -2451,6 +2463,19 @@
     .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.8); flex: 1; line-height: 1.5; font-weight: 600; }
     .gamify-daily-done { font-size: 1.1rem; color: var(--gold-300); }
 
+    /* Compact sizing for the growth/referral card when nested inside the
+       gamification widget, so it reads as a small section, not a full banner. */
+    #gamify-main .dash-growth-card { padding: 12px 14px; margin: 0; }
+    #gamify-main .dash-growth-title { font-size: 12.5px; }
+    #gamify-main .dash-growth-sub { font-size: 10.5px; }
+    #gamify-main .dash-growth-btns { margin-top: 10px; gap: 6px; }
+    #gamify-main .dash-growth-btn-main { padding: 7px 12px; font-size: 11.5px; }
+    #gamify-main .dash-growth-btn-sec { padding: 7px 11px; font-size: 11.5px; }
+    #gamify-main .dash-growth-stat { padding: 6px 10px; }
+    #gamify-main .dash-growth-stat-val { font-size: 16px; }
+    #gamify-main .dash-growth-stat-lbl { font-size: 9px; }
+    #gamify-main .dash-growth-dismiss { width: 20px; height: 20px; font-size: 12px; top: 8px; left: 10px; }
+
     /* Achievement toast */
     .achievement-toast {
       position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%;
@@ -4082,9 +4107,6 @@
 
     /* Lead cards get slightly more padding on desktop */
     .lead-card { padding: 16px 18px; }
-
-    /* Growth/referral card sits right after the dashboard — keep it aligned */
-    #dash-growth-card-wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px !important; }
   }
 
   /* On wide desktop screens, center list/grid screens instead of stretching
@@ -4701,6 +4723,8 @@
             <div class="gamify-daily-text" id="gamify-daily-text">טעינת אתגר יומי...</div>
             <div class="gamify-daily-done" id="gamify-daily-check"></div>
           </div>
+          <!-- GROWTH CARD (referral + annual teaser, injected by Dashboard.renderGrowthCard) -->
+          <div id="dash-growth-card-wrap" style="margin-top:12px;"></div>
         </div>
       </div>
 
@@ -4710,9 +4734,6 @@
       </div>
       <div class="activity-list" id="dash-activity"></div>
     </div>
-
-    <!-- GROWTH CARD (referral + annual teaser, injected by Dashboard.renderGrowthCard) -->
-    <div id="dash-growth-card-wrap" style="padding:0 16px;"></div>
 
     <!-- ── PIPELINE ── -->
     <div id="screen-pipeline" class="screen hidden">
@@ -5578,11 +5599,6 @@
     </div>
   </nav>
 
-  <!-- Accessibility FAB — mobile only, above bottom-nav -->
-  <button id="a11y-fab" data-a11y-btn
-          onclick="AccessibilityMode.toggle()"
-          aria-pressed="false" aria-label="מצב נגישות">♿</button>
-
   <!-- ═══════════════════════════════════════
        MODAL: SHARE LEAD WITH PARTNER
   ═══════════════════════════════════════ -->
@@ -5626,6 +5642,30 @@
       <div class="modal-footer">
         <button id="share-btn-create" class="btn btn-primary" style="flex:1;" onclick="Partners.createShare()">✅ יצירת שיתוף</button>
         <button id="share-btn-done" class="btn btn-primary hidden" style="flex:1;" onclick="closeModal('modal-share-lead');Partners.render()">סיום ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODAL: LEAD-ROLE FILTER PREFERENCES
+  ═══════════════════════════════════════ -->
+  <div id="modal-role-prefs" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-role-prefs')">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title">🏷️ סוגי לידים בפייפליין</div>
+        <button class="modal-close" onclick="closeModal('modal-role-prefs')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:13px;color:var(--gray-500);margin-bottom:14px;line-height:1.6;">
+          ניתן להסתיר סוגי לידים שלא רלוונטיים לעסק, למשל אם עובדים רק מול מוכרים או רק בשוק השכירות.
+          הסוגים המוסתרים לא נמחקים ולא משפיעים על לידים קיימים, הם רק לא מוצגים בסינון.
+        </div>
+        <div id="role-prefs-list" style="display:flex;flex-direction:column;gap:2px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" style="flex:1;" onclick="RoleFilterSettings.selectAll()">בחירת הכל</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="RoleFilterSettings.save()">שמירה</button>
       </div>
     </div>
   </div>
@@ -7334,6 +7374,14 @@
   </div>
 </div>
 
+<!-- Accessibility FAB — lives outside screen-login/app-shell so it can appear on
+     either; shown only on login + dashboard (see AccessibilityMode._initFabVisibility),
+     mobile only. Placed before the main <script> block so getElementById can find it
+     at parse time. -->
+<button id="a11y-fab" data-a11y-btn
+        onclick="AccessibilityMode.toggle()"
+        aria-pressed="false" aria-label="מצב נגישות">♿</button>
+
 <!-- PWA INSTALL BANNER - lives outside screen-login/app-shell so it can appear on either;
      placed before the main <script> block so getElementById can find it at parse time -->
 <div id="pwa-install-banner" class="hidden">
@@ -7399,6 +7447,63 @@ function showsBuyerSellerRole() {
   const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
   return ind !== 'interior';
 }
+// Shared label source for the role filter pills, so Pipeline/Leads/the prefs
+// modal all show the exact same text instead of three separate copies.
+const ROLE_FILTER_PILLS = [
+  { id: 'buyer',    label: '💰 קונים' },
+  { id: 'seller',   label: '🏠 מוכרים' },
+  { id: 'both',     label: '💰🏠 שניהם' },
+  { id: 'renter',   label: '🔑 שוכרים' },
+  { id: 'landlord', label: '🏘 משכירים' },
+];
+// Per-device preference: which of the 5 lead-role options an agent actually
+// deals with (e.g. only sellers, or only the rental market). Hides the rest
+// from the filter pills and the add/edit-lead role picker; all 5 enabled by
+// default. Stored locally only — not synced across devices/agents.
+const RoleFilterPrefs = {
+  _KEY: 'liders_role_prefs_enabled',
+  get() {
+    const raw = localStorage.getItem(this._KEY);
+    if (!raw) return ALL_LEAD_ROLES.slice();
+    try {
+      const arr = JSON.parse(raw).filter(r => ALL_LEAD_ROLES.includes(r));
+      return arr.length ? arr : ALL_LEAD_ROLES.slice();
+    } catch { return ALL_LEAD_ROLES.slice(); }
+  },
+  set(roles) {
+    localStorage.setItem(this._KEY, JSON.stringify(roles));
+  },
+};
+const RoleFilterSettings = {
+  open() {
+    const enabled = RoleFilterPrefs.get();
+    const list = document.getElementById('role-prefs-list');
+    if (list) {
+      list.innerHTML = ROLE_FILTER_PILLS.map(p => `
+        <label style="display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--gray-100);cursor:pointer;">
+          <input type="checkbox" data-role="${p.id}" ${enabled.includes(p.id) ? 'checked' : ''}
+            style="width:18px;height:18px;accent-color:var(--blue-600);flex-shrink:0;">
+          <span style="font-size:14px;font-weight:600;">${p.label}</span>
+        </label>
+      `).join('');
+    }
+    openModal('modal-role-prefs');
+  },
+  selectAll() {
+    document.querySelectorAll('#role-prefs-list input[type="checkbox"]').forEach(cb => cb.checked = true);
+  },
+  save() {
+    const checked = [...document.querySelectorAll('#role-prefs-list input[type="checkbox"]:checked')].map(cb => cb.dataset.role);
+    if (!checked.length) { toast('יש לבחור לפחות סוג ליד אחד', 'error'); return; }
+    RoleFilterPrefs.set(checked);
+    if (Pipeline._roleFilter !== 'all' && !checked.includes(Pipeline._roleFilter)) Pipeline._roleFilter = 'all';
+    if (Leads._roleFilter !== 'all' && !checked.includes(Leads._roleFilter)) Leads._roleFilter = 'all';
+    closeModal('modal-role-prefs');
+    Pipeline.render();
+    Leads.render();
+    toast('✅ נשמר', 'success');
+  },
+};
 function roleMatchesFilter(leadRole, filter) {
   if (!filter || filter === 'all') return true;
   const role = ALL_LEAD_ROLES.includes(leadRole) ? leadRole : 'buyer';
@@ -9036,7 +9141,25 @@ function applyIndustryToLeadForm(prefix) {
 
   // Buyer/seller role picker - meaningless for interior design clients
   const fgRole = document.getElementById(`fg-${prefix}-role`);
-  if (fgRole) fgRole.style.display = showsBuyerSellerRole() ? '' : 'none';
+  if (fgRole) {
+    fgRole.style.display = showsBuyerSellerRole() ? '' : 'none';
+    // Hide role options the agent disabled in RoleFilterSettings. For a brand-new
+    // lead (default "buyer"), fall back to the first enabled role if buyer itself
+    // is disabled; for an existing lead being edited, never touch its saved role —
+    // just keep its button visible even if that role has since been disabled.
+    const enabledRoles = RoleFilterPrefs.get();
+    const picker = document.getElementById(`${prefix}-lead-role-picker`);
+    if (picker) {
+      if (prefix === 'new' && !enabledRoles.includes(picker.dataset.value)) {
+        selectLeadRole('new', enabledRoles[0] || 'buyer');
+      }
+      const current = picker.dataset.value;
+      picker.querySelectorAll('.role-pick-btn').forEach(btn => {
+        const role = ALL_LEAD_ROLES.find(r => btn.classList.contains(`role-pick-${r}`));
+        btn.style.display = (enabledRoles.includes(role) || role === current) ? '' : 'none';
+      });
+    }
+  }
 
   // Source dropdown - populate with industry-specific options
   const sel = document.getElementById(`${prefix}-lead-source`);
@@ -13271,6 +13394,23 @@ const AccessibilityMode = {
   _KEY: 'liders_a11y',
   init() {
     if (localStorage.getItem(this._KEY) === '1') this.enable(false);
+    this._initFabVisibility();
+  },
+  // The FAB only needs to appear on the login screen and the dashboard —
+  // activating it applies system-wide via body.theme-accessible, so showing
+  // it on every screen just crowds the "+ ליד" FAB in the same corner.
+  _initFabVisibility() {
+    const fab = document.getElementById('a11y-fab');
+    const loginEl = document.getElementById('screen-login');
+    const dashEl  = document.getElementById('screen-dashboard');
+    if (!fab || !loginEl || !dashEl) return;
+    const sync = () => {
+      const show = !loginEl.classList.contains('hidden') || !dashEl.classList.contains('hidden');
+      fab.classList.toggle('a11y-fab-hidden', !show);
+    };
+    sync();
+    new MutationObserver(sync).observe(loginEl, { attributes: true, attributeFilter: ['class'] });
+    new MutationObserver(sync).observe(dashEl,  { attributes: true, attributeFilter: ['class'] });
   },
   enable(persist = true) {
     document.body.classList.add('theme-accessible');
@@ -13751,7 +13891,7 @@ const Dashboard = {
     const showAnnual = streak >= 10 && !AnnualUpsell._data().interest;
     if (showAnnual) {
       wrap.innerHTML = `
-        <div class="dash-growth-card" style="margin-bottom:16px;">
+        <div class="dash-growth-card">
           <button class="dash-growth-dismiss" onclick="localStorage.setItem('${KEY}','dismissed');document.getElementById('dash-growth-card-wrap').innerHTML='';">✕</button>
           <div class="dash-growth-row">
             <div class="dash-growth-left">
@@ -13770,7 +13910,7 @@ const Dashboard = {
         </div>`;
     } else {
       wrap.innerHTML = `
-        <div class="dash-growth-card" style="margin-bottom:16px;">
+        <div class="dash-growth-card">
           <button class="dash-growth-dismiss" onclick="localStorage.setItem('${KEY}','dismissed');document.getElementById('dash-growth-card-wrap').innerHTML='';">✕</button>
           <div class="dash-growth-row">
             <div class="dash-growth-left">
@@ -14236,18 +14376,15 @@ const Pipeline = {
     const el = document.getElementById('pipeline-role-filter');
     if (!el) return;
     if (!showsBuyerSellerRole()) { el.innerHTML = ''; this._roleFilter = 'all'; return; }
-    const pills = [
-      { id: 'all',      label: 'הכל' },
-      { id: 'buyer',    label: '💰 קונים' },
-      { id: 'seller',   label: '🏠 מוכרים' },
-      { id: 'both',     label: '💰🏠 שניהם' },
-      { id: 'renter',   label: '🔑 שוכרים' },
-      { id: 'landlord', label: '🏘 משכירים' },
-    ];
+    const enabled = RoleFilterPrefs.get();
+    const pills = [{ id: 'all', label: 'הכל' }, ...ROLE_FILTER_PILLS.filter(p => enabled.includes(p.id))];
     el.innerHTML = pills.map(p => `
       <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
         onclick="Pipeline.setRoleFilter('${p.id}')">${p.label}</button>
-    `).join('');
+    `).join('') + `
+      <button class="role-filter-edit-btn" onclick="RoleFilterSettings.open()"
+        title="עריכת סוגי לידים מוצגים" aria-label="עריכת סוגי לידים מוצגים">⚙️</button>
+    `;
   },
 
   setRoleFilter(role) {
@@ -14345,14 +14482,8 @@ const Leads = {
     const el = document.getElementById('leads-role-filter');
     if (!el) return;
     if (!showsBuyerSellerRole()) { el.innerHTML = ''; this._roleFilter = 'all'; return; }
-    const pills = [
-      { id: 'all',      label: 'הכל' },
-      { id: 'buyer',    label: '💰 קונים' },
-      { id: 'seller',   label: '🏠 מוכרים' },
-      { id: 'both',     label: '💰🏠 שניהם' },
-      { id: 'renter',   label: '🔑 שוכרים' },
-      { id: 'landlord', label: '🏘 משכירים' },
-    ];
+    const enabled = RoleFilterPrefs.get();
+    const pills = [{ id: 'all', label: 'הכל' }, ...ROLE_FILTER_PILLS.filter(p => enabled.includes(p.id))];
     el.innerHTML = pills.map(p => `
       <button class="role-filter-pill role-filter-${p.id}${this._roleFilter === p.id ? ' active' : ''}"
         onclick="Leads.setRoleFilter('${p.id}')">${p.label}</button>
