@@ -2451,6 +2451,19 @@
     .gamify-daily-text { font-size: 12px; color: rgba(255,255,255,.8); flex: 1; line-height: 1.5; font-weight: 600; }
     .gamify-daily-done { font-size: 1.1rem; color: var(--gold-300); }
 
+    /* Compact sizing for the growth/referral card when nested inside the
+       gamification widget, so it reads as a small section, not a full banner. */
+    #gamify-main .dash-growth-card { padding: 12px 14px; margin: 0; }
+    #gamify-main .dash-growth-title { font-size: 12.5px; }
+    #gamify-main .dash-growth-sub { font-size: 10.5px; }
+    #gamify-main .dash-growth-btns { margin-top: 10px; gap: 6px; }
+    #gamify-main .dash-growth-btn-main { padding: 7px 12px; font-size: 11.5px; }
+    #gamify-main .dash-growth-btn-sec { padding: 7px 11px; font-size: 11.5px; }
+    #gamify-main .dash-growth-stat { padding: 6px 10px; }
+    #gamify-main .dash-growth-stat-val { font-size: 16px; }
+    #gamify-main .dash-growth-stat-lbl { font-size: 9px; }
+    #gamify-main .dash-growth-dismiss { width: 20px; height: 20px; font-size: 12px; top: 8px; left: 10px; }
+
     /* Achievement toast */
     .achievement-toast {
       position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%;
@@ -4082,9 +4095,6 @@
 
     /* Lead cards get slightly more padding on desktop */
     .lead-card { padding: 16px 18px; }
-
-    /* Growth/referral card sits right after the dashboard — keep it aligned */
-    #dash-growth-card-wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px !important; }
   }
 
   /* On wide desktop screens, center list/grid screens instead of stretching
@@ -4701,6 +4711,8 @@
             <div class="gamify-daily-text" id="gamify-daily-text">טעינת אתגר יומי...</div>
             <div class="gamify-daily-done" id="gamify-daily-check"></div>
           </div>
+          <!-- GROWTH CARD (referral + annual teaser, injected by Dashboard.renderGrowthCard) -->
+          <div id="dash-growth-card-wrap" style="margin-top:12px;"></div>
         </div>
       </div>
 
@@ -4710,9 +4722,6 @@
       </div>
       <div class="activity-list" id="dash-activity"></div>
     </div>
-
-    <!-- GROWTH CARD (referral + annual teaser, injected by Dashboard.renderGrowthCard) -->
-    <div id="dash-growth-card-wrap" style="padding:0 16px;"></div>
 
     <!-- ── PIPELINE ── -->
     <div id="screen-pipeline" class="screen hidden">
@@ -13751,7 +13760,7 @@ const Dashboard = {
     const showAnnual = streak >= 10 && !AnnualUpsell._data().interest;
     if (showAnnual) {
       wrap.innerHTML = `
-        <div class="dash-growth-card" style="margin-bottom:16px;">
+        <div class="dash-growth-card">
           <button class="dash-growth-dismiss" onclick="localStorage.setItem('${KEY}','dismissed');document.getElementById('dash-growth-card-wrap').innerHTML='';">✕</button>
           <div class="dash-growth-row">
             <div class="dash-growth-left">
@@ -13770,7 +13779,7 @@ const Dashboard = {
         </div>`;
     } else {
       wrap.innerHTML = `
-        <div class="dash-growth-card" style="margin-bottom:16px;">
+        <div class="dash-growth-card">
           <button class="dash-growth-dismiss" onclick="localStorage.setItem('${KEY}','dismissed');document.getElementById('dash-growth-card-wrap').innerHTML='';">✕</button>
           <div class="dash-growth-row">
             <div class="dash-growth-left">
