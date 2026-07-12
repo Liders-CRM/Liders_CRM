@@ -1711,6 +1711,8 @@
       100%    { opacity: 0; }
     }
     @media (max-width: 480px) { .cta-crane { display: none; } .cta-drop-target { animation: none; } .cta-stage::after { display: none; } }
+    /* מרווח נוסף מעל הכפתור בכל רוחב שבו העגורן מוצג, כדי שהמשקולת לא תעבור על טקסט ה-hero-sub */
+    @media (min-width: 481px) { .hero-sub { margin-bottom: 130px; } }
 
     /* ══ Hero CTA — בורדו זכוכית ══ */
     .hero .btn-primary {
