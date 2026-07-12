@@ -16592,21 +16592,17 @@ ${fileData}
       return;
     }
 
-    // step 3 - preview & confirm
-    const preview = this._leads.slice(0, 6);
+    // step 3 - preview & confirm. Cards reuse the exact same classes as the
+    // real pipeline card (Pipeline.renderCard) so this is genuinely how each
+    // lead will look after import, not a simplified stand-in.
+    const preview = this._leads.slice(0, 8);
     body.innerHTML = `
       <div style="margin-bottom:12px;color:var(--gray-500);font-size:0.85rem;line-height:1.6;">
-        נמצאו <strong>${this._leads.length}</strong> לידים תקינים לייבוא
+        נמצאו <strong>${this._leads.length}</strong> לידים תקינים לייבוא, כך הם ייראו בפייפליין
         ${this._leads.length > preview.length ? `(מוצגים ${preview.length} ראשונים)` : ''}:
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-height:44vh;overflow:auto;">
-        ${preview.map(l => `
-          <div style="background:var(--bg-app);border-radius:8px;padding:10px 12px;font-size:0.85rem;">
-            <div style="font-weight:700;">${escapeHtml(l.name)}</div>
-            <div style="color:var(--gray-500);direction:ltr;text-align:right;">${escapeHtml(l.phone)}${l.email ? ' · ' + escapeHtml(l.email) : ''}</div>
-            ${l.desired_area ? `<div style="color:var(--gray-400);font-size:0.83rem;">📍 ${escapeHtml(l.desired_area)}</div>` : ''}
-          </div>
-        `).join('')}
+      <div style="display:flex;flex-direction:column;gap:10px;max-height:44vh;overflow:auto;padding:2px;">
+        ${preview.map(l => this._previewCardHTML(l)).join('')}
       </div>
       <div style="margin-top:14px;padding:12px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe;">
         <p style="margin:0;font-size:0.8rem;color:#1d4ed8;">
@@ -16616,6 +16612,33 @@ ${fileData}
     footer.innerHTML = `
       <button class="btn btn-ghost" onclick="LeadImport.back()">חזרה</button>
       <button class="btn btn-primary" id="import-confirm-btn" style="flex:1;" onclick="LeadImport.confirm()">ייבוא ${this._leads.length} לידים</button>`;
+  },
+
+  // Same markup/classes as Pipeline.renderCard, minus the parts that only
+  // apply to leads that already exist (click-to-open, delete button, tasks,
+  // stale badge) — everything shown here (score 50, role, source badge,
+  // budget dash behavior) mirrors exactly what bulkAddLeads() will save.
+  _previewCardHTML(lead) {
+    const initials = escapeHtml((lead.name || '').split(' ').map(w => w[0]).filter(Boolean).slice(0, 2).join('').toUpperCase());
+    return `
+      <div class="lead-card" style="cursor:default;">
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <div class="lead-card-avatar">${initials}</div>
+          <div style="flex:1; min-width:0;">
+            <div class="lead-card-name truncate">${escapeHtml(lead.name)}</div>
+            <div class="lead-card-meta truncate">${escapeHtml(lead.desired_area || '—')}</div>
+            <div class="lead-card-meta">${formatMoney(0)}–${formatMoney(lead.budget_max)}</div>
+          </div>
+          <div class="score-badge ${scoreClass(50)}">50</div>
+        </div>
+        <div class="lead-card-footer" style="margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+            ${roleBadgeHtml('buyer')}
+            <span class="badge badge-${safeSource(lead.source)}">${escapeHtml(sourceLabel(lead.source))}</span>
+          </div>
+          ${lead.phone ? `<span class="lead-card-meta" dir="ltr">${escapeHtml(lead.phone)}</span>` : ''}
+        </div>
+      </div>`;
   },
 
   async fetchFromDrive() {
