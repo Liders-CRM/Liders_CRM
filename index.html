@@ -4796,6 +4796,10 @@
           <div class="analytics-chart-title">📅 לידים חדשים, 6 חודשים אחרונים</div>
           <canvas id="analytics-monthly-chart" height="160"></canvas>
         </div>
+        <div id="analytics-agency-board-card" class="analytics-chart-card hidden">
+          <div class="analytics-chart-title">🏆 לוח סוכנים</div>
+          <div id="analytics-agency-board-body"></div>
+        </div>
       </div>
     </div>
 
@@ -14981,6 +14985,7 @@ const Analytics = {
       this.renderSourceChart();
       this.renderMonthlyChart();
       if (State.isDemo) this._renderDemoOverlay();
+      else AgencyLeaderboard.render();
     }, 50);
   },
 
@@ -19685,6 +19690,92 @@ const Team = {
   },
 };
 window.Team = Team;
+
+/* ═══════════════════════════════════════════
+   AGENCY LEADERBOARD — לוח סוכנים (Pro/Premium בלבד)
+═══════════════════════════════════════════ */
+const AgencyLeaderboard = {
+  _PLANS_ALLOWED: ['pro', 'premium', 'lifetime'],
+  _data: null,
+
+  async render() {
+    const card = document.getElementById('analytics-agency-board-card');
+    const body = document.getElementById('analytics-agency-board-body');
+    if (!card || !body) return;
+
+    if (!Team.canManage()) { card.classList.add('hidden'); return; }
+    card.classList.remove('hidden');
+
+    if (!this._PLANS_ALLOWED.includes(State.tenant?.plan)) {
+      body.innerHTML = this._lockedHTML();
+      return;
+    }
+
+    body.innerHTML = `<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:12.5px;">טוען...</div>`;
+    try {
+      const { data, error } = await sbClient.rpc('get_agent_leaderboard');
+      if (error) throw error;
+      this._data = data;
+      body.innerHTML = this._contentHTML(data);
+    } catch(e) {
+      body.innerHTML = `<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:12.5px;">
+        שגיאה בטעינת לוח הסוכנים
+        <button class="btn btn-ghost btn-sm" onclick="AgencyLeaderboard.render()" style="display:block;margin:8px auto 0;">🔄 ניסיון חוזר</button>
+      </div>`;
+    }
+  },
+
+  _lockedHTML() {
+    return `
+      <div style="text-align:center;padding:18px 12px;">
+        <div style="font-size:28px;margin-bottom:8px;">🔒</div>
+        <div style="font-weight:700;color:var(--gray-700);font-size:13.5px;margin-bottom:4px;">זמין בחבילות צוות וסוכנות</div>
+        <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">השוואת ביצועים בין סוכנים שהצטרפו לצוות</div>
+        <button class="btn btn-primary btn-sm" onclick="Billing.openCheckout('pro')">שדרוג חבילה</button>
+      </div>`;
+  },
+
+  _emptyHTML() {
+    return `
+      <div style="text-align:center;padding:18px 12px;">
+        <div style="font-size:28px;margin-bottom:8px;">👥</div>
+        <div style="font-weight:700;color:var(--gray-700);font-size:13.5px;margin-bottom:4px;">אין עדיין סוכנים להשוואה</div>
+        <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">הוספת סוכנים לצוות תאפשר השוואת ביצועים ביניהם</div>
+        <button class="btn btn-primary btn-sm" onclick="Team.open()">הזמנת סוכנים</button>
+      </div>`;
+  },
+
+  _contentHTML(d) {
+    const agents = d?.agents || [];
+    if (agents.length < 2) return this._emptyHTML();
+
+    const medal = r => r === 1 ? '🥇' : r === 2 ? '🥈' : r === 3 ? '🥉' : r;
+    const rows = agents.map(a => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid var(--gray-100);">
+        <div style="width:26px;text-align:center;font-size:14px;font-weight:800;color:var(--gray-500);flex-shrink:0;">${medal(a.rank)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:700;color:var(--gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(a.name)}</div>
+          <div style="font-size:11px;color:var(--gray-400);">${Team._ROLE_LABELS[a.role] || a.role} · ${formatRelDate(a.last_activity_at) || 'אין פעילות'}</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="font-size:15px;font-weight:800;color:var(--blue-600);">${a.closed_deals}</div>
+          <div style="font-size:10px;color:var(--gray-400);">עסקאות</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;width:48px;">
+          <div style="font-size:15px;font-weight:800;color:var(--green-600);">${a.conversion_rate}%</div>
+          <div style="font-size:10px;color:var(--gray-400);">המרה</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;width:56px;">
+          <div style="font-size:13px;font-weight:700;color:var(--gray-600);">${formatMoney(a.active_pipeline_value)}</div>
+          <div style="font-size:10px;color:var(--gray-400);">פייפליין</div>
+        </div>
+      </div>
+    `).join('');
+
+    return `<div>${rows}</div>`;
+  },
+};
+window.AgencyLeaderboard = AgencyLeaderboard;
 
 /* ═══════════════════════════════════════════
    WHATSAPP CONNECT, UI flow (backend TBD)
