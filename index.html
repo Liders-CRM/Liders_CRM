@@ -187,11 +187,15 @@
     body.theme-accessible textarea:focus {
       outline: 3px solid #FFFF00 !important;
     }
-    /* Sidebar accessibility toggle */
+    /* Sidebar accessibility toggle - desktop only (sidebar itself is hidden under
+       767px). Shown only while the dashboard is the active screen, same rule as
+       the mobile FAB (see AccessibilityMode._initFabVisibility), so it doesn't
+       persist across every screen via the sidebar that's always in the DOM. */
     .nav-item.a11y-btn {
       border: 1px solid rgba(255,255,255,0.12);
       margin-top: 4px;
     }
+    .nav-item.a11y-btn.a11y-fab-hidden { display: none !important; }
     .nav-item.a11y-btn[aria-pressed="true"] {
       background: #FFFF00;
       color: #000000;
@@ -4374,7 +4378,7 @@
       <a class="nav-item" onclick="App.logout()">
         <span class="nav-icon">🚪</span> יציאה
       </a>
-      <button class="nav-item a11y-btn" data-a11y-btn
+      <button class="nav-item a11y-btn" id="sidebar-a11y-btn" data-a11y-btn
               onclick="AccessibilityMode.toggle()"
               aria-pressed="false" aria-label="הפעלת מצב נגישות">
         <span class="nav-icon">♿</span>
@@ -6301,6 +6305,17 @@
       <button class="modal-close" onclick="closeModal('modal-smart-wa')">✕</button>
     </div>
     <div id="smart-wa-content" style="padding:0 16px 24px;min-height:120px;"></div>
+  </div>
+</div>
+
+<!-- ── Accessibility declaration modal ── -->
+<div id="modal-a11y-declaration" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-a11y-declaration')">
+  <div class="modal-sheet">
+    <div class="modal-header" style="padding:16px 16px 12px;">
+      <span style="font-weight:800;">♿ הצהרת נגישות</span>
+      <button class="modal-close" onclick="closeModal('modal-a11y-declaration')">✕</button>
+    </div>
+    <div id="a11y-declaration-content" style="padding:0 16px 24px;"></div>
   </div>
 </div>
 
@@ -13341,17 +13356,21 @@ const AccessibilityMode = {
     if (localStorage.getItem(this._KEY) === '1') this.enable(false);
     this._initFabVisibility();
   },
-  // The FAB only needs to appear on the login screen and the dashboard —
+  // The toggle only needs to appear on the login screen and the dashboard —
   // activating it applies system-wide via body.theme-accessible, so showing
-  // it on every screen just crowds the "+ ליד" FAB in the same corner.
+  // it on every screen just crowds the "+ ליד" FAB (mobile) or repeats itself
+  // on every sidebar view (desktop) for no reason. Covers both the mobile FAB
+  // and the desktop sidebar button with the same rule.
   _initFabVisibility() {
     const fab = document.getElementById('a11y-fab');
+    const sidebarBtn = document.getElementById('sidebar-a11y-btn');
     const loginEl = document.getElementById('screen-login');
     const dashEl  = document.getElementById('screen-dashboard');
-    if (!fab || !loginEl || !dashEl) return;
+    if (!loginEl || !dashEl) return;
     const sync = () => {
       const show = !loginEl.classList.contains('hidden') || !dashEl.classList.contains('hidden');
-      fab.classList.toggle('a11y-fab-hidden', !show);
+      if (fab) fab.classList.toggle('a11y-fab-hidden', !show);
+      if (sidebarBtn) sidebarBtn.classList.toggle('a11y-fab-hidden', !show);
     };
     sync();
     new MutationObserver(sync).observe(loginEl, { attributes: true, attributeFilter: ['class'] });
@@ -13382,6 +13401,34 @@ const AccessibilityMode = {
       declBtn.setAttribute('aria-pressed', String(on));
       declBtn.textContent = on ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעלת מצב נגישות';
     }
+  },
+  openDeclaration() {
+    const el = document.getElementById('a11y-declaration-content');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="a11y-declaration" role="region" aria-label="הצהרת נגישות" style="margin:0;">
+        <p>מערכת PLTO פועלת בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998, ולתקנות הנגישות לשירות באינטרנט. אנו מחויבים להבטיח שכל משתמש, ללא תלות ביכולותיו הגופניות, ייהנה מגישה מלאה ושוויונית למערכת.</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:10px;">רמת התאימות המוצהרת: <strong style="color:rgba(255,255,255,0.85);">WCAG 2.1 ברמה AA (חלקית)</strong> · תקן ת"י 5568 · עודכן לאחרונה: יולי 2026</p>
+        <ul>
+          <li>ניגודיות גבוהה (High Contrast), ניגודיות צבעים המאושרת לתקן WCAG AA</li>
+          <li>הגדלת טקסט ב-15% ללחיצה אחת (Chrome, Edge, Safari)</li>
+          <li>סימון פוקוס גלוי לניווט מקלדת בכל מצב, טבעת כחולה במצב רגיל, צהובה בולטת במצב נגישות</li>
+          <li>תגיות ARIA ותיוג סמנטי לקוראי מסך (NVDA, JAWS, VoiceOver)</li>
+          <li>ניווט מלא ממקלדת: Tab, Enter, Space, כולל כל כפתורי הניווט והמודלים</li>
+          <li>קישור "דלג לתוכן הראשי" בלחיצה ראשונה על Tab</li>
+          <li>העדפת הנגישות נשמרת אוטומטית בין כניסות</li>
+          <li>הודעות מערכת (toast) מוכרזות אוטומטית לקוראי מסך</li>
+        </ul>
+        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px;"><strong style="color:rgba(255,255,255,0.75);">מגבלות ידועות:</strong> הגדלת הטקסט אינה פועלת בדפדפן Firefox (מגבלת דפדפן), ניגודיות הצבעים פועלת בכל הדפדפנים. לבעלי מוגבלות קשה יותר, מומלץ לשלב עם הגדרות הנגישות של מערכת ההפעלה.</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px;"><strong style="color:rgba(255,255,255,0.75);">פניות נגישות:</strong> נתקלתם בבעיה? נשמח לטפל, פנו דרך מסך ה<button onclick="closeModal('modal-a11y-declaration');App.go('tools')" style="background:none;border:none;color:var(--blue-500,#60A5FA);font-size:12px;cursor:pointer;padding:0;text-decoration:underline;">"מרכז כלים"</button> או שלחו הודעה ישירות לתמיכה. נטפל בפנייתכם תוך 5 ימי עבודה.</p>
+        <button id="a11y-decl-toggle" class="a11y-decl-toggle"
+                aria-pressed="${State.isAccessibleMode}"
+                onclick="AccessibilityMode.toggle()">
+          ${State.isAccessibleMode ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעלת מצב נגישות'}
+        </button>
+      </div>
+    `;
+    openModal('modal-a11y-declaration');
   },
 };
 AccessibilityMode.init();
@@ -15866,27 +15913,15 @@ const Settings = {
           </div>
         </div>
       </div>
-      <div class="a11y-declaration" role="region" aria-label="הצהרת נגישות">
-        <h3>♿ הצהרת נגישות — PLTO</h3>
-        <p>מערכת PLTO פועלת בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998, ולתקנות הנגישות לשירות באינטרנט. אנו מחויבים להבטיח שכל משתמש, ללא תלות ביכולותיו הגופניות, ייהנה מגישה מלאה ושוויונית למערכת.</p>
-        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:10px;">רמת התאימות המוצהרת: <strong style="color:rgba(255,255,255,0.85);">WCAG 2.1 ברמה AA (חלקית)</strong> · תקן ת"י 5568 · עודכן לאחרונה: יולי 2026</p>
-        <ul>
-          <li>ניגודיות גבוהה (High Contrast) — ניגודיות צבעים המאושרת לתקן WCAG AA</li>
-          <li>הגדלת טקסט ב-15% ללחיצה אחת (Chrome, Edge, Safari)</li>
-          <li>סימון פוקוס גלוי לניווט מקלדת בכל מצב — טבעת כחולה במצב רגיל, צהובה בולטת במצב נגישות</li>
-          <li>תגיות ARIA ותיוג סמנטי לקוראי מסך (NVDA, JAWS, VoiceOver)</li>
-          <li>ניווט מלא ממקלדת: Tab, Enter, Space — כולל כל כפתורי הניווט והמודלים</li>
-          <li>קישור "דלג לתוכן הראשי" בלחיצה ראשונה על Tab</li>
-          <li>העדפת הנגישות נשמרת אוטומטית בין כניסות</li>
-          <li>הודעות מערכת (toast) מוכרזות אוטומטית לקוראי מסך</li>
-        </ul>
-        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px;"><strong style="color:rgba(255,255,255,0.75);">מגבלות ידועות:</strong> הגדלת הטקסט אינה פועלת בדפדפן Firefox (מגבלת דפדפן) — ניגודיות הצבעים פועלת בכל הדפדפנים. לבעלי מוגבלות קשה יותר, מומלץ לשלב עם הגדרות הנגישות של מערכת ההפעלה.</p>
-        <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px;"><strong style="color:rgba(255,255,255,0.75);">פניות נגישות:</strong> נתקלתם בבעיה? נשמח לטפל — פנו דרך מסך ה<button onclick="App.go('tools')" style="background:none;border:none;color:var(--blue-500,#60A5FA);font-size:12px;cursor:pointer;padding:0;text-decoration:underline;">"מרכז כלים"</button> או שלחו הודעה ישירות לתמיכה. נטפל בפנייתכם תוך 5 ימי עבודה.</p>
-        <button id="a11y-decl-toggle" class="a11y-decl-toggle"
-                aria-pressed="${State.isAccessibleMode}"
-                onclick="AccessibilityMode.toggle()">
-          ${State.isAccessibleMode ? '✅ מצב נגישות פעיל — לחיצה לכיבוי' : '♿ הפעלת מצב נגישות'}
-        </button>
+      <div class="settings-section">
+        <div class="settings-row" onclick="AccessibilityMode.openDeclaration()" style="cursor:pointer;">
+          <div class="settings-row-icon">♿</div>
+          <div class="settings-row-body">
+            <div class="settings-row-label">נגישות והצהרת נגישות</div>
+            <div class="settings-row-sub">${State.isAccessibleMode ? 'מצב נגישות פעיל' : 'הפעלת מצב נגישות, תקן ותאימות'}</div>
+          </div>
+          <div class="settings-arrow">›</div>
+        </div>
       </div>
     `;
   },
