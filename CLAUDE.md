@@ -425,6 +425,9 @@ supabase/
 | `ai-proxy` | קריאה ל-Claude Haiku 4.5 | פעיל ✅ |
 | `stripe-webhook` | demo/test בלבד | demo ⚠️ |
 
+> הטבלה הזו לא מתעדכנת אוטומטית — יש גם `twilio-whatsapp`, `gmail-proxy`,
+> `gmail-oauth-callback` פעילות (ראה סעיפי הסשנים למעלה לפרטים על כל אחת).
+
 **ANTHROPIC_API_KEY** מוגדר ב-Supabase Secrets. מודל נוכחי: `claude-haiku-4-5-20251001`.
 מדרג עלויות: Haiku → Sonnet כשיש הכנסות.
 
@@ -2205,6 +2208,141 @@ Playwright offline (כמו סשנים קודמים): 5 תרחישים (לא-מנ
   מודל נתונים קיימת, לא נגרמת ע"י הפיצ'ר הזה.
 - לא נבנה `closed_at`/טווחי זמן — פוטנציאל להרחבה עתידית אם תעלה דרישה אמיתית
   (עקרון "לא בונים רעיון עתידי באופן יזום" מסשן 12/7/2026).
+
+---
+
+## מה בוצע — סשן 13/7/2026 (ב') — מנוע A/B testing אמיתי + דוח שבועי למייל
+
+> ענף: `claude/system-value-display-button-vbukor`. לבקשת המשתמש: A/B testing
+> אמיתי גם על דף הנחיתה וגם על המערכת (לא רק תשתית ניהול), עם דוח אוטומטי
+> שנשלח למייל. הוחלט מול המשתמש: שני המשטחים (landing + app) מהסבב הראשון,
+> ומייל ישיר מ-Supabase (לא Make.com).
+
+### ✅ הושלם
+1. **מיגרציה `086_ab_testing_engine.sql`** — `cro_ab_tests.test_key` (מזהה יציב
+   שהקוד בפרונט מחפש לפיו איזה טסט לרנדר; NULL = רעיון בלבד, לא מוצג).
+   `get_active_ab_tests()` נבנה מחדש כ-RPC ציבורי (anon+authenticated) שמחזיר
+   את **תוכן** הוריאנטים בפועל (לא רק שם כמו שהיה קודם, לפני שנמחק ב-082 כקוד
+   מת). `admin_list_ab_tests`/`admin_upsert_ab_test` עודכנו לתמוך ב-test_key.
+2. **דוח CRO שבועי עובר ל-Supabase ישירות** — התגלה שהדוח הישן
+   (`send_cro_weekly_digest`, מיגרציה 069) שלח ל-Make webhook עם
+   `event=cro.weekly_digest`, אבל **לא קיים סצנריו ב-Make שמאזין לזה** (רק
+   Lead Notifications + Trial Expiry) — הדוח הלך לאיבוד שבועות בלי שאף אחד
+   שם לב. הוחלף ב-`send_ab_test_report_email()` חדש שבונה HTML (משפך כללי +
+   טבלת A/B) ושולח ל-Edge Function חדשה, `cro-report-email`, שמשתמשת באותה
+   תיבת Gmail מחוברת כמו `gmail-proxy` כדי לשלוח בפועל ל-`info@plto.app`.
+   Cron הוחלף מ-`plto-cro-weekly-digest` ל-`plto-ab-report-weekly` (אותו זמן:
+   יום ראשון 08:00 UTC).
+3. **אימות פנימי בלי secret חדש להגדיר ידנית** — ל-`cro-report-email` אין
+   session של משתמש (נקראת מ-pg_cron), אז האימות הוא לא JWT אלא secret
+   אקראי שנוצר אוטומטית ב-Supabase Vault (`cro_report_internal_secret`) ומאומת
+   מול ה-DB דרך RPC (`verify_cron_report_secret`, מותר ל-`service_role` בלבד
+   דרך GRANT). ה-Edge Function קוראת את הערך עם ה-`SUPABASE_SERVICE_ROLE_KEY`
+   שכבר מוזרק אוטומטית לכל Edge Function — שום secret לא נוסף ידנית ב-Dashboard.
+   `verify_jwt=false` ברמת הפלטפורמה (כמו `gmail-proxy`/`ai-proxy`/
+   `twilio-whatsapp`) כי pg_net לא שולח JWT; ההגנה האמיתית היא ה-secret הפנימי.
+4. **תוקן באג באפיון**: `current_role` **בתוך** פונקציית `SECURITY DEFINER`
+   משקף את ה-owner של הפונקציה (postgres), לא את הקורא בפועל — גילוי שקרה תוך
+   כדי בדיקה, אחרי ש-`verify_cron_report_secret` נכשל תמיד. ההגנה האמיתית בכל
+   ה-RPCs ה"מוגבלים לאדמין" בקודבייס (כולל `get_funnel_summary`,
+   `admin_list_ab_tests` הקיימים) היא רשימת ה-`GRANT`/`REVOKE`, לא ה-`IF
+   current_role NOT IN (...)` שבגוף הפונקציה (שלא ממש בודק את הקורא, רק
+   נשאר לעקביות סגנונית עם שאר הקוד). אומת ישירות: `SET ROLE anon` מקבל
+   "permission denied" (חסימה אמיתית ברמת GRANT), `SET ROLE service_role`
+   עובר (יש GRANT). מיגרציה `087_fix_verify_cron_report_secret.sql` תיקנה
+   את הבדיקה הפנימית לתואם לשאר הקוד ('postgres','service_role').
+5. **🔴 באג אבטחה/פונקציונליות שהתגלה בנפרד ב-`landing.html`, לא קשור ל-A/B**:
+   ה-CSP של הדף (`connect-src 'self'`, `script-src 'self' 'unsafe-inline'`
+   בלי googletagmanager.com) חסם **לחלוטין** גם את קריאות ה-`fetch` ל-Supabase
+   (`track_funnel_event` — מעקב הקלקות CTA שכבר קיים) וגם את טעינת GA4 עצמו.
+   כלומר **אנליטיקס דף הנחיתה כנראה לא עבד בפועל בכלל, בלי שגיאה גלויה
+   למשתמש**, מאז שה-CSP הזה הוגדר. תוקן: נוספו `https://scyfywvzoogfrlalgftv.
+   supabase.co` ו-`https://www.google-analytics.com` ל-`connect-src`,
+   ו-`https://www.googletagmanager.com` ל-`script-src` (מבלי לפתוח את ה-CSP
+   בצורה גורפת — נוספו רק המקורות הספציפיים הדרושים, לפי הכלל ב-CLAUDE.md
+   שדורש עדכון CSP בכל הוספת משאב חיצוני). אומת ב-Playwright: 0 שגיאות CSP
+   אחרי התיקון, קודם היו 2 (connect + script).
+6. **`ABEngine`** — מודול JS זהה ברעיון בשני הקבצים (מותאם למוסכמות הקיימות של
+   כל אחד: `landing.html` עם `fetch` גולמי כמו מעקב ה-CTA הקיים; `index.html`
+   דרך `sbClient.rpc` + `FunnelTracker` הקיים). הקצאת מבקר לוריאנט A/B
+   רנדומלית ויציבה ב-`localStorage` (`plto_ab_<test_key>`, לא משתנה בין
+   ביקורים), מחליפה טקסט רק אם יש טסט **פעיל** עם `test_key` תואם (בלי טסט
+   פעיל — הדף מציג את הטקסט הסטטי הקיים, בלי שום שינוי), שולחת
+   `ab_exposure`/`ab_converted` דרך `track_funnel_event` הקיים (אותה תשתית
+   שכבר משמשת למעקב אחר, אין טבלה/RPC נפרד).
+7. **שני טסטים מחווטים בפועל בסבב הזה** (התשתית תומכת בעוד בעתיד, פשוט
+   מוסיפים `test_key` חדש לקוד + לרשימת ה-`<select>` באדמין):
+   - `landing_hero_cta` → כפתור ה-CTA הראשי בדף הנחיתה (`#hero-cta-btn`).
+     המרה = קליק על הכפתור.
+   - `login_cta_button` → כפתור "התחלה בחינם" במסך הכניסה (`#btn-login-email`).
+     המרה = הרשמה שהושלמה בפועל (`isNew` ב-`_authAndEnter`, לא רק קליק) —
+     אות עמוק יותר מקליק כי כאן, בניגוד לדף הנחיתה, אפשר לצפות בתוצאה האמיתית
+     באותו session. תוקן גם באג נלווה: ה-`finally` block היה מאפס תמיד את
+     טקסט הכפתור לברירת המחדל הקשיחה אחרי כל ניסיון התחברות (גם כשלון), מה
+     שהיה מוחק כל וריאנט B בחזרה ל-A אחרי קליק ראשון — עכשיו משתמש ב-
+     `dataset.abText` שנשמר בזמן ההקצאה.
+8. **`admin.html`** — נוסף שדה `test_key` (select עם שני המפתחות הנתמכים +
+   "ללא — רעיון בלבד") למודל יצירת/עריכת טסט, עם הסבר inline שהפעלה בפועל
+   מציגה את הטקסט למבקרים אמיתיים. טבלת הטסטים הפעילים מציגה את ה-`test_key`
+   (או אזהרה אם חסר) מתחת לשם הטסט.
+9. **נבדק קצה-לקצה** (SQL ישיר עם `SET ROLE`, לא רק Playwright מדומה): טסט
+   אמיתי נוצר, הופעל זמנית, `get_active_ab_tests()` כ-`anon` החזיר את התוכן
+   הנכון, `ab_exposure`/`ab_converted` נשלחו ו-`admin_list_ab_tests` חישב
+   exposures/conversions נכון. הוחזר ל-`backlog` בסוף הבדיקה (לא יצא לאוויר
+   בלי שהמשתמש יבחר להפעיל) — נשאר ב-DB כטסט מוכן־מראש להפעלה:
+   "כניסה ישירה למערכת" (A, הקיים) מול "קדימה, למערכת" (B, הניסוח הקודם).
+   `Playwright` (offline, עם stubs) אימת גם את ה-DOM/click/localStorage בפועל
+   בשני הדפים.
+
+### ⚠️ Gmail OAuth refresh token פג (`invalid_grant`) — לא תוקן, כבר לא רלוונטי
+הדוח נכשל בפועל בבדיקה (500, `refresh failed: invalid_grant`) כי ה-refresh
+token של `gmail_tokens` (`liders.crm@gmail.com`) לא תקף יותר (רוענן לאחרונה
+10/7, נכשל ב-13/7 — תואם למגבלת Google של 7 ימים על refresh tokens כש-OAuth
+consent screen במצב "Testing" ולא "Production/Verified" **או** "Internal").
+**זה כנראה משפיע גם על תכונת תיבת ה-Gmail הקיימת באפליקציה** (`GmailInbox`) —
+לא קשור לדוח ה-CRO. תיקון (אם/כשיהיה רלוונטי בעתיד): לבקר ב-
+`https://scyfywvzoogfrlalgftv.supabase.co/functions/v1/gmail-oauth-callback`
+מחובר לחשבון המתאים כדי לבצע OAuth מחדש. לתיקון קבוע: ב-Google Cloud Console
+→ OAuth consent screen → User Type — אם `info@plto.app` נמצא באותו ארגון
+Workspace שהפרויקט תחתיו, מעבר ל-"Internal" (לא "External") מבטל את מגבלת
+7 הימים לגמרי בלי צורך באימות Google. המשתמש בחר לא לטפל בזה כרגע (ראה מטה).
+
+### ✅ עדכון 13/7/2026 — הדוח השבועי הוסר לגמרי (הוחלט מול המשתמש)
+המשתמש החליט לא לתחזק חיבור Gmail חוזר כל שבוע רק בשביל דוח לא הכרחי — מנוע
+ה-A/B testing עצמו לא תלוי במייל בכלל, כל התוצאות זמינות תמיד ב-admin.html.
+מיגרציה `088_remove_ab_report_email_infra.sql` (הוחלה על ה-DB החי) הסירה:
+- cron `plto-ab-report-weekly`
+- הפונקציות `send_ab_test_report_email()`, `verify_cron_report_secret()`
+- הפונקציה המתה `send_cro_weekly_digest()` (069) — ה-cron שלה כבר בוטל
+  קודם, נשארה שריד בלי קורא
+- ה-Vault secret `cro_report_internal_secret`
+- קובץ המקור `supabase/functions/cro-report-email/` הוסר מהריפו
+
+**⚠️ לא הוסר, דורש מחיקה ידנית אם רוצים**: ה-Edge Function `cro-report-email`
+עצמה עדיין פרוסה בפועל ב-Supabase (Dashboard → Edge Functions) — אין כלי MCP
+להסרת Edge Function. היא **מנוטרלת לגמרי בפועל** (כל בקשה אליה נכשלת כי
+`verify_cron_report_secret` שהיא מסתמכת עליו לאימות כבר לא קיים), אבל אם
+רוצים ניקיון מוחלט אפס-footprint — יש למחוק אותה ידנית מה-Dashboard.
+### 🔍 בדיקת `temp-selftest` (Edge Function לא מתועדת, בקשת המשתמש)
+נבדק בנפרד: תוכן הפונקציה כולו הוא `Deno.serve(() => new Response('Gone', {
+status: 410 }))` — כבר מנוטרלת בכוונה (אותו דפוס בדיוק כמו `admin-ops`
+המתועדת), 0 אזכורים בכל הריפו, 0 קריאות אמיתיות ב-24 השעות האחרונות (רק
+הקריאות שלי ל-`cro-report-email` הופיעו בלוגים). **מאושר כשריד מת, בטוח
+להסרה.** לא נמחקה בפועל — **אין כלי MCP למחיקת Edge Function** (רק ליצירה/
+עדכון/קריאה/רשימה), בדיוק כמו `cro-report-email` למעלה. נדרשת מחיקה ידנית
+דרך Dashboard → Edge Functions אם רוצים ניקיון מלא; שתי הפונקציות (`cro-
+report-email` ו-`temp-selftest`) לא עושות דבר ולא עולות כסף בזמן שהן יושבות
+שם ללא שימוש.
+
+### 📋 לסשן הבא
+- להחליט אם להפעיל בפועל את טסט ה-CTA שנשאר מוכן ב-backlog (בדיקה דרך
+  admin.html בלבד, לא מייל).
+- לשקול להוסיף עוד `test_key` נתמכים ברשימת ה-select באדמין ככל שנוספים עוד
+  מקומות לבדיקה (כרגע רק 2: hero CTA בנחיתה, login CTA באפליקציה).
+- אם אי פעם ירצו לחדש דוח אוטומטי למייל: לבדוק קודם User Type ב-Google Cloud
+  Console (ראה למעלה) לפני שבונים מחדש את התשתית שהוסרה.
+- מחיקה ידנית דרך Dashboard של `cro-report-email` ו-`temp-selftest` אם/כש
+  המשתמש ירצה ניקיון Edge Functions מלא (שתיהן מאושרות כבטוחות להסרה).
 
 ---
 

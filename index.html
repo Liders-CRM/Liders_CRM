@@ -13418,6 +13418,48 @@ const FunnelTracker = {
   },
 };
 
+/* ═══════════════════════════════════════════
+   A/B TESTING ENGINE
+   מקצה מבקר לוריאנט (יציב ב-localStorage), מציג טקסט מה-DB רק אם יש טסט
+   פעיל עם test_key תואם, שולח ab_exposure/ab_converted דרך FunnelTracker.
+   בלי טסט פעיל למפתח — המסך מציג את הטקסט הסטטי הקיים, בלי שינוי.
+   ניהול הטסטים קורה ב-admin.html → CRO → A/B Tests.
+═══════════════════════════════════════════ */
+const ABEngine = {
+  _exposed: {},
+  _bucket(testKey) {
+    const key = 'plto_ab_' + testKey;
+    let v = localStorage.getItem(key);
+    if (v === 'a' || v === 'b') return v;
+    v = (crypto.getRandomValues(new Uint32Array(1))[0] % 2 === 0) ? 'a' : 'b';
+    try { localStorage.setItem(key, v); } catch (_) {}
+    return v;
+  },
+  async apply(map) {
+    try {
+      const { data: tests, error } = await sbClient.rpc('get_active_ab_tests');
+      if (error || !tests) return;
+      tests.forEach(t => {
+        const sel = map[t.test_key];
+        if (!sel) return;
+        const el = document.querySelector(sel);
+        if (!el) return;
+        const variant = this._bucket(t.test_key);
+        const text = variant === 'a' ? t.variant_a : t.variant_b;
+        if (text) { el.textContent = text; el.dataset.abText = text; }
+        this._exposed[t.test_key] = { id: t.id, variant };
+        FunnelTracker.track('ab_exposure', { test_id: t.id, variant });
+      });
+    } catch (_) {}
+  },
+  convert(testKey) {
+    const e = this._exposed[testKey];
+    if (!e) return;
+    FunnelTracker.track('ab_converted', { test_id: e.id, variant: e.variant });
+  },
+};
+ABEngine.apply({ login_cta_button: '#btn-login-email' });
+
 const App = {
   async loginWithEmail() {
     const email    = document.getElementById('login-email').value.trim();
@@ -13504,7 +13546,10 @@ const App = {
       LoadingOverlay.show('טוען נתונים...');
       const user = data.user;
       const { isNew, joinedViaToken, joinedTenantName } = await DB.ensureAgent(user.email, user.email.split('@')[0]);
-      if (isNew) FunnelTracker.track('signup_completed', { method: 'email' });
+      if (isNew) {
+        FunnelTracker.track('signup_completed', { method: 'email' });
+        ABEngine.convert('login_cta_button');
+      }
       AuditLog.log('auth.login');
       const loaded = await DB.loadAll();
       State.stages     = loaded.stages;
@@ -13540,7 +13585,7 @@ const App = {
       }
       document.getElementById('loading-overlay')?.classList.add('hidden');
     } finally {
-      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'התחלה בחינם'; }
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = loginBtn.dataset.abText || 'התחלה בחינם'; }
     }
   },
   _showApp() {

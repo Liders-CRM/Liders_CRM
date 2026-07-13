@@ -1910,12 +1910,21 @@ function togglePasswordVisibility() {
         <textarea id="ab-hypothesis" placeholder="אם נשנה X, אנו מצפים ש-Y יגדל כי Z..."></textarea>
       </div>
       <div class="modal-form-group">
-        <label>Variant A (הנוכחי)</label>
-        <input type="text" id="ab-variant-a" placeholder="תיאור גרסה A">
+        <label>מיקום טכני (test_key)</label>
+        <select id="ab-test-key">
+          <option value="">ללא — רעיון בלבד, לא מוצג בפועל</option>
+          <option value="landing_hero_cta">כפתור CTA ראשי — דף הנחיתה</option>
+          <option value="login_cta_button">כפתור "התחלה בחינם" — מסך הכניסה</option>
+        </select>
+        <div style="font-size:.75rem;color:var(--text-dim);margin-top:4px;">בחירת מיקום + הפעלה (סטטוס Active) מציגה בפועל את הטקסט מ-Variant A/B למבקרים, מחצית-מחצית</div>
       </div>
       <div class="modal-form-group">
-        <label>Variant B (השינוי)</label>
-        <input type="text" id="ab-variant-b" placeholder="תיאור גרסה B">
+        <label>Variant A</label>
+        <input type="text" id="ab-variant-a" placeholder="הטקסט המדויק שיוצג בגרסה A">
+      </div>
+      <div class="modal-form-group">
+        <label>Variant B</label>
+        <input type="text" id="ab-variant-b" placeholder="הטקסט המדויק שיוצג בגרסה B">
       </div>
       <div class="modal-form-group">
         <label>סטטוס</label>
@@ -2007,7 +2016,7 @@ const AdminCRO = {
         const crB = t.exposures_b > 0 ? ((t.conversions_b / t.exposures_b) * 100).toFixed(1) + '%' : '—';
         const statusBadge = { active: '🟢 פעיל', concluded: '⚪ הסתיים' };
         return `<tr>
-          <td style="font-weight:600;">${esc(t.name)}</td>
+          <td style="font-weight:600;">${esc(t.name)}${t.test_key ? `<div style="font-size:.7rem;color:var(--text-dim);font-weight:400;">🔗 ${esc(t.test_key)}</div>` : '<div style="font-size:.7rem;color:var(--orange,#F59E0B);font-weight:400;">⚠️ ללא test_key — לא מוצג למבקרים</div>'}</td>
           <td style="font-size:.82rem;">${esc(t.variant_a || '—')}</td>
           <td style="font-size:.82rem;">${esc(t.variant_b || '—')}</td>
           <td style="font-size:.82rem;">${t.exposures_a ?? 0} / ${t.exposures_b ?? 0}</td>
@@ -2038,6 +2047,7 @@ const AdminCRO = {
     document.getElementById('ab-id').value          = test?.id || '';
     document.getElementById('ab-name').value        = test?.name || '';
     document.getElementById('ab-hypothesis').value  = test?.hypothesis || '';
+    document.getElementById('ab-test-key').value    = test?.test_key || '';
     document.getElementById('ab-variant-a').value   = test?.variant_a || '';
     document.getElementById('ab-variant-b').value   = test?.variant_b || '';
     document.getElementById('ab-status').value      = test?.status || 'backlog';
@@ -2064,6 +2074,7 @@ const AdminCRO = {
       p_variant_b:  document.getElementById('ab-variant-b').value.trim() || null,
       p_status:     status,
       p_winner:     (status === 'concluded' ? document.getElementById('ab-winner').value || null : null),
+      p_test_key:   document.getElementById('ab-test-key').value || null,
     });
     if (error) { alert('שגיאה: ' + error.message); return; }
     closeModal('modal-ab-test');
