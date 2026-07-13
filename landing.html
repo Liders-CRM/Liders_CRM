@@ -793,8 +793,6 @@
       height: 260px;
       background: linear-gradient(180deg, var(--navy-100) 0%, var(--gray-bg) 100%);
       overflow: hidden;
-      content-visibility: auto;
-      contain-intrinsic-size: auto 260px;
     }
     .ss-skyline {
       position: absolute; bottom: 36px; right: 5%;
@@ -868,7 +866,7 @@
     @keyframes bb-cycle-a { 0%, 42% { opacity: 1; transform: translateY(0); } 50%, 100% { opacity: 0; transform: translateY(-4px); } }
     @keyframes bb-cycle-b { 0%, 42% { opacity: 0; transform: translateY(4px); } 50%, 92% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(4px); } }
     @media (max-width: 700px) {
-      .street-scene { height: 200px; contain-intrinsic-size: auto 200px; }
+      .street-scene { height: 200px; }
       .ss-skyline { right: 3%; gap: 5px; }
       .ss-building { width: 26px; }
       .ss-b1 { height: 40px; } .ss-b2 { height: 64px; } .ss-b3 { height: 82px; } .ss-b4 { height: 52px; } .ss-b5 { height: 70px; }
@@ -1877,8 +1875,6 @@
       height: 130px;
       background: linear-gradient(180deg, var(--white) 0%, var(--gray-bg) 100%);
       overflow: hidden;
-      content-visibility: auto;
-      contain-intrinsic-size: auto 130px;
     }
     .cd-sign {
       position: absolute; top: 18px; left: 0; right: 0;
@@ -1937,8 +1933,6 @@
       justify-content: center;
       gap: 22px;
       overflow: hidden;
-      content-visibility: auto;
-      contain-intrinsic-size: auto 84px;
     }
     .ho-figure {
       width: 50px; height: 50px;
@@ -1992,7 +1986,7 @@
       .ho-to   { animation: none !important; }
     }
     @media (max-width: 480px) {
-      .handoff-divider { gap: 14px; height: 72px; contain-intrinsic-size: auto 72px; }
+      .handoff-divider { gap: 14px; height: 72px; }
       .ho-track { width: 84px; }
       .ho-figure { width: 42px; height: 42px; font-size: 22px; }
     }
@@ -2852,7 +2846,6 @@
 <section class="demo-section" id="demo">
   <div class="section-inner">
     <h2 class="section-title fade-up">הצצה לתוך לב המערכת</h2>
-    <p class="section-sub fade-up">מציגים לך פה רק טעימה קטנה ממה שקורה בפנים.</p>
 
     <div class="screen-reel fade-up">
       <div class="reel-window">
@@ -2948,8 +2941,7 @@
     </div>
 
     <div class="shots-cta fade-up">
-      <p class="shots-cta-note">🔒 את השאר שומרים למי שנכנס, ו-30 יום התנסות מלאה כבר מחכים לך, בלי שום סיכון.</p>
-      <a href="https://plto.app" class="btn-primary shimmer-cta" style="font-size:16px;">מעלים לידים ורואים את המערכת בפעולה</a>
+      <p class="shots-cta-note" style="margin-bottom:0;">⏰ שורפים המון זמן על לידים שלעולם לא יסגרו, ובסוף הלך הלקוח. את השאר שומרים למי שנכנס.</p>
     </div>
   </div>
 </section>
@@ -3219,12 +3211,7 @@
 <!-- קצת עלינו -->
 <section class="section about-section" id="about">
   <div class="section-inner">
-    <p class="about-pre-title fade-up">קצת עלינו</p>
-    <h2 class="section-title fade-up">מכל המערכות הקיימות, למה שנבחר דווקא בכם?</h2>
-    <div class="about-tagline fade-up">
-      <span class="about-plto-badge">PLTO</span>
-      <span class="about-tagline-words">שליטה, פרודוקטיביות וצמיחה</span>
-    </div>
+    <h2 class="section-title fade-up">מכל המערכות הקיימות, למה שנבחר ב-PLTO?</h2>
     <div class="about-body fade-up">
       <p>אחרי יותר מעשור בשיווק ומכירות, הבנו דבר אחד פשוט: בעלי מקצוע לא צריכים עוד מערכת CRM. הם צריכים מערכת שעובדת בשבילם, לא כזו שדורשת לעבוד בשבילה.</p>
       <p>מתוך זה נולדה PLTO: פלטפורמת ניהול לידים ומכירות שנבנתה עבור עולם הנדל"ן, סוכני נדל"ן, עו"ד נדל"ן ומעצבי פנים.</p>
@@ -3232,13 +3219,6 @@
       <p>אנחנו לא עוצרים. מקשיבים למשתמשים ומפתחים את PLTO כל הזמן, כדי ש-PLTO תמשיך לייצר ערך גם מחר.</p>
       <p>המטרה שלנו היא לא רק לנהל לידים. היא לעזור לבנות עסק שמתקדם מהר יותר, ומתמקד במה שבאמת מניע הצלחה.</p>
       <p class="about-closing">פחות בלגן. יותר שליטה.<br>ומשם, מגיעה גם הצמיחה.</p>
-    </div>
-
-    <div class="about-commitment fade-up">
-      <h3 class="about-commit-title">ההתחייבות שלנו</h3>
-      <p class="about-commit-text">אנחנו מאמינים ב-PLTO ובערך שהיא נותנת.</p>
-      <p class="about-commit-text">לכן, אם במהלך תקופת הניסיון לא תורגש תוצאה מהותית בהתנהלות העסקית, נבנה עבורכם דף נחיתה או דף מכירה במתנה, ללא עלות.</p>
-      <p class="about-commit-text">זו לא רק הבטחה.<br>זו רמת הביטחון שלנו במערכת שבנינו.</p>
     </div>
   </div>
 </section>
@@ -3376,12 +3356,6 @@
         <div class="step-micro">הסוכן עובד תמיד, גם מאחורי הקלעים.</div>
       </div>
     </div>
-    <div class="section-cta-wrap" style="margin-top:40px;">
-      <p class="section-pre-cta">סוכנים שעובדים חכם כבר עברו ל-PLTO, וסוגרים עסקאות בעקביות</p>
-      <a href="https://plto.app" class="btn-primary">מתחילים לעבוד בצורה מסודרת</a>
-      <p class="cta-trust-line">30 ימי ניסיון בחינם · גישה מלאה לכל הפיצ'רים · ביטול בכל עת</p>
-      <p class="section-pre-cta" style="margin-top:16px;">✓ מעקב מלא אחרי כל עסקה</p>
-    </div>
   </div>
 </section>
 
@@ -3399,8 +3373,8 @@
 <section class="section referral-pain-section">
   <div class="section-inner rp-inner">
     <h2 class="rp-heading fade-up">כמה פעמים ויתרת על ליד שלא היה בתחום שלך ובסוף לא הרווחת עליו כלום</h2>
-    <p class="rp-body fade-up" style="text-align:center;font-size:clamp(16px,1.9vw,18px);color:var(--text-muted);margin-top:12px;">יש פתרון, לוח ההזדמנויות של PLTO מאפשר להפנות ליד לקולגה ולקבל עמלה מוסכמת עם חתימה דיגיטלית.</p>
-    <div class="opp-explainer fade-up" style="margin-top:28px;">
+    <p class="rp-body" style="text-align:center;font-size:clamp(16px,1.9vw,18px);color:var(--text-muted);margin-top:12px;">יש פתרון, לוח ההזדמנויות של PLTO מאפשר להפנות ליד לקולגה ולקבל עמלה מוסכמת עם חתימה דיגיטלית.</p>
+    <div class="opp-explainer" style="margin-top:28px;">
       <div class="oe-title">📋 לוח ההזדמנויות · שוק ההפניות הפנימי של PLTO</div>
       <div class="oe-desc">יש לקוח שצריך מישהו מחוץ לתחום שלך או מחוץ לאזור? מפרסמים הזדמנות בלוח הפנימי עם עמלה, בעל המקצוע המתאים מגיב, וכל ההסכמות מגובות בחתימה דיגיטלית. בלי הסכמים בוואטסאפ שנשכחים, בלי אי-נעימויות בסוף.</div>
       <div class="oe-examples">
