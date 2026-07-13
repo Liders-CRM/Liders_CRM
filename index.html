@@ -883,7 +883,7 @@
       font-size: 22px; font-weight: 900; color: var(--white);
       letter-spacing: -0.5px;
     }
-    .sidebar-logo span { color: var(--blue-400, #60A5FA); }
+    .sidebar-logo span { color: var(--white); }
     .sidebar-subtitle { font-size: 11px; color: var(--navy-200); margin-top: 2px; }
     .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
     .nav-item {
@@ -1011,9 +1011,6 @@
       font-family: 'Helvetica Neue', Arial, sans-serif;
       font-weight: 700; font-size: 58px; line-height: 1;
       color: rgba(255,255,255,0.95); letter-spacing: -3.5px;
-    }
-    .lh-logo-o-svg {
-      width: 62px; height: 62px; overflow: visible;
     }
     @keyframes lh-enter {
       from { opacity: 0; transform: translateY(24px) scale(.88); }
@@ -1491,7 +1488,7 @@
     #loading-overlay.fade-out { opacity: 0; pointer-events: none; }
     #loading-overlay.hidden { display: none; }
     .loader-logo { font-size: 48px; font-weight: 900; color: #fff; letter-spacing: -2px; }
-    .loader-logo span { color: #60A5FA; }
+    .loader-logo span { color: #fff; }
     .loader-dots { display: flex; gap: 10px; }
     .loader-dots span {
       width: 10px; height: 10px; border-radius: 50%; background: var(--gold-400);
@@ -1554,7 +1551,7 @@
     #privacy-shield.active { opacity: 1; visibility: visible; pointer-events: all; }
     #privacy-shield .shield-icon { font-size: 38px; line-height: 1; }
     #privacy-shield .shield-logo { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1.5px; line-height: 1; }
-    #privacy-shield .shield-logo span { color: #60A5FA; }
+    #privacy-shield .shield-logo span { color: #fff; }
     #privacy-shield .shield-msg { font-size: 15px; font-weight: 700; color: #fff; max-width: 320px; line-height: 1.6; }
     #privacy-shield .shield-sub { font-size: 13px; color: var(--navy-200); max-width: 290px; line-height: 1.6; }
 
@@ -1849,7 +1846,7 @@
       text-align: center; font-size: 20px; font-weight: 900;
       color: rgba(255,255,255,0.9); letter-spacing: -0.5px; margin-bottom: 24px;
     }
-    .paywall-logo-top span { color: #60A5FA; }
+    .paywall-logo-top span { color: rgba(255,255,255,0.9); }
     .paywall-hero { text-align: center; margin-bottom: 28px; }
     .paywall-hero-icon { font-size: 54px; margin-bottom: 12px; line-height: 1; }
     .paywall-hero-title {
@@ -1954,7 +1951,7 @@
       font-size: 40px; font-weight: 900; color: white; letter-spacing: -1px;
       margin-bottom: 6px;
     }
-    .setup-logo span { color: #60A5FA; }
+    .setup-logo span { color: white; }
     .setup-subtitle {
       font-size: 17px; font-weight: 500; color: rgba(255,255,255,0.85);
       margin-bottom: 32px;
@@ -4160,12 +4157,7 @@
   <!-- ─── HERO ─── -->
   <div class="login-hero">
     <div class="lh-logo" role="img" aria-label="PLTO">
-      <span class="lh-logo-plt">PLT</span>
-      <svg class="lh-logo-o-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" aria-hidden="true">
-        <circle cx="26" cy="35" r="20" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.95)" stroke-width="7"/>
-        <path d="M 26.7,34.3 Q 45.4,24.9 49.3,11.7 Q 30.7,25.6 26.7,34.3 Z" fill="rgba(255,255,255,0.92)"/>
-        <path d="M 28.8,32.2 L 47.2,13.8 M 33.5,27.5 L 38.7,25.7 M 39.2,21.9 L 44.4,20" stroke="rgba(15,31,61,0.55)" stroke-width="0.7" stroke-linecap="round"/>
-      </svg>
+      <span class="lh-logo-plt">PLTO</span>
     </div>
     <div class="lh-badge">⚡ נבנה עבור שוק הנדל"ן הישראלי</div>
     <div class="lh-tagline">פותחים חשבון ומתחילים לעבוד</div>
