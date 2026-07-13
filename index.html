@@ -6960,12 +6960,12 @@
         <input type="url" id="edit-lead-inspiration" class="form-input" placeholder="https://www.pinterest.com/..." style="direction:ltr;">
       </div>
       <div class="form-group">
-        <label class="form-label">📋 תאריך חידוש עמלה <span style="color:var(--gray-400);font-weight:400;">(אופציונלי)</span></label>
+        <label class="form-label">📋 תאריך חידוש בלעדיות <span style="color:var(--gray-400);font-weight:400;">(אופציונלי, לא אחוז העמלה עצמו)</span></label>
         <input type="date" id="edit-lead-renewal-date" class="form-input">
       </div>
       <div class="form-group">
-        <label class="form-label">הערות לחידוש עמלה</label>
-        <input type="text" id="edit-lead-renewal-notes" class="form-input" placeholder="פרטי החוזה, גובה עמלה...">
+        <label class="form-label">הערות לחידוש בלעדיות</label>
+        <input type="text" id="edit-lead-renewal-notes" class="form-input" placeholder="פרטי החוזה, תנאי הבלעדיות...">
       </div>
     </div>
     <div class="modal-footer">
@@ -7487,6 +7487,20 @@ function calcInitials(name) {
 // (e.g. raw cell values from an uploaded CSV) into innerHTML templates.
 function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+// Safety net for AI-generated customer-facing messages (WhatsApp texts etc.):
+// strips a leading bold "title" line, "---" separators and stray ** markers
+// the model sometimes adds despite being told to return only the message body.
+function stripAiMessageArtifacts(text) {
+  if (!text) return text;
+  let t = String(text);
+  t = t.replace(/^\s*\*\*[^\n]{1,80}\*\*\s*\n+/, '');
+  t = t.replace(/^\s*[-_*]{3,}\s*\n+/, '');
+  t = t.replace(/\n+\s*[-_*]{3,}\s*$/, '');
+  t = t.replace(/\*\*(.+?)\*\*/g, '$1');
+  t = t.replace(/\n{3,}/g, '\n\n');
+  return t.trim();
 }
 
 // Allows only http/https URLs - blocks javascript:, data:, vbscript:, etc.
@@ -9408,12 +9422,14 @@ const AI = {
       : _ind === 'interior'
       ? 'בסוף ההודעה, הוסף שורה קצרה ועדינה שמזמינה להמליץ לחברים/משפחה אם יש היכרות עם מישהו שמתכנן פרויקט עיצוב.'
       : 'בסוף ההודעה, הוסף שורה קצרה ועדינה שמזמינה להמליץ לחברים/משפחה אם יש היכרות עם מישהו שמחפש נכס.';
-    return this.call([{ role: 'user', content:
+    const text = await this.call([{ role: 'user', content:
       `כתוב הודעת WhatsApp להחייאת ליד שלא פעיל ${days} ימים.
 ${contextLine}
 כללים: חמה ולא פולשנית, אל תאמר "לא שמעתי ממך", הצג ${updateLine}, מקסימום 3 שורות.
-${referralLine}`
+${referralLine}
+אל תכלול כותרת, סימני markdown (כמו ** או ---), או כל משפט לפני/אחרי ההודעה. החזר אך ורק את גוף ההודעה עצמה, מוכן להעתקה ושליחה ישירה ללקוח בלי שום עריכה.`
     }], 220);
+    return stripAiMessageArtifacts(text);
   },
 
   async getDealAdvice(lead) {
@@ -10899,7 +10915,7 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
     const act = document.getElementById(actId);
     const wm  = wmId ? document.getElementById(wmId) : null;
     if (!out) return;
-    out.textContent = text;
+    out.textContent = stripAiMessageArtifacts(text);
     out.classList.add('visible');
     if (act) act.classList.add('visible');
     if (wm) wm.classList.remove('hidden');
@@ -11008,15 +11024,17 @@ const SmartWA = {
 שלב נוכחי בפייפליין: ${stage?.name || 'פנייה נכנסה'}.
 ${safeNotes ? 'הערות על הלקוח: ' + safeNotes : ''}
 ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
-ההודעה תהיה אישית, חמה, טבעית בעברית. ללא emoji מיותרים. מזמינה לתגובה.`,
+ההודעה תהיה אישית, חמה, טבעית בעברית. ללא emoji מיותרים. מזמינה לתגובה.
+אל תכלול כותרת (כמו "הודעה ל${safeName}"), סימני markdown (כמו ** או ---), או כל משפט לפני/אחרי ההודעה. החזר אך ורק את גוף ההודעה עצמה, מילה ראשונה עד אחרונה, מוכן להעתקה ושליחה ישירה ללקוח בלי שום עריכה.`,
       }], 200, { type: 'marketing' });
+      const cleanMsg = stripAiMessageArtifacts(msg);
       const phone = (lead.phone || '').replace(/^0/, '').replace(/-/g, '');
-      const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(msg);
+      const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(cleanMsg);
       container.innerHTML = `
-        <div style="background:var(--gray-50);border-radius:12px;padding:14px;font-size:14px;line-height:1.7;color:var(--gray-800);white-space:pre-wrap;direction:rtl;text-align:right;margin-bottom:14px;">${escapeHtml(msg)}</div>
+        <div style="background:var(--gray-50);border-radius:12px;padding:14px;font-size:14px;line-height:1.7;color:var(--gray-800);white-space:pre-wrap;direction:rtl;text-align:right;margin-bottom:14px;">${escapeHtml(cleanMsg)}</div>
         <p style="font-size:11px;color:var(--gray-400);margin:0 0 10px;text-align:center;">✏️ סוכן השיווק יכול לפעמים לא לדייק, אפשר לערוך את ההודעה ב-WhatsApp לפני השליחה</p>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(msg)}">📋 העתקה</button>
+          <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(cleanMsg)}">📋 העתקה</button>
           <button class="btn" style="flex:1;background:#25D366;color:white;border:none;" onclick="window.open('${escapeHtml(waUrl)}')">📤 שליחה ב-WA</button>
         </div>
         <button class="btn btn-ghost" style="width:100%;font-size:13px;" onclick="SmartWA.open('${leadId}')">🔄 ייצר הודעה אחרת</button>
@@ -14101,7 +14119,7 @@ const Dashboard = {
     el.classList.remove('hidden');
     el.innerHTML = `
       <div class="section-header" style="margin-top:16px;">
-        <div class="section-title">📋 חידוש עמלה — בקרוב</div>
+        <div class="section-title">📋 חידוש בלעדיות, בקרוב</div>
         <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
       </div>
       <div style="background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-radius:14px;padding:4px 2px;overflow:hidden;">
@@ -14565,7 +14583,7 @@ const LeadDetail = {
               const days = Math.round((new Date(rd) - new Date()) / 86400000);
               const cls = days < 0 ? 'red' : days < 30 ? 'orange' : days < 60 ? 'amber' : 'green';
               const label = days < 0 ? `פג לפני ${Math.abs(days)} ימים` : days === 0 ? 'היום!' : `עוד ${days} יום${days===1?'':'ים'}`;
-              return `<div class="info-item info-item-full"><div class="info-label">📋 חידוש עמלה</div><div class="info-value"><span class="renewal-badge renewal-${cls}">${label}</span><span style="color:var(--gray-400);font-size:11px;margin-right:6px;">${rd}</span>${lead.commission_renewal_notes ? `<span style="color:var(--gray-500);font-size:12px;display:block;margin-top:2px;">${escapeHtml(lead.commission_renewal_notes)}</span>` : ''}</div></div>`;
+              return `<div class="info-item info-item-full"><div class="info-label">📋 חידוש בלעדיות</div><div class="info-value"><span class="renewal-badge renewal-${cls}">${label}</span><span style="color:var(--gray-400);font-size:11px;margin-right:6px;">${rd}</span>${lead.commission_renewal_notes ? `<span style="color:var(--gray-500);font-size:12px;display:block;margin-top:2px;">${escapeHtml(lead.commission_renewal_notes)}</span>` : ''}</div></div>`;
             })() : ''}
           </div>
           ${lead.notes ? `<div style="background:var(--gray-50);border-radius:var(--radius-md);padding:12px;font-size:14px;color:var(--gray-700);">${escapeHtml(lead.notes)}</div>` : ''}
