@@ -611,13 +611,6 @@
     .pain-after::before { content: "✓ "; }
 
     /* ══════════════════════════════
-       תצוגת המערכת
-    ══════════════════════════════ */
-    .demo-section {
-      background: var(--gray-bg);
-      padding: 38px 24px;
-    }
-    /* ══════════════════════════════
        קרוסלת מסכים
     ══════════════════════════════ */
     .screen-reel { margin-top: 40px; }
@@ -663,14 +656,20 @@
       font-size: 14px; font-weight: 700; color: var(--text);
       min-height: 42px; display: flex; align-items: center; justify-content: center;
     }
-    .reel-dots { display: flex; justify-content: center; gap: 7px; margin-top: 16px; }
+    .reel-dots { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
     .reel-pip {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--border); cursor: pointer;
-      transition: background 0.25s, transform 0.25s;
-      border: none; padding: 0;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s;
+      padding: 0;
+      box-shadow: var(--shadow-sm);
     }
-    .reel-pip.active { background: var(--blue); transform: scale(1.35); }
+    .reel-pip:hover:not(.active) { border-color: var(--blue); background: var(--blue-50); }
+    .reel-pip.active { background: var(--blue); border-color: var(--blue); transform: scale(1.1); box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
 
     /* ── Mock UI: Dashboard ── */
     .mock-ai-card {
@@ -777,14 +776,6 @@
     .mock-tool-badge { font-size: 8px; font-weight: 700; border-radius: 3px; padding: 1px 5px; }
     .mock-tool-badge.pro { background: rgba(124,58,237,0.15); color: #6d28d9; }
     .mock-tool-badge.new { background: rgba(22,163,74,0.15);  color: #15803d; }
-    .shots-cta { text-align: center; margin-top: 32px; }
-    .shots-cta-note {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-      font-weight: 600;
-    }
-
     /* ══════════════════════════════
        רחוב, עגורן ושלטי חוצות (מעבר בין סקשנים)
     ══════════════════════════════ */
@@ -1223,7 +1214,7 @@
     @media (max-width: 600px) {
       .stats-inner { grid-template-columns: repeat(3, 1fr); }
       .stat-num { font-size: 26px; }
-      .section, .demo-section, .agents-section, .pricing-section { padding: 28px 20px; }
+      .section, .agents-section, .pricing-section { padding: 28px 20px; }
       .closing { padding: 40px 20px; }
       .section-sub { margin-bottom: 22px; }
       .feature-groups { gap: 24px; }
@@ -2772,7 +2763,6 @@
     <a href="https://plto.app" class="nav-cta">מתחילים בחינם</a>
   </div>
   <div class="nav-menu-panel" id="navMenuPanel" aria-hidden="true">
-    <a href="#demo" onclick="closeNavMenu()">הצצה למערכת</a>
     <a href="#agents" onclick="closeNavMenu()">5 הסוכנים שלנו</a>
     <a href="#industries" onclick="closeNavMenu()">התחומים שלנו</a>
     <a href="#features" onclick="closeNavMenu()">מה מקבלים בפנים</a>
@@ -2840,112 +2830,6 @@
 </section>
 
 <!-- מעבר מכהה לבהיר -->
-<div class="sect-blend-light" aria-hidden="true"></div>
-
-<!-- תצוגת המערכת -->
-<section class="demo-section" id="demo">
-  <div class="section-inner">
-    <h2 class="section-title fade-up">הצצה לתוך לב המערכת</h2>
-
-    <div class="screen-reel fade-up">
-      <div class="reel-window">
-        <div class="reel-bar">
-          <span class="reel-dot"></span><span class="reel-dot"></span><span class="reel-dot"></span>
-          <span class="reel-url">plto.app</span>
-        </div>
-
-        <div class="reel-slides">
-          <!-- שקף 1: דשבורד -->
-          <div class="reel-slide active">
-            <div class="mock-ai-card">
-              <span class="mock-ai-icon">🤖</span>
-              <span class="mock-ai-text">נחמן עוד לא ענה, כדאי לשלוח WhatsApp לפני הערב</span>
-            </div>
-            <div class="mock-kpi-row">
-              <div class="mock-kpi"><div class="mock-kpi-val">₪3.3M</div><div class="mock-kpi-label">שווי צינור</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val">12</div><div class="mock-kpi-label">פגישות פתוחות</div></div>
-              <div class="mock-kpi"><div class="mock-kpi-val">2</div><div class="mock-kpi-label">לידים חדשים</div></div>
-            </div>
-            <div class="mock-lead-list">
-              <div class="mock-lead-row"><span class="mock-lead-dot hot"></span><span class="mock-lead-name">נחמן כהן</span><span class="mock-lead-val">₪2.1M</span><span class="mock-stage mock-s2">יצרנו קשר</span></div>
-              <div class="mock-lead-row"><span class="mock-lead-dot warm"></span><span class="mock-lead-name">שרית לוי</span><span class="mock-lead-val">₪860K</span><span class="mock-stage mock-s3">הצעה נשלחה</span></div>
-              <div class="mock-lead-row"><span class="mock-lead-dot cool"></span><span class="mock-lead-name">גיל שפירא</span><span class="mock-lead-val">₪480K</span><span class="mock-stage mock-s4">במשא ומתן</span></div>
-            </div>
-          </div>
-
-          <!-- שקף 2: פייפליין -->
-          <div class="reel-slide">
-            <div class="mock-kanban">
-              <div class="mock-col">
-                <div class="mock-col-hdr mock-hdr-1">ליד חדש</div>
-                <div class="mock-card">יעקב לוי<br><small>₪300K</small></div>
-                <div class="mock-card">רינת פרידמן<br><small>₪180K</small></div>
-              </div>
-              <div class="mock-col">
-                <div class="mock-col-hdr mock-hdr-2">יצרנו קשר</div>
-                <div class="mock-card mock-card-hot">נחמן כהן<br><small>₪2.1M</small></div>
-                <div class="mock-card">אלה מורחי<br><small>₪70K</small></div>
-              </div>
-              <div class="mock-col">
-                <div class="mock-col-hdr mock-hdr-3">הצעה נשלחה</div>
-                <div class="mock-card">שרית לוי<br><small>₪860K</small></div>
-              </div>
-              <div class="mock-col">
-                <div class="mock-col-hdr mock-hdr-4">סגירה ✓</div>
-                <div class="mock-card mock-card-won">ניר לוין<br><small>₪1.1M</small></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- שקף 3: לוח שנה -->
-          <div class="reel-slide">
-            <div class="mock-cal">
-              <div class="mock-cal-hdr">יולי 2026</div>
-              <div class="mock-cal-days"><span>א</span><span>ב</span><span>ג</span><span>ד</span><span>ה</span><span>ו</span></div>
-              <div class="mock-cal-grid">
-                <span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-                <span>6</span><span>7</span><span class="mock-today">8</span><span>9</span><span>10</span><span>11</span>
-                <span>12</span><span>13</span><span class="mock-event-day">14</span><span>15</span><span>16</span><span>17</span>
-                <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
-              </div>
-              <div class="mock-event-card">
-                <span class="mock-event-dot"></span>
-                <div><div class="mock-event-title">פגישה: נחמן כהן</div><div class="mock-event-time">יום ב' 14/7 · 14:00</div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- שקף 4: כלים -->
-          <div class="reel-slide">
-            <div class="mock-tools-header">כלים חכמים לסגירת עסקאות</div>
-            <div class="mock-tools-grid">
-              <div class="mock-tool"><span class="mock-tool-icon">🤖</span><span class="mock-tool-name">AI שיווקי</span><span class="mock-tool-badge pro">PRO</span></div>
-              <div class="mock-tool"><span class="mock-tool-icon">💬</span><span class="mock-tool-name">SmartWA</span></div>
-              <div class="mock-tool"><span class="mock-tool-icon">📥</span><span class="mock-tool-name">ייבוא לידים</span></div>
-              <div class="mock-tool"><span class="mock-tool-icon">🔗</span><span class="mock-tool-name">לולאת הפניות</span><span class="mock-tool-badge new">חדש</span></div>
-              <div class="mock-tool"><span class="mock-tool-icon">🏦</span><span class="mock-tool-name">מחשבון משכנתא</span></div>
-              <div class="mock-tool"><span class="mock-tool-icon">⚡</span><span class="mock-tool-name">יומן AI</span><span class="mock-tool-badge pro">PRO</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="reel-caption"><span class="reel-caption-text">הדשבורד. כל מה שחשוב, במבט אחד.</span></div>
-      </div>
-
-      <div class="reel-dots">
-        <button class="reel-pip active" aria-label="שקף 1"></button>
-        <button class="reel-pip" aria-label="שקף 2"></button>
-        <button class="reel-pip" aria-label="שקף 3"></button>
-        <button class="reel-pip" aria-label="שקף 4"></button>
-      </div>
-    </div>
-
-    <div class="shots-cta fade-up">
-      <p class="shots-cta-note" style="margin-bottom:0;">⏰ כל דקה על ליד שלא סוגר היא דקה שנגנבת מליד שכן יסגור. את השאר שומרים למי שנכנס.</p>
-    </div>
-  </div>
-</section>
-
 <!-- רצועת מספרים -->
 <div class="stats-bar">
   <div class="stats-inner">
@@ -3229,6 +3113,99 @@
     <h2 class="section-title fade-up">מה מקבלים בפנים</h2>
     <p class="section-subtitle fade-up" style="font-size:clamp(19px,2.8vw,26px);font-weight:800;color:var(--navy);text-align:center;margin-bottom:12px;">מערכת שלמה, בדיוק בשבילך</p>
     <p class="section-sub fade-up">טעימה מהכלים שמחכים בפנים, במערכת שמשתפרת כל הזמן בלי שתצטרכו ללמוד שום דבר מחדש.</p>
+
+    <div class="screen-reel fade-up">
+      <div class="reel-window">
+        <div class="reel-bar">
+          <span class="reel-dot"></span><span class="reel-dot"></span><span class="reel-dot"></span>
+          <span class="reel-url">plto.app</span>
+        </div>
+
+        <div class="reel-slides">
+          <!-- שקף 1: דשבורד -->
+          <div class="reel-slide active">
+            <div class="mock-ai-card">
+              <span class="mock-ai-icon">🤖</span>
+              <span class="mock-ai-text">נחמן עוד לא ענה, כדאי לשלוח WhatsApp לפני הערב</span>
+            </div>
+            <div class="mock-kpi-row">
+              <div class="mock-kpi"><div class="mock-kpi-val">₪3.3M</div><div class="mock-kpi-label">שווי צינור</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val">12</div><div class="mock-kpi-label">פגישות פתוחות</div></div>
+              <div class="mock-kpi"><div class="mock-kpi-val">2</div><div class="mock-kpi-label">לידים חדשים</div></div>
+            </div>
+            <div class="mock-lead-list">
+              <div class="mock-lead-row"><span class="mock-lead-dot hot"></span><span class="mock-lead-name">נחמן כהן</span><span class="mock-lead-val">₪2.1M</span><span class="mock-stage mock-s2">יצרנו קשר</span></div>
+              <div class="mock-lead-row"><span class="mock-lead-dot warm"></span><span class="mock-lead-name">שרית לוי</span><span class="mock-lead-val">₪860K</span><span class="mock-stage mock-s3">הצעה נשלחה</span></div>
+              <div class="mock-lead-row"><span class="mock-lead-dot cool"></span><span class="mock-lead-name">גיל שפירא</span><span class="mock-lead-val">₪480K</span><span class="mock-stage mock-s4">במשא ומתן</span></div>
+            </div>
+          </div>
+
+          <!-- שקף 2: פייפליין -->
+          <div class="reel-slide">
+            <div class="mock-kanban">
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-1">ליד חדש</div>
+                <div class="mock-card">יעקב לוי<br><small>₪300K</small></div>
+                <div class="mock-card">רינת פרידמן<br><small>₪180K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-2">יצרנו קשר</div>
+                <div class="mock-card mock-card-hot">נחמן כהן<br><small>₪2.1M</small></div>
+                <div class="mock-card">אלה מורחי<br><small>₪70K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-3">הצעה נשלחה</div>
+                <div class="mock-card">שרית לוי<br><small>₪860K</small></div>
+              </div>
+              <div class="mock-col">
+                <div class="mock-col-hdr mock-hdr-4">סגירה ✓</div>
+                <div class="mock-card mock-card-won">ניר לוין<br><small>₪1.1M</small></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- שקף 3: לוח שנה -->
+          <div class="reel-slide">
+            <div class="mock-cal">
+              <div class="mock-cal-hdr">יולי 2026</div>
+              <div class="mock-cal-days"><span>א</span><span>ב</span><span>ג</span><span>ד</span><span>ה</span><span>ו</span></div>
+              <div class="mock-cal-grid">
+                <span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                <span>6</span><span>7</span><span class="mock-today">8</span><span>9</span><span>10</span><span>11</span>
+                <span>12</span><span>13</span><span class="mock-event-day">14</span><span>15</span><span>16</span><span>17</span>
+                <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
+              </div>
+              <div class="mock-event-card">
+                <span class="mock-event-dot"></span>
+                <div><div class="mock-event-title">פגישה: נחמן כהן</div><div class="mock-event-time">יום ב' 14/7 · 14:00</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- שקף 4: כלים -->
+          <div class="reel-slide">
+            <div class="mock-tools-header">כלים חכמים לסגירת עסקאות</div>
+            <div class="mock-tools-grid">
+              <div class="mock-tool"><span class="mock-tool-icon">🤖</span><span class="mock-tool-name">AI שיווקי</span><span class="mock-tool-badge pro">PRO</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">💬</span><span class="mock-tool-name">SmartWA</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">📥</span><span class="mock-tool-name">ייבוא לידים</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">🔗</span><span class="mock-tool-name">לולאת הפניות</span><span class="mock-tool-badge new">חדש</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">🏦</span><span class="mock-tool-name">מחשבון משכנתא</span></div>
+              <div class="mock-tool"><span class="mock-tool-icon">⚡</span><span class="mock-tool-name">יומן AI</span><span class="mock-tool-badge pro">PRO</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reel-caption"><span class="reel-caption-text">הדשבורד. כל מה שחשוב, במבט אחד.</span></div>
+      </div>
+
+      <div class="reel-dots">
+        <button class="reel-pip active" aria-label="דשבורד">🤖</button>
+        <button class="reel-pip" aria-label="פייפליין">📋</button>
+        <button class="reel-pip" aria-label="לוח שנה">📅</button>
+        <button class="reel-pip" aria-label="כלים">⚡</button>
+      </div>
+    </div>
 
     <div class="feat-tabs fade-up" role="tablist">
       <button class="ft-tab active" data-ftab="0" role="tab" aria-selected="true">📋 פייפליין</button>
@@ -3672,7 +3649,7 @@
       pips[cur] && pips[cur].classList.add('active');
       if (capEl) capEl.textContent = captions[cur];
     }
-    function play()  { if (!timer) timer = setInterval(() => goTo(cur + 1), 2500); }
+    function play()  { if (!timer) timer = setInterval(() => goTo(cur + 1), 8000); }
     function pause() { clearInterval(timer); timer = null; }
     const win = document.querySelector('.reel-window');
     if (win) { win.addEventListener('mouseenter', pause); win.addEventListener('mouseleave', play); }
@@ -3809,7 +3786,6 @@
   var ctaMap = [
     { sel: '.nav-cta',                                    section: 'nav' },
     { sel: '.pulse-cta.cta-drop-target.has-rocket',       section: 'hero' },
-    { sel: '.shots-cta .shimmer-cta',                     section: 'preview_shots' },
     { sel: '.section-cta-wrap .btn-primary:not(.has-rocket)', section: 'referral_loop' },
     { sel: '.section-cta-wrap:last-child .btn-primary',   section: 'features' },
     { sel: '.plan-btn.outline:first-of-type',             section: 'pricing_solo' },
