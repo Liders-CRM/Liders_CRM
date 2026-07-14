@@ -6268,6 +6268,7 @@
       <!-- State: input -->
       <div id="ql-state-input">
         <p style="font-size:13px;color:var(--gray-500);margin-bottom:10px;">תיאור קצר של מה שהיה בשיחה/פגישה, שם הלקוח, מה דיברתם, עדכונים חשובים. AI יסדר ויכניס לליד הנכון.</p>
+        <div id="ql-usage" style="font-size:0.78rem;color:var(--gray-400);text-align:center;margin-bottom:8px;"></div>
         <textarea id="ql-input"
           placeholder='לדוגמה: "שוחחתי עם אבי לוי, הצעתי לו נכסים לפי האיזור שביקש. מוכן להעלות טיפה בתקציב אם תבוא עסקה טובה..."'
           style="width:100%;height:128px;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;font-family:inherit;resize:none;direction:rtl;color:var(--gray-900);background:var(--surface);transition:border-color .15s;"
@@ -6392,6 +6393,7 @@
       <div class="modal-title" id="reward-gen-title">🎁 פרס</div>
       <button class="modal-close" onclick="closeModal('modal-reward-gen')">×</button>
     </div>
+    <div id="reward-gen-usage" style="font-size:0.8rem;color:var(--gray-500);text-align:center;margin-bottom:10px;"></div>
     <div id="reward-gen-inputs" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
     <button class="tool-btn tool-btn-primary" id="reward-gen-btn" onclick="RewardGen.generate()">✨ יצירה עבורי</button>
     <div class="mktg-output" id="reward-gen-out"></div>
@@ -12000,6 +12002,8 @@ ${v.topics ? `נושאים מועדפים: ${v.topics}` : ''}
     const outEl = document.getElementById('reward-gen-out');
     if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
     document.getElementById('reward-gen-act')?.classList.remove('visible');
+    const usageEl = document.getElementById('reward-gen-usage');
+    if (usageEl) usageEl.textContent = AiLimits.limitLabel('general');
     openModal('modal-reward-gen');
   },
 
@@ -12021,6 +12025,8 @@ ${v.topics ? `נושאים מועדפים: ${v.topics}` : ''}
         outEl.textContent = text;
         document.getElementById('reward-gen-act')?.classList.add('visible');
       }
+      const usageEl = document.getElementById('reward-gen-usage');
+      if (usageEl) usageEl.textContent = AiLimits.limitLabel('general');
     } catch(e) {
       toast(e.message, 'error');
       if (outEl) { outEl.textContent = ''; outEl.classList.remove('visible'); }
@@ -19272,10 +19278,16 @@ const QuickLog = {
   open() {
     if (demoGuard()) return;
     this._resetToInput(true);
+    this._updateUsageLabel();
     openModal('modal-quicklog');
   },
 
-  openNew() { this._resetToInput(true); },
+  _updateUsageLabel() {
+    const el = document.getElementById('ql-usage');
+    if (el) el.textContent = AiLimits.limitLabel('quicklog');
+  },
+
+  openNew() { this._resetToInput(true); this._updateUsageLabel(); },
 
   _setState(s) {
     ['input','loading','pick','confirm','done'].forEach(name => {
