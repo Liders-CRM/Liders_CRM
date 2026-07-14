@@ -2331,7 +2331,7 @@
     .gamify-widget {
       margin: 0 20px 14px;
       background: linear-gradient(145deg, #0d1e3d 0%, #15325a 60%, #1a4080 100%);
-      border-radius: 20px; padding: 20px; color: white;
+      border-radius: 20px; padding: 16px; color: white;
       position: relative; overflow: hidden;
       box-shadow: 0 8px 32px rgba(15,31,61,.5), inset 0 1px 0 rgba(255,255,255,.08);
     }
@@ -2347,7 +2347,7 @@
       background: radial-gradient(circle, rgba(37,99,235,.12) 0%, transparent 70%);
       pointer-events: none;
     }
-    .gamify-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .gamify-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
     .gamify-avatar {
       width: 58px; height: 58px; border-radius: 16px; flex-shrink: 0;
       background: linear-gradient(135deg, var(--gold-600), var(--gold-400));
@@ -2361,7 +2361,7 @@
     }
     .gamify-level-name { font-size: 16px; font-weight: 900; letter-spacing: -.3px; }
     .gamify-streak { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 3px; }
-    .gamify-xp-area { margin-bottom: 14px; }
+    .gamify-xp-area { margin-bottom: 10px; }
     .gamify-xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.55); margin-bottom: 6px; }
     .gamify-bar {
       height: 10px; background: rgba(255,255,255,.1); border-radius: 10px;
@@ -2382,7 +2382,7 @@
       0%   { transform: translateX(-100%); }
       100% { transform: translateX(200%); }
     }
-    .gamify-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .gamify-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
     .gamify-stat {
       background: rgba(255,255,255,.07); border-radius: 12px;
       padding: 10px 6px; text-align: center;
@@ -2677,12 +2677,12 @@
     .milestone-save-note { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px; min-height: 16px; }
     .milestone-close-btn { background: none; color: rgba(255,255,255,0.55); border: none; font-size: 12px; cursor: pointer; padding: 6px; font-family: inherit; }
     /* Next milestone in gamify widget */
-    .gamify-milestone { margin-top: 12px; padding: 10px 12px; background: rgba(255,255,255,0.07); border-radius: 10px; }
-    .gamify-milestone-label { font-size: 9px; color: rgba(255,255,255,.45); margin-bottom: 3px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
-    .gamify-milestone-name { font-size: 12px; font-weight: 700; color: #F0C040; margin-bottom: 5px; }
+    .gamify-milestone { margin-top: 8px; padding: 8px 10px; background: rgba(255,255,255,0.07); border-radius: 10px; }
+    .gamify-milestone-label { font-size: 9px; color: rgba(255,255,255,.45); margin-bottom: 2px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+    .gamify-milestone-name { font-size: 12px; font-weight: 700; color: #F0C040; margin-bottom: 4px; }
     .gamify-milestone-bar { height: 5px; background: rgba(255,255,255,.12); border-radius: 5px; overflow: hidden; }
     .gamify-milestone-fill { height: 100%; background: linear-gradient(90deg, #C49A2A, #F0C040); border-radius: 5px; transition: width .8s ease; }
-    .gamify-milestone-xp { font-size: 10px; color: rgba(255,255,255,.4); margin-top: 4px; display: flex; justify-content: space-between; }
+    .gamify-milestone-xp { font-size: 10px; color: rgba(255,255,255,.4); margin-top: 3px; display: flex; justify-content: space-between; }
     /* Mortgage Calculator */
     .mortgage-result { background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: var(--radius-md); padding: 16px; margin-top: 4px; text-align: center; }
     .mortgage-monthly { font-size: 32px; font-weight: 900; color: var(--navy-500); }
@@ -2704,16 +2704,16 @@
     /* Gamify prizes grid */
     .gamify-prizes-title {
       font-size: 11px; font-weight: 800; letter-spacing: .5px;
-      color: var(--gold-300); margin: 16px 0 8px;
+      color: var(--gold-300); margin: 10px 0 6px;
       display: flex; align-items: center; gap: 6px;
     }
-    .gamify-prizes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .gamify-prizes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .gamify-prize-card {
-      background: rgba(255,255,255,.07); border-radius: 12px; padding: 12px 10px;
-      display: flex; flex-direction: column; gap: 3px;
+      background: rgba(255,255,255,.07); border-radius: 10px; padding: 8px 8px;
+      display: flex; align-items: center; gap: 8px;
       border: 1px solid rgba(255,255,255,.06); transition: all .2s;
     }
-    .gamify-prize-card.prize-locked { opacity: .4; }
+    .gamify-prize-card.prize-locked { background: rgba(255,255,255,.045); }
     .gamify-prize-card.prize-reached {
       border-color: rgba(240,192,64,.65); background: rgba(240,192,64,.13);
       cursor: pointer; animation: prize-pulse 2s infinite;
@@ -2725,9 +2725,11 @@
       0%,100%{ box-shadow:0 0 0 0 rgba(240,192,64,.4) }
       50%    { box-shadow:0 0 0 6px rgba(240,192,64,0) }
     }
-    .gamify-prize-icon { font-size: 26px; line-height: 1.1; margin-bottom: 2px; }
-    .gamify-prize-name { font-size: 11px; font-weight: 800; color: rgba(255,255,255,.9); line-height: 1.35; }
-    .gamify-prize-xp-tag { font-size: 10px; color: rgba(255,255,255,.38); font-weight: 600; margin-top: 2px; }
+    .gamify-prize-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
+    .gamify-prize-card.prize-locked .gamify-prize-icon { opacity: .55; filter: grayscale(.5); }
+    .gamify-prize-body { min-width: 0; flex: 1; }
+    .gamify-prize-name { font-size: 11.5px; font-weight: 800; color: rgba(255,255,255,.95); line-height: 1.25; }
+    .gamify-prize-xp-tag { font-size: 10px; color: rgba(255,255,255,.55); font-weight: 700; }
     .gamify-prize-reached-tag { font-size: 10px; color: #F0C040; font-weight: 800; }
     .gamify-prize-claimed-tag { font-size: 10px; color: #4ade80; font-weight: 800; }
 
@@ -11074,15 +11076,15 @@ const Gamify = {
     { min:   800, name: 'אגדה',    icon: '👑', next: 99999 },
   ],
   XP: {
-    add_lead:      10,
-    advance_stage: 20,
-    close_deal:   150,
-    complete_task: 10,
-    use_ai:         5,
-    log_activity:   8,
-    daily_login:    5,
-    rescue_cold:   25,
-    refer_joined:  100,
+    add_lead:      15,
+    advance_stage: 25,
+    close_deal:   200,
+    complete_task: 12,
+    use_ai:         8,
+    log_activity:  10,
+    daily_login:    8,
+    rescue_cold:   30,
+    refer_joined:  120,
   },
   ACHIEVEMENTS: [
     { id:'first_lead',   icon:'🎯', name:'ליד ראשון',        desc:'הליד הראשון נוסף למערכת',            xp:12,  check: d => d.leadsAdded >= 1   },
@@ -11109,15 +11111,15 @@ const Gamify = {
   ],
 
   MILESTONES: [
-    { xp:  7500, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',        desc: 'AI כותב עבורך תוכן מלא לדף נחיתה ממיר, כולל כותרות ו-CTA, מוכן להטמעה', action: 'landingPage' },
-    { xp: 14000, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',      desc: 'AI מתכנן עבורך תהליך מכירה שלב-אחר-שלב, מהפנייה הראשונה ועד הסגירה', action: 'salesProcess' },
-    { xp: 25000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית',    desc: 'AI כותב עבורך תסריט מצגת שקופית-אחר-שקופית, מוכן לעיצוב ושימוש', action: 'salesDeck' },
-    { xp: 40000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',     desc: 'AI יוצר עבורך 10 רעיונות לפוסטים + 3 תקצירי מאמרים + טיוטת קמפיין מייל', action: 'contentPack' },
-    { xp: 58000, icon: '🏢', value: '₪2,500',  name: 'תוכן ומבנה לאתר תדמית', desc: 'AI כותב עבורך את כל תוכן האתר, עמוד-אחר-עמוד, מוכן להטמעה בכל בונה אתרים', action: 'siteOutline' },
-    { xp: 78000, icon: '🔍', value: '₪3,500',  name: 'תוכנית SEO',             desc: 'AI מכין עבורך מילות מפתח, המלצות אופטימיזציה ו-6 רעיונות למאמרים לקידום אורגני', action: 'seoPlan' },
-    { xp: 100000, icon: '⚙️', value: '₪3,500', name: 'שרטוט אוטומציה עסקית',  desc: 'AI מתכנן עבורך 3 תהליכי אוטומציה מוכנים להקמה ב-Make.com, שלב אחר שלב', action: 'automationBlueprint' },
-    { xp: 125000, icon: '📢', value: '₪3,500', name: 'תוכנית קמפיין ממומן',   desc: 'AI בונה עבורך תוכנית קמפיין מלאה לחודש שלם, גוגל ופייסבוק, כולל יעדים ותקציב', action: 'campaignPlan' },
-    { xp: 150000, icon: '🏆', value: '₪10,000', name: 'תוכנית אסטרטגית עסקית', desc: 'AI בונה עבורך תוכנית צמיחה אסטרטגית מקיפה לחצי שנה, שיווק ומכירות', action: 'strategicPlan' },
+    { xp:  2500, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',        desc: 'AI כותב עבורך תוכן מלא לדף נחיתה ממיר, כולל כותרות ו-CTA, מוכן להטמעה', action: 'landingPage' },
+    { xp:  4500, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',      desc: 'AI מתכנן עבורך תהליך מכירה שלב-אחר-שלב, מהפנייה הראשונה ועד הסגירה', action: 'salesProcess' },
+    { xp:  8000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית',    desc: 'AI כותב עבורך תסריט מצגת שקופית-אחר-שקופית, מוכן לעיצוב ושימוש', action: 'salesDeck' },
+    { xp: 13000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',     desc: 'AI יוצר עבורך 10 רעיונות לפוסטים + 3 תקצירי מאמרים + טיוטת קמפיין מייל', action: 'contentPack' },
+    { xp: 19000, icon: '🏢', value: '₪2,500',  name: 'תוכן ומבנה לאתר תדמית', desc: 'AI כותב עבורך את כל תוכן האתר, עמוד-אחר-עמוד, מוכן להטמעה בכל בונה אתרים', action: 'siteOutline' },
+    { xp: 26000, icon: '🔍', value: '₪3,500',  name: 'תוכנית SEO',             desc: 'AI מכין עבורך מילות מפתח, המלצות אופטימיזציה ו-6 רעיונות למאמרים לקידום אורגני', action: 'seoPlan' },
+    { xp: 33000, icon: '⚙️', value: '₪3,500', name: 'שרטוט אוטומציה עסקית',  desc: 'AI מתכנן עבורך 3 תהליכי אוטומציה מוכנים להקמה ב-Make.com, שלב אחר שלב', action: 'automationBlueprint' },
+    { xp: 42000, icon: '📢', value: '₪3,500', name: 'תוכנית קמפיין ממומן',   desc: 'AI בונה עבורך תוכנית קמפיין מלאה לחודש שלם, גוגל ופייסבוק, כולל יעדים ותקציב', action: 'campaignPlan' },
+    { xp: 50000, icon: '🏆', value: '₪10,000', name: 'תוכנית אסטרטגית עסקית', desc: 'AI בונה עבורך תוכנית צמיחה אסטרטגית מקיפה לחצי שנה, שיווק ומכירות', action: 'strategicPlan' },
   ],
 
   _d: null,
@@ -11428,11 +11430,13 @@ const Gamify = {
       const msBar = document.getElementById('gamify-milestone-bar');
       if (msBar) msBar.style.display = 'none';
       const prizesGrid = document.getElementById('gamify-prizes-grid');
-      if (prizesGrid) prizesGrid.innerHTML = this.MILESTONES.slice(0, 3).map(m =>
+      if (prizesGrid) prizesGrid.innerHTML = this.MILESTONES.slice(0, 2).map(m =>
         `<div class="gamify-prize-card prize-locked" onclick="DemoLock.showPrompt()" style="cursor:pointer;filter:blur(1.5px);">
           <div class="gamify-prize-icon">${m.icon}</div>
-          <div class="gamify-prize-name">${m.name}</div>
-          <span class="gamify-prize-xp-tag">🔒 נעול</span>
+          <div class="gamify-prize-body">
+            <div class="gamify-prize-name">${m.name}</div>
+            <span class="gamify-prize-xp-tag">🔒 נעול</span>
+          </div>
         </div>`).join('');
       const mktgTeaserEl = document.getElementById('gamify-mktg-teaser');
       if (mktgTeaserEl) mktgTeaserEl.style.display = 'none';
@@ -11519,14 +11523,14 @@ const Gamify = {
       }
     }
 
-    // Prizes grid - show next 4 unclaimed + any available
+    // Prizes grid - compact preview of next 2 unclaimed (full list is one tap away via "צפייה בהכל")
     const prizesGrid = document.getElementById('gamify-prizes-grid');
     if (prizesGrid) {
       const shown = this.MILESTONES.filter((m, i) => {
         if (claimed.has(m.xp)) return false;
         const prev = this.MILESTONES.slice(0, i).filter(x => !claimed.has(x.xp));
-        return prev.length < 4;
-      }).slice(0, 4);
+        return prev.length < 2;
+      }).slice(0, 2);
       prizesGrid.innerHTML = shown.map(m => {
         const isReached = d.xp >= m.xp;
         const cls = isReached ? 'prize-reached' : 'prize-locked';
@@ -11538,8 +11542,10 @@ const Gamify = {
           : '';
         return `<div class="gamify-prize-card ${cls}" ${clickAttr}>
           <div class="gamify-prize-icon">${m.icon}</div>
+          <div class="gamify-prize-body">
           <div class="gamify-prize-name">${m.name}</div>
           ${tag}
+          </div>
         </div>`;
       }).join('');
     }
