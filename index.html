@@ -1915,33 +1915,6 @@
     .paywall-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
     /* ═══════════════════════════════════════
-       LOGIN TRIAL BADGE
-    ═══════════════════════════════════════ */
-    .login-trial-badge {
-      text-align: center; font-size: 12px; font-weight: 600;
-      color: var(--green-600); background: var(--green-100);
-      padding: 8px 12px; border-radius: var(--radius-md);
-      margin-top: 8px;
-    }
-
-    /* ═══════════════════════════════════════
-       LOGIN FEATURE TILES
-    ═══════════════════════════════════════ */
-    .login-features {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-      margin: 18px 0 20px;
-    }
-    .login-feature-tile {
-      border-radius: 14px; padding: 14px 12px;
-      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
-      font-size: 12px; font-weight: 700; line-height: 1.35;
-      color: #fff; position: relative; overflow: hidden; cursor: default;
-    }
-    .login-feature-tile::after {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(255,255,255,.07); pointer-events: none;
-    }
-    /* ═══════════════════════════════════════
        SETUP / LOADING SCREEN (post-onboarding)
     ═══════════════════════════════════════ */
     #screen-setup {
@@ -4138,7 +4111,7 @@
 <div id="consent-public-page" class="hidden" dir="rtl" style="position:fixed;inset:0;z-index:99999;background:var(--surface,#fff);display:flex;align-items:center;justify-content:center;padding:20px;">
   <div style="max-width:420px;width:100%;">
     <div style="text-align:center;margin-bottom:18px;">
-      <div style="font-size:26px;font-weight:800;color:var(--navy-500,#0F1F3D);">PLTO<span style="color:var(--blue-500,#2563EB);">.</span></div>
+      <div style="font-size:26px;font-weight:800;color:var(--navy-500,#0F1F3D);">PLTO</div>
     </div>
     <div id="consent-page-body" style="background:#fff;border:1px solid var(--gray-200,#E2E8F0);border-radius:16px;padding:22px 20px;box-shadow:0 8px 30px rgba(15,31,61,0.08);text-align:center;">
       <div style="font-size:13px;color:var(--gray-400,#94A3B8);">טוען...</div>
@@ -4585,7 +4558,7 @@
       <div id="dash-hot-leads" style="padding:0 20px 4px;display:flex;flex-direction:column;gap:8px;"></div>
 
       <!-- COLD LEADS & CHART -->
-      <div class="dash-section" style="display:none;">
+      <div class="dash-section hidden">
         <div class="section-header" style="margin-top:16px;">
           <div class="section-title">❄️ לידים שדורשים חיזור מחדש</div>
           <div class="section-link" onclick="App.go('leads')">כל הלידים</div>
@@ -10482,7 +10455,7 @@ const FeatureGate = {
 
     const overlay = document.createElement('div');
     overlay.className = 'fg-overlay';
-    overlay.style.cssText = 'position:absolute;inset:0;background:rgba(15,31,61,0.82);backdrop-filter:blur(4px);z-index:50;border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,31,61,0.82);backdrop-filter:blur(4px);z-index:500;border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto;';
 
     const createdAt = State.tenant?.created_at;
     const daysSoFar = createdAt ? Math.min(7, Math.floor((Date.now() - new Date(createdAt)) / 864e5)) : 0;
@@ -10742,7 +10715,7 @@ const Marketing = {
           <textarea id="mktg-fs-need" placeholder="תיאור קצר של מה שצריך לבנות..."></textarea>
           <button class="mktg-fs-submit" onclick="Marketing.submitFsRequest()">שליחת בקשה</button>
         </div>
-        <p class="mktg-fs-micro">כמובל שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
+        <p class="mktg-fs-micro">כמובן שהכל נתון לבחירתך החופשית · כל התוכן שמור אצלנו 30 יום לאחר סיום המנוי</p>
       </div>`;
     FeatureGate.applyOverlay('screen-marketing');
   },
@@ -10807,7 +10780,7 @@ ${ind === 'realestate_lawyer' ? 'משרד' : 'סוכנות'}: ${safeAgency}
           due_diligence:     'בדיקת נאותות שכל קונה חייב לעשות לפני רכישת נכס',
           contract_mistakes: 'טעויות נפוצות שאנשים עושים בחוזה מכר דירה',
           caveat:            'מה זו הערת אזהרה בטאבו ולמה היא קריטית להגנה על הקונה',
-          tax:               'היבטי מיסוי מקרקעין שחשוב להכיר לפני עסקה, מבלי לתת ייעוץ מס פרטני',
+          tax:               'היבטי מיסוי מקרקעין שחשוב להכיר לפני עסקה, מבלי לתת ייעוץ מס פרטני ומבלי לציין אחוזים/סכומים/תאריכים ספציפיים שאינם ודאיים',
           before_signing:    'למה חשוב להיוועץ בעו"ד מקרקעין לפני חתימה על זיכרון דברים',
         };
         prompt = `אתה ${AI._industryRole()} ישראלי, כותב תוכן מקצועי-חינוכי לרשת חברתית (${platMap[plat]||plat}).
@@ -10858,8 +10831,10 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
       };
       const complianceNote = isLawyer
         ? '\nחשוב: תוכן כללי ומקצועי בלבד, ללא הבטחות לתוצאה משפטית וללא התייחסות ללקוח ספציפי, בהתאם לכללי הפרסומת של לשכת עורכי הדין.' : '';
+      const statsGuard = (topic === 'market_update' || topic === 'tax_update')
+        ? '\nחשוב: אין לציין אחוזים, מחירים, ריביות או תאריכים ספציפיים שאינם ודאיים, התוכן צריך להישאר איכותני וכללי.' : '';
       const text = await AI.call([{ role: 'user', content:
-        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.${complianceNote}
+        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.${complianceNote}${statsGuard}
 חתימה: ${sig}
 כתוב הודעה קצרה (4-6 שורות), מקצועית ואנושית, בגוף ראשון. סיים בחתימה. החזר רק את ההודעה.`
       }], 400, { type: 'marketing' });
