@@ -9365,10 +9365,16 @@ const AI = {
     return this._safeHebrew(data?.content?.[0]?.text);
   },
 
-  _clientLangInstruction() {
-    return Settings.getClientLang() === 'en'
-      ? 'When drafting any message or email TO the client/lead, write it in English.'
-      : '';
+  // System prompt for AI calls that generate text sent to a lead/client
+  // (WhatsApp messages, emails, offers, proposals). Uses the tenant's
+  // client-language setting instead of the app's own Hebrew-only default,
+  // since the two audiences (agent using the app vs. lead reading the
+  // message) can want different languages.
+  _clientLangSystem() {
+    const lang = Settings.getClientLang();
+    if (lang === 'he') return this._DEFAULT_SYSTEM;
+    const name = Settings.CLIENT_LANGS[lang]?.name || 'עברית';
+    return `אתה עוזר AI מקצועי בתוך PLTO, מערכת לניהול פייפליין מכירות לסוכני נדל"ן ישראלים. ההנחיות והנתונים שתקבל כתובים בעברית, אבל הטקסט הסופי שאתה כותב, זה שיישלח ללקוח, חייב להיות כתוב במלואו ב${name} בלבד, בשפת אם טבעית וברורה. אסור לערבב עברית או כל שפה אחרת בתוך הטקסט הסופי, ואסור לצרף תרגום או הערה בעברית לצד הטקסט. היה חד, ענייני ומקצועי: בלי מילות מילוי, בלי הקדמות מיותרות, בלי קלישאות. תשובה ישירה שמובילה לפעולה הבאה.`;
   },
 
   _industryRole() {
@@ -9413,8 +9419,8 @@ const AI = {
 שם: ${lead.name} | שלב: ${stage?.name || 'ראשוני'}
 אזור: ${lead.desired_area || 'לא ידוע'} | תקציב: ${lead.budget_max ? formatMoney(lead.budget_max) : 'לא ידוע'}
 קשר אחרון: ${lead.last_contact ? formatRelDate(lead.last_contact) : 'לא היה קשר'}
-כללים: עברית פשוטה, טון חם, לא מכירתי, מקסימום 3 שורות, התחל "היי ${lead.name.split(' ')[0]}," וסיים בשאלה פתוחה.`
-    }], 200);
+כללים: שפה פשוטה, טון חם, לא מכירתי, מקסימום 3 שורות, התחל "היי ${lead.name.split(' ')[0]}," וסיים בשאלה פתוחה.`
+    }], 200, { system: this._clientLangSystem() });
   },
 
   async writeRescue(lead) {
@@ -9441,7 +9447,7 @@ ${contextLine}
 כללים: חמה ולא פולשנית, אל תאמר "לא שמעתי ממך", הצג ${updateLine}, מקסימום 3 שורות.
 ${referralLine}
 אל תכלול כותרת, סימני markdown (כמו ** או ---), או כל משפט לפני/אחרי ההודעה. החזר אך ורק את גוף ההודעה עצמה, מוכן להעתקה ושליחה ישירה ללקוח בלי שום עריכה.`
-    }], 220);
+    }], 220, { system: this._clientLangSystem() });
     return stripAiMessageArtifacts(text);
   },
 
@@ -9650,7 +9656,7 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
       const safeName    = String(name).slice(0, 50);
       const safeSubject = String(subject).slice(0, 100);
       const safeContent = String(content).slice(0, 500);
-      const prompt = `אתה ${role} ישראלי. כתוב אימייל מקצועי בעברית.
+      const prompt = `אתה ${role} ישראלי. כתוב אימייל מקצועי.
 נמען: ${safeName}
 נושא: ${safeSubject || 'לא צוין'}
 תוכן עיקרי: ${safeContent || 'לא צוין'}
@@ -9662,8 +9668,8 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 
 [גוף האימייל]
 
-עברית בלבד, טון ${toneLabel[tone]}, לא יותר מ-150 מילה.`;
-      const text = await AI.call([{ role: 'user', content: prompt }], 500);
+טון ${toneLabel[tone]}, לא יותר מ-150 מילה.`;
+      const text = await AI.call([{ role: 'user', content: prompt }], 500, { system: AI._clientLangSystem() });
       res.textContent = text || 'לא הצלחתי לייצר אימייל';
       res.classList.add('visible');
       if (acts) acts.style.display = 'flex';
@@ -9707,7 +9713,7 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 חברה: ${firm} | איש קשר: ${agent}
 תאריך: ${new Date().toLocaleDateString('he-IL')}
 
-כתוב הצעת מחיר מקצועית מובנית בעברית הכוללת:
+כתוב הצעת מחיר מקצועית ומובנית הכוללת:
 1. כותרת ופנייה
 2. תיאור השירות
 3. מה כלול
@@ -9716,8 +9722,8 @@ ${type === 'objection' ? '**תשובות להתנגדויות נפוצות:**\n[
 6. למה לבחור בנו (בסיס היתרונות)
 7. הצעד הבא + חתימה
 
-טון מקצועי ומשדר ביטחון. עברית בלבד.`;
-      const text = await AI.call([{ role: 'user', content: prompt }], 800);
+טון מקצועי ומשדר ביטחון.`;
+      const text = await AI.call([{ role: 'user', content: prompt }], 800, { system: AI._clientLangSystem() });
       res.textContent = text || 'לא הצלחתי לייצר הצעה';
       res.classList.add('visible');
       if (acts) acts.style.display = 'flex';
@@ -10774,13 +10780,13 @@ const Marketing = {
       const complianceNote = ind === 'realestate_lawyer'
         ? '\nחשוב: זו הודעה אישית ללקוח קיים שלך בלבד, בטון מקצועי ומכבד, ללא הבטחות לתוצאה משפטית.' : '';
       const text = await AI.call([{ role: 'user', content:
-        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp אישית ומשכנעת בעברית עבור הליד הבא.
+        `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp אישית ומשכנעת עבור הליד הבא.
 שם: ${safeName} | שלב: ${State.stages.find(s=>s.id===lead.stage)?.name||'ראשוני'}
 ${propStr ? `${getLabel('property')}: ${propStr}` : ''}
 סוג הודעה: ${typeMap[type]||type}${complianceNote}
 ${ind === 'realestate_lawyer' ? 'משרד' : 'סוכנות'}: ${safeAgency}
 כתוב הודעה קצרה (3-5 שורות), אנושית, בגוף ראשון. אל תכלול כותרות. סיים בחתימה. החזר רק את ההודעה עצמה.`
-      }], 400, { type: 'marketing' });
+      }], 400, { type: 'marketing', system: AI._clientLangSystem() });
       if (text) { this._show('mktg-offer-out', 'mktg-offer-act', text, 'mktg-offer-wm'); this._updateUsageLabels(); }
     } catch(e) {
       toast(e.message, 'error');
@@ -10819,9 +10825,9 @@ ${getLabel('property')}: ${prop.title||'לא צוין'} | עיר: ${prop.city||'
 ${prop.rooms ? `חדרים: ${prop.rooms}` : ''}${prop.area ? ` | שטח: ${prop.area} מ״ר` : ''}
 ${prop.price ? `מחיר: ${Number(prop.price).toLocaleString('he-IL')} ₪` : ''}
 ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
-כתוב פוסט בעברית, קצר ומושך, כולל קריאה לפעולה. החזר רק את הפוסט.`;
+כתוב פוסט קצר ומושך, כולל קריאה לפעולה. החזר רק את הפוסט.`;
       }
-      const text = await AI.call([{ role: 'user', content: prompt }], 450, { type: 'marketing' });
+      const text = await AI.call([{ role: 'user', content: prompt }], 450, { type: 'marketing', system: AI._clientLangSystem() });
       if (text) { this._show('mktg-post-out', 'mktg-post-act', text, 'mktg-post-wm'); this._updateUsageLabels(); }
     } catch(e) {
       toast(e.message, 'error');
@@ -10862,7 +10868,7 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
         `אתה ${AI._industryRole()} ישראלי. כתוב הודעת WhatsApp broadcast לרשימת לקוחות בנושא: ${topicMap[topic]||topic}.${complianceNote}${statsGuard}
 חתימה: ${sig}
 כתוב הודעה קצרה (4-6 שורות), מקצועית ואנושית, בגוף ראשון. סיים בחתימה. החזר רק את ההודעה.`
-      }], 400, { type: 'marketing' });
+      }], 400, { type: 'marketing', system: AI._clientLangSystem() });
       if (text) { this._show('mktg-campaign-out', 'mktg-campaign-act', text, 'mktg-campaign-wm'); this._updateUsageLabels(); }
     } catch(e) {
       toast(e.message, 'error');
@@ -11039,9 +11045,9 @@ const SmartWA = {
 שלב נוכחי בפייפליין: ${stage?.name || 'פנייה נכנסה'}.
 ${safeNotes ? 'הערות על הלקוח: ' + safeNotes : ''}
 ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
-ההודעה תהיה אישית, חמה, טבעית בעברית. ללא emoji מיותרים. מזמינה לתגובה.
+ההודעה תהיה אישית, חמה וטבעית. ללא emoji מיותרים. מזמינה לתגובה.
 אל תכלול כותרת (כמו "הודעה ל${safeName}"), סימני markdown (כמו ** או ---), או כל משפט לפני/אחרי ההודעה. החזר אך ורק את גוף ההודעה עצמה, מילה ראשונה עד אחרונה, מוכן להעתקה ושליחה ישירה ללקוח בלי שום עריכה.`,
-      }], 200, { type: 'marketing' });
+      }], 200, { type: 'marketing', system: AI._clientLangSystem() });
       const cleanMsg = stripAiMessageArtifacts(msg);
       const phone = (lead.phone || '').replace(/^0/, '').replace(/-/g, '');
       const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(cleanMsg);
@@ -15848,14 +15854,15 @@ const Settings = {
               <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11.5px;color:var(--gray-600);line-height:1.5;">
                 🔒 שים לב: העברה או העתקה של נתונים בין משתמשים שונים אינה אפשרית מטעמי אבטחה ובידוד נתונים.
               </div>
-              <div style="padding-top:2px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                <div>
-                  <div style="font-size:13px;font-weight:600;color:var(--gray-700);">📧 שפת מיילים ללקוחות</div>
-                  <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">השפה בה ישלחו מיילים ל-leads שלך</div>
+              <div style="padding-top:2px;border-top:1px solid var(--border);">
+                <div style="margin-bottom:8px;">
+                  <div style="font-size:13px;font-weight:600;color:var(--gray-700);">🌐 שפת טקסטים ללקוחות</div>
+                  <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">השפה שבה הסוכן החכם יכתוב הודעות וואטסאפ, מיילים והצעות ללידים</div>
                 </div>
-                <div style="display:flex;gap:4px;">
-                  <button onclick="Settings.setClientLang('he')" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:${Settings.getClientLang()==='he'?'var(--navy-500)':'var(--gray-50)'};color:${Settings.getClientLang()==='he'?'white':'var(--gray-600)'};">עברית</button>
-                  <button onclick="Settings.setClientLang('en')" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:${Settings.getClientLang()==='en'?'var(--navy-500)':'var(--gray-50)'};color:${Settings.getClientLang()==='en'?'white':'var(--gray-600)'};">English</button>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${Object.entries(Settings.CLIENT_LANGS).map(([code, meta]) => `
+                    <button onclick="Settings.setClientLang('${code}')" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:${Settings.getClientLang()===code?'var(--navy-500)':'var(--gray-50)'};color:${Settings.getClientLang()===code?'white':'var(--gray-600)'};">${meta.label}</button>
+                  `).join('')}
                 </div>
               </div>
             </div>`;
@@ -16055,14 +16062,24 @@ const Settings = {
     toast('פתיחת אשף ההגדרות...', 'info');
     setTimeout(() => Onboarding.show(), 600);
   },
+  CLIENT_LANGS: {
+    he: { label: 'עברית',   name: 'עברית'   },
+    en: { label: 'English', name: 'אנגלית'  },
+    ru: { label: 'Русский', name: 'רוסית'   },
+    es: { label: 'Español', name: 'ספרדית'  },
+    fr: { label: 'Français',name: 'צרפתית'  },
+  },
+
   getClientLang() {
-    return localStorage.getItem('liders_client_lang') || 'he';
+    const saved = localStorage.getItem('liders_client_lang') || 'he';
+    return this.CLIENT_LANGS[saved] ? saved : 'he';
   },
 
   setClientLang(lang) {
+    if (!this.CLIENT_LANGS[lang]) return;
     localStorage.setItem('liders_client_lang', lang);
     Settings.render();
-    toast(lang === 'en' ? '✅ מיילים ישלחו ללקוח באנגלית' : '✅ מיילים ישלחו ללקוח בעברית', 'success');
+    toast(lang === 'he' ? '✅ טקסטים ללקוחות יופקו בעברית' : `✅ טקסטים ללקוחות יופקו ב${this.CLIENT_LANGS[lang].name}`, 'success');
   },
 
   async setIndustry(ind) {
