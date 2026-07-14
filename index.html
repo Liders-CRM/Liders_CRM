@@ -9325,6 +9325,25 @@ function fabAction() {
 let _modalLastFocus = null;
 function openModal(id) {
   _modalLastFocus = document.activeElement;
+  // The guided tour and level-up celebration overlays both sit above modals
+  // (z-index 99980 / 9998 vs 200) with pointer-events:all, so a modal opened
+  // while either is showing would be fully unclickable underneath it - end
+  // them instead of trapping the user.
+  if (document.getElementById('tour-overlay') && typeof GuidedTour !== 'undefined') {
+    GuidedTour.done(false);
+  }
+  const levelupOverlay = document.getElementById('levelup-overlay');
+  if (levelupOverlay && levelupOverlay.classList.contains('show') && typeof Gamify !== 'undefined') {
+    Gamify.closeLevelUp();
+  }
+  const milestoneOverlay = document.getElementById('milestone-overlay');
+  if (milestoneOverlay && milestoneOverlay.classList.contains('show') && typeof Gamify !== 'undefined') {
+    Gamify.closeMilestone();
+  }
+  const annualUpsellOverlay = document.getElementById('annual-upsell-modal');
+  if (annualUpsellOverlay && annualUpsellOverlay.classList.contains('show') && typeof AnnualUpsell !== 'undefined') {
+    AnnualUpsell.dismiss();
+  }
   const modal = document.getElementById(id);
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -11378,7 +11397,15 @@ const Gamify = {
     setTimeout(() => el.classList.remove('show'), 4000);
   },
 
-  showLevelUp(level) {
+  showLevelUp(level, _retries = 0) {
+    // Full-screen celebration (z-index 9998, pointer-events:all) would trap
+    // the user behind an unclickable screen if it appears while a modal
+    // (z-index 200) is open - defer instead of showing blind. Same class of
+    // bug as GuidedTour vs. modals.
+    if (document.querySelector('.modal-overlay:not(.hidden)')) {
+      if (_retries < 20) setTimeout(() => this.showLevelUp(level, _retries + 1), 1000);
+      return;
+    }
     document.getElementById('levelup-icon').textContent = level.icon;
     document.getElementById('levelup-name').textContent = level.name;
     document.getElementById('levelup-sub').textContent  = `ברכות! הגעת לרמה "${level.name}", ממשיכים לנצח! 💪`;
@@ -11709,7 +11736,14 @@ const Gamify = {
     }
   },
 
-  showMilestone(m) {
+  showMilestone(m, _retries = 0) {
+    // Same modal-collision guard as showLevelUp - this overlay (z-index 9999,
+    // pointer-events:all) would trap the user behind an unclickable screen
+    // if it appears while a modal (z-index 200) is open.
+    if (document.querySelector('.modal-overlay:not(.hidden)')) {
+      if (_retries < 20) setTimeout(() => this.showMilestone(m, _retries + 1), 1000);
+      return;
+    }
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set('milestone-fireworks', m.icon);
     set('milestone-xp-badge', m.xp.toLocaleString('he-IL') + ' XP');
@@ -13396,6 +13430,16 @@ const AnnualUpsell = {
         cta:   'עדכנו אותי כשזה יוצא 📬',
       },
     };
+
+    // Same modal-collision guard as GuidedTour/showLevelUp/showMilestone -
+    // this backdrop (z-index 9000, pointer-events once shown) would trap the
+    // user behind an unclickable screen if it appears while a modal is open.
+    if (document.querySelector('.modal-overlay:not(.hidden)')) {
+      this._deferRetries = (this._deferRetries || 0) + 1;
+      if (this._deferRetries <= 20) setTimeout(() => this.show(trigger), 1000);
+      return;
+    }
+    this._deferRetries = 0;
 
     const v = VARIANTS[trigger] || VARIANTS.settings_cta;
     document.getElementById('aum-icon').textContent  = v.icon;
@@ -18239,8 +18283,10 @@ sbClient.auth.onAuthStateChange((event, session) => {
           State.tasks      = loaded.tasks;
           State.properties = loaded.properties;
           State.activities = loaded.activities;
-          const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-          State.agent  = { name, email: session.user.email, initials: name[0].toUpperCase(), role: 'סוכן' };
+          const agentRow = loaded.agent;
+          const roleMap = { owner: 'מנהל', agent: 'סוכן', admin: 'אדמין' };
+          const name = agentRow?.name || session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+          State.agent  = { name, email: session.user.email, initials: calcInitials(name), role: roleMap[agentRow?.role] || 'סוכן', rawRole: agentRow?.role || 'agent' };
           const t = loaded.tenant;
           State.tenant = t
             ? { id: t.id, name: t.name, slug: t.slug, plan: t.plan, trial_ends_at: t.trial_ends_at,
@@ -19802,6 +19848,17 @@ const GuidedTour = {
 
   start() {
     if (!this.shouldShow()) return;
+    // Its overlay (z-index 99980, pointer-events:all) sits above modals
+    // (z-index 200) with no cutout - launching on top of an already-open
+    // modal would trap the user behind an unclickable screen. Retry shortly
+    // instead of starting blind, and give up quietly after a while rather
+    // than looping forever if a modal is somehow always open.
+    if (document.querySelector('.modal-overlay:not(.hidden)')) {
+      this._deferredRetries = (this._deferredRetries || 0) + 1;
+      if (this._deferredRetries <= 20) setTimeout(() => this.start(), 1000);
+      return;
+    }
+    this._deferredRetries = 0;
     this._step = 0;
     this._cachedSteps = this._getSteps();
     this._render();
