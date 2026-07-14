@@ -6600,28 +6600,42 @@
   </div>
 </div>
 
-<!-- מודל: שליפת טלפון ממדלן (Copy-Paste מגושר) -->
+<!-- מודל: שמירת נכס ממדלן (טלפון + תיאור + תמונות, Copy-Paste מגושר) -->
 <div id="modal-madlan-phone" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-madlan-phone')">
-  <div class="modal" style="max-width:380px;">
+  <div class="modal" style="max-width:400px;">
     <div class="modal-handle"></div>
-    <div class="modal-header"><div class="modal-title">📞 שלוף טלפון ממדלן</div></div>
+    <div class="modal-header"><div class="modal-title">🏠 שמירת נכס ממדלן</div></div>
     <div class="modal-body" style="padding:16px;">
       <div id="madlan-phone-lead-name" style="font-size:13px;color:var(--gray-500);margin-bottom:10px;text-align:center;"></div>
       <div style="background:var(--blue-50,#EFF6FF);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13.5px;line-height:1.9;color:var(--navy);">
         <div style="font-weight:700;margin-bottom:6px;">שלבים פשוטים:</div>
         <div>1️⃣ פתיחת הנכס של הלקוח במדלן</div>
-        <div>2️⃣ מצא את מספר הטלפון של המוכר או הסוכן</div>
-        <div>3️⃣ העתקת המספר</div>
-        <div>4️⃣ הדבק בשדה למטה ולחיצה על שמור</div>
+        <div>2️⃣ העתקת מספר הטלפון, התיאור וקישור המודעה</div>
+        <div>3️⃣ הדבקה בשדות למטה, וצילומי מסך של התמונות אם רוצים</div>
+        <div>4️⃣ אישור שוחח עם הלקוח, ולחיצה על שמירה</div>
       </div>
-      <label class="form-label">מספר טלפון</label>
+      <label class="form-label">מספר טלפון *</label>
       <input type="tel" id="madlan-phone-input" class="form-input" placeholder="050-0000000"
              style="direction:ltr;font-size:18px;text-align:center;letter-spacing:1px;">
       <div id="madlan-phone-error" style="color:var(--red-500,#EF4444);font-size:12px;margin-top:6px;display:none;text-align:center;"></div>
+
+      <label class="form-label" style="margin-top:14px;">קישור למודעה במדלן</label>
+      <input type="url" id="madlan-listing-url" class="form-input" placeholder="https://www.madlan.co.il/..." style="direction:ltr;">
+
+      <label class="form-label" style="margin-top:14px;">תיאור הנכס</label>
+      <textarea id="madlan-listing-desc" class="form-input form-textarea" placeholder="הדבקת התיאור מהמודעה במדלן..."></textarea>
+
+      <label class="form-label" style="margin-top:14px;">תמונות הנכס <span style="color:var(--gray-400);font-weight:400;">(עד 5, צילומי מסך מהמודעה)</span></label>
+      <div id="madlan-prop-gallery" class="prop-gallery-grid"></div>
+
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-top:16px;padding:12px;background:var(--gold-50,#FFFBEB);border-radius:10px;cursor:pointer;">
+        <input type="checkbox" id="madlan-consent-check" style="margin-top:2px;flex-shrink:0;" onchange="LeadDetail._updateMadlanSaveBtn()">
+        <span style="font-size:13px;color:var(--navy);line-height:1.5;">שוחחתי עם הלקוח בטלפון והוא אישר שאפשר לשמור את הפרטים והתמונות במערכת</span>
+      </label>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-madlan-phone')">ביטול</button>
-      <button class="btn btn-primary" onclick="LeadDetail.saveMadlanPhone()">💾 שמירת טלפון</button>
+      <button class="btn btn-primary" id="madlan-save-btn" disabled onclick="LeadDetail.saveMadlanPhone()">💾 שמירה</button>
     </div>
   </div>
 </div>
@@ -7821,6 +7835,8 @@ const DB = {
         neighborhood: p.neighborhood || '', description: p.description || '',
         image_url: p.image_url || null,
         image_urls: p.image_urls?.length ? p.image_urls : (p.image_url ? [p.image_url] : []),
+        madlan_url: p.madlan_url || null,
+        source_lead_id: p.source_lead_id || null,
       })),
       activities: (actsR.data || []).map(a => ({
         id: a.id, lead_id: a.lead_id, type: a.type,
@@ -7929,6 +7945,7 @@ const DB = {
   async addProperty(prop) {
     const { data, error } = await sbClient.from('properties').insert({
       tenant_id: this.tenantId,
+      agent_id: this.agentId || null,
       title: prop.title,
       type: prop.type || 'apartment',
       status: prop.status || 'available',
@@ -7941,6 +7958,8 @@ const DB = {
       description: prop.description || '',
       image_url: prop.image_url || null,
       image_urls: prop.image_urls || [],
+      madlan_url: prop.madlan_url || null,
+      source_lead_id: prop.source_lead_id || null,
     }).select().single();
     if (error) throw error;
     AuditLog.log('property.created', 'property', data.id, { title: data.title });
@@ -7952,6 +7971,8 @@ const DB = {
       neighborhood: '', description: data.description || '',
       image_url: data.image_url || null,
       image_urls: data.image_urls || [],
+      madlan_url: data.madlan_url || null,
+      source_lead_id: data.source_lead_id || null,
     };
   },
 
@@ -14696,12 +14717,15 @@ const LeadDetail = {
           ${matchProps.length ? `
             <div style="display:flex;flex-direction:column;gap:10px;">
               ${matchProps.map(p => `
-                <div class="card" style="padding:14px;display:flex;gap:12px;align-items:center;">
-                  <div style="font-size:28px;">🏠</div>
-                  <div style="flex:1;">
+                <div class="card" style="padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;" onclick="openEditProperty('${p.id}')">
+                  ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : '<div style="font-size:28px;">🏠</div>'}
+                  <div style="flex:1;min-width:0;">
                     <div style="font-weight:700;font-size:14px;">${escapeHtml(p.title)}</div>
-                    <div style="font-size:12px;color:var(--gray-500);">${escapeHtml(p.city)} · ${p.rooms} חד׳ · ${p.area} מ"ר</div>
-                    <div style="font-size:14px;font-weight:800;color:var(--navy-500);margin-top:3px;">${formatMoney(p.price)}</div>
+                    <div style="font-size:12px;color:var(--gray-500);">${escapeHtml(p.city||'')}${p.rooms ? ' · ' + p.rooms + ' חד׳' : ''}${p.area ? ' · ' + p.area + ' מ"ר' : ''}</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
+                      <div style="font-size:14px;font-weight:800;color:var(--navy-500);">${formatMoney(p.price)}</div>
+                      ${p.madlan_url ? `<a href="${escapeHtml(safeUrl(p.madlan_url))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:#0369A1;background:#E6FBF9;padding:2px 8px;border-radius:99px;">🔗 מדלן</a>` : ''}
+                    </div>
                   </div>
                 </div>
               `).join('')}
@@ -14776,6 +14800,7 @@ const LeadDetail = {
   },
   matchProperties(lead) {
     return State.properties.filter(p => {
+      if (p.source_lead_id === lead.id) return true;
       if (p.status === 'sold') return false;
       const priceOk = (!lead.budget_max || p.price <= lead.budget_max * 1.1) &&
                       (!lead.budget_min || p.price >= lead.budget_min * 0.9);
@@ -14871,29 +14896,86 @@ const LeadDetail = {
     }
   },
 
-  // ── משימה 13: שלוף טלפון ממדלן + WhatsApp ישיר עם בדיקת הסכמה ──
+  // ── משימה 13: שמירת נכס ממדלן (טלפון + תיאור + תמונות) + WhatsApp ישיר עם בדיקת הסכמה ──
 
   _madlanLeadId: null,
+  _madlanFiles: [],
   _waLeadId: null,
   _waPending: null,
 
   openMadlanModal(leadId) {
     this._madlanLeadId = leadId;
+    this._madlanFiles = [];
     const inp = document.getElementById('madlan-phone-input');
     if (inp) inp.value = '';
+    document.getElementById('madlan-listing-url').value = '';
+    document.getElementById('madlan-listing-desc').value = '';
+    const consentEl = document.getElementById('madlan-consent-check');
+    if (consentEl) consentEl.checked = false;
     const err = document.getElementById('madlan-phone-error');
     if (err) { err.textContent = ''; err.style.display = 'none'; }
     const lead = State.leads.find(l => l.id === leadId);
     const nameEl = document.getElementById('madlan-phone-lead-name');
     if (nameEl) nameEl.textContent = lead ? `עבור הליד: ${lead.name}${lead.phone ? ' (מספר נוכחי: ' + lead.phone + ')' : ''}` : '';
+    this._renderMadlanGallery();
+    this._updateMadlanSaveBtn();
     openModal('modal-madlan-phone');
     setTimeout(() => document.getElementById('madlan-phone-input')?.focus(), 200);
+  },
+
+  _updateMadlanSaveBtn() {
+    const btn = document.getElementById('madlan-save-btn');
+    const consentEl = document.getElementById('madlan-consent-check');
+    if (btn) btn.disabled = !consentEl?.checked;
+  },
+
+  _renderMadlanGallery() {
+    const grid = document.getElementById('madlan-prop-gallery');
+    if (!grid) return;
+    const files = this._madlanFiles;
+    const thumbs = files.map((f, i) => `
+      <div class="prop-gallery-thumb">
+        <img src="${f._preview}">
+        ${i === 0 ? '<span class="gal-main">ראשי</span>' : ''}
+        <button class="gal-remove" onclick="LeadDetail.removeMadlanFile(${i})">✕</button>
+      </div>`).join('');
+    const addBtn = files.length < 5
+      ? `<label class="prop-gallery-add">+<input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="LeadDetail.addMadlanFiles(this)"></label>`
+      : '';
+    grid.innerHTML = files.length
+      ? thumbs + addBtn
+      : `<label class="prop-img-upload-zone" style="grid-column:1/-1; padding:18px; display:flex; flex-direction:column; align-items:center;">
+           <input type="file" accept="image/jpeg,image/png,image/webp,image/heic" multiple onchange="LeadDetail.addMadlanFiles(this)">
+           <div style="font-size:26px; margin-bottom:6px;">📷</div>
+           <div style="font-size:13px; font-weight:600; color:var(--gray-600);">הוספת תמונות</div>
+           <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">עד 5 תמונות · JPG PNG WEBP</div>
+         </label>`;
+  },
+
+  addMadlanFiles(input) {
+    const files = Array.from(input.files || []);
+    for (const f of files) {
+      if (this._madlanFiles.length >= 5) break;
+      if (f.size > 10 * 1024 * 1024) { toast('קובץ גדול מדי (מקס׳ 10MB)', 'error'); continue; }
+      this._madlanFiles.push(f);
+      PropImages._readFile(f, () => this._renderMadlanGallery());
+    }
+    input.value = '';
+  },
+
+  removeMadlanFile(i) {
+    this._madlanFiles.splice(i, 1);
+    this._renderMadlanGallery();
   },
 
   async saveMadlanPhone() {
     const raw = (document.getElementById('madlan-phone-input')?.value || '').trim();
     const err = document.getElementById('madlan-phone-error');
     const showErr = (msg) => { if (err) { err.textContent = msg; err.style.display = 'block'; } };
+    if (!document.getElementById('madlan-consent-check')?.checked) {
+      showErr('יש לאשר ששוחחתם עם הלקוח לפני השמירה');
+      return;
+    }
     if (!raw) { showErr('יש להזין מספר טלפון'); return; }
     const clean = raw.replace(/[-\s]/g, '');
     if (!/^0[2-9]\d{7,8}$/.test(clean)) {
@@ -14901,15 +14983,52 @@ const LeadDetail = {
       return;
     }
     if (!this._madlanLeadId) return;
+    const listingUrl = document.getElementById('madlan-listing-url')?.value.trim() || '';
+    const description = document.getElementById('madlan-listing-desc')?.value.trim() || '';
+    const saveBtn = document.getElementById('madlan-save-btn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
     try {
       await DB.updateLead(this._madlanLeadId, { phone: clean });
       const lead = State.leads.find(l => l.id === this._madlanLeadId);
       if (lead) lead.phone = clean;
-      toast(`📞 הטלפון ${clean} נשמר עבור ${lead?.name || 'הליד'}`, 'success');
+
+      let createdProperty = false;
+      if (listingUrl || description || this._madlanFiles.length) {
+        const prop = await DB.addProperty({
+          title: `נכס ממדלן, ${lead?.name || 'ליד'}`,
+          status: 'available',
+          description,
+          madlan_url: listingUrl || null,
+          source_lead_id: this._madlanLeadId,
+        });
+        if (this._madlanFiles.length) {
+          try {
+            const urls = [];
+            for (let i = 0; i < this._madlanFiles.length; i++) {
+              urls.push(await PropImages._uploadOne(this._madlanFiles[i], prop.id, i));
+            }
+            await sbClient.from('properties').update({ image_url: urls[0], image_urls: urls })
+              .eq('id', prop.id).eq('tenant_id', DB.tenantId);
+            prop.image_url = urls[0];
+            prop.image_urls = urls;
+          } catch (imgErr) {
+            toast(`הנכס נשמר אבל התמונות לא הועלו: ${imgErr.message}`, 'warning');
+          }
+        }
+        State.properties.unshift(prop);
+        createdProperty = true;
+      }
+
+      toast(createdProperty
+        ? `🏠 הנכס נשמר וקושר לליד ${lead?.name || ''}`
+        : `📞 הטלפון ${clean} נשמר עבור ${lead?.name || 'הליד'}`, 'success');
+      this._madlanFiles = [];
       closeModal('modal-madlan-phone');
       if (State.screen === 'lead-detail') LeadDetail.render(this._madlanLeadId);
     } catch(e) {
       showErr('שגיאה בשמירה: ' + (e?.message || 'שגיאה לא ידועה'));
+    } finally {
+      if (saveBtn) { saveBtn.disabled = !document.getElementById('madlan-consent-check')?.checked; saveBtn.textContent = '💾 שמירה'; }
     }
   },
 
