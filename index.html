@@ -11148,8 +11148,10 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
       const cleanMsg = stripAiMessageArtifacts(msg);
       const phone = (lead.phone || '').replace(/^0/, '').replace(/-/g, '');
       const waUrl = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(cleanMsg);
+      const usageLabel = AiLimits.limitLabel('marketing');
       container.innerHTML = `
         <div style="background:var(--gray-50);border-radius:12px;padding:14px;font-size:14px;line-height:1.7;color:var(--gray-800);white-space:pre-wrap;direction:rtl;text-align:right;margin-bottom:14px;">${escapeHtml(cleanMsg)}</div>
+        <div style="font-size:0.8rem;color:var(--gray-500);text-align:center;margin-bottom:10px;">✨ <span class="mktg-usage-counter">${usageLabel}</span> · אותה מכסה של כלי השיווק</div>
         <p style="font-size:11px;color:var(--gray-400);margin:0 0 10px;text-align:center;">✏️ סוכן השיווק יכול לפעמים לא לדייק, אפשר לערוך את ההודעה ב-WhatsApp לפני השליחה</p>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
           <button class="btn" style="flex:1;border:1px solid var(--border);" onclick="navigator.clipboard.writeText(this.dataset.msg);toast('✅ הועתק','success')" data-msg="${escapeHtml(cleanMsg)}">📋 העתקה</button>
@@ -11161,6 +11163,7 @@ ${safeArea ? 'אזור/פרויקט: ' + safeArea : ''}
           <span>שליחת ההודעות מבוצעת ישירות ממכשירך האישי ובאחריותך הבלעדית. באחריות המשתמש לוודא כי הנמענים אינם מתנגדים לקבלת הודעות, בהתאם להוראות חוק התקשורת (חוק הספאם).</span>
         </div>
       `;
+      Marketing._updateUsageLabels();
     } catch(e) {
       container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-500);">⚠️ ${escapeHtml(e.message)}</div>`;
     }
