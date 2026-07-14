@@ -7112,6 +7112,10 @@
         <label class="form-label" id="lbl-new-prop-images">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
         <div id="new-prop-gallery" class="prop-gallery-grid"></div>
       </div>
+      <div class="form-group" id="fg-new-prop-tour">
+        <label class="form-label" id="lbl-new-prop-tour">קישור לסיור וירטואלי 360°</label>
+        <input type="url" id="new-prop-tour-url" class="form-input" placeholder="https://my.matterport.com/show/?m=..." dir="ltr">
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-add-property')">ביטול</button>
@@ -7189,6 +7193,10 @@
       <div class="form-group" id="fg-edit-prop-images">
         <label class="form-label" id="lbl-edit-prop-images">תמונות נכס <span style="color:var(--gray-400);font-weight:400;">(עד 5)</span></label>
         <div id="edit-prop-gallery" class="prop-gallery-grid"></div>
+      </div>
+      <div class="form-group" id="fg-edit-prop-tour">
+        <label class="form-label" id="lbl-edit-prop-tour">קישור לסיור וירטואלי 360°</label>
+        <input type="url" id="edit-prop-tour-url" class="form-input" placeholder="https://my.matterport.com/show/?m=..." dir="ltr">
       </div>
     </div>
     <div class="modal-footer" style="flex-direction:column; gap:8px;">
@@ -7918,6 +7926,7 @@ const DB = {
         image_url: p.image_url || null,
         image_urls: p.image_urls?.length ? p.image_urls : (p.image_url ? [p.image_url] : []),
         madlan_url: p.madlan_url || null,
+        virtual_tour_url: p.virtual_tour_url || null,
         source_lead_id: p.source_lead_id || null,
       })),
       activities: (actsR.data || []).map(a => ({
@@ -8041,6 +8050,7 @@ const DB = {
       image_url: prop.image_url || null,
       image_urls: prop.image_urls || [],
       madlan_url: prop.madlan_url || null,
+      virtual_tour_url: prop.virtual_tour_url || null,
       source_lead_id: prop.source_lead_id || null,
     }).select().single();
     if (error) throw error;
@@ -8054,6 +8064,7 @@ const DB = {
       image_url: data.image_url || null,
       image_urls: data.image_urls || [],
       madlan_url: data.madlan_url || null,
+      virtual_tour_url: data.virtual_tour_url || null,
       source_lead_id: data.source_lead_id || null,
     };
   },
@@ -8070,6 +8081,7 @@ const DB = {
       address: updates.address,
       city: updates.city,
       description: updates.description,
+      virtual_tour_url: updates.virtual_tour_url || null,
       ...(updates.image_url  !== undefined ? { image_url:  updates.image_url  } : {}),
       ...(updates.image_urls !== undefined ? { image_urls: updates.image_urls } : {}),
     }).eq('id', propId).eq('tenant_id', this.tenantId);
@@ -9238,6 +9250,7 @@ const PROPERTY_CONFIG = {
     priceLabel: 'מחיר (₪)', priceRequired: true, pricePlaceholder: '2000000',
     showRooms: true, showArea: true, showFloor: true, showImages: true,
     imagesLabel: 'תמונות נכס',
+    showVirtualTour: true, tourLabel: 'קישור לסיור וירטואלי 360°',
   },
   interior: {
     titlePlaceholder: 'לדוגמה: שיפוץ סלון בסגנון מינימליסטי',
@@ -9249,6 +9262,7 @@ const PROPERTY_CONFIG = {
     priceLabel: 'תקציב (₪)', priceRequired: false, pricePlaceholder: '80000',
     showRooms: true, showArea: true, showFloor: false, showImages: true,
     imagesLabel: 'תמונות השראה',
+    showVirtualTour: true, tourLabel: 'קישור לסיור וירטואלי 360°',
   },
   realestate_lawyer: {
     titlePlaceholder: 'לדוגמה: ליווי רכישת דירה, רחוב הרצל 10',
@@ -9260,6 +9274,7 @@ const PROPERTY_CONFIG = {
     priceLabel: 'שכר טרחה (₪)', priceRequired: false, pricePlaceholder: '15000',
     showRooms: false, showArea: false, showFloor: false, showImages: false,
     imagesLabel: '',
+    showVirtualTour: false, tourLabel: '',
   },
 };
 PROPERTY_CONFIG.other = PROPERTY_CONFIG.realestate;
@@ -9302,6 +9317,8 @@ function applyIndustryToPropertyForm(prefix) {
   showFg(`fg-${prefix}-prop-floor`,  cfg.showFloor);
   showFg(`fg-${prefix}-prop-images`, cfg.showImages);
   setText(`lbl-${prefix}-prop-images`, cfg.imagesLabel);
+  showFg(`fg-${prefix}-prop-tour`, cfg.showVirtualTour);
+  setText(`lbl-${prefix}-prop-tour`, cfg.tourLabel);
   // "floor" and "city" share a form-row; when floor is hidden, city must span
   // both columns or it collapses into floor's grid slot leaving a blank gap.
   const cityFg = document.getElementById(`fg-${prefix}-prop-city`);
@@ -15396,6 +15413,7 @@ const PropertiesScreen = {
             ${cfg.showFloor && p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
           </div>` : ''}
           ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
+          ${p.virtual_tour_url ? `<a href="${escapeHtml(safeUrl(p.virtual_tour_url))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#7C3AED;background:#F5F3FF;padding:3px 9px;border-radius:99px;margin-top:6px;font-weight:600;">🎥 סיור 360°</a>` : ''}
           <button class="prop-share-btn" onclick="event.stopPropagation();shareProperty('${p.id}')">📤 שיתוף</button>
         </div>
       </div>
@@ -17892,6 +17910,8 @@ async function addProperty() {
   const price = parseFloat(document.getElementById('new-prop-price').value) || 0;
   if (!title) { toast('נא להזין כותרת', 'error'); return; }
   if (propConfig().priceRequired && !price) { toast('נא להזין מחיר', 'error'); return; }
+  const tourUrl = document.getElementById('new-prop-tour-url').value.trim();
+  if (tourUrl && safeUrl(tourUrl) === '#') { toast('קישור הסיור הווירטואלי לא תקין', 'error'); return; }
   const saveBtn = document.querySelector('#modal-add-property .btn-primary');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   SaveAnim.show();
@@ -17908,6 +17928,7 @@ async function addProperty() {
       address:     document.getElementById('new-prop-address').value.trim(),
       city:        document.getElementById('new-prop-city').value.trim(),
       description: document.getElementById('new-prop-description').value.trim(),
+      virtual_tour_url: tourUrl || null,
     };
     const prop = await DB.addProperty(propData);
     if (PropImages.newFiles.length) {
@@ -17925,7 +17946,7 @@ async function addProperty() {
     }
     State.properties.unshift(prop);
     closeModal('modal-add-property');
-    ['new-prop-title','new-prop-price','new-prop-rooms','new-prop-area','new-prop-floor','new-prop-address','new-prop-city','new-prop-description']
+    ['new-prop-title','new-prop-price','new-prop-rooms','new-prop-area','new-prop-floor','new-prop-address','new-prop-city','new-prop-description','new-prop-tour-url']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     PropImages.resetNew();
     await new Promise(r => setTimeout(r, Math.max(0, 1500 - (Date.now() - t0))));
@@ -17959,6 +17980,7 @@ function openEditProperty(propId) {
   document.getElementById('edit-prop-address').value     = p.address || '';
   document.getElementById('edit-prop-city').value        = p.city   || '';
   document.getElementById('edit-prop-description').value = p.description || '';
+  document.getElementById('edit-prop-tour-url').value    = p.virtual_tour_url || '';
   PropImages.resetEdit(p.image_urls?.length ? p.image_urls : (p.image_url ? [p.image_url] : []));
   openModal('modal-edit-property');
 }
@@ -17972,6 +17994,8 @@ async function saveEditProperty() {
   const price = parseFloat(document.getElementById('edit-prop-price').value) || 0;
   if (!title) { toast('נא להזין כותרת', 'error'); return; }
   if (propConfig().priceRequired && !price) { toast('נא להזין מחיר', 'error'); return; }
+  const tourUrl = document.getElementById('edit-prop-tour-url').value.trim();
+  if (tourUrl && safeUrl(tourUrl) === '#') { toast('קישור הסיור הווירטואלי לא תקין', 'error'); return; }
   const saveBtn = document.getElementById('edit-prop-save-btn');
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'שומר...'; }
   SaveAnim.show();
@@ -17989,6 +18013,7 @@ async function saveEditProperty() {
       address:     document.getElementById('edit-prop-address').value.trim(),
       city:        document.getElementById('edit-prop-city').value.trim(),
       description: document.getElementById('edit-prop-description').value.trim(),
+      virtual_tour_url: tourUrl || null,
       image_url:   allUrls[0] || null,
       image_urls:  allUrls,
     };
@@ -18097,6 +18122,7 @@ function shareProperty(propId) {
     cfg.showFloor && p.floor > 0 ? `🏢 קומה ${p.floor}` : '',
     (p.address || p.city) ? `📍 ${[p.address, p.city].filter(Boolean).join(', ')}` : '',
     p.description ? `\n${p.description.slice(0, 200)}` : '',
+    p.virtual_tour_url && safeUrl(p.virtual_tour_url) !== '#' ? `\n🎥 סיור וירטואלי 360°: ${p.virtual_tour_url}` : '',
     '\n📞 לפרטים נוספים צרו קשר',
   ].filter(Boolean);
   const text = lines.join('\n');
