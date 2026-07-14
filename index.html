@@ -11085,6 +11085,8 @@ const Gamify = {
     daily_login:    8,
     rescue_cold:   30,
     refer_joined:  120,
+    import_leads_small: 50,
+    import_leads_large: 100,
   },
   ACHIEVEMENTS: [
     { id:'first_lead',   icon:'🎯', name:'ליד ראשון',        desc:'הליד הראשון נוסף למערכת',            xp:12,  check: d => d.leadsAdded >= 1   },
@@ -11111,7 +11113,7 @@ const Gamify = {
   ],
 
   MILESTONES: [
-    { xp:  2500, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',        desc: 'AI כותב עבורך תוכן מלא לדף נחיתה ממיר, כולל כותרות ו-CTA, מוכן להטמעה', action: 'landingPage' },
+    { xp:  3000, icon: '🌐', value: '₪500',    name: 'דף נחיתה מקצועי',        desc: 'AI כותב עבורך תוכן מלא לדף נחיתה ממיר, כולל כותרות ו-CTA, מוכן להטמעה', action: 'landingPage' },
     { xp:  4500, icon: '💼', value: '₪800',    name: 'תהליך מכירה מותאם',      desc: 'AI מתכנן עבורך תהליך מכירה שלב-אחר-שלב, מהפנייה הראשונה ועד הסגירה', action: 'salesProcess' },
     { xp:  8000, icon: '🎤', value: '₪2,000',  name: 'מצגת מכירה מקצועית',    desc: 'AI כותב עבורך תסריט מצגת שקופית-אחר-שקופית, מוכן לעיצוב ושימוש', action: 'salesDeck' },
     { xp: 13000, icon: '📣', value: '₪1,500',  name: 'חבילת תוכן שיווקי',     desc: 'AI יוצר עבורך 10 רעיונות לפוסטים + 3 תקצירי מאמרים + טיוטת קמפיין מייל', action: 'contentPack' },
@@ -11164,6 +11166,7 @@ const Gamify = {
     if (d.acTasks  === undefined) d.acTasks  = 0;
     if (d.acLeads  === undefined) d.acLeads  = 0;
     if (d.acAi     === undefined) d.acAi     = 0;
+    if (d.acImports === undefined) d.acImports = 0;
     if (!d.milestoneClaimed) d.milestoneClaimed = [];
     if (d.acDate !== today_) {
       d.acDate = today_;
@@ -11171,6 +11174,7 @@ const Gamify = {
       d.acTasks = 0;
       d.acLeads = 0;
       d.acAi    = 0;
+      d.acImports = 0;
     }
   },
 
@@ -11186,6 +11190,8 @@ const Gamify = {
         return d.acLeads < 10;
       case 'use_ai':
         return d.acAi < 3;
+      case 'import_leads':
+        return d.acImports < 3;
       default:
         return true;
     }
@@ -11204,7 +11210,9 @@ const Gamify = {
   event(type, extra) {
     if (State.isDemo) return;
     const d = this.get();
-    const pts = this.XP[type] || 0;
+    const pts = type === 'import_leads'
+      ? ((extra?.count || 0) >= 10 ? this.XP.import_leads_large : this.XP.import_leads_small)
+      : (this.XP[type] || 0);
     if (!pts) return;
     this._resetDaily(d);
     const leadId = extra?.id || null;
@@ -11219,6 +11227,7 @@ const Gamify = {
     const prevLevel = this.getLevel(d.xp);
     d.xp += pts;
     if (type === 'add_lead')      { d.leadsAdded++;      d.acLeads++;  }
+    if (type === 'import_leads')  { d.leadsAdded += (extra?.count || 0); d.acImports++; }
     if (type === 'close_deal')    { d.dealsClosed++;      if (leadId) d.acClosed.push(leadId);   this.confetti(); setTimeout(() => toast(MICRO_COPY.dealClosed[_getInd()] || MICRO_COPY.dealClosed.other, 'success', 5000), 600); if (d.dealsClosed === 1) setTimeout(() => AnnualUpsell.tryShow('first_deal'), 4000); }
     if (type === 'advance_stage') { if (leadId) d.acAdvanced.push(leadId); this.targetHit(); }
     if (type === 'complete_task') { d.tasksCompleted++;   d.acTasks++;  }
@@ -16708,6 +16717,7 @@ ${fileData}
       toast(seconds
         ? `✅ ${added.length} לידים יובאו תוך ${seconds} שניות, באקסל זה היה לוקח שעות`
         : `✅ ${added.length} לידים יובאו בהצלחה`, 'success');
+      Gamify.event('import_leads', { count: added.length });
       App.updateBadges();
       if (State.screen === 'pipeline') Pipeline.render();
       else if (State.screen === 'leads') Leads.render();
