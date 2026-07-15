@@ -15315,10 +15315,7 @@ const LeadDetail = {
         });
         if (this._madlanFiles.length) {
           try {
-            const urls = [];
-            for (let i = 0; i < this._madlanFiles.length; i++) {
-              urls.push(await PropImages._uploadOne(this._madlanFiles[i], prop.id, i));
-            }
+            const urls = await Promise.all(this._madlanFiles.map((f, i) => PropImages._uploadOne(f, prop.id, i)));
             await sbClient.from('properties').update({ image_url: urls[0], image_urls: urls })
               .eq('id', prop.id).eq('tenant_id', DB.tenantId);
             prop.image_url = urls[0];
@@ -17814,30 +17811,49 @@ const PropImages = {
     this.renderEdit();
   },
 
+  // תמונות ממצלמת נייד מגיעות לרוב במגה-בייטים בודדים; דחיסה בצד הלקוח
+  // לפני העלאה חוסכת עשרות שניות על העלאה סלולרית, בלי אובדן איכות נראה לעין.
+  _resizeForUpload(file) {
+    return new Promise(resolve => {
+      if (!file.type.startsWith('image/') || file.size <= 400 * 1024) { resolve(file); return; }
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const maxEdge = 1920;
+        const scale = Math.min(1, maxEdge / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(blob => {
+          if (!blob) { resolve(file); return; }
+          resolve(new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.85);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  },
+
   async _uploadOne(file, propId, suffix) {
-    const ext  = file.name.split('.').pop().toLowerCase() || 'jpg';
+    const upFile = await this._resizeForUpload(file);
+    const ext  = upFile.name.split('.').pop().toLowerCase() || 'jpg';
     const path = `${DB.tenantId}/${propId}_${suffix}.${ext}`;
-    const { error } = await sbClient.storage.from('property-images').upload(path, file, { upsert: true, contentType: file.type });
+    const { error } = await sbClient.storage.from('property-images').upload(path, upFile, { upsert: true, contentType: upFile.type });
     if (error) throw error;
     return sbClient.storage.from('property-images').getPublicUrl(path).data.publicUrl;
   },
 
   async uploadNewAll(propId) {
     const ordered = this._reordered(this.newFiles, this.mainIndex);
-    const urls = [];
-    for (let i = 0; i < ordered.length; i++) {
-      urls.push(await this._uploadOne(ordered[i], propId, i));
-    }
-    return urls;
+    return Promise.all(ordered.map((f, i) => this._uploadOne(f, propId, i)));
   },
 
   async uploadEditNew(propId) {
-    const ts   = Date.now();
-    const urls = [...this.editUrls];
-    for (let i = 0; i < this.editFiles.length; i++) {
-      urls.push(await this._uploadOne(this.editFiles[i], propId, `${ts}_${i}`));
-    }
-    return this._reordered(urls, this.editMainIndex);
+    const ts = Date.now();
+    const newUrls = await Promise.all(this.editFiles.map((f, i) => this._uploadOne(f, propId, `${ts}_${i}`)));
+    return this._reordered([...this.editUrls, ...newUrls], this.editMainIndex);
   },
 };
 
