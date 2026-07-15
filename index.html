@@ -13685,6 +13685,11 @@ const ABEngine = {
   },
   async apply(map) {
     try {
+      // Called at script top-level, before onAuthStateChange has run. If a stored
+      // session's access token already expired, sbClient.rpc() would send it as-is
+      // and get a 401 from PostgREST before the SDK's background refresh kicks in.
+      // getSession() actively refreshes an expired/near-expired token first.
+      await sbClient.auth.getSession();
       const { data: tests, error } = await sbClient.rpc('get_active_ab_tests');
       if (error || !tests) return;
       tests.forEach(t => {
