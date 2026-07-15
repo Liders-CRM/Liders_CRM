@@ -9251,6 +9251,8 @@ const PROPERTY_CONFIG = {
     showRooms: true, showArea: true, showFloor: true, showImages: true,
     imagesLabel: 'תמונות נכס',
     showVirtualTour: true, tourLabel: 'קישור לסיור וירטואלי 360°',
+    tourChip: '🎥 סיור 360°', tourShareLabel: '🎥 סיור וירטואלי 360°',
+    tourPlaceholder: 'https://my.matterport.com/show/?m=...',
   },
   interior: {
     titlePlaceholder: 'לדוגמה: שיפוץ סלון בסגנון מינימליסטי',
@@ -9262,7 +9264,9 @@ const PROPERTY_CONFIG = {
     priceLabel: 'תקציב (₪)', priceRequired: false, pricePlaceholder: '80000',
     showRooms: true, showArea: true, showFloor: false, showImages: true,
     imagesLabel: 'תמונות השראה',
-    showVirtualTour: true, tourLabel: 'קישור לסיור וירטואלי 360°',
+    showVirtualTour: true, tourLabel: 'קישור להדמיה / עיצוב',
+    tourChip: '🎨 הדמיה', tourShareLabel: '🎨 קישור להדמיה',
+    tourPlaceholder: 'https://... (קישור לצפייה בהדמיה)',
   },
   realestate_lawyer: {
     titlePlaceholder: 'לדוגמה: ליווי רכישת דירה, רחוב הרצל 10',
@@ -9275,6 +9279,7 @@ const PROPERTY_CONFIG = {
     showRooms: false, showArea: false, showFloor: false, showImages: false,
     imagesLabel: '',
     showVirtualTour: false, tourLabel: '',
+    tourChip: '', tourShareLabel: '', tourPlaceholder: '',
   },
 };
 PROPERTY_CONFIG.other = PROPERTY_CONFIG.realestate;
@@ -9319,6 +9324,7 @@ function applyIndustryToPropertyForm(prefix) {
   setText(`lbl-${prefix}-prop-images`, cfg.imagesLabel);
   showFg(`fg-${prefix}-prop-tour`, cfg.showVirtualTour);
   setText(`lbl-${prefix}-prop-tour`, cfg.tourLabel);
+  if (prefix === 'new') setPh('new-prop-tour-url', cfg.tourPlaceholder || '');
   // "floor" and "city" share a form-row; when floor is hidden, city must span
   // both columns or it collapses into floor's grid slot leaving a blank gap.
   const cityFg = document.getElementById(`fg-${prefix}-prop-city`);
@@ -15413,7 +15419,7 @@ const PropertiesScreen = {
             ${cfg.showFloor && p.floor > 0 ? `<div class="property-spec">🏢 קומה ${p.floor}</div>` : ''}
           </div>` : ''}
           ${p.description ? `<div style="font-size:12px;color:var(--gray-500);margin-top:6px;line-height:1.4;">${escapeHtml(p.description.slice(0,80))}${p.description.length > 80 ? '...' : ''}</div>` : ''}
-          ${p.virtual_tour_url ? `<a href="${escapeHtml(safeUrl(p.virtual_tour_url))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#7C3AED;background:#F5F3FF;padding:3px 9px;border-radius:99px;margin-top:6px;font-weight:600;">🎥 סיור 360°</a>` : ''}
+          ${p.virtual_tour_url ? `<a href="${escapeHtml(safeUrl(p.virtual_tour_url))}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#7C3AED;background:#F5F3FF;padding:3px 9px;border-radius:99px;margin-top:6px;font-weight:600;">${escapeHtml(cfg.tourChip || '🔗 קישור')}</a>` : ''}
           <button class="prop-share-btn" onclick="event.stopPropagation();shareProperty('${p.id}')">📤 שיתוף</button>
         </div>
       </div>
@@ -18122,7 +18128,7 @@ function shareProperty(propId) {
     cfg.showFloor && p.floor > 0 ? `🏢 קומה ${p.floor}` : '',
     (p.address || p.city) ? `📍 ${[p.address, p.city].filter(Boolean).join(', ')}` : '',
     p.description ? `\n${p.description.slice(0, 200)}` : '',
-    p.virtual_tour_url && safeUrl(p.virtual_tour_url) !== '#' ? `\n🎥 סיור וירטואלי 360°: ${p.virtual_tour_url}` : '',
+    p.virtual_tour_url && safeUrl(p.virtual_tour_url) !== '#' ? `\n${cfg.tourShareLabel || '🔗 קישור'}: ${p.virtual_tour_url}` : '',
     '\n📞 לפרטים נוספים צרו קשר',
   ].filter(Boolean);
   const text = lines.join('\n');
