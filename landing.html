@@ -2596,13 +2596,18 @@
     }
     @media (max-width: 480px) {
       .excel-title-row {
-        flex-direction: column;
+        justify-content: flex-end;
         gap: 10px;
       }
+      .mini-excel-wrap svg {
+        width: 24px;
+        height: 24px;
+      }
       .excel-title-row .section-title {
-        font-size: 21px;
+        font-size: 19px;
         max-width: none;
         min-width: 0;
+        text-align: right;
       }
     }
 
