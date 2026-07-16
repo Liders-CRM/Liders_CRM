@@ -7348,6 +7348,32 @@
   </div>
 </div>
 
+<!-- PIN Lock Intro (explains why, shown once before first setup) -->
+<div class="modal-overlay hidden" id="modal-pinlock-intro">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-header">
+      <div class="modal-title">🔒 הגנה קצרה על פרטי הלקוחות</div>
+      <button class="modal-close" onclick="AppLock.skipIntro()">×</button>
+    </div>
+    <div class="modal-body" style="padding:20px;line-height:1.7;">
+      <p style="margin-bottom:12px;">
+        המערכת שומרת טלפונים, תקציבים ופרטים אישיים של לקוחות אמיתיים. קוד קצר
+        של 4 ספרות מוודא שאם הטלפון נשאר פתוח או עובר יד, אף אחד מלבדך לא יוכל
+        להיכנס ולראות את הפרטים האלה.
+      </p>
+      <p style="color:var(--gray-500);font-size:0.85rem;">
+        זה לא במקום הסיסמה של החשבון, זו שכבת הגנה נוספת ומהירה לשימוש
+        היומיומי. הקוד יתבקש רק אחרי כמה דקות מחוץ למערכת, לא בכל לחיצה. ניתן
+        לכבות בכל שלב בהגדרות.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="AppLock.skipIntro()">אולי מאוחר יותר</button>
+      <button class="btn btn-primary" onclick="AppLock.skipIntro(); AppLock.startSetup();">הגדרת קוד</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tutorial Video Modal -->
 <div class="modal-overlay hidden" id="modal-tutorial">
   <div class="modal" style="max-width:480px;">
@@ -13922,7 +13948,14 @@ const App = {
     // Init PIN lock
     AppLock._updateLockBtn();
     AppLock.initListeners();
-    AppLock.startTimer();
+    AppLock.checkStaleOnResume();
+    // Prompt PIN-lock setup once for users who haven't turned it on - protects
+    // client data (phone numbers, budgets, personal details) if someone else
+    // picks up an unlocked phone. Deferred until after onboarding is done so
+    // it doesn't compete with the first-run wizard/guided tour.
+    if (!State.isDemo && !AppLock.isEnabled() && localStorage.getItem('onboarding_done') === '1' && !localStorage.getItem('liders_pinlock_intro_shown')) {
+      setTimeout(() => AppLock.showIntro(), 4500);
+    }
     // Hard 8h session ceiling - independent of PIN-lock timer
     IdleSession.initListeners();
     // Init privacy shield (blur-on-focus-loss for sensitive screens)
@@ -15968,6 +16001,7 @@ const AppLock = {
   _pin: '',
   _setupStep: 0,
   _setupPin: '',
+  LAST_ACTIVE_KEY: 'liders_lock_last_active',
 
   isEnabled() { return !!localStorage.getItem('liders_pin_hash'); },
   getTimeoutMs() { return parseInt(localStorage.getItem('liders_lock_mins') || '5') * 60 * 1000; },
@@ -15979,16 +16013,27 @@ const AppLock = {
 
   async setup(pin) {
     localStorage.setItem('liders_pin_hash', await this._hash(pin));
+    localStorage.setItem(this.LAST_ACTIVE_KEY, String(Date.now()));
     this._updateLockBtn();
     this.startTimer();
   },
 
   disable() {
     localStorage.removeItem('liders_pin_hash');
+    localStorage.removeItem(this.LAST_ACTIVE_KEY);
     this._clearTimer();
     this._updateLockBtn();
     if (State.screen === 'settings') Settings.render();
     toast('🔓 נעילת PIN בוטלה', 'success');
+  },
+
+  showIntro() {
+    document.getElementById('modal-pinlock-intro')?.classList.remove('hidden');
+  },
+
+  skipIntro() {
+    localStorage.setItem('liders_pinlock_intro_shown', '1');
+    document.getElementById('modal-pinlock-intro')?.classList.add('hidden');
   },
 
   lock() {
@@ -16011,6 +16056,7 @@ const AppLock = {
         this._goToSettings = false;
         App.go('settings');
       } else {
+        localStorage.setItem(this.LAST_ACTIVE_KEY, String(Date.now()));
         this.startTimer();
       }
     } else {
@@ -16045,7 +16091,28 @@ const AppLock = {
 
   _clearTimer() { if (this._timer) { clearTimeout(this._timer); this._timer = null; } },
 
-  resetTimer() { if (this.isEnabled()) this.startTimer(); },
+  resetTimer() {
+    if (!this.isEnabled()) return;
+    localStorage.setItem(this.LAST_ACTIVE_KEY, String(Date.now()));
+    this.startTimer();
+  },
+
+  // Called whenever the app becomes visible again (tab/app switch back, or a
+  // cold start with a restored session) - locks immediately if the app was
+  // away for longer than the configured timeout, instead of waiting for a
+  // fresh idle timer to elapse on an already-visible dashboard. This is what
+  // makes "left the app and came back" actually require the PIN, not just
+  // "sat idle while the app stayed open". A short away time (e.g. a quick
+  // WhatsApp send and back) stays well under the timeout and never locks.
+  checkStaleOnResume() {
+    if (!this.isEnabled()) return;
+    const last = Number(localStorage.getItem(this.LAST_ACTIVE_KEY) || 0);
+    if (last > 0 && (Date.now() - last) >= this.getTimeoutMs()) {
+      this.lock();
+    } else {
+      this.startTimer();
+    }
+  },
 
   _updateLockBtn() {
     const btn = document.getElementById('sidebar-lock-btn');
@@ -16056,6 +16123,10 @@ const AppLock = {
     ['touchstart','mousedown','keydown'].forEach(e =>
       document.addEventListener(e, () => this.resetTimer(), { passive: true })
     );
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) this.checkStaleOnResume();
+    });
+    window.addEventListener('focus', () => this.checkStaleOnResume());
   },
 
   /* ── PIN Setup flow ── */
@@ -16179,6 +16250,7 @@ const Settings = {
           <div class="settings-row-icon">⏱️</div>
           <div class="settings-row-body">
             <div class="settings-row-label">נעילה אוטומטית אחרי</div>
+            <div class="settings-row-sub">חל גם כשיוצאים מהאפליקציה וחוזרים, לא רק בזמן שהיא פתוחה</div>
           </div>
           <select onchange="AppLock.setLockMins(this.value)"
             style="border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:14px;background:var(--bg-card);font-family:inherit;cursor:pointer;">
@@ -16200,7 +16272,7 @@ const Settings = {
           <div class="settings-row-icon">🔒</div>
           <div class="settings-row-body">
             <div class="settings-row-label">הפעלת נעילת PIN</div>
-            <div class="settings-row-sub">אופציונלי, הגן על הנתונים עם קוד 4 ספרות. ניתן לבטל בכל עת.</div>
+            <div class="settings-row-sub">מגן על פרטי הלקוחות אם הטלפון נשאר פתוח או עובר יד. קוד 4 ספרות, ניתן לכבות בכל עת.</div>
           </div>
           <div class="settings-arrow">›</div>
         </div>
