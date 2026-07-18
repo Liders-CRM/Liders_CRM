@@ -2145,9 +2145,9 @@
       font-size: 10px; font-weight: 800; color: var(--orange-500);
       background: white; padding: 2px 6px; border-radius: 99px; white-space: nowrap;
     }
-    .api-key-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .api-key-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
     .api-key-row input {
-      flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+      flex: 1 1 140px; min-width: 0; padding: 8px 12px; border: 1px solid var(--border);
       border-radius: var(--radius-md); font-size: 12px; font-family: monospace;
       background: var(--gray-50); direction: ltr;
     }
@@ -16253,31 +16253,37 @@ const Settings = {
           const curMeta = IND_META[cur] || IND_META.other;
           return `
             <div style="padding:12px 16px 0;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--gray-50);margin-bottom:10px;">
+              <div id="industry-current-row" onclick="Settings.toggleIndustryMenu()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--gray-50);cursor:pointer;">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <span style="font-size:22px;">${curMeta.icon}</span>
                   <div>
                     <div style="font-size:13px;font-weight:700;color:var(--gray-800);">${curMeta.label}</div>
-                    <div style="font-size:11px;color:var(--gray-500);">תחום עסקי נוכחי</div>
+                    <div style="font-size:11px;color:var(--gray-500);">תחום עסקי נוכחי, לחיצה לשינוי</div>
                   </div>
                 </div>
+                <div class="settings-arrow">›</div>
               </div>
-              <div style="background:var(--blue-50,#EFF6FF);border:1px solid var(--blue-200,#BFDBFE);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--blue-700,#1D4ED8);line-height:1.5;">
-                💬 לשינוי התחום העסקי, יש לפנות לצוות התמיכה: <a href="mailto:info@plto.app" style="color:inherit;font-weight:700;">info@plto.app</a>
+              <div id="industry-change-menu" style="display:none;margin-top:6px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+                ${Object.entries(IND_META).filter(([id]) => id !== cur).map(([id, meta]) => `
+                  <div onclick="Settings.confirmChangeIndustry('${id}')" style="display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;background:white;border-top:1px solid var(--border);">
+                    <span style="font-size:18px;">${meta.icon}</span>
+                    <span style="font-size:13px;font-weight:600;color:var(--gray-700);">${meta.label}</span>
+                  </div>
+                `).join('')}
               </div>
-              <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11.5px;color:var(--gray-600);line-height:1.5;">
-                🔒 שים לב: העברה או העתקה של נתונים בין משתמשים שונים אינה אפשרית מטעמי אבטחה ובידוד נתונים.
+              <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:10px 0 14px;font-size:11.5px;color:var(--gray-600);line-height:1.5;">
+                🔒 שינוי תחום מאפס תוויות מותאמות אישית לברירת המחדל של התחום החדש. העברה או העתקה של נתונים בין משתמשים שונים אינה אפשרית מטעמי אבטחה ובידוד נתונים.
               </div>
               <div style="padding-top:2px;border-top:1px solid var(--border);">
                 <div style="margin-bottom:8px;">
                   <div style="font-size:13px;font-weight:600;color:var(--gray-700);">🌐 שפת טקסטים ללקוחות</div>
                   <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">השפה שבה הסוכן החכם יכתוב הודעות וואטסאפ, מיילים והצעות ללידים</div>
                 </div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <select class="form-input" style="max-width:220px;" onchange="Settings.setClientLang(this.value)">
                   ${Object.entries(Settings.CLIENT_LANGS).map(([code, meta]) => `
-                    <button onclick="Settings.setClientLang('${code}')" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:${Settings.getClientLang()===code?'var(--navy-500)':'var(--gray-50)'};color:${Settings.getClientLang()===code?'white':'var(--gray-600)'};">${meta.label}</button>
+                    <option value="${code}" ${Settings.getClientLang() === code ? 'selected' : ''}>${meta.label}</option>
                   `).join('')}
-                </div>
+                </select>
               </div>
             </div>`;
         })()}
@@ -16486,6 +16492,17 @@ const Settings = {
     localStorage.setItem('liders_client_lang', lang);
     Settings.render();
     toast(lang === 'he' ? '✅ טקסטים ללקוחות יופקו בעברית' : `✅ טקסטים ללקוחות יופקו ב${this.CLIENT_LANGS[lang].name}`, 'success');
+  },
+
+  toggleIndustryMenu() {
+    const menu = document.getElementById('industry-change-menu');
+    if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  },
+
+  async confirmChangeIndustry(ind) {
+    const IND_NAMES = { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'עיצוב פנים', other: 'אחר' };
+    if (!confirm(`לשנות את תחום העסק ל${IND_NAMES[ind] || ind}? התוויות המותאמות אישית יתאפסו לברירת המחדל של התחום החדש.`)) return;
+    await this.setIndustry(ind);
   },
 
   async setIndustry(ind) {
@@ -19615,7 +19632,7 @@ const TutorialVideo = {
         { title: '🏠 יד2, מדלן ומחשבון משכנתא', desc: 'קיצורי דרך מהדשבורד לפתיחה מהירה של יד2 ומדלן, ומחשבון משכנתא מהיר לשיתוף עם הקונה.' },
         { title: '🤖 סוכן שיווק ונכסים',         desc: 'כותב בשבילך פוסטים לנכסים, הצעות מיוחדות ומסרי WhatsApp ללקוחות, תוך שניות.' },
         { title: '🔗 לולאת הפניות',               desc: 'הפניית ליד לעו"ד נדל"ן או מעצב פנים בלחיצה מזכה ב-250 XP, ופותחת אפשרות לקבל הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל עסקה שנסגרת, כל ביקור, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל עסקה שנסגרת, כל ביקור, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       realestate_lawyer: [
         { title: '➕ הוספת לקוח חדש',            desc: 'הכפתור הכתום + פותח טופס עם שם הלקוח, סוג העסקה (רכישה/מכירה) ושלב הטיפול.' },
@@ -19623,7 +19640,7 @@ const TutorialVideo = {
         { title: '⚖️ טאבו, נבו ומיסוי מקרקעין',  desc: 'קיצורי דרך מהדשבורד לטאבו, לנבו ולמיסוי מקרקעין, ישירות מבלי לחפש בדפדפן.' },
         { title: '🤖 תוכן שיווקי מקצועי',         desc: 'כותב טיפים משפטיים לרשתות, מסרי פנייה ללקוחות, בהתאם לכללי פרסומת של לשכת עורכי הדין.' },
         { title: '🔗 לולאת הפניות',               desc: 'שליחת לקוח מעוניין בנכס לסוכן נדל"ן מזכה ב-250 XP, ובונה שיתוף פעולה שמניב הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל תיק שנסגר, כל ייעוץ, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל תיק שנסגר, כל ייעוץ, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       interior: [
         { title: '➕ הוספת לקוח חדש',            desc: 'הכפתור הכתום + פותח טופס עם שם הלקוח, סגנון עיצוב מועדף, תקציב ושלב הפרויקט.' },
@@ -19631,7 +19648,7 @@ const TutorialVideo = {
         { title: '📌 Pinterest, Houzz והשראה',    desc: 'קיצורי דרך מהדשבורד ל-Pinterest ו-Houzz לחיפוש השראה עיצובית, ישירות בלי לחפש.' },
         { title: '🤖 סוכן שיווק עיצובי',          desc: 'כותב בשבילך פוסטים עיצוביים, מסרי פנייה ללקוחות וקמפיין WhatsApp לפרויקט, תוך שניות.' },
         { title: '🔗 לולאת הפניות',               desc: 'שליחת לקוח חדש שרכש דירה לסוכן נדל"ן מזכה ב-250 XP, ובונה שיתוף פעולה שמניב הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פרויקט שנסגר, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פרויקט שנסגר, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       other: [
         { title: '➕ הוספת ליד חדש',             desc: 'הכפתור הכתום + בפינה הימנית התחתונה פותח טופס עם שם, טלפון ושלב הפייפליין.' },
@@ -19639,7 +19656,7 @@ const TutorialVideo = {
         { title: '🔗 לולאת הפניות בין קולגות',   desc: 'לשונית "שיתופי פעולה" מאפשרת שיתוף לידים עם קולגות ב-PLTO.' },
         { title: '🤖 סוכן השיווק',                desc: 'לשונית "שירותי שיווק", הסוכן יכתוב הצעות מחיר, פוסטים ומסרים ללקוחות.' },
         { title: '🏦 מרכז כלים',                  desc: 'כלים ייחודיים לתחום שלך, ישירות מהדשבורד.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פעולה מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה, קמפיינים ועוד!' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פעולה מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק, אוטומציה לעסק ועוד.' },
       ],
     };
     return byInd[ind] || byInd.other;
@@ -19915,7 +19932,7 @@ const GuidedTour = {
       { target: null,                       emoji: '🎉', title: 'ברוכים הבאים ל-PLTO', text: 'נעשה סיור קצר של 30 שניות כדי לדעת בדיוק מה לעשות ואיפה הכל נמצא.' },
       { target: '#fab-btn',                  emoji: '➕', title: `הוספת ${addLabel}`,          text: addText },
       { target: '[data-screen="pipeline"]',  emoji: '📋', title: pipeLabel,                    text: pipeText },
-      { target: '#gamify-widget',            emoji: '🏆', title: 'צוברים XP ומרוויחים פרסים!', text: 'כל פעולה מוסיפה XP, שניתן לפדות בפרסים אמיתיים: ייעוץ שיווקי, דפי נחיתה, קמפיינים ועוד.' },
+      { target: '#gamify-widget',            emoji: '🏆', title: 'צוברים XP ומרוויחים פרסים!', text: 'כל פעולה מוסיפה XP, שניתן לפדות בתוכן AI שימושי לעסק: דף נחיתה, תוכנית שיווק, אוטומציה ועוד.' },
       { target: '[data-screen="marketing"]', emoji: '🤖', title: 'סוכן השיווק שלך',           text: mktgText },
       { target: null, isLast: true,          emoji: '🚀', title: 'כל הכבוד! מתחילים!',        text: finalText },
     ];
