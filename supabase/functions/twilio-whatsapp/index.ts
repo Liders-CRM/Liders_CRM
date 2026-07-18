@@ -71,8 +71,15 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Tenant isolation: verify the destination phone belongs to a lead in this user's tenant.
-    // RLS on the leads table automatically scopes the query to the authenticated user's tenant.
+    // Tenant isolation: verify the destination phone belongs to a lead in this user's tenant,
+    // OR matches the tenant's own configured self-notification number (Settings -> WhatsApp
+    // Business number). The self-notify exception was added 18/7/2026: Twilio.notifyNewLead/
+    // notifyStageChanged/notifyTaskDue/notifyColdLeads/test all send to the tenant's own number
+    // to alert the agent about their own CRM activity, not to a lead - without this exception
+    // every one of those calls was silently rejected as phone_not_in_leads, so the feature never
+    // actually delivered a message. Safe because the number came from the tenant itself via
+    // update_tenant_integrations(), not from attacker-controlled input.
+    // RLS on the leads/tenants tables automatically scopes both checks to the authenticated user's tenant.
     const rawPhone = to.replace(/^whatsapp:/, '').trim();
     if (!/^\+?[0-9]{7,15}$/.test(rawPhone)) {
       return new Response(
@@ -80,23 +87,43 @@ Deno.serve(async (req: Request) => {
         { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } },
       );
     }
-    const altPhone = rawPhone.startsWith('+972')
-      ? '0' + rawPhone.slice(4)
-      : rawPhone.startsWith('0')
-        ? '+972' + rawPhone.slice(1)
-        : null;
-    const candidates = altPhone ? [rawPhone, altPhone] : [rawPhone];
-    const { data: leadCheck } = await sbClient
-      .from('leads')
-      .select('id')
-      .in('phone', candidates)
-      .limit(1)
-      .maybeSingle();
-    if (!leadCheck) {
-      return new Response(
-        JSON.stringify({ error: 'phone_not_in_leads' }),
-        { status: 403, headers: { ...cors, 'Content-Type': 'application/json' } },
-      );
+
+    const toIntlDigits = (s: string) => {
+      const d = (s || '').replace(/\D/g, '');
+      return d.startsWith('0') ? '972' + d.slice(1) : d;
+    };
+
+    let selfNotifyAuthorized = false;
+    const { data: tenantId } = await sbClient.rpc('get_my_tenant_id');
+    if (tenantId) {
+      const { data: tenantRow } = await sbClient
+        .from('tenants')
+        .select('whatsapp_number')
+        .eq('id', tenantId)
+        .maybeSingle();
+      const tenantDigits = toIntlDigits(tenantRow?.whatsapp_number ?? '');
+      if (tenantDigits && tenantDigits === toIntlDigits(rawPhone)) selfNotifyAuthorized = true;
+    }
+
+    if (!selfNotifyAuthorized) {
+      const altPhone = rawPhone.startsWith('+972')
+        ? '0' + rawPhone.slice(4)
+        : rawPhone.startsWith('0')
+          ? '+972' + rawPhone.slice(1)
+          : null;
+      const candidates = altPhone ? [rawPhone, altPhone] : [rawPhone];
+      const { data: leadCheck } = await sbClient
+        .from('leads')
+        .select('id')
+        .in('phone', candidates)
+        .limit(1)
+        .maybeSingle();
+      if (!leadCheck) {
+        return new Response(
+          JSON.stringify({ error: 'phone_not_in_leads' }),
+          { status: 403, headers: { ...cors, 'Content-Type': 'application/json' } },
+        );
+      }
     }
 
     const safeMessage = message.slice(0, MAX_MESSAGE_LEN);
