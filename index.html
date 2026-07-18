@@ -3481,9 +3481,9 @@
   /* Real estate shortcuts */
   .re-shortcuts { }
   .re-shortcuts-title { font-size:11px; font-weight:700; color:var(--gray-500); margin-bottom:8px; letter-spacing:0.4px; }
-  .re-shortcuts-row { display:flex; gap:8px; }
+  .re-shortcuts-row { display:flex; gap:8px; flex-wrap:wrap; }
   .re-shortcut-btn {
-    flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+    flex:1; min-width:78px; display:flex; align-items:center; justify-content:center; gap:5px;
     padding:8px 6px; border-radius:10px; font-size:12px; font-weight:700;
     cursor:pointer; text-decoration:none; border:none; font-family:var(--font);
     transition: transform .13s;
@@ -3499,6 +3499,7 @@
   .re-misim     { background:linear-gradient(135deg,#7C3AED,#6D28D9); color:#fff; box-shadow:0 3px 10px rgba(124,58,237,0.35); }
   .re-pinterest { background:linear-gradient(135deg,#E60023,#C60018); color:#fff; box-shadow:0 3px 10px rgba(230,0,35,0.35); }
   .re-houzz     { background:linear-gradient(135deg,#73BA3C,#5A9E2A); color:#fff; box-shadow:0 3px 10px rgba(115,186,60,0.35); }
+  .re-mortgage  { background:linear-gradient(135deg,#0EA5E9,#0284C7); color:#fff; box-shadow:0 3px 10px rgba(2,132,199,0.35); }
   .re-logo-mono {
     display:inline-flex; align-items:center; justify-content:center;
     width:17px; height:17px; border-radius:50%; background:rgba(255,255,255,0.28);
@@ -3567,6 +3568,16 @@
   @keyframes tourHighlight {
     0%,100% { outline-color:#F59E0B; box-shadow:0 0 0 0 rgba(245,158,11,0.5); }
     50%      { outline-color:#FBBF24; box-shadow:0 0 0 8px rgba(245,158,11,0); }
+  }
+  .wa-connect-highlight {
+    outline:3px solid #25D366 !important;
+    outline-offset:4px;
+    border-radius:inherit;
+    animation:waConnectHighlight 1.2s ease-in-out 2;
+  }
+  @keyframes waConnectHighlight {
+    0%,100% { outline-color:#25D366; box-shadow:0 0 0 0 rgba(37,211,102,0.45); }
+    50%      { outline-color:#128C7E; box-shadow:0 0 0 8px rgba(37,211,102,0); }
   }
 
   /* ── Tutorial modal ── */
@@ -4483,6 +4494,9 @@
           <a class="re-shortcut-btn re-madlan" href="https://www.madlan.co.il/for-sale" target="_blank" rel="noopener">
             <span class="re-logo-mono">M</span> מדלן
           </a>
+          <button class="re-shortcut-btn re-mortgage" onclick="MortgageCalc.open()">
+            <span class="re-shortcut-icon">🧮</span> משכנתא
+          </button>
           <button class="re-shortcut-btn re-wa" onclick="WAConnect.open()">
             <span class="re-shortcut-icon">📲</span> WhatsApp
           </button>
@@ -4505,6 +4519,9 @@
           <a class="re-shortcut-btn re-misim" href="https://taxes.gov.il/RealEstateTaxation/Pages/RealEstateTaxation.aspx" target="_blank" rel="noopener">
             <span class="re-shortcut-icon">💰</span> מיסוי
           </a>
+          <button class="re-shortcut-btn re-mortgage" onclick="MortgageCalc.open()">
+            <span class="re-shortcut-icon">🧮</span> משכנתא
+          </button>
           <button class="re-shortcut-btn re-wa" onclick="WAConnect.open()">
             <span class="re-shortcut-icon">📲</span> WhatsApp
           </button>
@@ -6124,76 +6141,6 @@
         <div class="form-label" style="margin-bottom:8px;">הזמנות ממתינות</div>
         <div id="team-invites-list"></div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- WHATSAPP CONNECT MODAL -->
-<div id="modal-whatsapp-connect" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-whatsapp-connect')">
-  <div class="modal-sheet" style="max-width:440px;overflow:visible;">
-    <div class="modal-header" style="background:linear-gradient(135deg,#075E54,#128C7E);border-radius:16px 16px 0 0;padding:20px 20px 18px;">
-      <div>
-        <div class="modal-title" style="color:#fff;font-size:18px;">חיבור ה-WhatsApp שלך ב-2 דקות</div>
-        <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:3px;">נחבר בצורה מאובטחת את הוואטסאפ שלך לשליחת הודעות אוטומטיות מה-CRM</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('modal-whatsapp-connect')" style="color:rgba(255,255,255,.7);">×</button>
-    </div>
-    <div style="padding:24px 20px 0;">
-      <!-- Visual flow -->
-      <div id="wa-connect-screen-main" style="">
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:24px;">
-          <div style="text-align:center;">
-            <div style="font-size:42px;filter:drop-shadow(0 4px 10px rgba(37,211,102,.25));">📱</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:4px;font-weight:600;">WhatsApp</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <div style="width:48px;height:2px;background:linear-gradient(90deg,#25D366,#2563EB);border-radius:2px;"></div>
-            <div style="font-size:10px;color:var(--gray-400);font-weight:600;">מאובטח</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:42px;filter:drop-shadow(0 4px 10px rgba(37,99,235,.25));">🏆</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:4px;font-weight:600;">PLTO</div>
-          </div>
-        </div>
-        <div style="background:var(--gray-50);border-radius:14px;padding:16px 18px;margin-bottom:18px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">התראת WhatsApp על כל ליד חדש</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">שליחת הודעות אוטומטיות עם מעבר שלב</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">ניתוק בכל עת בלחיצה אחת</span>
-          </div>
-        </div>
-        <label style="display:flex;align-items:flex-start;gap:10px;background:var(--gray-50);border-radius:12px;padding:14px 16px;margin-bottom:20px;cursor:pointer;">
-          <input type="checkbox" id="wa-terms-check" style="margin-top:2px;accent-color:#25D366;width:16px;height:16px;flex-shrink:0;">
-          <span style="font-size:12px;color:var(--gray-600);line-height:1.6;">
-            השימוש תואם למדיניות WhatsApp, לשליחה לנמענים שהסכימו לכך בלבד, והאחריות על השימוש היא על המשתמש. החיבור מאובטח וניתן לניתוק בכל עת.
-          </span>
-        </label>
-        <button class="btn" id="wa-connect-main-btn" onclick="WAConnect.start()" style="width:100%;padding:14px;font-size:16px;font-weight:800;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border-radius:14px;margin-bottom:8px;">
-          📲 חיבור לוואטסאפ
-        </button>
-        <div style="text-align:center;font-size:12px;color:var(--gray-400);margin-bottom:4px;">ללא הגדרה טכנית. הכל מתבצע אוטומטית.</div>
-        <div style="text-align:center;font-size:11px;color:var(--gray-400);">המערכת תומכת בחשבונות WhatsApp Business בלבד</div>
-      </div>
-      <!-- Status screen -->
-      <div id="wa-connect-screen-progress" class="hidden" style="text-align:center;padding:12px 0 8px;">
-        <div style="font-size:48px;margin-bottom:12px;" id="wa-progress-icon">⏳</div>
-        <div style="font-size:16px;font-weight:800;color:var(--navy-500);margin-bottom:6px;" id="wa-progress-title">מחבר...</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;" id="wa-progress-sub">אנא המתן</div>
-        <div style="background:var(--gray-100);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--gray-600);text-align:right;">
-          <strong>👋 הודעת אישור מהסוכן החכם:</strong><br>
-          <span style="font-style:italic;">"היי, כאן הסוכן החכם שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-whatsapp-connect')">סגור</button>
     </div>
   </div>
 </div>
@@ -16337,15 +16284,7 @@ const Settings = {
       </div>
       <div class="settings-section">
         <div class="settings-section-title">חיבורים</div>
-        <div class="settings-row" onclick="WAConnect.open()" style="cursor:pointer;background:linear-gradient(135deg,rgba(37,211,102,.06),rgba(18,140,126,.04));border:1px solid rgba(37,211,102,.2);">
-          <div class="settings-row-icon" style="background:#DCFCE7;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">📲</div>
-          <div class="settings-row-body">
-            <div class="settings-row-label">חיבור WhatsApp אוטומטי</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">חיבור מהיר, ב-2 דקות בלבד</div>
-          </div>
-          <div class="settings-arrow" style="color:#25D366;">›</div>
-        </div>
-        <div class="settings-row" style="flex-direction:column; align-items:stretch;">
+        <div id="settings-wa-twilio-row" class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
             <div class="settings-row-icon">💬</div>
             <div class="settings-row-body" style="flex:1;">
@@ -20557,36 +20496,19 @@ window.AgencyLeaderboard = AgencyLeaderboard;
    WHATSAPP CONNECT, UI flow (backend TBD)
 ═══════════════════════════════════════════ */
 const WAConnect = {
+  // Jumps straight to the real, working Twilio WhatsApp connection in
+  // Settings instead of the old "connect in 2 minutes" mock flow, which
+  // never did anything but show "coming soon" (removed 18/7/2026).
   open() {
-    document.getElementById('wa-connect-screen-main')?.classList.remove('hidden');
-    document.getElementById('wa-connect-screen-progress')?.classList.add('hidden');
-    const cb = document.getElementById('wa-terms-check');
-    if (cb) cb.checked = false;
-    openModal('modal-whatsapp-connect');
-  },
-
-  start() {
-    const cb = document.getElementById('wa-terms-check');
-    if (!cb?.checked) { toast('יש לאשר את תנאי השימוש לפני החיבור', 'warning'); return; }
-
-    document.getElementById('wa-connect-screen-main')?.classList.add('hidden');
-    const prog = document.getElementById('wa-connect-screen-progress');
-    if (prog) prog.classList.remove('hidden');
-
-    const icon  = document.getElementById('wa-progress-icon');
-    const title = document.getElementById('wa-progress-title');
-    const sub   = document.getElementById('wa-progress-sub');
-
-    if (icon) icon.textContent = '⏳';
-    if (title) title.textContent = 'מכין את החיבור...';
-    if (sub) sub.textContent = 'אנא המתן מספר שניות';
-
+    App.go('settings');
     setTimeout(() => {
-      if (icon) icon.textContent = '📲';
-      if (title) title.textContent = 'בקרוב זמין!';
-      if (sub) sub.textContent = 'תכונת ה-WhatsApp מתפתחת ותהיה זמינה בשבועות הקרובים. נודיע לך ברגע שפתוח!';
-      toast('📲 WhatsApp, בקרוב! נעדכן אותך כשיהיה זמין', 'info', 4000);
-    }, 1800);
+      const row = document.getElementById('settings-wa-twilio-row');
+      if (!row) return;
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.classList.add('wa-connect-highlight');
+      setTimeout(() => row.classList.remove('wa-connect-highlight'), 2400);
+      document.getElementById('wa-number-input')?.focus({ preventScroll: true });
+    }, 150);
   },
 };
 window.WAConnect = WAConnect;
