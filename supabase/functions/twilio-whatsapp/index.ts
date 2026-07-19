@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { to, message } = await req.json();
+    const { to, message, checkStatus } = await req.json();
     if (!to || typeof to !== 'string' || !message || typeof message !== 'string') {
       return new Response(
         JSON.stringify({ error: 'to and message are required' }),
@@ -159,8 +159,27 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Optional (used by the "🔔 בדיקת Twilio" test button only, not real notifications,
+    // to avoid adding latency to lead alerts): poll Twilio once for the real delivery
+    // status, since a 200 from the send call above only means Twilio *accepted* the
+    // message, not that WhatsApp actually delivered it (Sandbox opt-in can be expired).
+    let deliveryStatus: string | undefined;
+    let deliveryError: string | undefined;
+    if (checkStatus && data.sid) {
+      try {
+        await new Promise((r) => setTimeout(r, 2500));
+        const statusRes = await fetch(
+          `https://api.twilio.com/2010-04-01/Accounts/${ACCOUNT_SID}/Messages/${data.sid}.json`,
+          { headers: { Authorization: `Basic ${btoa(`${ACCOUNT_SID}:${AUTH_TOKEN}`)}` } }
+        );
+        const statusData = await statusRes.json();
+        deliveryStatus = statusData.status;
+        if (statusData.error_code) deliveryError = `${statusData.error_code}: ${statusData.error_message ?? ''}`.trim();
+      } catch (_e) { /* best-effort only, never fail the send because of this */ }
+    }
+
     return new Response(
-      JSON.stringify({ success: true, sid: data.sid }),
+      JSON.stringify({ success: true, sid: data.sid, ...(deliveryStatus ? { deliveryStatus, deliveryError } : {}) }),
       { headers: { ...cors, 'Content-Type': 'application/json' } }
     );
 

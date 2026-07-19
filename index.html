@@ -12435,10 +12435,26 @@ const Twilio = {
   async test() {
     const to = Make.getWhatsApp();
     if (!to) { toast('יש להגדיר מספר WhatsApp בהגדרות קודם', 'error'); return; }
-    toast('שולח הודעת בדיקה...', '');
-    const data = await this.send(to, '✅ בדיקת חיבור מ-PLTO, Twilio WhatsApp עובד! 🎉');
-    if (data?.success) toast('✅ הודעת בדיקה נשלחה ל-WhatsApp שלך!', 'success');
-    else toast('שגיאה בשליחה, יש לבדוק שהמספר הצטרף ל-Sandbox', 'error');
+    const toE164 = this._toE164(to);
+    if (!toE164) { toast('מספר וואטסאפ לא תקין', 'error'); return; }
+    toast('שולח הודעת בדיקה, ובודקים גם שהיא נמסרה בפועל...', '');
+    let data = null;
+    try {
+      const { data: res, error } = await sbClient.functions.invoke('twilio-whatsapp', {
+        body: { to: toE164, message: '✅ בדיקת חיבור מ-PLTO, Twilio WhatsApp עובד! 🎉', checkStatus: true },
+      });
+      if (!error) data = res;
+    } catch (_e) { /* data stays null, handled below */ }
+
+    if (!data?.success) { toast('שגיאה בשליחה, יש לבדוק שהמספר הצטרף ל-Sandbox', 'error'); return; }
+
+    if (data.deliveryStatus === 'delivered') {
+      toast('✅ ההודעה נמסרה בפועל ל-WhatsApp שלך!', 'success');
+    } else if (data.deliveryStatus === 'failed' || data.deliveryStatus === 'undelivered') {
+      toast(`⚠️ ההודעה נשלחה אך לא נמסרה (${data.deliveryError || data.deliveryStatus}), יש לשלוח שוב join turn-layers מה-WhatsApp שלך`, 'error');
+    } else {
+      toast(`✅ ההודעה נשלחה, סטטוס נוכחי: ${data.deliveryStatus || 'ממתין לאישור'}`, 'success');
+    }
   },
 };
 
