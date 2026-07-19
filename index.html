@@ -15973,6 +15973,11 @@ const AppLock = {
   isEnabled() { return !!localStorage.getItem('liders_pin_hash'); },
   getTimeoutMs() { return parseInt(localStorage.getItem('liders_lock_mins') || '5') * 60 * 1000; },
 
+  toggleManageMenu() {
+    const menu = document.getElementById('pinlock-manage-menu');
+    if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  },
+
   async _hash(pin) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('lcrm_' + pin));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
@@ -16224,15 +16229,20 @@ const Settings = {
             ${['1','5','15','30'].map(m => `<option value="${m}" ${(localStorage.getItem('liders_lock_mins')||'5')===m?'selected':''}>${m} דקות</option>`).join('')}
           </select>
         </div>
-        <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
-          <div class="settings-row-icon">🔄</div>
-          <div class="settings-row-body"><div class="settings-row-label">שינוי קוד PIN</div></div>
+        <div class="settings-row" onclick="AppLock.toggleManageMenu()" style="cursor:pointer;">
+          <div class="settings-row-icon">🔧</div>
+          <div class="settings-row-body"><div class="settings-row-label">ניהול קוד PIN</div></div>
           <div class="settings-arrow">›</div>
         </div>
-        <div class="settings-row" onclick="if(confirm('לבטל את נעילת ה-PIN?'))AppLock.disable();" style="cursor:pointer;">
-          <div class="settings-row-icon">🔓</div>
-          <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כיבוי נעילת PIN</div></div>
-          <div class="settings-arrow">›</div>
+        <div id="pinlock-manage-menu" style="display:none;">
+          <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
+            <div class="settings-row-icon">🔄</div>
+            <div class="settings-row-body"><div class="settings-row-label">שינוי קוד</div></div>
+          </div>
+          <div class="settings-row" onclick="if(confirm('לבטל את נעילת ה-PIN?'))AppLock.disable();" style="cursor:pointer;border-bottom:none;">
+            <div class="settings-row-icon">🔓</div>
+            <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כיבוי הנעילה</div></div>
+          </div>
         </div>
         ` : `
         <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
