@@ -1607,33 +1607,24 @@
       margin-bottom: 18px;
     }
     .ft-tab {
+      width: 44px; height: 44px; border-radius: 50%;
       background: transparent;
       border: 1.5px solid rgba(255,255,255,0.22);
-      border-radius: 24px;
-      padding: 8px 20px;
-      font-size: 14px;
+      font-size: 18px;
       color: rgba(255,255,255,0.62);
       cursor: pointer;
-      font-family: 'Rubik','Heebo',sans-serif;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
     }
     .ft-tab.active {
       background: var(--blue,#2563EB);
       border-color: var(--blue,#2563EB);
       color: #fff;
-      font-weight: 700;
+      transform: scale(1.08);
       box-shadow: 0 0 16px rgba(37,99,235,0.32);
     }
     .ft-tab:hover:not(.active) { border-color: rgba(255,255,255,0.42); color: rgba(255,255,255,0.88); }
-
-    .feat-progress {
-      height: 3px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
-      margin-bottom: 26px;
-      overflow: hidden;
-    }
-    .fp-bar { height: 100%; background: var(--blue,#2563EB); width: 0%; border-radius: 2px; }
 
     /* ══════════════════════════════
        תמחור: תג השקה וטיזר שנתי
@@ -3239,11 +3230,10 @@
     </div>
 
     <div class="feat-tabs fade-up" role="tablist">
-      <button class="ft-tab active" data-ftab="0" role="tab" aria-selected="true">📋 פייפליין</button>
-      <button class="ft-tab" data-ftab="1" role="tab" aria-selected="false">🎮 גיימיפיקציה</button>
-      <button class="ft-tab" data-ftab="2" role="tab" aria-selected="false">🏠 כלים ואינטגרציות</button>
+      <button class="ft-tab active" data-ftab="0" role="tab" aria-selected="true" aria-label="פייפליין">📋</button>
+      <button class="ft-tab" data-ftab="1" role="tab" aria-selected="false" aria-label="גיימיפיקציה">🎮</button>
+      <button class="ft-tab" data-ftab="2" role="tab" aria-selected="false" aria-label="כלים ואינטגרציות">🏠</button>
     </div>
-    <div class="feat-progress" aria-hidden="true"><div class="fp-bar"></div></div>
 
     <div class="feature-groups feat-carousel">
       <div class="feature-group fade-up" data-tab-panel="0">
@@ -3702,15 +3692,13 @@
     tsObs.observe(ts);
   })();
 
-  // ═══ Features Carousel ═══
+  // ═══ Features Carousel (מעבר ידני בלבד, בלי טיימר אוטומטי) ═══
   (function () {
     const groups = Array.from(document.querySelectorAll('[data-tab-panel]'));
     const tabs   = Array.from(document.querySelectorAll('.ft-tab'));
-    const fpBar  = document.querySelector('.fp-bar');
     if (!groups.length || !tabs.length) return;
 
-    const DELAY = 4600;
-    let current = 0, timer = null, barRaf = null;
+    let current = 0;
 
     function showTab(idx, dir) {
       groups.forEach(g => g.classList.remove('ft-active', 'ft-prev'));
@@ -3719,37 +3707,13 @@
       if (grp) grp.classList.add(dir === 'prev' ? 'ft-prev' : 'ft-active');
       if (tabs[idx]) { tabs[idx].classList.add('active'); tabs[idx].setAttribute('aria-selected', 'true'); }
       current = idx;
-      resetBar();
-    }
-
-    function resetBar() {
-      if (!fpBar) return;
-      cancelAnimationFrame(barRaf);
-      fpBar.style.transition = 'none';
-      fpBar.style.width = '0%';
-      barRaf = requestAnimationFrame(() => requestAnimationFrame(() => {
-        fpBar.style.transition = 'width ' + DELAY + 'ms linear';
-        fpBar.style.width = '100%';
-      }));
-    }
-
-    function startAuto() {
-      clearInterval(timer);
-      timer = setInterval(() => showTab((current + 1) % groups.length, 'next'), DELAY);
     }
 
     tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => { showTab(i, i < current ? 'prev' : 'next'); startAuto(); });
+      tab.addEventListener('click', () => showTab(i, i < current ? 'prev' : 'next'));
     });
 
-    const wrap = document.querySelector('.feat-carousel');
-    if (wrap) {
-      wrap.addEventListener('mouseenter', () => clearInterval(timer));
-      wrap.addEventListener('mouseleave', () => startAuto());
-    }
-
     showTab(0, 'next');
-    startAuto();
   })();
 </script>
 
