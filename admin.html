@@ -754,12 +754,62 @@
               <th>משימות</th>
               <th>שיווק</th>
               <th>מושבים</th>
+              <th>מחזור חיוב</th>
               <th>נרשם</th>
               <th>פעולות</th>
             </tr>
           </thead>
           <tbody id="saas-tbody">
-            <tr><td colspan="10"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+            <tr><td colspan="11"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-header" style="margin-top:28px;">
+        <h2>🎁 תגמולי הפניה</h2>
+        <div class="header-actions">
+          <button class="btn-outline btn-sm" onclick="loadReferralRewards()">🔄 רענון</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>מפנה</th>
+              <th>טננט שהומר</th>
+              <th>סטטוס</th>
+              <th>ערך (₪)</th>
+              <th>תוקף עד</th>
+              <th>נוצר</th>
+            </tr>
+          </thead>
+          <tbody id="referral-rewards-tbody">
+            <tr><td colspan="6"><div class="empty-state"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-header" style="margin-top:28px;">
+        <h2>🎨 עמודי לקוח (Page Builder)</h2>
+        <div class="header-actions">
+          <button class="btn-outline btn-sm" onclick="loadClientPages()">🔄 רענון</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>סוכנות</th>
+              <th>סוג עמוד</th>
+              <th>slug</th>
+              <th>סטטוס</th>
+              <th>צפיות</th>
+              <th>נוצר</th>
+              <th>פעולות</th>
+            </tr>
+          </thead>
+          <tbody id="client-pages-tbody">
+            <tr><td colspan="7"><div class="empty-state"><div class="spinner"></div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -1032,6 +1082,14 @@
         </div>
       </div>
       <div class="modal-form-group">
+        <label>מחזור חיוב</label>
+        <select id="mgmt-billing-period" class="form-input">
+          <option value="">לא הוגדר</option>
+          <option value="monthly">חודשי</option>
+          <option value="annual">שנתי</option>
+        </select>
+      </div>
+      <div class="modal-form-group">
         <label>הארכת ניסיון</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;">
           <button class="btn-outline btn-sm" onclick="extendTrial(_mgmtTenant?.id,7)">+ 7 ימים</button>
@@ -1208,7 +1266,7 @@ function switchTab(tab) {
   });
   if (tab === 'accounts') loadAccounts();
   if (tab === 'invoices') loadInvoices();
-  if (tab === 'saas')     loadSaasTenants();
+  if (tab === 'saas')     { loadSaasTenants(); loadReferralRewards(); loadClientPages(); }
   if (tab === 'support')  loadSupportTickets();
   if (tab === 'roadmap')  loadRoadmapItems();
 }
@@ -1469,13 +1527,13 @@ let allTenantSeats = {};
 
 async function loadSaasTenants() {
   const tbody = document.getElementById('saas-tbody');
-  tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="spinner"></div></div></td></tr>';
+  tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="spinner"></div></div></td></tr>';
   const [{ data, error }, { data: seatData }] = await Promise.all([
     sb.rpc('get_saas_tenants_admin'),
     sb.rpc('admin_list_tenant_seats'),
   ]);
   if (error) {
-    tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
     return;
   }
   allSaasTenants = data || [];
@@ -1502,7 +1560,7 @@ function renderSaasStats(tenants) {
 function renderSaasTable(tenants) {
   const tbody = document.getElementById('saas-tbody');
   if (!tenants.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon">🏢</div><p>אין נתונים</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="icon">🏢</div><p>אין נתונים</p></div></td></tr>';
     return;
   }
   tbody.innerHTML = tenants.map(t => {
@@ -1522,6 +1580,10 @@ function renderSaasTable(tenants) {
     const seatsCell = seats
       ? `<span style="font-weight:600;">${seats.seats_active}/${seats.seats_max}</span>${seats.overage_seats > 0 ? `<div style="font-size:.72rem;color:var(--gold);font-weight:700;">+${seats.overage_seats} מעבר, ₪${seats.monthly_overage_charge}/חוד'</div>` : ''}`
       : '<span style="color:var(--text-dim)">~~</span>';
+    const billingPeriodMap = {monthly:'חודשי', annual:'שנתי'};
+    const billingPeriodCell = billingPeriodMap[t.billing_period]
+      ? `<span style="font-size:.82rem;">${billingPeriodMap[t.billing_period]}</span>`
+      : '<span style="color:var(--text-dim)">~~</span>';
     return `
       <tr>
         <td><strong>${esc(t.name||'?')}</strong>${t.notes ? `<div style="font-size:.72rem;color:var(--text-dim);margin-top:2px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(t.notes)}">📝 ${esc(t.notes)}</div>` : ''}</td>
@@ -1532,6 +1594,7 @@ function renderSaasTable(tenants) {
         <td style="color:var(--text-muted)">${t.task_count||0}</td>
         <td>${mktgCell}</td>
         <td>${seatsCell}</td>
+        <td>${billingPeriodCell}</td>
         <td style="font-size:.78rem;color:var(--text-dim);white-space:nowrap;">${t.created_at ? new Date(t.created_at).toLocaleDateString('he-IL') + '<br>' + new Date(t.created_at).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '~~'}</td>
         <td>
           <div class="action-btns">
@@ -1543,6 +1606,71 @@ function renderSaasTable(tenants) {
         </td>
       </tr>`;
   }).join('');
+}
+
+/* ── REFERRAL CONVERSION REWARDS (read-only report) ── */
+async function loadReferralRewards() {
+  const tbody = document.getElementById('referral-rewards-tbody');
+  const { data, error } = await sb.rpc('list_referral_conversion_rewards');
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
+    return;
+  }
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">🎁</div><p>אין תגמולי הפניה עדיין</p></div></td></tr>';
+    return;
+  }
+  const statusMap = {
+    credited: '<span class="badge badge-green">זוכה</span>',
+    queued_referrer_on_trial: '<span class="badge badge-dim">ממתין (מפנה ב-trial)</span>',
+    noop_lifetime: '<span class="badge badge-gold">ללא צורך (lifetime)</span>',
+    noop_cancelled: '<span class="badge badge-dim">בוטל</span>',
+  };
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td><strong>${esc(r.referrer_name || '?')}</strong></td>
+      <td>${esc(r.converted_name || '?')}</td>
+      <td>${statusMap[r.credit_status] || esc(r.credit_status)}</td>
+      <td>${r.monetary_value_ils ? '₪' + Number(r.monetary_value_ils).toLocaleString() : '~~'}</td>
+      <td style="font-size:.78rem;color:var(--text-dim);">${r.plan_expires_at_after ? new Date(r.plan_expires_at_after).toLocaleDateString('he-IL') : '~~'}</td>
+      <td style="font-size:.78rem;color:var(--text-dim);">${r.created_at ? new Date(r.created_at).toLocaleDateString('he-IL') : '~~'}</td>
+    </tr>`).join('');
+}
+
+/* ── CLIENT PAGES (Page Builder, read-only report + archive) ── */
+async function loadClientPages() {
+  const tbody = document.getElementById('client-pages-tbody');
+  const { data, error } = await sb.rpc('admin_list_client_pages');
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p style="color:var(--red)">שגיאה: ${esc(error.message)}</p></div></td></tr>`;
+    return;
+  }
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">🎨</div><p>עדיין לא נוצרו עמודים</p></div></td></tr>';
+    return;
+  }
+  const pageTypeMap = { referral_invite: 'עמוד הזמנה' };
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td><strong>${esc(p.tenant_name || '?')}</strong></td>
+      <td>${esc(pageTypeMap[p.page_type] || p.page_type)}</td>
+      <td style="font-size:.78rem;color:var(--text-muted);direction:ltr;text-align:right;">${esc(p.slug)}</td>
+      <td>${p.status === 'published' ? '<span class="badge badge-green">פורסם</span>' : '<span class="badge badge-dim">בארכיון</span>'}</td>
+      <td>${p.view_count || 0}</td>
+      <td style="font-size:.78rem;color:var(--text-dim);">${p.created_at ? new Date(p.created_at).toLocaleDateString('he-IL') : '~~'}</td>
+      <td>
+        ${p.status === 'published' ? `<button class="btn-icon" title="הסרת העמוד" onclick="archiveClientPage('${p.id}')" style="font-size:.75rem;color:var(--red);">🗑</button>` : ''}
+        <button class="btn-icon" title="פתיחת העמוד" onclick="window.open('https://plto.app/page.html?p=${esc(p.slug)}','_blank')" style="font-size:.75rem;">⧉</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function archiveClientPage(pageId) {
+  if (!confirm('להסיר עמוד זה מהתצוגה הציבורית?')) return;
+  const { error } = await sb.rpc('admin_archive_client_page', { p_page_id: pageId });
+  if (error) { toast('שגיאה: ' + error.message, 'error'); return; }
+  toast('🗑 העמוד הוסר', 'success');
+  loadClientPages();
 }
 
 async function grantFreePlan(tenantId) {
@@ -1609,20 +1737,25 @@ function openTenantMgmt(id) {
   document.getElementById('mgmt-tenant-name').textContent = tenant.name || '?';
   document.getElementById('mgmt-marketing').checked = !!tenant.marketing_addon;
   document.getElementById('mgmt-notes').value = tenant.notes || '';
+  document.getElementById('mgmt-billing-period').value = tenant.billing_period || '';
   openModal('modal-tenant-mgmt');
 }
 
 async function saveTenantMgmt() {
   if (!_mgmtTenant) return;
-  const newMktg  = document.getElementById('mgmt-marketing').checked;
-  const newNotes = document.getElementById('mgmt-notes').value.trim();
-  const tid      = _mgmtTenant.id;
+  const newMktg   = document.getElementById('mgmt-marketing').checked;
+  const newNotes  = document.getElementById('mgmt-notes').value.trim();
+  const newPeriod = document.getElementById('mgmt-billing-period').value || null;
+  const tid       = _mgmtTenant.id;
 
   const calls = [];
   if (!!_mgmtTenant.marketing_addon !== newMktg) {
     calls.push(sb.rpc('admin_toggle_marketing_addon', { p_tenant_id: tid, p_enabled: newMktg }));
   }
   calls.push(sb.rpc('admin_set_tenant_notes', { p_tenant_id: tid, p_notes: newNotes }));
+  if ((_mgmtTenant.billing_period || null) !== newPeriod) {
+    calls.push(sb.rpc('admin_set_billing_period', { p_tenant_id: tid, p_period: newPeriod }));
+  }
 
   const results = await Promise.all(calls);
   const err = results.find(r => r.error)?.error;

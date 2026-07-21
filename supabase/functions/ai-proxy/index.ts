@@ -23,7 +23,7 @@ const ALLOWED_MODELS = [
   'claude-sonnet-4-6',
 ];
 
-const ALLOWED_TYPES = ['general', 'marketing', 'quicklog', 'support', 'motivation', 'lead_image_import'];
+const ALLOWED_TYPES = ['general', 'marketing', 'quicklog', 'support', 'motivation', 'lead_image_import', 'page_copy'];
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 
 // Hard caps — client cannot exceed these
@@ -79,11 +79,14 @@ serve(async (req) => {
     const aiType = ALLOWED_TYPES.includes(rawType) ? rawType : 'general';
     const { data: quota, error: quotaErr } = aiType === 'lead_image_import'
       ? await sbClient.rpc('check_and_increment_lead_image_import')
+      : aiType === 'page_copy'
+      ? await sbClient.rpc('check_and_increment_page_copy')
       : await sbClient.rpc('check_and_increment_ai_usage', { p_type: aiType });
     if (quotaErr || !quota?.allowed) {
       return Response.json(
         {
           error: 'quota_exceeded',
+          type:  aiType,
           reason: quota?.reason ?? 'daily_limit',
           plan:  quota?.plan  ?? 'unknown',
           used:  quota?.used  ?? 0,
