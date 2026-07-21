@@ -1,6 +1,6 @@
 # PLTO — SaaS Architecture Skill
 
-## פקודה: `/liders-crm`
+## פקודה: `/plto-crm`
 
 סקיל זה מספק ארכיטקטורה, entities ו-workflow לבניית features במערכת **PLTO** — פלטפורמת SaaS מולטי-טנאנט לניהול לידים ומכירות נדל"ן.
 

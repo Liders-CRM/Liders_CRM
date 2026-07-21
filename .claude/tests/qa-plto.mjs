@@ -1,7 +1,7 @@
 /**
  * PLTO — QA Agent
  * בדיקת E2E מלאה — מריץ על localhost עם Supabase mock
- * שימוש: node qa-liders.mjs
+ * שימוש: node qa-plto.mjs
  */
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import { writeFileSync, mkdirSync } from 'fs';

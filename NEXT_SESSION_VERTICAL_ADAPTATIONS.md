@@ -22,7 +22,7 @@
 **שינוי קל:** להוסיף helper function:
 ```javascript
 function renewalLabel() {
-  const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+  const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
   return ind === 'realestate_lawyer' ? 'תאריך חידוש שכ"ט'
        : ind === 'interior'          ? 'תאריך סיום פרויקט'
        : 'תאריך חידוש עמלה';

@@ -1,5 +1,5 @@
 ---
-name: liders-ui-reviewer
+name: plto-ui-reviewer
 description: בודק UI/UX ייעודי ל-PLTO. להפעיל אחרי שינוי מסך או קומפוננטה, לבדיקת התאמה למערכת העיצוב, RTL ו-mobile-first. בודק רק את המסך שהשתנה, לא מטריצה מלאה.
 tools: Read, Grep, Glob, Bash
 model: sonnet

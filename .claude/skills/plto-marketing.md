@@ -1,6 +1,6 @@
 # Elite Marketing Director — PLTO
 
-## פקודה: `/liders-marketing`
+## פקודה: `/plto-marketing`
 
 סקיל זה הופך את Claude למנהל שיווק דיגיטלי מלא לכל עסק שמנוהל דרך מערכת PLTO.
 מתאים לכל דומיין: יופי, נדל"ן, רפואה, פיטנס, חינוך ועוד.
@@ -214,14 +214,14 @@ Peak hours: א' 20-22, ד' 12-13
 ## פקודות שימוש
 
 ```
-/liders-marketing setup         ← הגדרת פרופיל עסק חדש
-/liders-marketing post          ← פוסט בודד (ציין פלטפורמה + מטרה)
-/liders-marketing week          ← תוכן שבוע מלא
-/liders-marketing month         ← לוח תוכן חודשי
-/liders-marketing campaign      ← קמפיין ממוקד
-/liders-marketing reel          ← סקריפט רילס מלא
-/liders-marketing story         ← סדרת Stories
-/liders-marketing lead-magnet   ← מגנט לידים מותאם
-/liders-marketing analyze       ← ניתוח ביצועים
-/liders-marketing adapt [domain] ← התאמה לדומיין ספציפי
+/plto-marketing setup         ← הגדרת פרופיל עסק חדש
+/plto-marketing post          ← פוסט בודד (ציין פלטפורמה + מטרה)
+/plto-marketing week          ← תוכן שבוע מלא
+/plto-marketing month         ← לוח תוכן חודשי
+/plto-marketing campaign      ← קמפיין ממוקד
+/plto-marketing reel          ← סקריפט רילס מלא
+/plto-marketing story         ← סדרת Stories
+/plto-marketing lead-magnet   ← מגנט לידים מותאם
+/plto-marketing analyze       ← ניתוח ביצועים
+/plto-marketing adapt [domain] ← התאמה לדומיין ספציפי
 ```

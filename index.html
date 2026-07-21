@@ -2145,9 +2145,9 @@
       font-size: 10px; font-weight: 800; color: var(--orange-500);
       background: white; padding: 2px 6px; border-radius: 99px; white-space: nowrap;
     }
-    .api-key-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .api-key-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
     .api-key-row input {
-      flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+      flex: 1 1 140px; min-width: 0; padding: 8px 12px; border: 1px solid var(--border);
       border-radius: var(--radius-md); font-size: 12px; font-family: monospace;
       background: var(--gray-50); direction: ltr;
     }
@@ -3481,9 +3481,9 @@
   /* Real estate shortcuts */
   .re-shortcuts { }
   .re-shortcuts-title { font-size:11px; font-weight:700; color:var(--gray-500); margin-bottom:8px; letter-spacing:0.4px; }
-  .re-shortcuts-row { display:flex; gap:8px; }
+  .re-shortcuts-row { display:flex; gap:8px; flex-wrap:wrap; }
   .re-shortcut-btn {
-    flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+    flex:1; min-width:78px; display:flex; align-items:center; justify-content:center; gap:5px;
     padding:8px 6px; border-radius:10px; font-size:12px; font-weight:700;
     cursor:pointer; text-decoration:none; border:none; font-family:var(--font);
     transition: transform .13s;
@@ -3499,6 +3499,7 @@
   .re-misim     { background:linear-gradient(135deg,#7C3AED,#6D28D9); color:#fff; box-shadow:0 3px 10px rgba(124,58,237,0.35); }
   .re-pinterest { background:linear-gradient(135deg,#E60023,#C60018); color:#fff; box-shadow:0 3px 10px rgba(230,0,35,0.35); }
   .re-houzz     { background:linear-gradient(135deg,#73BA3C,#5A9E2A); color:#fff; box-shadow:0 3px 10px rgba(115,186,60,0.35); }
+  .re-mortgage  { background:linear-gradient(135deg,#0EA5E9,#0284C7); color:#fff; box-shadow:0 3px 10px rgba(2,132,199,0.35); }
   .re-logo-mono {
     display:inline-flex; align-items:center; justify-content:center;
     width:17px; height:17px; border-radius:50%; background:rgba(255,255,255,0.28);
@@ -3567,6 +3568,16 @@
   @keyframes tourHighlight {
     0%,100% { outline-color:#F59E0B; box-shadow:0 0 0 0 rgba(245,158,11,0.5); }
     50%      { outline-color:#FBBF24; box-shadow:0 0 0 8px rgba(245,158,11,0); }
+  }
+  .wa-connect-highlight {
+    outline:3px solid #25D366 !important;
+    outline-offset:4px;
+    border-radius:inherit;
+    animation:waConnectHighlight 1.2s ease-in-out 2;
+  }
+  @keyframes waConnectHighlight {
+    0%,100% { outline-color:#25D366; box-shadow:0 0 0 0 rgba(37,211,102,0.45); }
+    50%      { outline-color:#128C7E; box-shadow:0 0 0 8px rgba(37,211,102,0); }
   }
 
   /* ── Tutorial modal ── */
@@ -4483,6 +4494,9 @@
           <a class="re-shortcut-btn re-madlan" href="https://www.madlan.co.il/for-sale" target="_blank" rel="noopener">
             <span class="re-logo-mono">M</span> מדלן
           </a>
+          <button class="re-shortcut-btn re-mortgage" onclick="MortgageCalc.open()">
+            <span class="re-shortcut-icon">🧮</span> משכנתא
+          </button>
           <button class="re-shortcut-btn re-wa" onclick="WAConnect.open()">
             <span class="re-shortcut-icon">📲</span> WhatsApp
           </button>
@@ -4505,6 +4519,9 @@
           <a class="re-shortcut-btn re-misim" href="https://taxes.gov.il/RealEstateTaxation/Pages/RealEstateTaxation.aspx" target="_blank" rel="noopener">
             <span class="re-shortcut-icon">💰</span> מיסוי
           </a>
+          <button class="re-shortcut-btn re-mortgage" onclick="MortgageCalc.open()">
+            <span class="re-shortcut-icon">🧮</span> משכנתא
+          </button>
           <button class="re-shortcut-btn re-wa" onclick="WAConnect.open()">
             <span class="re-shortcut-icon">📲</span> WhatsApp
           </button>
@@ -6135,76 +6152,6 @@
   </div>
 </div>
 
-<!-- WHATSAPP CONNECT MODAL -->
-<div id="modal-whatsapp-connect" class="modal-overlay hidden" onclick="closeModalOnBg(event,'modal-whatsapp-connect')">
-  <div class="modal-sheet" style="max-width:440px;overflow:visible;">
-    <div class="modal-header" style="background:linear-gradient(135deg,#075E54,#128C7E);border-radius:16px 16px 0 0;padding:20px 20px 18px;">
-      <div>
-        <div class="modal-title" style="color:#fff;font-size:18px;">חיבור ה-WhatsApp שלך ב-2 דקות</div>
-        <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:3px;">נחבר בצורה מאובטחת את הוואטסאפ שלך לשליחת הודעות אוטומטיות מה-CRM</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('modal-whatsapp-connect')" style="color:rgba(255,255,255,.7);">×</button>
-    </div>
-    <div style="padding:24px 20px 0;">
-      <!-- Visual flow -->
-      <div id="wa-connect-screen-main" style="">
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:24px;">
-          <div style="text-align:center;">
-            <div style="font-size:42px;filter:drop-shadow(0 4px 10px rgba(37,211,102,.25));">📱</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:4px;font-weight:600;">WhatsApp</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <div style="width:48px;height:2px;background:linear-gradient(90deg,#25D366,#2563EB);border-radius:2px;"></div>
-            <div style="font-size:10px;color:var(--gray-400);font-weight:600;">מאובטח</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:42px;filter:drop-shadow(0 4px 10px rgba(37,99,235,.25));">🏆</div>
-            <div style="font-size:11px;color:var(--gray-500);margin-top:4px;font-weight:600;">PLTO</div>
-          </div>
-        </div>
-        <div style="background:var(--gray-50);border-radius:14px;padding:16px 18px;margin-bottom:18px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">התראת WhatsApp על כל ליד חדש</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">שליחת הודעות אוטומטיות עם מעבר שלב</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:20px;">✅</span>
-            <span style="font-size:13px;color:var(--gray-700);">ניתוק בכל עת בלחיצה אחת</span>
-          </div>
-        </div>
-        <label style="display:flex;align-items:flex-start;gap:10px;background:var(--gray-50);border-radius:12px;padding:14px 16px;margin-bottom:20px;cursor:pointer;">
-          <input type="checkbox" id="wa-terms-check" style="margin-top:2px;accent-color:#25D366;width:16px;height:16px;flex-shrink:0;">
-          <span style="font-size:12px;color:var(--gray-600);line-height:1.6;">
-            השימוש תואם למדיניות WhatsApp, לשליחה לנמענים שהסכימו לכך בלבד, והאחריות על השימוש היא על המשתמש. החיבור מאובטח וניתן לניתוק בכל עת.
-          </span>
-        </label>
-        <button class="btn" id="wa-connect-main-btn" onclick="WAConnect.start()" style="width:100%;padding:14px;font-size:16px;font-weight:800;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border-radius:14px;margin-bottom:8px;">
-          📲 חיבור לוואטסאפ
-        </button>
-        <div style="text-align:center;font-size:12px;color:var(--gray-400);margin-bottom:4px;">ללא הגדרה טכנית. הכל מתבצע אוטומטית.</div>
-        <div style="text-align:center;font-size:11px;color:var(--gray-400);">המערכת תומכת בחשבונות WhatsApp Business בלבד</div>
-      </div>
-      <!-- Status screen -->
-      <div id="wa-connect-screen-progress" class="hidden" style="text-align:center;padding:12px 0 8px;">
-        <div style="font-size:48px;margin-bottom:12px;" id="wa-progress-icon">⏳</div>
-        <div style="font-size:16px;font-weight:800;color:var(--navy-500);margin-bottom:6px;" id="wa-progress-title">מחבר...</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-bottom:20px;" id="wa-progress-sub">אנא המתן</div>
-        <div style="background:var(--gray-100);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--gray-600);text-align:right;">
-          <strong>👋 הודעת אישור מהסוכן החכם:</strong><br>
-          <span style="font-style:italic;">"היי, כאן הסוכן החכם שלך, החיבור הצליח! מהיום אני אעדכן אותך על כל ליד חדש ישירות בוואטסאפ 🚀"</span>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-whatsapp-connect')">סגור</button>
-    </div>
-  </div>
-</div>
-
 <!-- ONBOARDING ROCKET LAUNCH OVERLAY -->
 <!-- ── Quick call-result bottom sheet ── -->
 <div class="call-sheet" id="call-result-sheet" onclick="if(event.target===this)CallLog.hide()">
@@ -7516,7 +7463,7 @@ function roleBadgeHtml(r) {
 }
 // Role picker hidden for interior design (buying/selling/renting not relevant).
 function showsBuyerSellerRole() {
-  const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+  const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
   return ind !== 'interior';
 }
 // Shared label source for the role filter pills, so Pipeline/Leads/the prefs
@@ -7533,7 +7480,7 @@ const ROLE_FILTER_PILLS = [
 // from the filter pills and the add/edit-lead role picker; all 5 enabled by
 // default. Stored locally only — not synced across devices/agents.
 const RoleFilterPrefs = {
-  _KEY: 'liders_role_prefs_enabled',
+  _KEY: 'plto_role_prefs_enabled',
   get() {
     const raw = localStorage.getItem(this._KEY);
     if (!raw) return ALL_LEAD_ROLES.slice();
@@ -7823,9 +7770,9 @@ const DB = {
   updateCustomLabels(labels) {
     State.customLabels = labels;
     if (Object.keys(labels).length) {
-      localStorage.setItem('liders_custom_labels', JSON.stringify(labels));
+      localStorage.setItem('plto_custom_labels', JSON.stringify(labels));
     } else {
-      localStorage.removeItem('liders_custom_labels');
+      localStorage.removeItem('plto_custom_labels');
     }
   },
 
@@ -8438,9 +8385,9 @@ const Billing = {
       price: 349,
       priceLabel: '₪349',
       desc: 'לצוות קטן',
-      features: ['3 סוכנים כלולים, עד 8 בתוספת תשלום', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
+      features: ['3 סוכנים כלולים, עד 7 בתוספת תשלום', 'עד 1,000 לידים פעילים', 'לוח Kanban + פייפליין', 'תזכורות WhatsApp', 'אפליקציה מובייל', 'AI שיווקי מתקדם'],
       featured: true,
-      agentLimit: '3 סוכנים כלולים · עד 8 · ₪40/סוכן נוסף',
+      agentLimit: '3 סוכנים כלולים · עד 7 · ₪40/סוכן נוסף',
       annualMonthly: 249,
       annualTotal: 2990,
     },
@@ -8666,7 +8613,7 @@ const Billing = {
     if (!this.PAYMENTS_LIVE) {
       // שלב ניסיון - שמירת עניין + התראה לאדמין
       const plan = this.PLANS.find(p => p.id === planId);
-      localStorage.setItem('liders_upgrade_interest', JSON.stringify({
+      localStorage.setItem('plto_upgrade_interest', JSON.stringify({
         plan: planId, ts: Date.now(), email: State.agent?.email || ''
       }));
       fetch(this._UPGRADE_WEBHOOK, {
@@ -8767,7 +8714,7 @@ const Onboarding = {
           { id: 'interior',          icon: '🎨', label: 'עיצוב פנים' },
           { id: 'other',             icon: '🎯', label: 'אחר' },
         ];
-        const current = localStorage.getItem('liders_industry') || '';
+        const current = localStorage.getItem('plto_industry') || '';
         const existingCopy = current ? (Onboarding._VERTICAL_COPY[current] || Onboarding._VERTICAL_COPY.other) : null;
         return `
           <div class="ind-grid">
@@ -8784,7 +8731,7 @@ const Onboarding = {
           </div>`;
       },
       validate() {
-        if (!localStorage.getItem('liders_industry')) {
+        if (!localStorage.getItem('plto_industry')) {
           toast('נא לבחור את תחום העסק שלך', 'error'); return false;
         }
         return true;
@@ -8793,11 +8740,11 @@ const Onboarding = {
     {
       title: 'קצת עליך 👋',
       get subtitle() {
-        const ind = localStorage.getItem('liders_industry') || 'other';
+        const ind = localStorage.getItem('plto_industry') || 'other';
         return (Onboarding._VERTICAL_COPY[ind] || Onboarding._VERTICAL_COPY.other).step1sub;
       },
       render() {
-        const industry = localStorage.getItem('liders_industry') || 'other';
+        const industry = localStorage.getItem('plto_industry') || 'other';
         const bizPlaceholder = industry === 'realestate'  ? 'PLTO נדל"ן, תל אביב'
           : industry === 'interior'          ? 'PLTO עיצוב פנים, תל אביב'
           : industry === 'realestate_lawyer' ? 'PLTO משפטי נדל"ן, תל אביב'
@@ -8841,7 +8788,7 @@ const Onboarding = {
       title: 'שלבי פייפליין',
       subtitle: 'ניתן לערוך את השמות בחופשיות, מותאמים לתחום שלך',
       render() {
-        const ind = localStorage.getItem('liders_industry') || 'other';
+        const ind = localStorage.getItem('plto_industry') || 'other';
         const defaults = INDUSTRY_LABELS[ind]?.stages || ['פנייה נכנסה','יצרנו קשר','הצעה נשלחה','במשא ומתן','עסקה נסגרה ✓'];
         const industryChanged = Onboarding._data.prevIndustry !== ind;
         const existing = (State.stages || []).map(s => s.name).filter(Boolean);
@@ -8871,7 +8818,7 @@ const Onboarding = {
       subtitle: 'הסוכן החכם שמנטר ומניע אותך',
       render() {
         const firstName = (Onboarding._data.agentName || 'יזם').split(' ')[0];
-        const ind = localStorage.getItem('liders_industry') || 'other';
+        const ind = localStorage.getItem('plto_industry') || 'other';
         const AGENT_TIPS = {
           realestate:        'רוב הקונים בוחרים סוכן תוך 72 שעות מהפנייה הראשונה. אני אזהיר אותך על כל ליד שלא קיבל מענה תוך יום.',
           interior:          'לקוח עיצוב מחליט אחרי ראיית Portfolio. אני אזכיר לך מתי לשלוח דוגמאות עבודה לכל ליד.',
@@ -8960,7 +8907,7 @@ const Onboarding = {
   },
 
   _selectIndustry(id) {
-    localStorage.setItem('liders_industry', id);
+    localStorage.setItem('plto_industry', id);
     document.querySelectorAll('.ind-card').forEach(el => {
       const onclick = el.getAttribute('onclick') || '';
       const cardId = (onclick.match(/'([^']+)'/) || [])[1];
@@ -8989,7 +8936,7 @@ const Onboarding = {
   show() {
     if (localStorage.getItem('onboarding_done') === '1') return;
     this._step = 0;
-    this._data = { prevIndustry: localStorage.getItem('liders_industry') };
+    this._data = { prevIndustry: localStorage.getItem('plto_industry') };
     document.getElementById('modal-onboarding').classList.remove('hidden');
     this._renderStep();
   },
@@ -8998,7 +8945,7 @@ const Onboarding = {
   // from login (DB.ensureAgent), so this only skips the personalization
   // steps; the user can fill in industry/pipeline/webhook later via settings.
   skip() {
-    FunnelTracker.track('onboarding_abandoned', { step: this._step + 1, industry: localStorage.getItem('liders_industry') || null });
+    FunnelTracker.track('onboarding_abandoned', { step: this._step + 1, industry: localStorage.getItem('plto_industry') || null });
     document.getElementById('modal-onboarding').classList.add('hidden');
     localStorage.setItem('onboarding_done', '1');
   },
@@ -9054,7 +9001,7 @@ const Onboarding = {
       const minDelay = new Promise(resolve => setTimeout(resolve, 4800));
 
       // Run all saves
-      const ind = localStorage.getItem('liders_industry') || 'other';
+      const ind = localStorage.getItem('plto_industry') || 'other';
       DB.updateIndustry(ind);
       const industryChanged = this._data.prevIndustry !== ind;
       if (this._data.stageNames?.length && (!State.stages?.length || this._data.stagesEdited || industryChanged)) {
@@ -9069,7 +9016,7 @@ const Onboarding = {
         } catch (e) { /* non-fatal */ }
       }
       if (this._data.agencyName) {
-        localStorage.setItem('liders_agency_name', this._data.agencyName);
+        localStorage.setItem('plto_agency_name', this._data.agencyName);
         try {
           await DB.updateTenantProfile(this._data.agencyName, this._data.agencyPhone, this._data.agencyCity);
           if (State.tenant) State.tenant.name = this._data.agencyName;
@@ -9078,12 +9025,12 @@ const Onboarding = {
         } catch (e) { /* non-fatal */ }
       }
       if (this._data.agencyPhone) {
-        localStorage.setItem('liders_agency_phone', this._data.agencyPhone);
+        localStorage.setItem('plto_agency_phone', this._data.agencyPhone);
         localStorage.setItem('whatsapp_number', this._data.agencyPhone);
         if (State.tenant) State.tenant.whatsapp_number = this._data.agencyPhone;
       }
-      if (this._data.agencyEmail) localStorage.setItem('liders_agency_email', this._data.agencyEmail);
-      if (this._data.agencyCity)  localStorage.setItem('liders_agency_city',  this._data.agencyCity);
+      if (this._data.agencyEmail) localStorage.setItem('plto_agency_email', this._data.agencyEmail);
+      if (this._data.agencyCity)  localStorage.setItem('plto_agency_city',  this._data.agencyCity);
 
       // Wait for minimum display time, then transition to app
       await minDelay;
@@ -9196,11 +9143,11 @@ const INDUSTRY_LABELS = {
 function getLabel(key) {
   const custom = State.customLabels || {};
   if (custom[key]) return custom[key];
-  const ind = localStorage.getItem('liders_industry') || 'other';
+  const ind = localStorage.getItem('plto_industry') || 'other';
   return (INDUSTRY_LABELS[ind] || INDUSTRY_LABELS.other)[key] || key;
 }
 
-function _getInd() { return localStorage.getItem('liders_industry') || State.tenant?.industry || 'other'; }
+function _getInd() { return localStorage.getItem('plto_industry') || State.tenant?.industry || 'other'; }
 
 const MICRO_COPY = {
   emptyPipeline: {
@@ -9237,7 +9184,7 @@ const INDUSTRY_SOURCES = {
 };
 
 function applyIndustryToLeadForm(prefix) {
-  const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+  const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
 
   // Inspiration URL field - only relevant for interior designers
   const fg = document.getElementById(`fg-${prefix}-inspiration`);
@@ -9322,7 +9269,7 @@ const PROPERTY_CONFIG = {
 PROPERTY_CONFIG.other = PROPERTY_CONFIG.realestate;
 
 function propConfig() {
-  const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+  const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
   return PROPERTY_CONFIG[ind] || PROPERTY_CONFIG.realestate;
 }
 
@@ -9537,7 +9484,7 @@ const AI = {
   },
 
   _industryRole() {
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const map = {
       realestate:         'סוכן נדל"ן ומתווך מוסמך',
       interior:           'מעצב פנים עם ניסיון בפרויקטי נדל"ן ומגורים',
@@ -9584,7 +9531,7 @@ const AI = {
 
   async writeRescue(lead) {
     const days = lead.last_contact ? Math.abs(diffDays(lead.last_contact)) : 30;
-    const _ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const _ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const contextLine = _ind === 'realestate_lawyer'
       ? `תחום: עריכת דין נדל"ן | שם: ${lead.name}`
       : _ind === 'interior'
@@ -9708,7 +9655,7 @@ const Tools = {
     proposal: n => `היי ${n||'שם'},\nשלחתי לך קצת קודם את ההצעה, הכל מגיע בסדר?\nאם יש לך שאלות או רוצה לשנות משהו, אני כאן 🙌`,
     closing:  n => `היי ${n||'שם'}, תודה על הפגישה, ממש נהניתי!\nכמו שדיברנו, אני שולח לך עכשיו את הפרטים הסופיים.\nאשמח לדעת, מה עוד צריך ממני כדי להתקדם? 🤝`,
     cold_referral: n => {
-      const _i = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+      const _i = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
       const update = _i === 'realestate_lawyer'
         ? 'יש עדכון משפטי רלוונטי שעשוי לעניין, אשמח לשתף.'
         : _i === 'interior'
@@ -9918,7 +9865,7 @@ const AiLimits = {
     internal: { general: 999, marketing: 999, quicklog: 999, support: 999, motivation: 999 },
   },
   _ADMIN: ['info@plto.app','elgrablidudu@gmail.com'],
-  _k: 'liders_ai_v1',
+  _k: 'plto_ai_v1',
   _today: () => new Date().toISOString().split('T')[0],
   _isAdmin() { return this._ADMIN.includes((State.agent?.email||'').toLowerCase()); },
   _get() {
@@ -10694,8 +10641,8 @@ const FeatureGate = {
 const Marketing = {
   _outputId: null,
   _pendingAction: null,
-  _CONSENT_KEY: 'liders_mktg_consent_v1',
-  _TRIAL_KEY_PFX: 'liders_mktg_trial_',
+  _CONSENT_KEY: 'plto_mktg_consent_v1',
+  _TRIAL_KEY_PFX: 'plto_mktg_trial_',
 
   render() {
     const el = document.getElementById('screen-marketing');
@@ -10739,7 +10686,7 @@ const Marketing = {
     const propOptions = `<option value="">ללא ${getLabel('property')} ספציפי</option>` +
       properties.map(p => `<option value="${p.id}">${escapeHtml(p.title || p.city)}</option>`).join('');
     const usageLabel = AiLimits.limitLabel('marketing');
-    const ind        = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind        = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const isLawyer    = ind === 'realestate_lawyer';
 
     const trialBanner = !hasAccess ? `
@@ -10914,7 +10861,7 @@ const Marketing = {
     if (!this._checkConsent(() => this.genOffer())) return;
     if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
-    const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind    = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const leadId = document.getElementById('mktg-lead-sel')?.value;
     const propId  = document.getElementById('mktg-prop-sel')?.value;
     const type    = document.getElementById('mktg-offer-type')?.value;
@@ -10957,7 +10904,7 @@ ${ind === 'realestate_lawyer' ? 'משרד' : 'סוכנות'}: ${safeAgency}
     if (!this._checkConsent(() => this.genPost())) return;
     if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
-    const ind    = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind    = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const plat   = document.getElementById('mktg-platform')?.value;
     const outEl  = document.getElementById('mktg-post-out');
     if (outEl) { outEl.textContent = '✨ יוצר פוסט...'; outEl.classList.add('visible'); }
@@ -10998,7 +10945,7 @@ ${prop.description ? `תיאור: ${prop.description.slice(0,150)}` : ''}
     if (!this._checkConsent(() => this.genCampaign())) return;
     if (!this._requireAccess()) return;
     if (!AiLimits.canUse('marketing')) { toast(`הגעת למגבלת כלי השיווק, ${AiLimits._lim().marketing} שימושים/יום בחבילה שלך. ${MICRO_COPY.aiLimitSuffix[_getInd()]||''}`, 'warning'); return; }
-    const ind      = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind      = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const topic    = document.getElementById('mktg-campaign-topic')?.value;
     const sigInput = document.getElementById('mktg-campaign-sig')?.value.trim();
     const sig      = sigInput || State.tenant?.name || (ind === 'realestate_lawyer' ? 'המשרד שלי' : 'הסוכנות שלי');
@@ -11297,7 +11244,7 @@ const Gamify = {
 
   get() {
     if (!this._d) {
-      const raw = localStorage.getItem('liders_gamify_v2');
+      const raw = localStorage.getItem('plto_gamify_v2');
       this._d = raw ? JSON.parse(raw) : {
         xp: 0, achievements: [], streak: 0,
         lastLogin: null, aiUses: 0, tasksCompleted: 0,
@@ -11310,7 +11257,7 @@ const Gamify = {
     return this._d;
   },
 
-  save() { localStorage.setItem('liders_gamify_v2', JSON.stringify(this._d)); },
+  save() { localStorage.setItem('plto_gamify_v2', JSON.stringify(this._d)); },
 
   getLevel(xp) {
     let lv = this.LEVELS[0];
@@ -12496,13 +12443,33 @@ const Twilio = {
     return this.send(to, `❄️ *${names.length} לידים התקררו* (14+ ימים בלי קשר)\n${list}${names.length > 3 ? '\n...' : ''}`);
   },
 
+  openSandboxJoin() {
+    window.open('https://wa.me/14155238886?text=' + encodeURIComponent('join turn-layers'), '_blank');
+  },
+
   async test() {
     const to = Make.getWhatsApp();
     if (!to) { toast('יש להגדיר מספר WhatsApp בהגדרות קודם', 'error'); return; }
-    toast('שולח הודעת בדיקה...', '');
-    const data = await this.send(to, '✅ בדיקת חיבור מ-PLTO, Twilio WhatsApp עובד! 🎉');
-    if (data?.success) toast('✅ הודעת בדיקה נשלחה ל-WhatsApp שלך!', 'success');
-    else toast('שגיאה בשליחה, יש לבדוק שהמספר הצטרף ל-Sandbox', 'error');
+    const toE164 = this._toE164(to);
+    if (!toE164) { toast('מספר וואטסאפ לא תקין', 'error'); return; }
+    toast('שולח הודעת בדיקה, ובודקים גם שהיא נמסרה בפועל...', '');
+    let data = null;
+    try {
+      const { data: res, error } = await sbClient.functions.invoke('twilio-whatsapp', {
+        body: { to: toE164, message: '✅ בדיקת חיבור מ-PLTO, Twilio WhatsApp עובד! 🎉', checkStatus: true },
+      });
+      if (!error) data = res;
+    } catch (_e) { /* data stays null, handled below */ }
+
+    if (!data?.success) { toast('שגיאה בשליחה, יש לבדוק שהמספר הצטרף ל-Sandbox', 'error'); return; }
+
+    if (data.deliveryStatus === 'delivered') {
+      toast('✅ ההודעה נמסרה בפועל ל-WhatsApp שלך!', 'success');
+    } else if (data.deliveryStatus === 'failed' || data.deliveryStatus === 'undelivered') {
+      toast(`⚠️ ההודעה נשלחה אך לא נמסרה (${data.deliveryError || data.deliveryStatus}), יש לשלוח שוב join turn-layers מה-WhatsApp שלך`, 'error');
+    } else {
+      toast(`✅ ההודעה נשלחה, סטטוס נוכחי: ${data.deliveryStatus || 'ממתין לאישור'}`, 'success');
+    }
   },
 };
 
@@ -12642,7 +12609,7 @@ const DemoLock = {
 };
 
 const Referral = {
-  _KEY: 'liders_referral_v1',
+  _KEY: 'plto_referral_v1',
 
   _data() {
     try { return JSON.parse(localStorage.getItem(this._KEY) || '{}'); } catch { return {}; }
@@ -12727,9 +12694,9 @@ const Referral = {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref && ref.length >= 4) {
-      localStorage.setItem('liders_inbound_ref', ref.toUpperCase().trim());
+      localStorage.setItem('plto_inbound_ref', ref.toUpperCase().trim());
     }
-    const saved = localStorage.getItem('liders_inbound_ref');
+    const saved = localStorage.getItem('plto_inbound_ref');
     if (saved) {
       const banner = document.getElementById('ref-welcome-banner');
       if (banner) banner.style.display = 'block';
@@ -12739,10 +12706,10 @@ const Referral = {
   // Called after first login - awards 100 welcome XP if user arrived via referral link
   claimWelcomeBonus() {
     if (State.isDemo) return;
-    const inboundRef = localStorage.getItem('liders_inbound_ref');
+    const inboundRef = localStorage.getItem('plto_inbound_ref');
     if (!inboundRef) return;
-    if (localStorage.getItem('liders_ref_claimed')) return;
-    localStorage.setItem('liders_ref_claimed', '1');
+    if (localStorage.getItem('plto_ref_claimed')) return;
+    localStorage.setItem('plto_ref_claimed', '1');
     const gd = Gamify.get();
     gd.xp += 100;
     Gamify.save();
@@ -12758,10 +12725,10 @@ const Referral = {
   // even though referrer and referred are almost always on different devices.
   async claimReferralSignup() {
     if (State.isDemo || !DB.tenantId || !State.isNewTenant) return;
-    const inboundRef = localStorage.getItem('liders_inbound_ref');
+    const inboundRef = localStorage.getItem('plto_inbound_ref');
     if (!inboundRef) return;
-    if (localStorage.getItem('liders_ref_signup_claimed')) return;
-    localStorage.setItem('liders_ref_signup_claimed', '1');
+    if (localStorage.getItem('plto_ref_signup_claimed')) return;
+    localStorage.setItem('plto_ref_signup_claimed', '1');
     try { await sbClient.rpc('claim_referral_signup', { p_code: inboundRef }); } catch (_e) {}
   },
 
@@ -12900,7 +12867,7 @@ const LeadReferral = {
   _leadId: null,
   _token: null,
   _lastMsg: '',
-  _INBOUND_KEY: 'liders_inbound_lref',
+  _INBOUND_KEY: 'plto_inbound_lref',
   VERTICALS: {
     realestate:        'סוכן נדל"ן',
     realestate_lawyer: 'עו"ד נדל"ן',
@@ -13501,7 +13468,7 @@ const GmailInbox = {
 };
 
 const AnnualUpsell = {
-  _KEY: 'liders_annual_v1',
+  _KEY: 'plto_annual_v1',
 
   _data() {
     try { return JSON.parse(localStorage.getItem(this._KEY) || '{}'); } catch { return {}; }
@@ -13715,7 +13682,7 @@ const LoadingOverlay = {
    All toggle buttons carry [data-a11y-btn] so _sync() updates all at once.
 ═══════════════════════════════════════════ */
 const AccessibilityMode = {
-  _KEY: 'liders_a11y',
+  _KEY: 'plto_a11y',
   init() {
     if (localStorage.getItem(this._KEY) === '1') this.enable(false);
     this._initFabVisibility();
@@ -13813,7 +13780,7 @@ document.querySelectorAll('.modal-close:not([aria-label])').forEach(btn => {
    Fire-and-forget — לעולם לא חוסם את ה-UI.
 ═══════════════════════════════════════════ */
 const FunnelTracker = {
-  _SESSION_KEY: 'liders_cro_session',
+  _SESSION_KEY: 'plto_cro_session',
   get sessionId() {
     let sid = sessionStorage.getItem(this._SESSION_KEY);
     if (!sid) { sid = crypto.randomUUID(); sessionStorage.setItem(this._SESSION_KEY, sid); }
@@ -14030,7 +13997,7 @@ const App = {
     // Restore industry from Supabase so it survives logout
     const savedInd = State.tenant?.industry || '';
     if (savedInd && INDUSTRY_LABELS[savedInd]) {
-      localStorage.setItem('liders_industry', savedInd);
+      localStorage.setItem('plto_industry', savedInd);
     }
     // Skip onboarding only if industry was already chosen (saved in Supabase).
     // New users with no industry set will always see the wizard, regardless of account age.
@@ -14039,7 +14006,7 @@ const App = {
     }
     // Restore custom label overrides from localStorage
     try {
-      const raw = localStorage.getItem('liders_custom_labels');
+      const raw = localStorage.getItem('plto_custom_labels');
       State.customLabels = raw ? JSON.parse(raw) : {};
     } catch(_e) { State.customLabels = {}; }
     this._applyIndustryLabels();
@@ -14089,7 +14056,7 @@ const App = {
     // Start sparkle particle loop on motivation button
     _startMotivationSparkles();
     // Show guided tour for new users after onboarding is done
-    if (!State.isDemo && localStorage.getItem('onboarding_done') === '1' && !localStorage.getItem('liders_tour_v1')) {
+    if (!State.isDemo && localStorage.getItem('onboarding_done') === '1' && !localStorage.getItem('plto_tour_v1')) {
       setTimeout(() => GuidedTour.start(), 3500);
     }
     // Init PIN lock
@@ -14100,7 +14067,7 @@ const App = {
     // client data (phone numbers, budgets, personal details) if someone else
     // picks up an unlocked phone. Deferred until after onboarding is done so
     // it doesn't compete with the first-run wizard/guided tour.
-    if (!State.isDemo && !AppLock.isEnabled() && localStorage.getItem('onboarding_done') === '1' && !localStorage.getItem('liders_pinlock_intro_shown')) {
+    if (!State.isDemo && !AppLock.isEnabled() && localStorage.getItem('onboarding_done') === '1' && !localStorage.getItem('plto_pinlock_intro_shown')) {
       setTimeout(() => AppLock.showIntro(), 4500);
     }
     // Hard 8h session ceiling - independent of PIN-lock timer
@@ -14126,7 +14093,7 @@ const App = {
     const addBtns = document.querySelectorAll('.btn-add-lead-label');
     addBtns.forEach(b => { b.textContent = '+ ' + getLabel('addLead'); });
     // Show industry-specific shortcut row
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const reShortcuts = document.getElementById('realestate-shortcuts');
     if (reShortcuts) reShortcuts.classList.toggle('hidden', ind !== 'realestate');
     const lawyerShortcuts = document.getElementById('lawyer-shortcuts');
@@ -14141,7 +14108,7 @@ const App = {
     if (compareBtn) compareBtn.classList.toggle('hidden', ind !== 'realestate');
   },
   async logout() {
-    const curInd = localStorage.getItem('liders_industry');
+    const curInd = localStorage.getItem('plto_industry');
     if (curInd && !State.isDemo) {
       const save = await new Promise(resolve => {
         const el = document.createElement('div');
@@ -14173,9 +14140,9 @@ const App = {
     // tenant's leads, tasks, properties, activities, stages, agent or tenant info.
     State.isDemo = false;
     document.getElementById('demo-banner')?.classList.add('hidden');
-    ['make_webhook_url','whatsapp_number','onboarding_done','liders_industry',
-     'liders_agency_name','liders_agency_phone','liders_agency_city',
-     'liders_custom_labels','liders_client_lang'].forEach(k => localStorage.removeItem(k));
+    ['make_webhook_url','whatsapp_number','onboarding_done','plto_industry',
+     'plto_agency_name','plto_agency_phone','plto_agency_city',
+     'plto_custom_labels','plto_client_lang'].forEach(k => localStorage.removeItem(k));
     State.customLabels = {};
     State.leads       = [...DEMO.leads];
     State.properties  = [...DEMO.properties];
@@ -14252,7 +14219,7 @@ const App = {
       case 'marketing':   Marketing.render();      break;
       case 'pro':         ProHub.render();         break;
       case 'xp-store':    Gamify.renderStore();    break;
-      case 'referral':    Referral.renderScreen(); localStorage.setItem('liders_ref_visited','1'); document.getElementById('nav-ref-badge')?.remove(); break;
+      case 'referral':    Referral.renderScreen(); localStorage.setItem('plto_ref_visited','1'); document.getElementById('nav-ref-badge')?.remove(); break;
       case 'email':           GmailInbox.renderScreen(); break;
       case 'recent-activity': RecentActivity.render();  break;
     }
@@ -14298,7 +14265,7 @@ const Dashboard = {
   renderGrowthCard() {
     const wrap = document.getElementById('dash-growth-card-wrap');
     if (!wrap || State.isDemo) return;
-    const KEY = 'liders_growth_card_v1';
+    const KEY = 'plto_growth_card_v1';
     if (localStorage.getItem(KEY) === 'dismissed') { wrap.innerHTML = ''; return; }
     const refData = Referral._data();
     const xpData  = Gamify.get();
@@ -14574,8 +14541,8 @@ const Dashboard = {
   _runDailyWaAutomation() {
     if (State.isDemo) return;
     const todayStr = today();
-    if (localStorage.getItem('liders_wa_auto_last_run') === todayStr) return;
-    localStorage.setItem('liders_wa_auto_last_run', todayStr);
+    if (localStorage.getItem('plto_wa_auto_last_run') === todayStr) return;
+    localStorage.setItem('plto_wa_auto_last_run', todayStr);
 
     const dueTasks = State.tasks.filter(t => !t.done && t.due === todayStr);
     if (dueTasks.length) {
@@ -14719,7 +14686,7 @@ const Dashboard = {
 /* ── Stale lead helper ───────────────────────────── */
 function isLeadStale(lead) {
   if (!lead) return false;
-  const ind = localStorage.getItem('liders_industry') || 'other';
+  const ind = localStorage.getItem('plto_industry') || 'other';
   const thresholds = {
     realestate:7, interior:10, realestate_lawyer:10, other:10
   };
@@ -14735,7 +14702,7 @@ function isLeadStale(lead) {
 /* ── Industry-specific empty-column tip ─────────── */
 function pipelineEmptyTip(stageIdx) {
   if (stageIdx !== 0) return '';
-  const ind = localStorage.getItem('liders_industry') || 'other';
+  const ind = localStorage.getItem('plto_industry') || 'other';
   const tips = {
     realestate:        '💡 רוב הקונים מגיעים מהפניות, כדאי לשלוח הודעה ל-3 לקוחות ישנים השבוע',
     interior:          '💡 כדאי לפרסם תמונה מפרויקט אחרון באינסטגרם, לידים מגיעים מ-portfolio',
@@ -14989,7 +14956,7 @@ const DealChecklist = {
   templateFor(ind) { return CHECKLIST_TEMPLATES[ind] || null; },
 
   renderBlock(lead) {
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const template = this.templateFor(ind);
     if (!template) return '';
     const state = lead.checklist || {};
@@ -15025,7 +14992,7 @@ const DealChecklist = {
     checkEl.classList.toggle('checked', checklist[key].done);
     checkEl.textContent = checklist[key].done ? '✓' : '';
     checkEl.closest('.dc-item')?.classList.toggle('dc-done', checklist[key].done);
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const template = this.templateFor(ind);
     const progressEl = document.getElementById(`dc-progress-${leadId}`);
     if (progressEl && template) {
@@ -15060,7 +15027,7 @@ const LeadDetail = {
     const activities = State.activities.filter(a => a.lead_id === leadId)
       .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
     const matchProps = this.matchProperties(lead);
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
 
     document.getElementById('lead-detail-content').innerHTML = `
       <div class="lead-detail-header">
@@ -16148,10 +16115,15 @@ const AppLock = {
   _pin: '',
   _setupStep: 0,
   _setupPin: '',
-  LAST_ACTIVE_KEY: 'liders_lock_last_active',
+  LAST_ACTIVE_KEY: 'plto_lock_last_active',
 
-  isEnabled() { return !!localStorage.getItem('liders_pin_hash'); },
-  getTimeoutMs() { return parseInt(localStorage.getItem('liders_lock_mins') || '5') * 60 * 1000; },
+  isEnabled() { return !!localStorage.getItem('plto_pin_hash'); },
+  getTimeoutMs() { return parseInt(localStorage.getItem('plto_lock_mins') || '5') * 60 * 1000; },
+
+  toggleManageMenu() {
+    const menu = document.getElementById('pinlock-manage-menu');
+    if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  },
 
   async _hash(pin) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('lcrm_' + pin));
@@ -16159,14 +16131,14 @@ const AppLock = {
   },
 
   async setup(pin) {
-    localStorage.setItem('liders_pin_hash', await this._hash(pin));
+    localStorage.setItem('plto_pin_hash', await this._hash(pin));
     localStorage.setItem(this.LAST_ACTIVE_KEY, String(Date.now()));
     this._updateLockBtn();
     this.startTimer();
   },
 
   disable() {
-    localStorage.removeItem('liders_pin_hash');
+    localStorage.removeItem('plto_pin_hash');
     localStorage.removeItem(this.LAST_ACTIVE_KEY);
     this._clearTimer();
     this._updateLockBtn();
@@ -16179,7 +16151,7 @@ const AppLock = {
   },
 
   skipIntro() {
-    localStorage.setItem('liders_pinlock_intro_shown', '1');
+    localStorage.setItem('plto_pinlock_intro_shown', '1');
     document.getElementById('modal-pinlock-intro')?.classList.add('hidden');
   },
 
@@ -16193,7 +16165,7 @@ const AppLock = {
 
   async _tryUnlock() {
     const hash = await this._hash(this._pin);
-    if (hash === localStorage.getItem('liders_pin_hash')) {
+    if (hash === localStorage.getItem('plto_pin_hash')) {
       document.getElementById('screen-lock').classList.add('hidden');
       this._pin = '';
       this._renderDots();
@@ -16315,7 +16287,7 @@ const AppLock = {
   },
 
   setLockMins(mins) {
-    localStorage.setItem('liders_lock_mins', mins);
+    localStorage.setItem('plto_lock_mins', mins);
     this.startTimer();
   },
 };
@@ -16345,7 +16317,7 @@ const IdleSession = {
   async _expire() {
     this._clear();
     await DB.signOut();
-    localStorage.removeItem('liders_pin_hash');
+    localStorage.removeItem('plto_pin_hash');
     toast('החיבור פג עקב חוסר פעילות, יש להתחבר מחדש', 'warning');
     location.reload();
   },
@@ -16401,18 +16373,23 @@ const Settings = {
           </div>
           <select onchange="AppLock.setLockMins(this.value)"
             style="border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:14px;background:var(--bg-card);font-family:inherit;cursor:pointer;">
-            ${['1','5','15','30'].map(m => `<option value="${m}" ${(localStorage.getItem('liders_lock_mins')||'5')===m?'selected':''}>${m} דקות</option>`).join('')}
+            ${['1','5','15','30'].map(m => `<option value="${m}" ${(localStorage.getItem('plto_lock_mins')||'5')===m?'selected':''}>${m} דקות</option>`).join('')}
           </select>
         </div>
-        <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
-          <div class="settings-row-icon">🔄</div>
-          <div class="settings-row-body"><div class="settings-row-label">שינוי קוד PIN</div></div>
+        <div class="settings-row" onclick="AppLock.toggleManageMenu()" style="cursor:pointer;">
+          <div class="settings-row-icon">🔧</div>
+          <div class="settings-row-body"><div class="settings-row-label">ניהול קוד PIN</div></div>
           <div class="settings-arrow">›</div>
         </div>
-        <div class="settings-row" onclick="if(confirm('לבטל את נעילת ה-PIN?'))AppLock.disable();" style="cursor:pointer;">
-          <div class="settings-row-icon">🔓</div>
-          <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כיבוי נעילת PIN</div></div>
-          <div class="settings-arrow">›</div>
+        <div id="pinlock-manage-menu" style="display:none;">
+          <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
+            <div class="settings-row-icon">🔄</div>
+            <div class="settings-row-body"><div class="settings-row-label">שינוי קוד</div></div>
+          </div>
+          <div class="settings-row" onclick="if(confirm('לבטל את נעילת ה-PIN?'))AppLock.disable();" style="cursor:pointer;border-bottom:none;">
+            <div class="settings-row-icon">🔓</div>
+            <div class="settings-row-body"><div class="settings-row-label" style="color:var(--red-500);">כיבוי הנעילה</div></div>
+          </div>
         </div>
         ` : `
         <div class="settings-row" onclick="AppLock.startSetup()" style="cursor:pointer;">
@@ -16449,50 +16426,48 @@ const Settings = {
             interior:           { icon:'🎨', label:'עיצוב פנים' },
             other:              { icon:'🎯', label:'אחר' },
           };
-          const cur = localStorage.getItem('liders_industry') || 'other';
+          const cur = localStorage.getItem('plto_industry') || 'other';
           const curMeta = IND_META[cur] || IND_META.other;
           return `
             <div style="padding:12px 16px 0;">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--gray-50);margin-bottom:10px;">
+              <div id="industry-current-row" onclick="Settings.toggleIndustryMenu()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--gray-50);cursor:pointer;">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <span style="font-size:22px;">${curMeta.icon}</span>
                   <div>
                     <div style="font-size:13px;font-weight:700;color:var(--gray-800);">${curMeta.label}</div>
-                    <div style="font-size:11px;color:var(--gray-500);">תחום עסקי נוכחי</div>
+                    <div style="font-size:11px;color:var(--gray-500);">תחום עסקי נוכחי, לחיצה לשינוי</div>
                   </div>
                 </div>
+                <div class="settings-arrow">›</div>
               </div>
-              <div style="background:var(--blue-50,#EFF6FF);border:1px solid var(--blue-200,#BFDBFE);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--blue-700,#1D4ED8);line-height:1.5;">
-                💬 לשינוי התחום העסקי, יש לפנות לצוות התמיכה: <a href="mailto:info@plto.app" style="color:inherit;font-weight:700;">info@plto.app</a>
+              <div id="industry-change-menu" style="display:none;margin-top:6px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+                ${Object.entries(IND_META).filter(([id]) => id !== cur).map(([id, meta]) => `
+                  <div onclick="Settings.confirmChangeIndustry('${id}')" style="display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;background:white;border-top:1px solid var(--border);">
+                    <span style="font-size:18px;">${meta.icon}</span>
+                    <span style="font-size:13px;font-weight:600;color:var(--gray-700);">${meta.label}</span>
+                  </div>
+                `).join('')}
               </div>
-              <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:11.5px;color:var(--gray-600);line-height:1.5;">
-                🔒 שים לב: העברה או העתקה של נתונים בין משתמשים שונים אינה אפשרית מטעמי אבטחה ובידוד נתונים.
+              <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:10px 0 14px;font-size:11.5px;color:var(--gray-600);line-height:1.5;">
+                🔒 שינוי תחום מאפס תוויות מותאמות אישית לברירת המחדל של התחום החדש. העברה או העתקה של נתונים בין משתמשים שונים אינה אפשרית מטעמי אבטחה ובידוד נתונים.
               </div>
               <div style="padding-top:2px;border-top:1px solid var(--border);">
                 <div style="margin-bottom:8px;">
                   <div style="font-size:13px;font-weight:600;color:var(--gray-700);">🌐 שפת טקסטים ללקוחות</div>
                   <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">השפה שבה הסוכן החכם יכתוב הודעות וואטסאפ, מיילים והצעות ללידים</div>
                 </div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <select class="form-input" style="max-width:220px;" onchange="Settings.setClientLang(this.value)">
                   ${Object.entries(Settings.CLIENT_LANGS).map(([code, meta]) => `
-                    <button onclick="Settings.setClientLang('${code}')" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:${Settings.getClientLang()===code?'var(--navy-500)':'var(--gray-50)'};color:${Settings.getClientLang()===code?'white':'var(--gray-600)'};">${meta.label}</button>
+                    <option value="${code}" ${Settings.getClientLang() === code ? 'selected' : ''}>${meta.label}</option>
                   `).join('')}
-                </div>
+                </select>
               </div>
             </div>`;
         })()}
       </div>
       <div class="settings-section">
         <div class="settings-section-title">חיבורים</div>
-        <div class="settings-row" onclick="WAConnect.open()" style="cursor:pointer;background:linear-gradient(135deg,rgba(37,211,102,.06),rgba(18,140,126,.04));border:1px solid rgba(37,211,102,.2);">
-          <div class="settings-row-icon" style="background:#DCFCE7;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">📲</div>
-          <div class="settings-row-body">
-            <div class="settings-row-label">חיבור WhatsApp אוטומטי</div>
-            <div class="settings-row-sub" style="color:var(--orange-500);">חיבור מהיר, ב-2 דקות בלבד</div>
-          </div>
-          <div class="settings-arrow" style="color:#25D366;">›</div>
-        </div>
-        <div class="settings-row" style="flex-direction:column; align-items:stretch;">
+        <div id="settings-wa-twilio-row" class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
             <div class="settings-row-icon">💬</div>
             <div class="settings-row-body" style="flex:1;">
@@ -16507,7 +16482,16 @@ const Settings = {
             <button class="btn btn-primary btn-sm" onclick="const v=document.getElementById('wa-number-input').value; if(v) Make.setWhatsApp(v);">שמירה</button>
             ${Make.getWhatsApp() ? `<button class="btn btn-ghost btn-sm" onclick="Twilio.test()">🔔 בדיקת Twilio</button>` : ''}
           </div>
-          ${Make.getWhatsApp() ? `<div style="font-size:11px;color:var(--gray-500);margin-top:6px;line-height:1.5;">💡 <strong>Sandbox:</strong> יש לשלוח <code>join turn-layers</code> ל-<strong>+1 415 523 8886</strong> מה-WhatsApp שלך לפני הבדיקה</div>` : ''}
+          ${Make.getWhatsApp() ? `
+          <div style="background:var(--orange-50,#FFF7ED);border:1px solid var(--orange-100,#FFEDD5);border-radius:10px;padding:10px 12px;margin-top:8px;">
+            <div style="font-size:12px;font-weight:700;color:var(--gray-800);margin-bottom:4px;">⚠️ לפני הבדיקה הראשונה (או אם עברו כמה ימים בלי שימוש), יש לאשר את החיבור מול Twilio</div>
+            <div style="font-size:11.5px;color:var(--gray-600);line-height:1.6;margin-bottom:8px;">
+              המערכת שולחת הודעות בדיקה דרך מספר Sandbox של Twilio, ולא ישירות מהמספר שלך. כדי לקבל הודעות ממנו, נדרש
+              אישור חד-פעמי מה-WhatsApp של המספר שהוגדר: שליחת ההודעה <code>join turn-layers</code> למספר של Twilio.
+              האישור הזה פג כעבור כמה ימים ללא שימוש, ואז צריך לבצע את השלב הזה שוב.
+            </div>
+            <button class="btn btn-sm" style="background:var(--green-600,#16A34A);color:white;width:100%;" onclick="Twilio.openSandboxJoin()">📲 שליחת הודעת האישור בוואטסאפ</button>
+          </div>` : ''}
         </div>
         <div class="settings-row" style="flex-direction:column; align-items:stretch;">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -16669,10 +16653,10 @@ const Settings = {
   async resetOnboarding() {
     if (demoGuard()) return;
     await DB.updateIndustry(null);
-    localStorage.removeItem('liders_industry');
+    localStorage.removeItem('plto_industry');
     localStorage.removeItem('onboarding_done');
     State.customLabels = {};
-    localStorage.removeItem('liders_custom_labels');
+    localStorage.removeItem('plto_custom_labels');
     toast('פתיחת אשף ההגדרות...', 'info');
     setTimeout(() => Onboarding.show(), 600);
   },
@@ -16685,20 +16669,31 @@ const Settings = {
   },
 
   getClientLang() {
-    const saved = localStorage.getItem('liders_client_lang') || 'he';
+    const saved = localStorage.getItem('plto_client_lang') || 'he';
     return this.CLIENT_LANGS[saved] ? saved : 'he';
   },
 
   setClientLang(lang) {
     if (!this.CLIENT_LANGS[lang]) return;
-    localStorage.setItem('liders_client_lang', lang);
+    localStorage.setItem('plto_client_lang', lang);
     Settings.render();
     toast(lang === 'he' ? '✅ טקסטים ללקוחות יופקו בעברית' : `✅ טקסטים ללקוחות יופקו ב${this.CLIENT_LANGS[lang].name}`, 'success');
   },
 
+  toggleIndustryMenu() {
+    const menu = document.getElementById('industry-change-menu');
+    if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  },
+
+  async confirmChangeIndustry(ind) {
+    const IND_NAMES = { realestate: 'סוכן נדל"ן', realestate_lawyer: 'עו"ד נדל"ן', interior: 'עיצוב פנים', other: 'אחר' };
+    if (!confirm(`לשנות את תחום העסק ל${IND_NAMES[ind] || ind}? התוויות המותאמות אישית יתאפסו לברירת המחדל של התחום החדש.`)) return;
+    await this.setIndustry(ind);
+  },
+
   async setIndustry(ind) {
     if (!INDUSTRY_LABELS[ind]) return;
-    localStorage.setItem('liders_industry', ind);
+    localStorage.setItem('plto_industry', ind);
     await DB.updateIndustry(ind);
     // Switching industry resets custom labels so defaults feel fresh
     DB.updateCustomLabels({});
@@ -18517,7 +18512,7 @@ document.getElementById('new-task-due').value = addDays(1);
 // localStorage timestamp is robust across refresh/PWA-relaunch while still
 // auto-expiring stale sessions after a real gap of inactivity.
 const AuthSession = {
-  _KEY: 'liders_auth_active_ts',
+  _KEY: 'plto_auth_active_ts',
   _MAX_AGE_MS: 30 * 24 * 60 * 60 * 1000, // 30 days of inactivity
   isTrusted() {
     const ts = Number(localStorage.getItem(this._KEY) || 0);
@@ -18702,7 +18697,7 @@ LeadReferral.checkInbound();
 // עמוד ציבורי לאישור לקוח (?consent=) — ללא התחברות
 ClientConsent.check();
 // Hide referral "new" badge if user already visited
-if (localStorage.getItem('liders_ref_visited')) {
+if (localStorage.getItem('plto_ref_visited')) {
   document.addEventListener('DOMContentLoaded', () => document.getElementById('nav-ref-badge')?.remove(), { once: true });
   document.getElementById('nav-ref-badge')?.remove();
 }
@@ -19350,7 +19345,7 @@ const Support = {
   open() {
     if (State.isDemo) { DemoLock.showPrompt('הצטרפו לנסיון חינמי ותוכלו לקבל תמיכה אישית מסוכן התמיכה שלך 🤖'); return; }
     const today_ = new Date().toISOString().split('T')[0];
-    const key = 'liders_coffee_popup_date';
+    const key = 'plto_coffee_popup_date';
     const showCoffee = localStorage.getItem(key) !== today_ && !State.isDemo;
     if (showCoffee) { localStorage.setItem(key, today_); CoffeePopup.show(() => this._doOpen()); return; }
     this._doOpen();
@@ -19804,7 +19799,7 @@ const TutorialVideo = {
   _render() {
     const container = document.getElementById('tutorial-steps');
     if (!container) return;
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const steps = this._getSteps(ind);
     container.innerHTML = steps.map((s, i) => `
       <div class="tutorial-step-card">
@@ -19823,7 +19818,7 @@ const TutorialVideo = {
         { title: '🏠 יד2, מדלן ומחשבון משכנתא', desc: 'קיצורי דרך מהדשבורד לפתיחה מהירה של יד2 ומדלן, ומחשבון משכנתא מהיר לשיתוף עם הקונה.' },
         { title: '🤖 סוכן שיווק ונכסים',         desc: 'כותב בשבילך פוסטים לנכסים, הצעות מיוחדות ומסרי WhatsApp ללקוחות, תוך שניות.' },
         { title: '🔗 לולאת הפניות',               desc: 'הפניית ליד לעו"ד נדל"ן או מעצב פנים בלחיצה מזכה ב-250 XP, ופותחת אפשרות לקבל הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל עסקה שנסגרת, כל ביקור, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל עסקה שנסגרת, כל ביקור, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       realestate_lawyer: [
         { title: '➕ הוספת לקוח חדש',            desc: 'הכפתור הכתום + פותח טופס עם שם הלקוח, סוג העסקה (רכישה/מכירה) ושלב הטיפול.' },
@@ -19831,7 +19826,7 @@ const TutorialVideo = {
         { title: '⚖️ טאבו, נבו ומיסוי מקרקעין',  desc: 'קיצורי דרך מהדשבורד לטאבו, לנבו ולמיסוי מקרקעין, ישירות מבלי לחפש בדפדפן.' },
         { title: '🤖 תוכן שיווקי מקצועי',         desc: 'כותב טיפים משפטיים לרשתות, מסרי פנייה ללקוחות, בהתאם לכללי פרסומת של לשכת עורכי הדין.' },
         { title: '🔗 לולאת הפניות',               desc: 'שליחת לקוח מעוניין בנכס לסוכן נדל"ן מזכה ב-250 XP, ובונה שיתוף פעולה שמניב הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל תיק שנסגר, כל ייעוץ, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל תיק שנסגר, כל ייעוץ, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       interior: [
         { title: '➕ הוספת לקוח חדש',            desc: 'הכפתור הכתום + פותח טופס עם שם הלקוח, סגנון עיצוב מועדף, תקציב ושלב הפרויקט.' },
@@ -19839,7 +19834,7 @@ const TutorialVideo = {
         { title: '📌 Pinterest, Houzz והשראה',    desc: 'קיצורי דרך מהדשבורד ל-Pinterest ו-Houzz לחיפוש השראה עיצובית, ישירות בלי לחפש.' },
         { title: '🤖 סוכן שיווק עיצובי',          desc: 'כותב בשבילך פוסטים עיצוביים, מסרי פנייה ללקוחות וקמפיין WhatsApp לפרויקט, תוך שניות.' },
         { title: '🔗 לולאת הפניות',               desc: 'שליחת לקוח חדש שרכש דירה לסוכן נדל"ן מזכה ב-250 XP, ובונה שיתוף פעולה שמניב הפניות חזרה.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פרויקט שנסגר, כל הפניה, מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה ועוד.' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פרויקט שנסגר, כל הפניה, מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק ותוכנית אסטרטגית לעסק.' },
       ],
       other: [
         { title: '➕ הוספת ליד חדש',             desc: 'הכפתור הכתום + בפינה הימנית התחתונה פותח טופס עם שם, טלפון ושלב הפייפליין.' },
@@ -19847,7 +19842,7 @@ const TutorialVideo = {
         { title: '🔗 לולאת הפניות בין קולגות',   desc: 'לשונית "שיתופי פעולה" מאפשרת שיתוף לידים עם קולגות ב-PLTO.' },
         { title: '🤖 סוכן השיווק',                desc: 'לשונית "שירותי שיווק", הסוכן יכתוב הצעות מחיר, פוסטים ומסרים ללקוחות.' },
         { title: '🏦 מרכז כלים',                  desc: 'כלים ייחודיים לתחום שלך, ישירות מהדשבורד.' },
-        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פעולה מוסיפה XP שפודים בפרסים: ייעוץ שיווקי, דפי נחיתה, קמפיינים ועוד!' },
+        { title: '🏆 XP ופרסים אמיתיים',          desc: 'כל פעולה מוסיפה XP שפודים בתוכן AI שימושי: דף נחיתה, תוכנית שיווק, אוטומציה לעסק ועוד.' },
       ],
     };
     return byInd[ind] || byInd.other;
@@ -19917,7 +19912,7 @@ const MotivationAgent = {
   // Progressive cooldown: each use today adds more wait time
   // Use 1→ wait 1.5h | Use 2→ wait 2h | Use 3→ wait 2.5h | Use 4+→ wait 3h
   _COOLDOWNS_MIN: [90, 120, 150, 180],
-  _STORAGE_KEY: 'liders_motive_v2',
+  _STORAGE_KEY: 'plto_motive_v2',
   _countdownInterval: null,
   _quotes: [
     'כל ליד הוא הזדמנות. כל שיחה היא צעד קדימה. המשך כך! 💪',
@@ -20088,11 +20083,11 @@ const MotivationAgent = {
    GUIDED TOUR MODULE, first-time walkthrough
 ═══════════════════════════════════════════ */
 const GuidedTour = {
-  _KEY: 'liders_tour_v1',
+  _KEY: 'plto_tour_v1',
   _step: 0,
   _cachedSteps: null,
   _getSteps() {
-    const ind = localStorage.getItem('liders_industry') || State.tenant?.industry || 'other';
+    const ind = localStorage.getItem('plto_industry') || State.tenant?.industry || 'other';
     const addLabel = { realestate: 'קונה חדש', realestate_lawyer: 'לקוח חדש', interior: 'לקוח חדש', other: 'ליד חדש' }[ind] || 'ליד חדש';
     const pipeLabel = { realestate: 'פייפליין עסקאות', realestate_lawyer: 'פייפליין תיקים', interior: 'פייפליין פרויקטים', other: 'פייפליין המכירות' }[ind] || 'פייפליין לידים';
     const addText = {
@@ -20123,7 +20118,7 @@ const GuidedTour = {
       { target: null,                       emoji: '🎉', title: 'ברוכים הבאים ל-PLTO', text: 'נעשה סיור קצר של 30 שניות כדי לדעת בדיוק מה לעשות ואיפה הכל נמצא.' },
       { target: '#fab-btn',                  emoji: '➕', title: `הוספת ${addLabel}`,          text: addText },
       { target: '[data-screen="pipeline"]',  emoji: '📋', title: pipeLabel,                    text: pipeText },
-      { target: '#gamify-widget',            emoji: '🏆', title: 'צוברים XP ומרוויחים פרסים!', text: 'כל פעולה מוסיפה XP, שניתן לפדות בפרסים אמיתיים: ייעוץ שיווקי, דפי נחיתה, קמפיינים ועוד.' },
+      { target: '#gamify-widget',            emoji: '🏆', title: 'צוברים XP ומרוויחים פרסים!', text: 'כל פעולה מוסיפה XP, שניתן לפדות בתוכן AI שימושי לעסק: דף נחיתה, תוכנית שיווק, אוטומציה ועוד.' },
       { target: '[data-screen="marketing"]', emoji: '🤖', title: 'סוכן השיווק שלך',           text: mktgText },
       { target: null, isLast: true,          emoji: '🚀', title: 'כל הכבוד! מתחילים!',        text: finalText },
     ];
@@ -20305,7 +20300,7 @@ window.Roadmap = Roadmap;
    IDEA BOX, submit user ideas for 300 XP
 ═══════════════════════════════════════════ */
 const IdeaBox = {
-  _STORAGE_KEY: 'liders_ideas_v1',
+  _STORAGE_KEY: 'plto_ideas_v1',
   _submitted: null,
 
   open() {
@@ -20378,7 +20373,7 @@ window.IdeaBox = IdeaBox;
    → joins the agency tenant automatically.
 ═══════════════════════════════════════════ */
 const AgentInvite = {
-  _KEY: 'liders_ainvite',
+  _KEY: 'plto_ainvite',
   _previewData: null,
 
   checkInbound() {
@@ -20538,7 +20533,7 @@ const Team = {
       const msg = e.message || '';
       if (msg.includes('seat_limit_reached')) {
         if (State.tenant?.plan === 'pro') {
-          toast('הגעת למקסימום המושבים בחבילת צוות, יש לשדרג לחבילת סוכנות להוספת סוכנים נוספים', 'warning', 6000);
+          toast('הגעת למקסימום המושבים בחבילת צוות, בחבילת סוכנות מקבלים 10 מושבים כלולים במחיר דומה, שדרוג משתלם', 'warning', 7000);
         } else {
           closeModal('modal-team');
           Support.open();
@@ -20704,36 +20699,19 @@ window.AgencyLeaderboard = AgencyLeaderboard;
    WHATSAPP CONNECT, UI flow (backend TBD)
 ═══════════════════════════════════════════ */
 const WAConnect = {
+  // Jumps straight to the real, working Twilio WhatsApp connection in
+  // Settings instead of the old "connect in 2 minutes" mock flow, which
+  // never did anything but show "coming soon" (removed 18/7/2026).
   open() {
-    document.getElementById('wa-connect-screen-main')?.classList.remove('hidden');
-    document.getElementById('wa-connect-screen-progress')?.classList.add('hidden');
-    const cb = document.getElementById('wa-terms-check');
-    if (cb) cb.checked = false;
-    openModal('modal-whatsapp-connect');
-  },
-
-  start() {
-    const cb = document.getElementById('wa-terms-check');
-    if (!cb?.checked) { toast('יש לאשר את תנאי השימוש לפני החיבור', 'warning'); return; }
-
-    document.getElementById('wa-connect-screen-main')?.classList.add('hidden');
-    const prog = document.getElementById('wa-connect-screen-progress');
-    if (prog) prog.classList.remove('hidden');
-
-    const icon  = document.getElementById('wa-progress-icon');
-    const title = document.getElementById('wa-progress-title');
-    const sub   = document.getElementById('wa-progress-sub');
-
-    if (icon) icon.textContent = '⏳';
-    if (title) title.textContent = 'מכין את החיבור...';
-    if (sub) sub.textContent = 'אנא המתן מספר שניות';
-
+    App.go('settings');
     setTimeout(() => {
-      if (icon) icon.textContent = '📲';
-      if (title) title.textContent = 'בקרוב זמין!';
-      if (sub) sub.textContent = 'תכונת ה-WhatsApp מתפתחת ותהיה זמינה בשבועות הקרובים. נודיע לך ברגע שפתוח!';
-      toast('📲 WhatsApp, בקרוב! נעדכן אותך כשיהיה זמין', 'info', 4000);
-    }, 1800);
+      const row = document.getElementById('settings-wa-twilio-row');
+      if (!row) return;
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.classList.add('wa-connect-highlight');
+      setTimeout(() => row.classList.remove('wa-connect-highlight'), 2400);
+      document.getElementById('wa-number-input')?.focus({ preventScroll: true });
+    }, 150);
   },
 };
 window.WAConnect = WAConnect;
@@ -20744,7 +20722,7 @@ window.WAConnect = WAConnect;
    2nd offence: immediate account lock + Make.com report + forced logout
 ═══════════════════════════════════════════ */
 const InjectionGuard = {
-  _KEY: 'liders_inj_v1',
+  _KEY: 'plto_inj_v1',
   _PATTERNS: [
     /ignore\s+(?:all\s+)?(?:previous|prior)\s+instructions?/i,
     /forget\s+(?:everything|all|previous|prior)/i,

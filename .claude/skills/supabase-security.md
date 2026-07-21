@@ -82,7 +82,7 @@ async function adminLogin(pin: string) {
 // hash PIN locally before storing
 async function hashPin(pin) {
   const encoder = new TextEncoder();
-  const data = encoder.encode(pin + 'liders-salt-2025');
+  const data = encoder.encode(pin + 'plto-salt-2025');
   const hash = await crypto.subtle.digest('SHA-256', data);
   return btoa(String.fromCharCode(...new Uint8Array(hash)));
 }

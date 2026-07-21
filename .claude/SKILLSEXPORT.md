@@ -37,7 +37,7 @@ npx skills add supabase/agent-skills
 
 | סקיל | פקודה | תיאור | נוצר |
 |------|-------|-------|------|
-| **CRM Workflow** | `/liders-crm` | ארכיטקטורה, entities, workflow לבניית features | 2026-06-02 |
+| **CRM Workflow** | `/plto-crm` | ארכיטקטורה, entities, workflow לבניית features | 2026-06-02 |
 | **Playwright E2E** | `/playwright-crm` | בדיקות אוטומטיות + CI integration | 2026-06-02 |
 | **Figma UI/UX** | `/figma-crm-ui` | עיצוב עם Figma + Canva MCP, RTL | 2026-06-02 |
 | **Supabase Security** | `/supabase-security` | RLS policies, auth, secrets, audit | 2026-06-02 |
@@ -46,7 +46,9 @@ npx skills add supabase/agent-skills
 | **Security Guardian** | `/security-guardian` | הגנת data, checklist, incident response | 2026-06-02 |
 | **Design System Pro** | `/design-system` | tokens מדויקים, components, RTL specs | 2026-06-02 |
 | **CRM Live Data** ⭐ | `/crm-live-data` | שאיבת נתונים חיים מכל MCPs (Supabase, Calendar, Gmail, Make, Notion, Airtable) | 2026-06-02 |
-| **Liders Marketing** | `/liders-marketing` | מנהל שיווק דיגיטלי אוניברסלי לכל עסק ב-PLTO — אסטרטגיה, תוכן, קופי, עיצוב, ניתוח | 2026-06-03 |
+| **PLTO Marketing** | `/plto-marketing` | מנהל שיווק דיגיטלי אוניברסלי לכל עסק ב-PLTO — אסטרטגיה, תוכן, קופי, עיצוב, ניתוח | 2026-06-03 |
+| **QA PLTO** | `/qa-plto` | בדיקת E2E מלאה של הממשק (סקריפט `.claude/tests/qa-plto.mjs`) | 2026-07-17 |
+| **Hebrew Style Guardian** | `/hebrew-style-guardian` | ניטרליות מגדרית, איסור סלאש/מקף/חץ, היררכיית פונטים, בדיקת כתיב | 2026-07-21 |
 
 ### 📦 סקילים מ-npm (`.agents/skills/`)
 
@@ -91,7 +93,7 @@ npx skills add supabase/agent-skills
 
 עדכן את הקבצים הבאים כשמשכפלים לCRM נדל"ן:
 
-### `liders-crm.md` — החלף entities:
+### `plto-crm.md` — החלף entities:
 ```
 במקום: clients, appointments, services, staff, payments
 שים:   leads, properties, viewings, agents, deals/commissions

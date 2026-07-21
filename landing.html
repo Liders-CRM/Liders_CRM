@@ -3431,10 +3431,10 @@
         <div class="plan-price">₪349<small>/חודש</small></div>
         <div class="plan-annual-teaser">📅 שנתי · ₪249/חודש · חיסכון ₪1,198</div>
         <div class="plan-limit">3 סוכנים כלולים · עד 1,000 לידים</div>
-        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 8 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
+        <div class="plan-seats">👥 מצרפים עוד סוכנים עד 7 סה"כ · כל סוכן נוסף רק ₪40/חודש</div>
         <ul class="plan-features">
           <li>כל מה שב-Solo</li>
-          <li>3 סוכנים כלולים, ניתן להרחיב עד 8</li>
+          <li>3 סוכנים כלולים, ניתן להרחיב עד 7</li>
           <li>אנליטיקס צוות</li>
           <li>דוחות ביצועים</li>
         </ul>
@@ -3556,7 +3556,7 @@
       </details>
       <details class="faq-item">
         <summary>המערכת מתאימה לעצמאי או רק לצוותים גדולים?</summary>
-        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי: סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים. חבילות צוות וסוכנות גדלות איתך, מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 8 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
+        <div class="faq-answer">גם וגם. חבילת Solo נבנתה בדיוק בשביל עצמאי: סוכן נדל"ן, עו"ד נדל"ן ועיצוב פנים. חבילות צוות וסוכנות גדלות איתך, מצרפים סוכנים נוספים ב-₪40 לחודש לסוכן, עד 7 בחבילת צוות ועד 25 בחבילת סוכנות.</div>
       </details>
       <details class="faq-item">
         <summary>כמה זמן לוקח להתחיל לעבוד בפועל?</summary>
@@ -3756,7 +3756,7 @@
 <script>
 /* Accessibility Mode — landing.html (standalone, no State dependency) */
 (function() {
-  var KEY = 'liders_a11y';
+  var KEY = 'plto_a11y';
   var on  = localStorage.getItem(KEY) === '1';
   function apply() {
     document.body.classList.toggle('theme-accessible', on);
@@ -3793,7 +3793,7 @@
   var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjeWZ5d3Z6b29nZnJsYWxnZnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMTM3NTIsImV4cCI6MjA2Njc4OTc1Mn0.5aGMSrqSgYdIbZ5qAI1WX2ZBfp6-5TEaqQxOuMfKXkk';
 
   function getSessionId() {
-    var KEY = 'liders_cro_session';
+    var KEY = 'plto_cro_session';
     var sid = sessionStorage.getItem(KEY);
     if (!sid) { sid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, function(c){return(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16);}); sessionStorage.setItem(KEY, sid); }
     return sid;
@@ -3862,7 +3862,7 @@
   var STORAGE_PREFIX = 'plto_ab_';
 
   function getSessionId() {
-    var KEY = 'liders_cro_session';
+    var KEY = 'plto_cro_session';
     var sid = sessionStorage.getItem(KEY);
     if (!sid) { sid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, function(c){return(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16);}); sessionStorage.setItem(KEY, sid); }
     return sid;

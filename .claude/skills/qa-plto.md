@@ -1,6 +1,6 @@
 # PLTO — סוכן בדיקות QA
 
-## פקודה: `/qa-liders`
+## פקודה: `/qa-plto`
 
 בדיקת E2E מלאה של כל הממשק — כל כפתור, טאב, מודל וטופס.
 
@@ -10,10 +10,10 @@
 
 ```bash
 # בדמו-מוד (ללא קרדנשיאלים)
-node /home/user/PLTO/.claude/tests/qa-liders.mjs --url https://plto.app
+node /home/user/PLTO/.claude/tests/qa-plto.mjs --url https://plto.app
 
 # עם כניסה (מייל + סיסמה מ-env)
-QA_EMAIL=xxx QA_PASS=yyy node /home/user/PLTO/.claude/tests/qa-liders.mjs --url https://plto.app --login
+QA_EMAIL=xxx QA_PASS=yyy node /home/user/PLTO/.claude/tests/qa-plto.mjs --url https://plto.app --login
 ```
 
 ---
