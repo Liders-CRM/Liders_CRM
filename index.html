@@ -5714,19 +5714,26 @@
             <label class="form-label">משפט הקשר (לא חובה)</label>
             <input type="text" id="lref-context" class="form-input" maxlength="300" placeholder="סגרנו על דירה ברעננה, צריכים ליווי משפטי">
           </div>
-          <div class="form-group">
-            <label class="form-label">עמלת הפניה (לא חובה)</label>
-            <select id="lref-commission-type" class="form-input" onchange="LeadReferral.toggleCommissionValue()">
-              <option value="none">ללא עמלה</option>
-              <option value="percent">אחוז מהעסקה</option>
-              <option value="fixed">סכום קבוע (₪)</option>
-            </select>
+          <div id="lref-commission-section">
+            <div class="form-group">
+              <label class="form-label">עמלת הפניה (לא חובה)</label>
+              <select id="lref-commission-type" class="form-input" onchange="LeadReferral.toggleCommissionValue()">
+                <option value="none">ללא עמלה</option>
+                <option value="percent">אחוז מהעסקה</option>
+                <option value="fixed">סכום קבוע (₪)</option>
+              </select>
+            </div>
+            <div class="form-group hidden" id="lref-commission-value-wrap">
+              <label class="form-label" id="lref-commission-value-label">אחוז</label>
+              <input type="number" id="lref-commission-value" class="form-input" min="0" step="0.1" placeholder="לדוגמה: 10">
+              <div id="lref-commission-hint" style="font-size:11.5px;color:var(--gray-500);margin-top:4px;">
+                🔒 כשיש עמלה, נדרשת חתימה דיגיטלית של הקולגה על הסכם עמלה קצר לפני שהליד נחשף אליו.
+              </div>
+            </div>
           </div>
-          <div class="form-group hidden" id="lref-commission-value-wrap">
-            <label class="form-label" id="lref-commission-value-label">אחוז</label>
-            <input type="number" id="lref-commission-value" class="form-input" min="0" step="0.1" placeholder="לדוגמה: 10">
-            <div id="lref-commission-hint" style="font-size:11.5px;color:var(--gray-500);margin-top:4px;">
-              🔒 כשיש עמלה, נדרשת חתימה דיגיטלית של הקולגה על הסכם עמלה קצר לפני שהליד נחשף אליו.
+          <div class="form-group hidden" id="lref-commission-lawyer-note">
+            <div style="font-size:11.5px;color:var(--gray-500);line-height:1.6;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px;">
+              ℹ️ הפניה בליווי עורך דין נדל"ן מתבצעת ללא עמלה, בהתאם לכללי האתיקה המקצועית של לשכת עורכי הדין.
             </div>
           </div>
           <div class="form-group">
@@ -5851,7 +5858,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">תחום מבוקש</label>
-          <select id="opp-vertical" class="form-input">
+          <select id="opp-vertical" class="form-input" onchange="OppBoard.onVerticalChange()">
             <option value="realestate">🏠 סוכן נדל"ן</option>
             <option value="realestate_lawyer">⚖️ עו"ד נדל"ן</option>
             <option value="interior">🎨 עיצוב פנים</option>
@@ -5874,17 +5881,24 @@
           <label class="form-label">עיר (לא חובה)</label>
           <input type="text" id="opp-city" class="form-input" placeholder="לדוגמה: חיפה">
         </div>
-        <div class="form-group">
-          <label class="form-label">עמלה מוצעת (לא חובה)</label>
-          <select id="opp-commission-type" class="form-input" onchange="OppBoard.toggleCommissionValue()">
-            <option value="none">ללא עמלה</option>
-            <option value="percent">אחוז מהעסקה</option>
-            <option value="fixed">סכום קבוע (₪)</option>
-          </select>
+        <div id="opp-commission-section">
+          <div class="form-group">
+            <label class="form-label">עמלה מוצעת (לא חובה)</label>
+            <select id="opp-commission-type" class="form-input" onchange="OppBoard.toggleCommissionValue()">
+              <option value="none">ללא עמלה</option>
+              <option value="percent">אחוז מהעסקה</option>
+              <option value="fixed">סכום קבוע (₪)</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="opp-commission-value-wrap">
+            <label class="form-label" id="opp-commission-value-label">אחוז</label>
+            <input type="number" id="opp-commission-value" class="form-input" min="0" step="0.1">
+          </div>
         </div>
-        <div class="form-group hidden" id="opp-commission-value-wrap">
-          <label class="form-label" id="opp-commission-value-label">אחוז</label>
-          <input type="number" id="opp-commission-value" class="form-input" min="0" step="0.1">
+        <div class="form-group hidden" id="opp-commission-lawyer-note">
+          <div style="font-size:11.5px;color:var(--gray-500);line-height:1.6;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px;">
+            ℹ️ הזדמנות בליווי עורך דין נדל"ן מתפרסמת ללא עמלה, בהתאם לכללי האתיקה המקצועית של לשכת עורכי הדין.
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -7183,10 +7197,10 @@
       אך ורק כדי לספק לך את שירות ה-CRM, ניהול לידים, מעקב עסקאות, ודוחות.</p>
 
       <p><strong>כמה זמן אנחנו שומרים את הנתונים?</strong><br>
-      נתוניך נשמרים כל עוד המנוי פעיל + 30 יום נוספים לאחר סיומו. לאחר מכן נמחקים אוטומטית.</p>
+      נתוניך נשמרים כל עוד המנוי פעיל. לאחר סיום המנוי הנתונים נשמרים עד 30 יום נוספים לצורך אפשרות ייצוא ולאחר מכן נמחקים כחלק מתהליך סגירת החשבון.</p>
 
       <p><strong>האם מידע משותף עם צדדים שלישיים?</strong><br>
-      לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים. שירותי תשתית (Supabase לאחסון, Tranzila לחיוב) מקבלים גישה מוגבלת לנדרש בלבד.</p>
+      לא. אין מכירה, השכרה, או שיתוף מידע עם צדדים שלישיים לצורכי שיווק. שירותי תשתית (כגון Supabase לאחסון, וספק סליקה מאובטח ומורשה לחיוב בעת הפעלת חבילה בתשלום) מקבלים גישה מוגבלת לנדרש בלבד.</p>
 
       <p><strong>זכות מחיקה</strong><br>
       לבקשת מחיקת כל הנתונים שלך, יש לשלוח אימייל ל-<a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a></p>
@@ -7200,13 +7214,19 @@
       ניסיון חינמי של 30 יום ניתן לכל חשבון חדש ללא צורך בכרטיס אשראי. לאחר 30 יום יידרש מנוי בתשלום להמשך גישה.</p>
 
       <p><strong>ביטול ומחיקה</strong><br>
-      ניתן לבטל בכל עת דרך פורטל החיוב. ביטול תקף לסוף תקופת החיוב הנוכחית. נתוניך יישמרו 30 יום נוספים ולאחר מכן יימחקו.</p>
+      ניתן לבטל בכל עת בפנייה למייל <a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a>. ביטול תקף לסוף תקופת החיוב הנוכחית. נתוניך יישמרו 30 יום נוספים לצורך אפשרות ייצוא ולאחר מכן יימחקו.</p>
+
+      <p><strong>תוכן שנוצר על-ידי בינה מלאכותית</strong><br>
+      כלי ה-AI במערכת (הצעות שיווק, תוכן לרשתות, הודעות WhatsApp, ניתוחים וניקוד) מספקים סיוע וטיוטה בלבד. PLTO אינה מתחייבת לדיוק, שלמות או התאמה של תוכן שנוצר על-ידי AI, והוא אינו מהווה ייעוץ מקצועי, משפטי, שיווקי או אחר. באחריותך המלאה לבדוק, לערוך ולאשר כל תוכן כזה, כולל התאמתו לכל כלל אתי, מקצועי או רגולטורי החל עליך (למשל כללי הפרסומת של לשכת עורכי הדין), לפני כל שימוש, פרסום או שליחה ללקוח.</p>
 
       <p><strong>הגבלת אחריות</strong><br>
-      PLTO לא תישא באחריות לנזקים עקיפים, אובדן רווחים, או אובדן נתונים הנובעים משימוש בשירות.</p>
+      השירות מסופק "כפי שהוא", ללא אחריות מכל סוג. PLTO לא תישא באחריות לנזקים עקיפים, תוצאתיים, אובדן רווחים, אובדן נתונים, או נזקים הנובעים מהסתמכות על תוכן AI. ככל שתחול אחריות כלשהי על PLTO על אף האמור, היא תוגבל בכל מקרה לסכום ששולם בפועל על-ידך עבור השירות בששת החודשים שקדמו לאירוע נשוא התביעה.</p>
 
-      <p><strong>דין חל</strong><br>
-      השירות כפוף לחוקי מדינת ישראל, כולל חוק הגנת הפרטיות, תשמ"א-1981 ותקנות אבטחת המידע.</p>
+      <p><strong>שיפוי</strong><br>
+      אתה מתחייב לשפות את PLTO בגין כל תביעה, דרישה, נזק או הוצאה (לרבות שכר טרחת עורך דין) הנובעים משימושך במערכת, מתוכן שהזנת או שלחת ללקוחותיך (לרבות תוכן AI שלא בדקת לפני שימוש), או מהפרת כל דין או כלל אתי מקצועי החל עליך.</p>
+
+      <p><strong>דין חל ומקום שיפוט</strong><br>
+      השירות כפוף לחוקי מדינת ישראל, כולל חוק הגנת הפרטיות, תשמ"א-1981 ותקנות אבטחת המידע. סמכות השיפוט הבלעדית בכל מחלוקת הנוגעת לשירות נתונה לבתי המשפט המוסמכים במחוז תל אביב-יפו בלבד.</p>
 
       <h3 style="margin:20px 0 8px;font-size:1rem;color:var(--navy-700);">3. בעלות על תוכן ונתונים, חשוב לקרוא</h3>
 
@@ -7221,16 +7241,13 @@
       עמוד ציבורי שנוצר באמצעות בונה העמודים (למשל עמוד הזמנת קולגה) מתארח על שרתי PLTO ונושא סימון PLTO קבוע שאינו ניתן להסרה בכל דרך, לרבות בתוכניות בתשלום. הקישור לעמוד וזמינותו הציבורית מותנים בכך שהחשבון שיצר אותו פעיל ובמנוי בתוקף, ניסיון או תשלום. אם המנוי מבוטל או פג, ייתכן שהעמוד יפסיק להיות נגיש לציבור.</p>
 
       <p><strong>מה קורה בסיום מנוי</strong><br>
-      ביטול מנוי אינו מוחק את הנתונים אוטומטית, הנתונים נשמרים עד 30 יום לאחר הביטול. במהלך תקופה זו ניתן לייצא את הנתונים האישיים (לידים, עסקאות, הערות) על-ידי פנייה ל-<a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a>. לאחר 30 יום הנתונים נמחקים לצמיתות.</p>
+      ביטול מנוי אינו מוחק את הנתונים מיידית, הנתונים נשמרים עד 30 יום נוספים לאחר הביטול. במהלך תקופה זו ניתן לייצא את הנתונים האישיים (לידים, עסקאות, הערות) על-ידי פנייה ל-<a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a>. לאחר מכן הנתונים נמחקים כחלק מתהליך סגירת החשבון.</p>
 
       <p><strong>תוכן שנשאר בשרתים</strong><br>
       נתונים שהוזנו למערכת (שמות לקוחות, מספרי טלפון, ערכי עסקאות, הערות מקצועיות) מאוחסנים על שרתי הפלטפורמה. בניגוד לנתונים האישיים, תוכן שנוצר ע"י AI ושימש לשיפור המערכת עשוי להישמר בצורה אנונימית.</p>
 
       <p><strong>הסכמה מפורשת</strong><br>
       שימוש במערכת, לרבות בתקופת הניסיון החינמי, מהווה הסכמה מפורשת ומלאה לתנאים אלו. אם אינך מסכים, אנא הפסק את השימוש ופנה אלינו למחיקת נתוניך.</p>
-
-      <p><strong>דין חל</strong><br>
-      השירות כפוף לחוקי מדינת ישראל, כולל חוק הגנת הפרטיות, תשמ"א-1981 ותקנות אבטחת המידע.</p>
 
       <p style="margin-top:16px;color:var(--gray-500);font-size:0.82rem;">
         עדכון אחרון: יולי 2026 | שאלות: <a href="mailto:info@plto.app" style="color:var(--blue-500);">info@plto.app</a>
@@ -10518,8 +10535,26 @@ const OppBoard = {
     document.getElementById('opp-vertical').value = 'realestate';
     document.getElementById('opp-region').value = 'center';
     document.getElementById('opp-commission-type').value = 'none';
-    this.toggleCommissionValue();
+    this._applyCommissionRule();
     openModal('modal-publish-opportunity');
+  },
+
+  // Same rule as LeadReferral: no paid commission when a lawyer is involved
+  // (publisher or target vertical), enforced again server-side in
+  // publish_opportunity (migration 111).
+  onVerticalChange() {
+    this._applyCommissionRule();
+  },
+
+  _applyCommissionRule() {
+    const vertical = document.getElementById('opp-vertical').value;
+    const lawyerInvolved = (State.tenant?.industry === 'realestate_lawyer') || vertical === 'realestate_lawyer';
+    document.getElementById('opp-commission-section').classList.toggle('hidden', lawyerInvolved);
+    document.getElementById('opp-commission-lawyer-note').classList.toggle('hidden', !lawyerInvolved);
+    if (lawyerInvolved) {
+      document.getElementById('opp-commission-type').value = 'none';
+      this.toggleCommissionValue();
+    }
   },
 
   toggleCommissionValue() {
@@ -10752,7 +10787,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genOffer()">✨ יצירת הצעה</button>
             <div class="mktg-output" id="mktg-offer-out"></div>
-            <div class="mktg-watermark hidden" id="mktg-offer-wm">🏷️ נבנה ע"י PLTO | plto.app</div>
+            <div class="mktg-watermark hidden" id="mktg-offer-wm">🏷️ נבנה ע"י PLTO | plto.app<br>טיוטת AI, יש לבדוק ולערוך לפני שליחה</div>
             <div class="mktg-actions" id="mktg-offer-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-offer-out')">📋 העתקה</button>
             </div>
@@ -10794,7 +10829,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genPost()">✨ יצירת פוסט</button>
             <div class="mktg-output" id="mktg-post-out"></div>
-            <div class="mktg-watermark hidden" id="mktg-post-wm">🏷️ נבנה ע"י PLTO | plto.app</div>
+            <div class="mktg-watermark hidden" id="mktg-post-wm">🏷️ נבנה ע"י PLTO | plto.app<br>טיוטת AI, יש לבדוק ולערוך לפני פרסום</div>
             <div class="mktg-actions" id="mktg-post-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-post-out')">📋 העתקה</button>
             </div>
@@ -10835,7 +10870,7 @@ const Marketing = {
             </div>
             <button class="tool-btn tool-btn-primary" onclick="Marketing.genCampaign()">✨ יצירת הודעה</button>
             <div class="mktg-output" id="mktg-campaign-out"></div>
-            <div class="mktg-watermark hidden" id="mktg-campaign-wm">🏷️ נבנה ע"י PLTO | plto.app</div>
+            <div class="mktg-watermark hidden" id="mktg-campaign-wm">🏷️ נבנה ע"י PLTO | plto.app<br>טיוטת AI, יש לבדוק ולערוך לפני שליחה</div>
             <div class="mktg-actions" id="mktg-campaign-act">
               <button class="mktg-btn-copy" onclick="Marketing.copy('mktg-campaign-out')">📋 העתקה</button>
             </div>
@@ -12904,14 +12939,41 @@ const LeadReferral = {
     document.getElementById('lref-consent-formal').checked = false;
     document.getElementById('lref-profession-wrap').classList.add('hidden');
     this._consentMode = null;
-    this.toggleCommissionValue();
+    // Referring to an unregistered external professional ("אחר") always
+    // requires a paid commission (that's the only way sign.html has
+    // anything to show), which a lawyer referrer can never carry (see
+    // _applyCommissionRule). Rather than leave that combination as a dead
+    // end, the option itself isn't offered to a lawyer tenant.
+    const otherOpt = document.querySelector('#lref-vertical option[value="other"]');
+    if (otherOpt) { const isLawyerTenant = State.tenant?.industry === 'realestate_lawyer'; otherOpt.hidden = isLawyerTenant; otherOpt.disabled = isLawyerTenant; }
+    this._applyCommissionRule();
     openModal('modal-lead-referral');
+  },
+
+  // A lawyer (realestate_lawyer) referrer, or a referral targeting a lawyer,
+  // can never carry a paid commission — Bar Association ethics rules
+  // restrict fee-sharing with non-lawyers. Enforced here in the UI (hides
+  // the field so nobody has to think about it) and again server-side in
+  // _create_lead_referral_core (migration 111), which is the real guard.
+  _lawyerLocked: false,
+
+  _applyCommissionRule() {
+    const vertical = document.getElementById('lref-vertical').value;
+    const lawyerInvolved = (State.tenant?.industry === 'realestate_lawyer') || vertical === 'realestate_lawyer';
+    this._lawyerLocked = lawyerInvolved;
+    document.getElementById('lref-commission-section').classList.toggle('hidden', lawyerInvolved);
+    document.getElementById('lref-commission-lawyer-note').classList.toggle('hidden', !lawyerInvolved);
+    if (lawyerInvolved) {
+      document.getElementById('lref-commission-type').value = 'none';
+      this.toggleCommissionValue();
+    }
   },
 
   onVerticalChange() {
     const v = document.getElementById('lref-vertical').value;
     this._isExternal = (v === 'other');
     document.getElementById('lref-profession-wrap').classList.toggle('hidden', !this._isExternal);
+    this._applyCommissionRule();
     // For external, commission is strongly recommended — update hint text
     const hint = document.getElementById('lref-commission-hint');
     if (hint) {
@@ -12946,7 +13008,7 @@ const LeadReferral = {
     if (!vertical) { toast('יש לבחור את תחום הקולגה', 'error'); return; }
     if (!name)     { toast('יש להזין את שם הקולגה', 'error'); return; }
     if (isExternal && !profession) { toast('יש לציין את תחום המקצוע', 'error'); return; }
-    if (isExternal && commType === 'none') { toast('לשליחה לבעל מקצוע חיצוני יש להגדיר עמלת הפניה', 'error'); return; }
+    if (isExternal && commType === 'none' && !this._lawyerLocked) { toast('לשליחה לבעל מקצוע חיצוני יש להגדיר עמלת הפניה', 'error'); return; }
     if (!this._consentMode) { toast('יש לבחור כיצד קיבלת/תקבל את הסכמת הלקוח', 'error'); return; }
 
     let commValue = null;

@@ -409,9 +409,16 @@
           <button type="button" class="sig-clear-btn" onclick="SignPad.clear()">🗑️ ניקוי חתימה</button>
         </div>
 
+        <div class="form-section">
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--gray-600);cursor:pointer;line-height:1.5;">
+            <input type="checkbox" id="sig-agree-checkbox" style="margin-top:3px;flex-shrink:0;">
+            <span>קריאת ההסכם שלמעלה ו<a href="https://plto.app/privacy-policy.html" target="_blank" rel="noopener" style="color:var(--blue);">מדיניות הפרטיות</a>, ואישור תנאיהם, נדרשים לפני החתימה.</span>
+          </label>
+        </div>
+
         <div class="legal-note">
-          החתימה הדיגיטלית, בצירוף שמך, כתובת ה-IP ומועד החתימה, נשמרים כראיה משפטית מחייבת.
-          PLTO היא פלטפורמה טכנולוגית בלבד ואינה צד להסכם.
+          לזיהוי החותם נשמרים שמך, כתובת ה-IP ומועד החתימה, לצד תמונת החתימה. אלה יכולים לשמש כראיה לזיהוי החותם ולמועד ההסכמה, בכפוף לכל דין.
+          PLTO היא פלטפורמה טכנולוגית בלבד, אינה צד להסכם ואינה אחראית לאכיפתו.
         </div>
 
         <button class="btn-sign" id="btn-sign" onclick="Page.sign()">✅ חתימה וקבלת פרטי הלקוח</button>
@@ -613,6 +620,7 @@ const Page = {
     const name  = document.getElementById('sig-name').value.trim();
     const phone = document.getElementById('sig-phone').value.trim();
     if (!name)          { this._flash('יש להזין שם מלא לחתימה'); return; }
+    if (!document.getElementById('sig-agree-checkbox').checked) { this._flash('יש לאשר את קריאת ההסכם ומדיניות הפרטיות'); return; }
     if (SignPad.isEmpty()) { this._flash('נא לחתום בתיבת החתימה'); return; }
 
     const btn = document.getElementById('btn-sign');
